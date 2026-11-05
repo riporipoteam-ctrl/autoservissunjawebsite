@@ -3,289 +3,1087 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#f5f3ed">
-  <meta name="description" content="Auto Servis Šunja u Goraždu. Servisiranje, održavanje i popravka Peugeot vozila i drugih automobila. Pozovite 061 297 847.">
-  <meta property="og:title" content="Auto Servis Šunja · Goražde">
-  <meta property="og:description" content="Servisiranje, održavanje i popravka Peugeot vozila i drugih automobila.">
+  <meta name="theme-color" content="#f3f5f4">
+  <meta name="description" content="Auto Servis Šunja u Goraždu: servisiranje i održavanje Peugeot vozila i drugih automobila. Pozovite 061 297 847 i dogovorite dolazak.">
+  <meta property="og:title" content="Auto Servis Šunja — Goražde">
+  <meta property="og:description" content="Peugeot servis i automehaničarske usluge u Goraždu. Nazovite i dogovorite dolazak.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://autosunja.sitey.my/">
-  <title>Auto Servis Šunja · Goražde</title>
+  <link rel="canonical" href="https://autosunja.sitey.my/">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231768d3'/%3E%3Ctext x='32' y='45' text-anchor='middle' font-family='Arial' font-size='39' font-weight='700' fill='white'%3ES%3C/text%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://www.instagram.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Auto Servis Šunja — Peugeot servis u Goraždu</title>
   <style>
     :root {
-      --paper: #f5f3ed;
-      --paper-deep: #eae8df;
-      --ink: #1c2931;
-      --muted: #657078;
-      --line: #d2d1c8;
-      --blue: #1d66bd;
-      --blue-dark: #174d8a;
-      --orange: #d85b38;
-      --white: #fffefa;
-      --sans: "Archivo", Arial, sans-serif;
-      --serif: "Newsreader", Georgia, serif;
-      --max: 1200px;
+      color-scheme: light;
+      --paper: #f3f5f4;
+      --paper-bright: #fbfcfa;
+      --paper-blue: #e7eef5;
+      --ink: #17252f;
+      --ink-soft: #253640;
+      --muted: #66757d;
+      --line: #d6dfe2;
+      --blue: #1768cf;
+      --blue-hover: #0e55ad;
+      --blue-pale: #d6e5f6;
+      --white: #fff;
+      --display: "Space Grotesk", "Arial", sans-serif;
+      --body: "DM Sans", "Arial", sans-serif;
+      --mono: "IBM Plex Mono", monospace;
+      --max: 1240px;
+      --gutter: clamp(22px, 5.2vw, 76px);
+      --ease: cubic-bezier(.2,.75,.25,1);
+      --shadow: 0 28px 70px rgba(20, 45, 63, .12);
     }
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; scroll-padding-top: 84px; }
-    body { margin: 0; color: var(--ink); background: var(--paper); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 100px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: var(--body);
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    body.menu-open { overflow: hidden; }
     a { color: inherit; }
-    a:focus-visible, button:focus-visible { outline: 3px solid var(--orange); outline-offset: 4px; }
-    .container { width: min(calc(100% - 64px), var(--max)); margin-inline: auto; }
-    .mono { font: 500 10px/1.5 var(--sans); letter-spacing: .105em; text-transform: uppercase; }
-    .skip-link { position: fixed; z-index: 30; top: 10px; left: 10px; padding: 12px 15px; color: #fff; background: var(--blue); transform: translateY(-160%); }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a:focus-visible, button:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 4px;
+      border-radius: 3px;
+    }
+    img, svg { display: block; }
+    .container { width: min(calc(100% - var(--gutter) * 2), var(--max)); margin-inline: auto; }
+    .eyebrow {
+      margin: 0;
+      color: var(--blue);
+      font: 600 10px/1.5 var(--mono);
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .skip-link {
+      position: fixed;
+      z-index: 40;
+      top: 12px;
+      left: 12px;
+      padding: 12px 16px;
+      color: var(--white);
+      background: var(--ink);
+      transform: translateY(-160%);
+      transition: transform .22s var(--ease);
+    }
     .skip-link:focus { transform: translateY(0); }
-    .topline { color: #e9edf0; background: var(--ink); }
-    .topline-inner { min-height: 34px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-    .topline p { margin: 0; color: #d4dce0; }
-    .topline a { color: #d4dce0; text-decoration: none; }
-    .topline a:hover { color: #fff; }
-    .site-header { position: sticky; top: 0; z-index: 10; background: rgb(245 243 237 / 96%); border-bottom: 1px solid var(--line); backdrop-filter: blur(12px); }
-    .nav { min-height: 74px; display: flex; justify-content: space-between; align-items: center; gap: 24px; }
-    .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-    .brand-initial { width: 38px; height: 38px; display: grid; place-items: center; color: var(--white); background: var(--blue); font: 600 20px/1 var(--serif); }
-    .brand-title { display: block; font-size: 12px; line-height: 1.1; font-weight: 800; letter-spacing: .035em; }
-    .brand-sub { display: block; margin-top: 5px; color: var(--muted); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; }
-    .nav-links { display: flex; align-items: center; gap: clamp(20px, 3vw, 40px); }
-    .nav-links > a { color: #39464d; text-decoration: none; font-size: 12px; font-weight: 600; }
-    .nav-links > a:hover { color: var(--blue); }
-    .nav-links .nav-phone { padding: 11px 15px; color: var(--white); background: var(--blue); }
-    .nav-phone:hover { background: var(--blue-dark); color: var(--white) !important; }
 
-    .hero { padding: clamp(54px, 7vw, 88px) 0 70px; }
-    .hero-grid { display: grid; grid-template-columns: minmax(0, .95fr) minmax(360px, 1.05fr); gap: clamp(46px, 7vw, 96px); align-items: center; }
-    .kicker { display: flex; align-items: center; gap: 10px; color: var(--blue); }
-    .kicker::before { content: ""; width: 22px; height: 2px; background: var(--orange); }
-    h1 { max-width: 630px; margin: 22px 0 18px; font: 500 clamp(54px, 7.2vw, 91px)/.98 var(--serif); letter-spacing: -.055em; }
-    h1 em { color: var(--blue); font-weight: 400; }
-    .hero-copy { max-width: 470px; margin: 0; color: #59666d; font-size: 15px; line-height: 1.8; }
-    .hero-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 22px; margin-top: 29px; }
-    .button { min-height: 48px; display: inline-flex; justify-content: center; align-items: center; gap: 9px; padding: 0 16px; color: var(--white); background: var(--blue); font-size: 12px; font-weight: 700; text-decoration: none; transition: background .18s ease, transform .18s ease; }
-    .button:hover { background: var(--blue-dark); transform: translateY(-1px); }
-    .button .symbol { font-size: 16px; line-height: 1; }
-    .text-link { color: var(--ink); text-decoration-color: var(--orange); text-decoration-thickness: 1px; text-underline-offset: 5px; font-size: 12px; font-weight: 700; }
-    .hero-details { display: flex; align-items: flex-start; gap: 22px; margin-top: 39px; padding-top: 20px; border-top: 1px solid var(--line); }
-    .hero-detail { min-width: 0; }
-    .hero-detail + .hero-detail { padding-left: 22px; border-left: 1px solid var(--line); }
-    .hero-detail .mono { display: block; color: var(--muted); }
-    .hero-detail strong { display: block; margin-top: 5px; font-size: 12px; line-height: 1.45; }
+    .topbar {
+      color: #e9eef1;
+      background: var(--ink);
+      font: 500 10px/1.4 var(--mono);
+      letter-spacing: .035em;
+    }
+    .topbar-inner {
+      min-height: 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+    .topbar p { margin: 0; }
+    .topbar-links { display: flex; align-items: center; gap: 26px; }
+    .topbar a { color: inherit; text-decoration: none; transition: color .2s ease; }
+    .topbar a:hover { color: #a9cffb; }
+    .topbar .topbar-dot { color: #80b2ed; }
 
-    .feature-wrap { position: relative; min-width: 0; padding: 15px 15px 0 0; }
-    .feature-wrap::before { content: ""; position: absolute; z-index: -1; top: 0; right: 0; bottom: 32px; left: 30px; background: #dce2e5; }
-    .feature-note { position: absolute; z-index: 2; top: -13px; left: 0; padding: 8px 11px; color: #fff; background: var(--orange); font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
-    .feature-post { min-height: 475px; background: #d7dcdd; }
-    .embed-fallback { min-height: 475px; display: flex; flex-direction: column; justify-content: space-between; padding: 23px; background: linear-gradient(150deg, #d7dcdd 0 60%, #c7d0d3 60% 100%); }
-    .embed-fallback-top { display: flex; justify-content: space-between; gap: 12px; color: #4d5d64; }
-    .embed-fallback-mid { padding: 25px 0; }
-    .embed-fallback-mid span { display: block; color: #66747a; }
-    .embed-fallback-mid strong { display: block; max-width: 300px; margin-top: 10px; font: 500 clamp(28px, 3vw, 38px)/1.05 var(--serif); letter-spacing: -.035em; }
-    .embed-fallback-bottom { display: flex; justify-content: space-between; align-items: center; gap: 12px; border-top: 1px solid rgb(28 41 49 / 23%); padding-top: 13px; }
-    .embed-fallback-bottom a { font-size: 11px; font-weight: 700; text-decoration-color: var(--orange); text-underline-offset: 4px; }
-    .feature-credit { margin: 9px 0 0; color: var(--muted); font-size: 10px; text-align: right; }
-    .feature-post .instagram-media { margin: 0 auto !important; }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(23, 37, 47, .09);
+      background: rgba(243, 245, 244, .94);
+      -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
+    }
+    .nav {
+      min-height: 82px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 28px;
+    }
+    .brand {
+      display: inline-flex;
+      min-width: 0;
+      align-items: center;
+      gap: 13px;
+      text-decoration: none;
+    }
+    .brand-mark {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      color: var(--white);
+      background: var(--blue);
+      border-radius: 3px;
+      font: 600 25px/1 var(--display);
+      letter-spacing: -.08em;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,.24);
+      position: relative;
+    }
+    .brand-mark::after {
+      content: "";
+      position: absolute;
+      inset: 4px;
+      border: 1px solid rgba(255,255,255,.42);
+      border-radius: 1px;
+    }
+    .brand-name {
+      display: block;
+      font: 700 13px/1.15 var(--display);
+      letter-spacing: .035em;
+    }
+    .brand-place {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font: 500 9px/1.2 var(--mono);
+      letter-spacing: .045em;
+    }
+    .nav-right { display: flex; align-items: center; gap: clamp(28px, 4.5vw, 62px); }
+    .nav-links { display: flex; align-items: center; gap: clamp(22px, 3.1vw, 42px); }
+    .nav-links a {
+      position: relative;
+      color: #40505a;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: color .2s ease;
+    }
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      bottom: -7px;
+      left: 0;
+      height: 1px;
+      background: var(--blue);
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform .25s var(--ease);
+    }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+    .nav-call, .button {
+      min-height: 48px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 11px;
+      padding: 0 18px;
+      border: 1px solid transparent;
+      color: var(--white);
+      background: var(--blue);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background .2s ease, transform .2s var(--ease), box-shadow .2s ease;
+    }
+    .nav-call { min-height: 43px; padding-inline: 16px; font-size: 11px; }
+    .nav-call:hover, .button:hover {
+      color: var(--white);
+      background: var(--blue-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 9px 20px rgba(23,104,207,.2);
+    }
+    .button:active, .nav-call:active { transform: translateY(1px) scale(.99); }
+    .button svg, .nav-call svg { width: 16px; height: 16px; }
+    .menu-toggle {
+      width: 44px;
+      height: 44px;
+      display: none;
+      place-items: center;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: var(--paper-bright);
+      cursor: pointer;
+    }
+    .menu-icon { width: 18px; display: grid; gap: 5px; }
+    .menu-icon span { height: 1.5px; background: currentColor; transition: transform .22s ease, width .22s ease; }
+    .menu-icon span:last-child { width: 12px; }
 
-    .service-band { color: var(--white); background: var(--blue); }
-    .service-band-inner { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-    .service-band p { margin: 0; font-size: 13px; font-weight: 600; }
-    .service-band .mono { color: rgb(255 255 255 / 75%); }
-    .service-band a { display: inline-flex; gap: 8px; align-items: center; color: var(--white); font-size: 12px; font-weight: 700; text-decoration-color: rgb(255 255 255 / 65%); text-underline-offset: 4px; white-space: nowrap; }
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(48px, 7.2vw, 92px) 0 clamp(70px, 8vw, 100px);
+      background:
+        linear-gradient(90deg, rgba(23,104,207,.035) 1px, transparent 1px),
+        linear-gradient(rgba(23,104,207,.035) 1px, transparent 1px),
+        var(--paper);
+      background-size: 50px 50px;
+      background-position: center top;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      top: -19rem;
+      right: -16rem;
+      width: 43rem;
+      height: 43rem;
+      border: 1px solid rgba(23,104,207,.08);
+      border-radius: 50%;
+      box-shadow: 0 0 0 50px rgba(23,104,207,.018), 0 0 0 100px rgba(23,104,207,.014);
+      pointer-events: none;
+    }
+    .hero-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(390px, 1.1fr);
+      align-items: center;
+      gap: clamp(34px, 6.5vw, 92px);
+    }
+    .hero-copy { max-width: 540px; position: relative; z-index: 2; }
+    .hero-kicker { display: flex; align-items: center; gap: 10px; color: var(--blue); }
+    .hero-kicker::before { content: ""; width: 24px; height: 2px; background: currentColor; }
+    h1 {
+      max-width: 600px;
+      margin: 24px 0 22px;
+      font: 600 clamp(58px, 7.15vw, 98px)/.91 var(--display);
+      letter-spacing: -.085em;
+      text-wrap: balance;
+    }
+    h1 span { color: var(--blue); }
+    .hero-lede {
+      max-width: 460px;
+      margin: 0;
+      color: #55656e;
+      font-size: clamp(14px, 1.2vw, 16px);
+      line-height: 1.8;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 24px; margin-top: 30px; }
+    .text-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+    .text-link span { color: var(--blue); font-size: 17px; transition: transform .2s var(--ease); }
+    .text-link:hover span { transform: translate(3px, -2px); }
+    .hero-details {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      max-width: 450px;
+      margin-top: 40px;
+      border-top: 1px solid var(--line);
+    }
+    .hero-detail { padding: 17px 12px 0 0; }
+    .hero-detail + .hero-detail { padding-left: 21px; border-left: 1px solid var(--line); }
+    .hero-detail-label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font: 500 9px/1.4 var(--mono);
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .hero-detail strong { font-size: 12px; font-weight: 700; line-height: 1.45; }
 
-    .section { padding: clamp(70px, 8.8vw, 106px) 0; }
-    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 32px; margin-bottom: 35px; }
-    .section-kicker { margin: 0 0 12px; color: var(--blue); }
-    h2 { margin: 0; font: 500 clamp(39px, 5vw, 62px)/1.03 var(--serif); letter-spacing: -.045em; }
-    .section-intro { max-width: 360px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.8; }
-    .services { background: var(--paper-deep); }
-    .service-table { border-top: 1px solid #c8c9c1; }
-    .service-line { display: grid; grid-template-columns: 52px minmax(190px, .75fr) minmax(220px, 1fr); align-items: center; gap: 18px; min-height: 88px; border-bottom: 1px solid #c8c9c1; }
-    .service-index { color: var(--orange); font-size: 10px; font-weight: 700; }
-    .service-line h3 { margin: 0; font-size: clamp(16px, 2vw, 20px); font-weight: 700; letter-spacing: -.025em; }
-    .service-line p { margin: 0; color: #5d686e; font-size: 12px; line-height: 1.65; }
-    .service-foot { margin: 18px 0 0; color: #667078; font-size: 11px; line-height: 1.7; }
+    .hero-visual { position: relative; min-width: 0; padding: 14px 0 22px 22px; }
+    .hero-visual::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      right: 19px;
+      bottom: 0;
+      left: 0;
+      background: var(--blue-pale);
+    }
+    .visual-top {
+      position: absolute;
+      z-index: 3;
+      top: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      color: #eaf2fb;
+      background: var(--ink);
+      font: 500 9px/1.4 var(--mono);
+      letter-spacing: .07em;
+      text-transform: uppercase;
+    }
+    .visual-top .light { width: 7px; height: 7px; border-radius: 50%; background: #87b8f1; box-shadow: 0 0 0 4px rgba(135,184,241,.15); }
+    .hero-photo {
+      position: relative;
+      min-height: 495px;
+      height: clamp(495px, 48vw, 630px);
+      overflow: hidden;
+      background: #d5e0e8;
+      box-shadow: var(--shadow);
+      isolation: isolate;
+    }
+    .hero-photo::after {
+      content: "";
+      position: absolute;
+      z-index: 3;
+      inset: 0;
+      border: 1px solid rgba(255,255,255,.7);
+      pointer-events: none;
+    }
+    .visual-caption {
+      position: relative;
+      z-index: 4;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 13px 3px 0;
+      color: var(--muted);
+      font: 500 9px/1.4 var(--mono);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+    .visual-caption a { color: var(--blue); text-decoration: none; transition: color .2s ease; }
+    .visual-caption a:hover { color: var(--blue-hover); }
+    .photo-index {
+      position: absolute;
+      z-index: 4;
+      bottom: 34px;
+      left: -2px;
+      padding: 10px 13px;
+      color: var(--white);
+      background: var(--blue);
+      font: 500 9px/1.4 var(--mono);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      box-shadow: 0 6px 18px rgba(23,104,207,.22);
+    }
+
+    .media-fallback {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      padding: clamp(22px, 3vw, 38px);
+      color: var(--white);
+      background:
+        radial-gradient(circle at 78% 25%, rgba(107,166,224,.33), transparent 24%),
+        linear-gradient(140deg, #182b38, #203b4b 58%, #12242f);
+      transition: opacity .4s ease, visibility .4s ease;
+    }
+    .media-fallback::before, .media-fallback::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+    .media-fallback::before {
+      inset: 0;
+      opacity: .26;
+      background: linear-gradient(rgba(207,226,244,.18) 1px, transparent 1px), linear-gradient(90deg, rgba(207,226,244,.18) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(135deg, black, transparent 82%);
+    }
+    .media-fallback::after {
+      top: 16%;
+      right: -8%;
+      width: min(75%, 420px);
+      aspect-ratio: 1;
+      border: 1px solid rgba(201,225,249,.22);
+      border-radius: 50%;
+      box-shadow: 0 0 0 28px rgba(201,225,249,.05), 0 0 0 56px rgba(201,225,249,.04);
+    }
+    .fallback-meta, .fallback-bottom { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 16px; }
+    .fallback-meta { color: #b9cbd8; font: 500 9px/1.5 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    .fallback-illustration {
+      position: absolute;
+      z-index: 1;
+      right: 2%;
+      bottom: 13%;
+      width: min(92%, 570px);
+      height: auto;
+      color: #aecff1;
+      opacity: .88;
+    }
+    .fallback-bottom { align-items: end; }
+    .fallback-heading { position: relative; z-index: 2; max-width: 330px; }
+    .fallback-heading span { display: block; color: #9cbbda; font: 500 9px/1.5 var(--mono); letter-spacing: .13em; text-transform: uppercase; }
+    .fallback-heading strong { display: block; margin-top: 9px; font: 600 clamp(28px, 3.2vw, 40px)/1.04 var(--display); letter-spacing: -.055em; }
+    .fallback-bottom a { position: relative; z-index: 2; color: #c6ddf7; font-size: 11px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+    .insta-lazy { position: relative; }
+    .insta-lazy blockquote.instagram-media {
+      position: absolute !important;
+      top: -52px !important;
+      left: 50% !important;
+      z-index: 1;
+      width: 100% !important;
+      max-width: none !important;
+      min-width: 0 !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      background: transparent !important;
+      border: 0 !important;
+      transform: translateX(-50%);
+    }
+    .insta-lazy iframe {
+      display: block;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+      height: 680px !important;
+      border: 0 !important;
+    }
+    .insta-lazy.has-embed .media-fallback { visibility: hidden; opacity: 0; }
+    .hero-photo.insta-lazy { overflow: hidden; }
+    .hero-photo.insta-lazy blockquote.instagram-media { top: -46px !important; }
+    .hero-photo.insta-lazy iframe { height: 770px !important; }
+    .hero-photo .media-fallback { min-height: 100%; }
+
+    .info-ribbon { position: relative; color: var(--white); background: var(--blue); }
+    .ribbon-inner {
+      min-height: 76px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 26px;
+    }
+    .ribbon-label { color: rgba(255,255,255,.7); font: 500 9px/1.5 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+    .ribbon-services { display: flex; flex-wrap: wrap; align-items: center; gap: 13px; font: 600 12px/1.5 var(--display); }
+    .ribbon-services i { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,.7); }
+    .ribbon-link { display: inline-flex; align-items: center; gap: 10px; color: var(--white); font-size: 11px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+    .ribbon-link span { font-size: 17px; transition: transform .2s var(--ease); }
+    .ribbon-link:hover span { transform: translateX(4px); }
+
+    .section { padding: clamp(78px, 9vw, 122px) 0; }
+    .section-head {
+      display: grid;
+      grid-template-columns: 1fr minmax(240px, 400px);
+      align-items: end;
+      gap: 38px;
+      margin-bottom: 42px;
+    }
+    .section-title { margin: 12px 0 0; font: 600 clamp(38px, 5.1vw, 65px)/.99 var(--display); letter-spacing: -.075em; text-wrap: balance; }
+    .section-intro { max-width: 390px; margin: 0 0 3px auto; color: var(--muted); font-size: 13px; line-height: 1.8; }
+    .services { background: var(--paper-bright); }
+    .service-layout { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(290px, .9fr); gap: 20px; }
+    .service-primary {
+      min-height: 366px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+      position: relative;
+      padding: clamp(26px, 4vw, 46px);
+      color: var(--white);
+      background: var(--ink);
+    }
+    .service-primary::before {
+      content: "01";
+      position: absolute;
+      right: -14px;
+      bottom: -78px;
+      color: rgba(255,255,255,.045);
+      font: 700 clamp(210px, 30vw, 380px)/1 var(--display);
+      letter-spacing: -.12em;
+      pointer-events: none;
+    }
+    .service-primary-top { position: relative; z-index: 1; display: flex; justify-content: space-between; gap: 20px; }
+    .service-number { color: #a8c8ed; font: 500 10px/1.4 var(--mono); letter-spacing: .08em; }
+    .service-symbol {
+      width: 47px;
+      height: 47px;
+      display: grid;
+      place-items: center;
+      color: #c6def7;
+      border: 1px solid rgba(198,222,247,.35);
+      border-radius: 50%;
+    }
+    .service-symbol svg { width: 22px; height: 22px; }
+    .service-primary-copy { position: relative; z-index: 1; max-width: 510px; }
+    .service-primary h3 { margin: 0 0 12px; font: 600 clamp(29px, 3.2vw, 42px)/1.04 var(--display); letter-spacing: -.055em; }
+    .service-primary p { max-width: 400px; margin: 0; color: #c4ced3; font-size: 13px; line-height: 1.8; }
+    .service-primary .service-action { margin-top: 24px; color: #d5e6f8; }
+    .service-primary .service-action span { color: #a6caf2; }
+    .service-stack { display: grid; grid-template-rows: 1fr 1fr; gap: 20px; }
+    .service-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 173px;
+      padding: clamp(22px, 3vw, 32px);
+      border: 1px solid var(--line);
+      background: var(--paper);
+      transition: transform .25s var(--ease), border-color .25s ease, background .25s ease;
+    }
+    .service-card:hover { transform: translateY(-4px); border-color: #a7bfd8; background: #f0f5f9; }
+    .service-card-top { display: flex; justify-content: space-between; gap: 20px; }
+    .service-card .service-number { color: var(--blue); }
+    .service-card-icon { width: 18px; height: 18px; color: var(--blue); }
+    .service-card h3 { margin: 15px 0 7px; font: 600 20px/1.15 var(--display); letter-spacing: -.045em; }
+    .service-card p { max-width: 410px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .service-note { margin: 18px 0 0; padding-left: 16px; border-left: 2px solid var(--blue); color: var(--muted); font-size: 11px; line-height: 1.7; }
+
+    .visit {
+      padding: 0 0 clamp(78px, 8vw, 108px);
+      background: var(--paper-bright);
+    }
+    .visit-panel {
+      display: grid;
+      grid-template-columns: .86fr 1.14fr;
+      gap: clamp(32px, 7vw, 90px);
+      padding: clamp(28px, 5.5vw, 64px);
+      color: var(--ink);
+      background: var(--paper-blue);
+      position: relative;
+      overflow: hidden;
+    }
+    .visit-panel::after {
+      content: "";
+      position: absolute;
+      right: -100px;
+      bottom: -270px;
+      width: 430px;
+      height: 430px;
+      border: 1px solid rgba(23,104,207,.13);
+      border-radius: 50%;
+      box-shadow: 0 0 0 35px rgba(23,104,207,.04), 0 0 0 70px rgba(23,104,207,.035);
+      pointer-events: none;
+    }
+    .visit-title { position: relative; z-index: 1; }
+    .visit-title h2 { margin: 12px 0 14px; font: 600 clamp(34px, 4vw, 52px)/.98 var(--display); letter-spacing: -.07em; }
+    .visit-title p:last-child { max-width: 340px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    .visit-steps { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; align-self: center; border-top: 1px solid #bfcfdd; border-bottom: 1px solid #bfcfdd; }
+    .visit-step { min-height: 118px; padding: 18px 16px 18px 0; }
+    .visit-step + .visit-step { padding-left: 17px; border-left: 1px solid #bfcfdd; }
+    .visit-step .service-number { color: var(--blue); }
+    .visit-step h3 { margin: 18px 0 0; font: 600 14px/1.35 var(--display); letter-spacing: -.025em; }
 
     .work { background: var(--paper); }
-    .work .section-head { margin-bottom: 29px; }
-    .instagram-profile { color: var(--blue); font-size: 11px; font-weight: 700; text-decoration-color: var(--orange); text-underline-offset: 4px; white-space: nowrap; }
-    .post-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; align-items: start; }
-    .post-shell { min-width: 0; padding: 12px; border: 1px solid var(--line); background: var(--white); }
-    .post-shell .embed-fallback { min-height: 220px; padding: 17px; background: #e6e6df; }
-    .post-shell .embed-fallback-mid strong { font-size: 27px; }
-    .post-shell .instagram-media { margin: 0 auto !important; }
-    .post-source { margin: 10px 1px 1px; display: flex; justify-content: space-between; gap: 14px; align-items: baseline; color: var(--muted); font-size: 10px; }
-    .post-source a { color: var(--blue); font-weight: 700; text-decoration: none; }
-
-    .contact { color: #f7f6f1; background: var(--ink); }
-    .contact-grid { display: grid; grid-template-columns: .85fr 1.15fr; gap: clamp(44px, 8vw, 110px); align-items: start; }
-    .contact .section-kicker { color: #93bde9; }
-    .contact h2 { color: var(--white); }
-    .contact-lede { max-width: 370px; margin: 19px 0 0; color: #bdc5c9; font-size: 13px; line-height: 1.8; }
-    .contact-info { border-top: 1px solid rgb(255 255 255 / 27%); }
-    .contact-row { display: grid; grid-template-columns: 110px 1fr; gap: 18px; align-items: start; padding: 19px 0; border-bottom: 1px solid rgb(255 255 255 / 20%); }
-    .contact-row .mono { padding-top: 3px; color: #9caab1; }
-    .contact-row strong, .contact-row a { color: var(--white); font-size: 14px; line-height: 1.6; text-decoration: none; }
-    .contact-row a:hover { color: #9cc5f0; }
-    .hours-row { display: flex; justify-content: space-between; gap: 18px; max-width: 330px; color: #e2e5e4; font-size: 12px; line-height: 1.9; }
-    .hours-row strong { font-size: 12px; }
-    .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 23px; }
-    .contact-actions .button { color: var(--ink); background: #e6e9e9; }
-    .contact-actions .button:hover { background: #fff; }
-    .contact-actions .map-link { color: var(--white); border: 1px solid rgb(255 255 255 / 35%); background: transparent; }
-    .contact-actions .map-link:hover { color: var(--ink); background: var(--white); }
-    footer { padding: 20px 0; color: #b8c2c8; background: #142129; }
-    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 18px; }
-    .footer-inner p { margin: 0; font-size: 10px; line-height: 1.7; }
-    .footer-brand { color: var(--white); font-weight: 700; }
-    .footer-inner a { color: #a9c9e6; font-size: 10px; text-decoration: none; }
-    .mobile-call { display: none; }
-    @media (max-width: 800px) {
-      .container { width: min(calc(100% - 40px), var(--max)); }
-      .hero-grid { grid-template-columns: 1fr; gap: 43px; }
-      .hero-copy { max-width: 580px; }
-      .feature-wrap { width: min(100%, 600px); }
-      .feature-post, .embed-fallback { min-height: 420px; }
-      .contact-grid { grid-template-columns: 1fr; gap: 35px; }
-      .contact-lede { max-width: 600px; }
+    .work-head { margin-bottom: 38px; }
+    .work-head .section-intro { max-width: 380px; }
+    .social-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 18px;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 700;
+      text-decoration: none;
     }
-    @media (max-width: 560px) {
-      .container { width: min(calc(100% - 32px), var(--max)); }
-      .topline-inner { min-height: 34px; }
-      .topline .mono { font-size: 8px; }
-      .nav { min-height: 64px; }
-      .nav-links { gap: 0; }
-      .nav-links > a:not(.nav-phone) { display: none; }
-      .nav-links .nav-phone { min-height: 40px; display: inline-flex; align-items: center; padding: 0 12px; font-size: 11px; }
-      .brand-initial { width: 34px; height: 34px; }
-      .hero { padding: 51px 0 53px; }
-      h1 { font-size: clamp(53px, 15vw, 76px); }
-      .hero-copy { font-size: 13px; }
-      .hero-actions { gap: 17px; margin-top: 22px; }
-      .hero-details { gap: 13px; margin-top: 30px; }
+    .social-link span { font-size: 16px; transition: transform .2s var(--ease); }
+    .social-link:hover span { transform: translate(3px,-2px); }
+    .gallery-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(18px, 3vw, 34px); align-items: start; }
+    .gallery-card { min-width: 0; }
+    .gallery-card:nth-child(2) { margin-top: 58px; }
+    .gallery-frame {
+      height: clamp(310px, 35vw, 465px);
+      position: relative;
+      overflow: hidden;
+      background: #d8e2e9;
+      box-shadow: 0 18px 45px rgba(20,45,63,.09);
+    }
+    .gallery-frame .media-fallback { padding: 24px; }
+    .gallery-frame .fallback-heading strong { font-size: clamp(25px, 2.7vw, 34px); }
+    .gallery-frame .fallback-illustration { width: 95%; }
+    .gallery-frame .insta-lazy blockquote.instagram-media { top: -50px !important; }
+    .gallery-frame .insta-lazy iframe { height: 650px !important; }
+    .gallery-caption { display: flex; justify-content: space-between; align-items: start; gap: 18px; padding: 16px 0 0; border-top: 1px solid var(--line); }
+    .gallery-meta { color: var(--muted); font: 500 9px/1.5 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+    .gallery-caption h3 { margin: 7px 0 0; font: 600 19px/1.2 var(--display); letter-spacing: -.04em; }
+    .gallery-caption a { display: inline-flex; flex: 0 0 auto; align-items: center; gap: 6px; margin-top: 8px; color: var(--blue); font-size: 11px; font-weight: 700; text-decoration: none; }
+    .gallery-caption a span { font-size: 15px; transition: transform .2s var(--ease); }
+    .gallery-caption a:hover span { transform: translate(3px,-2px); }
+
+    .contact {
+      color: var(--white);
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+    .contact-eyebrow { color: #a8c8ed; }
+    .contact::before {
+      content: "";
+      position: absolute;
+      top: -17rem;
+      left: -16rem;
+      width: 40rem;
+      height: 40rem;
+      border: 1px solid rgba(137,183,231,.14);
+      border-radius: 50%;
+      box-shadow: 0 0 0 40px rgba(137,183,231,.04), 0 0 0 80px rgba(137,183,231,.03);
+      pointer-events: none;
+    }
+    .contact-grid { position: relative; display: grid; grid-template-columns: .95fr 1.05fr; gap: clamp(44px, 9vw, 120px); }
+    .contact h2 { max-width: 570px; margin: 13px 0 18px; color: var(--white); font: 600 clamp(42px, 6.3vw, 78px)/.95 var(--display); letter-spacing: -.08em; }
+    .contact-lede { max-width: 400px; margin: 0; color: #bdc8cf; font-size: 13px; line-height: 1.8; }
+    .contact-details { border-top: 1px solid rgba(255,255,255,.22); }
+    .contact-row { display: grid; grid-template-columns: 110px minmax(0,1fr); gap: 20px; padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,.17); }
+    .contact-row-label { padding-top: 4px; color: #a9b8c1; font: 500 9px/1.5 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
+    .contact-row-value { color: var(--white); font-size: 13px; line-height: 1.65; }
+    .contact-row-value a { color: inherit; text-decoration: none; transition: color .2s ease; }
+    .contact-row-value a:hover { color: #a6caf2; }
+    .hours-line { display: flex; justify-content: space-between; gap: 18px; max-width: 360px; }
+    .hours-line + .hours-line { margin-top: 5px; color: #aebbc2; }
+    .hours-line strong { font-weight: 700; }
+    .contact-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+    .contact-actions .button { color: var(--ink); background: var(--white); }
+    .contact-actions .button:hover { color: var(--ink); background: #dcecff; }
+    .contact-actions .button-outline { color: var(--white); border-color: rgba(255,255,255,.35); background: transparent; }
+    .contact-actions .button-outline:hover { color: var(--ink); border-color: var(--white); background: var(--white); }
+
+    .site-footer { padding: 23px 0; color: #bdc8cf; background: #111d25; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+    .footer-brand { color: var(--white); font: 600 11px/1.4 var(--display); letter-spacing: .045em; }
+    .footer-address, .footer-copy { margin: 5px 0 0; color: #a4b2ba; font: 400 9px/1.6 var(--mono); }
+    .footer-social { color: #c6dcf4; font-size: 10px; font-weight: 600; text-decoration: none; }
+    .footer-social:hover { text-decoration: underline; text-underline-offset: 4px; }
+    .mobile-actions { display: none; }
+
+    .motion-ready [data-reveal] { opacity: 0; transform: translate3d(0, 18px, 0); transition: opacity .65s var(--ease), transform .65s var(--ease); }
+    .motion-ready [data-reveal].is-visible { opacity: 1; transform: translate3d(0,0,0); }
+    .motion-ready .hero-copy [data-reveal]:nth-child(2) { transition-delay: .07s; }
+    .motion-ready .hero-copy [data-reveal]:nth-child(3) { transition-delay: .12s; }
+    .motion-ready .hero-copy [data-reveal]:nth-child(4) { transition-delay: .17s; }
+    .motion-ready .hero-visual { transition-delay: .12s; }
+    .motion-ready .gallery-card:nth-child(2) { transition-delay: .12s; }
+
+    @media (min-width: 801px) {
+      .hero-copy [data-reveal] { animation: enter-up .7s var(--ease) both; }
+      .hero-copy [data-reveal]:nth-child(2) { animation-delay: .06s; }
+      .hero-copy [data-reveal]:nth-child(3) { animation-delay: .12s; }
+      .hero-copy [data-reveal]:nth-child(4) { animation-delay: .18s; }
+      .hero-visual { animation: enter-right .85s var(--ease) .12s both; }
+    }
+    @keyframes enter-up {
+      from { opacity: 0; transform: translate3d(0,18px,0); }
+      to { opacity: 1; transform: translate3d(0,0,0); }
+    }
+    @keyframes enter-right {
+      from { opacity: 0; transform: translate3d(20px,0,0); }
+      to { opacity: 1; transform: translate3d(0,0,0); }
+    }
+
+    @media (max-width: 920px) {
+      .hero-grid { grid-template-columns: minmax(0, .9fr) minmax(330px, 1.1fr); gap: 35px; }
+      h1 { font-size: clamp(56px, 7.7vw, 78px); }
+      .hero-photo { height: 520px; min-height: 470px; }
+      .nav-right { gap: 24px; }
+      .visit-panel { grid-template-columns: 1fr; gap: 28px; }
+      .visit-title { max-width: 580px; }
+    }
+    @media (max-width: 760px) {
+      :root { --gutter: 24px; }
+      html { scroll-padding-top: 82px; }
+      .topbar-inner { min-height: 34px; }
+      .topbar { font-size: 9px; }
+      .nav { min-height: 72px; }
+      .nav-right { gap: 14px; }
+      .nav-call { display: none; }
+      .menu-toggle { display: grid; position: relative; z-index: 2; }
+      .nav-links {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 10px var(--gutter) 20px;
+        border-bottom: 1px solid var(--line);
+        background: var(--paper-bright);
+        box-shadow: 0 18px 32px rgba(23,37,47,.08);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-8px);
+        transition: opacity .2s ease, transform .2s var(--ease), visibility .2s;
+      }
+      .nav-links.is-open { opacity: 1; visibility: visible; transform: translateY(0); }
+      .nav-links a { padding: 16px 2px; border-bottom: 1px solid var(--line); font-size: 14px; }
+      .nav-links a::after { display: none; }
+      .nav-links a:last-child { border-bottom: 0; }
+      .menu-toggle[aria-expanded="true"] .menu-icon span:first-child { transform: translateY(3.25px) rotate(45deg); }
+      .menu-toggle[aria-expanded="true"] .menu-icon span:last-child { width: 18px; transform: translateY(-3.25px) rotate(-45deg); }
+      .hero { padding: 56px 0 62px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 42px; }
+      .hero-copy { max-width: 640px; }
+      h1 { max-width: 560px; margin-top: 20px; font-size: clamp(58px, 12vw, 86px); }
+      .hero-lede { max-width: 540px; }
+      .hero-details { margin-top: 30px; }
+      .hero-visual { width: min(100%, 640px); margin-left: auto; padding-left: 16px; }
+      .hero-photo { height: clamp(390px, 78vw, 530px); min-height: 390px; }
+      .hero-visual::before { right: 14px; }
+      .photo-index { bottom: 33px; }
+      .ribbon-inner { min-height: 74px; justify-content: center; flex-wrap: wrap; gap: 5px 25px; padding-block: 13px; }
+      .ribbon-label { display: none; }
+      .ribbon-services { gap: 10px; font-size: 11px; }
+      .ribbon-link { font-size: 10px; }
+      .section-head { grid-template-columns: 1fr; gap: 16px; margin-bottom: 30px; }
+      .section-intro { max-width: 520px; margin: 0; }
+      .service-layout { grid-template-columns: 1fr; }
+      .service-primary { min-height: 320px; }
+      .service-stack { grid-template-columns: 1fr 1fr; grid-template-rows: none; }
+      .service-card { min-height: 220px; }
+      .visit { padding-bottom: 74px; }
+      .visit-steps { max-width: 100%; }
+      .gallery-frame { height: clamp(330px, 76vw, 470px); }
+      .gallery-card:nth-child(2) { margin-top: 32px; }
+      .contact-grid { grid-template-columns: 1fr; gap: 37px; }
+      .contact h2 { font-size: clamp(45px, 10vw, 70px); }
+      .footer-inner { align-items: start; }
+    }
+    @media (max-width: 520px) {
+      :root { --gutter: 19px; }
+      .topbar-inner { min-height: 34px; }
+      .topbar-links { gap: 10px; }
+      .topbar .topbar-hours { display: none; }
+      .brand { gap: 10px; }
+      .brand-mark { width: 39px; height: 39px; font-size: 23px; }
+      .brand-name { font-size: 11px; }
+      .brand-place { font-size: 8px; }
+      .nav { min-height: 65px; }
+      .menu-toggle { width: 41px; height: 41px; }
+      .hero { padding: 46px 0 53px; }
+      .hero-grid { gap: 34px; }
+      .hero-kicker { font-size: 9px; }
+      h1 { margin: 18px 0 17px; font-size: clamp(53px, 14.2vw, 72px); letter-spacing: -.08em; }
+      .hero-lede { font-size: 13px; line-height: 1.75; }
+      .hero-actions { gap: 16px; margin-top: 23px; }
+      .hero-actions .button { min-height: 47px; padding-inline: 14px; font-size: 11px; }
+      .text-link { font-size: 11px; }
+      .hero-details { margin-top: 27px; }
+      .hero-detail { padding-top: 14px; }
       .hero-detail + .hero-detail { padding-left: 13px; }
+      .hero-detail-label { font-size: 8px; }
       .hero-detail strong { font-size: 10px; }
-      .hero-detail .mono { font-size: 8px; }
-      .feature-wrap { padding: 11px 11px 0 0; }
-      .feature-wrap::before { left: 18px; bottom: 22px; }
-      .feature-post, .embed-fallback { min-height: 360px; }
-      .embed-fallback { padding: 16px; }
-      .service-band-inner { min-height: 75px; align-items: start; flex-direction: column; justify-content: center; gap: 4px; }
-      .service-band p { font-size: 11px; }
-      .service-band a { font-size: 10px; }
-      .section { padding: 66px 0; }
-      .section-head { align-items: start; flex-direction: column; gap: 14px; margin-bottom: 26px; }
-      .section-intro { max-width: 100%; }
-      .service-line { grid-template-columns: 34px 1fr; gap: 8px 12px; padding: 16px 0; }
-      .service-line h3 { font-size: 16px; }
-      .service-line p { grid-column: 2; margin-top: -4px; }
-      .post-grid { grid-template-columns: 1fr; gap: 15px; }
-      .post-shell { padding: 8px; }
-      .post-shell .embed-fallback { min-height: 180px; }
-      .instagram-profile { align-self: flex-start; }
-      .contact-row { grid-template-columns: 82px 1fr; gap: 10px; }
-      .contact-row strong, .contact-row a { font-size: 12px; }
-      .hours-row { font-size: 11px; }
-      .hours-row strong { font-size: 11px; }
-      .footer-inner { align-items: start; flex-direction: column; }
-      .mobile-call { position: fixed; z-index: 9; right: 15px; bottom: 15px; min-height: 48px; display: inline-flex; align-items: center; gap: 9px; padding: 0 16px; color: #fff; background: var(--blue); box-shadow: 0 5px 18px rgb(0 0 0 / 23%); font-size: 11px; font-weight: 700; text-decoration: none; }
-      body { padding-bottom: 69px; }
+      .hero-visual { padding: 10px 0 18px 12px; }
+      .visual-top { top: 0; padding: 8px 9px; font-size: 8px; }
+      .hero-photo { height: 390px; min-height: 390px; }
+      .visual-caption { font-size: 8px; }
+      .photo-index { bottom: 29px; left: -4px; padding: 9px 10px; font-size: 8px; }
+      .media-fallback { padding: 20px; }
+      .fallback-meta { font-size: 8px; }
+      .fallback-bottom a { font-size: 9px; }
+      .fallback-heading strong { font-size: 29px; }
+      .ribbon-inner { justify-content: space-between; gap: 8px; }
+      .ribbon-services { gap: 7px; font-size: 9px; }
+      .ribbon-services i { width: 3px; height: 3px; }
+      .ribbon-link { gap: 6px; font-size: 9px; }
+      .section { padding: 70px 0; }
+      .section-title { font-size: clamp(38px, 10vw, 52px); }
+      .section-head { gap: 13px; margin-bottom: 25px; }
+      .service-primary { min-height: 305px; padding: 24px; }
+      .service-primary h3 { font-size: 31px; }
+      .service-primary p { font-size: 12px; }
+      .service-stack { grid-template-columns: 1fr; gap: 12px; }
+      .service-card { min-height: 168px; padding: 21px; }
+      .service-card h3 { margin-top: 12px; font-size: 18px; }
+      .visit { padding-bottom: 65px; }
+      .visit-panel { gap: 24px; padding: 25px 21px; }
+      .visit-title h2 { font-size: 37px; }
+      .visit-title p:last-child { font-size: 11px; }
+      .visit-steps { grid-template-columns: 1fr; }
+      .visit-step { min-height: 72px; display: grid; grid-template-columns: 34px 1fr; align-items: center; gap: 12px; padding: 13px 0; }
+      .visit-step + .visit-step { padding-left: 0; border-left: 0; border-top: 1px solid #bfcfdd; }
+      .visit-step h3 { margin: 0; font-size: 13px; }
+      .gallery-grid { grid-template-columns: 1fr; gap: 29px; }
+      .gallery-card:nth-child(2) { margin-top: 0; }
+      .gallery-frame { height: 365px; }
+      .gallery-caption { gap: 10px; }
+      .gallery-caption h3 { font-size: 17px; }
+      .gallery-caption a { font-size: 10px; }
+      .contact-row { grid-template-columns: 78px minmax(0,1fr); gap: 10px; }
+      .contact-row-value { font-size: 11px; }
+      .contact-row-label { font-size: 8px; }
+      .hours-line { gap: 10px; }
+      .hours-line strong { white-space: nowrap; }
+      .contact-actions .button { min-height: 45px; padding-inline: 13px; font-size: 10px; }
+      .footer-inner { flex-direction: column; gap: 10px; }
+      .mobile-actions {
+        position: fixed;
+        z-index: 15;
+        right: 12px;
+        bottom: max(12px, env(safe-area-inset-bottom));
+        left: 12px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        padding: 7px;
+        border: 1px solid rgba(23,37,47,.12);
+        background: rgba(251,252,250,.96);
+        box-shadow: 0 10px 32px rgba(23,37,47,.18);
+        -webkit-backdrop-filter: blur(16px);
+        backdrop-filter: blur(16px);
+      }
+      .mobile-actions a {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: var(--white);
+        background: var(--blue);
+        font-size: 11px;
+        font-weight: 700;
+        text-decoration: none;
+      }
+      .mobile-actions a:last-child { color: var(--ink); background: #e5edf5; }
+      .mobile-actions svg { width: 15px; height: 15px; }
+      body { padding-bottom: 79px; }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      *, *::before, *::after { transition-duration: .01ms !important; }
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+      .motion-ready [data-reveal] { opacity: 1; transform: none; }
     }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AutoRepair",
+    "name": "Auto Servis Šunja",
+    "telephone": "+38761297847",
+    "url": "https://autosunja.sitey.my/",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Hajra Lakovića 38",
+      "addressLocality": "Goražde",
+      "postalCode": "73000",
+      "addressCountry": "BA"
+    },
+    "openingHoursSpecification": [{
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      "opens": "10:00",
+      "closes": "18:00"
+    }],
+    "sameAs": ["https://www.instagram.com/sunja_servis_peugeot/"]
+  }
+  </script>
 </head>
 <body>
-  <a class="skip-link" href="#main">Preskoči na sadržaj</a>
-  <div class="topline">
-    <div class="container topline-inner">
-      <p class="mono">Hajra Lakovića 38 · Goražde</p>
-      <a class="mono" href="tel:+38761297847">061 297 847</a>
+  <a class="skip-link" href="#glavni-sadrzaj">Preskoči na sadržaj</a>
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <p>HAJRA LAKOVIĆA 38 <span class="topbar-dot">·</span> GORAŽDE</p>
+      <div class="topbar-links">
+        <span class="topbar-hours">PON–SUB <span class="topbar-dot">·</span> 10:00–18:00</span>
+        <a href="tel:+38761297847">061 297 847</a>
+      </div>
     </div>
   </div>
+
   <header class="site-header">
     <nav class="container nav" aria-label="Glavna navigacija">
       <a class="brand" href="#pocetak" aria-label="Auto Servis Šunja, početna">
-        <span class="brand-initial" aria-hidden="true">Š</span>
-        <span><span class="brand-title">AUTO SERVIS ŠUNJA</span><span class="brand-sub">Goražde · Bosna i Hercegovina</span></span>
+        <span class="brand-mark" aria-hidden="true">Š</span>
+        <span>
+          <span class="brand-name">AUTO SERVIS ŠUNJA</span>
+          <span class="brand-place">Goražde · Bosna i Hercegovina</span>
+        </span>
       </a>
-      <div class="nav-links">
-        <a href="#usluge">Usluge</a>
-        <a href="#radovi">Radovi</a>
-        <a href="#kontakt">Kontakt</a>
-        <a class="nav-phone" href="tel:+38761297847">Pozovi servis</a>
+      <div class="nav-right">
+        <div class="nav-links" id="primary-nav">
+          <a href="#usluge">Usluge</a>
+          <a href="#radovi">Radovi</a>
+          <a href="#kontakt">Kontakt</a>
+        </div>
+        <a class="nav-call" href="tel:+38761297847">
+          <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6.2 3.5 8 6.8 6.6 8.2c.8 1.8 2.2 3.2 4 4l1.4-1.4 3.3 1.8-.5 3c-.1.6-.7 1-1.3.9C7 15.7 3.2 11.8 2.4 5.3c-.1-.6.3-1.2.9-1.3l2.9-.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Pozovi servis
+        </a>
+        <button class="menu-toggle" id="menu-toggle" type="button" aria-label="Otvori navigaciju" aria-controls="primary-nav" aria-expanded="false">
+          <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
+        </button>
       </div>
     </nav>
   </header>
 
-  <main id="main">
+  <main id="glavni-sadrzaj">
     <section class="hero" id="pocetak">
       <div class="container hero-grid">
-        <div class="hero-content">
-          <p class="kicker mono">Automehaničarska radnja · Goražde</p>
-          <h1>Peugeot servis<br><em>u Goraždu.</em></h1>
-          <p class="hero-copy">Servisiranje, održavanje i popravka Peugeot vozila i drugih automobila. Nazovite, opišite problem i dogovorite dolazak.</p>
-          <div class="hero-actions">
-            <a class="button" href="tel:+38761297847"><span class="symbol" aria-hidden="true">↗</span>Pozovi 061 297 847</a>
-            <a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+Šunja%2C+Hajra+Lakovića+38%2C+Goražde" target="_blank" rel="noopener noreferrer">Upute do servisa</a>
+        <div class="hero-copy">
+          <p class="eyebrow hero-kicker" data-reveal>Automehaničarski servis <span aria-hidden="true">/</span> Goražde</p>
+          <h1 data-reveal>Peugeot servis<br><span>u Goraždu.</span></h1>
+          <p class="hero-lede" data-reveal>Servisiranje, održavanje i popravka Peugeot vozila i drugih automobila. Nazovite, opišite problem i dogovorite dolazak.</p>
+          <div class="hero-actions" data-reveal>
+            <a class="button" href="tel:+38761297847">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6.2 3.5 8 6.8 6.6 8.2c.8 1.8 2.2 3.2 4 4l1.4-1.4 3.3 1.8-.5 3c-.1.6-.7 1-1.3.9C7 15.7 3.2 11.8 2.4 5.3c-.1-.6.3-1.2.9-1.3l2.9-.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Pozovi 061 297 847
+            </a>
+            <a class="text-link" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+Šunja%2C+Hajra+Lakovića+38%2C+Goražde" target="_blank" rel="noopener noreferrer">Upute do servisa <span aria-hidden="true">↗</span></a>
           </div>
-          <div class="hero-details">
-            <div class="hero-detail"><span class="mono">Adresa</span><strong>Hajra Lakovića 38</strong></div>
-            <div class="hero-detail"><span class="mono">Radno vrijeme</span><strong>Pon. – sub. · 10–18 h</strong></div>
+          <div class="hero-details" data-reveal>
+            <div class="hero-detail">
+              <span class="hero-detail-label">Radno vrijeme</span>
+              <strong>Pon. – sub. · 10:00–18:00</strong>
+            </div>
+            <div class="hero-detail">
+              <span class="hero-detail-label">Adresa</span>
+              <strong>Hajra Lakovića 38</strong>
+            </div>
           </div>
         </div>
-        <div class="feature-wrap">
-          <span class="feature-note">Fotografija iz servisa</span>
-          <article class="feature-post insta-lazy" data-post="https://www.instagram.com/p/Dcts18Glm7R/" data-label="Objava · 31. august 2026.">
-            <div class="embed-fallback">
-              <div class="embed-fallback-top"><span class="mono">Auto Servis Šunja</span><span class="mono">Instagram</span></div>
-              <div class="embed-fallback-mid"><span class="mono">31. 08. 2026. · javna objava</span><strong>Pogledajte fotografiju sa profila servisa.</strong></div>
-              <div class="embed-fallback-bottom"><span class="mono">@sunja_servis_peugeot</span><a href="https://www.instagram.com/p/Dcts18Glm7R/" target="_blank" rel="noopener noreferrer">Otvori objavu ↗</a></div>
+
+        <div class="hero-visual" data-reveal>
+          <div class="visual-top"><span class="light" aria-hidden="true"></span> Radionica <span aria-hidden="true">/</span> Goražde</div>
+          <div class="hero-photo insta-lazy" data-post="https://www.instagram.com/p/Dcts18Glm7R/" aria-label="Fotografija iz Auto Servisa Šunja">
+            <div class="media-fallback" aria-hidden="true">
+              <div class="fallback-meta"><span>AŠ / 01</span><span>Servisna radionica</span></div>
+              <svg class="fallback-illustration" viewBox="0 0 680 420" fill="none" aria-hidden="true">
+                <path d="M76 276h61l35-69c9-18 27-29 47-29h205c23 0 42 14 50 35l21 57h83c18 0 32 14 32 32v34H76v-60Z" stroke="currentColor" stroke-width="2"/>
+                <path d="m202 205 27-37c8-11 20-18 34-18h129c15 0 28 9 34 22l18 39M184 229h86m116 0h93M125 335v-55m459 55v-42" stroke="currentColor" stroke-width="2"/>
+                <path d="M142 335c0-29 24-53 53-53s53 24 53 53m192 0c0-29 24-53 53-53s53 24 53 53" stroke="currentColor" stroke-width="2"/>
+                <circle cx="195" cy="335" r="28" stroke="currentColor" stroke-width="2"/>
+                <circle cx="493" cy="335" r="28" stroke="currentColor" stroke-width="2"/>
+                <path d="M308 185v55m-24-27h48m80-27v55m-24-27h48M327 276h78m-39-39v78M87 127h83m-41-41v83m401-56h76m-38-38v76" stroke="currentColor" stroke-width="1.3" opacity=".66"/>
+                <path d="M55 376h568M75 395h528M108 106h55m377 18h48" stroke="currentColor" stroke-width="1" opacity=".48"/>
+                <circle cx="340" cy="266" r="5" fill="currentColor"/>
+              </svg>
+              <div class="fallback-bottom">
+                <div class="fallback-heading"><span>Iz radionice</span><strong>Rad na Peugeot vozilima i drugim automobilima.</strong></div>
+                <a href="https://www.instagram.com/p/Dcts18Glm7R/" target="_blank" rel="noopener noreferrer">Pogledaj objavu ↗</a>
+              </div>
             </div>
-          </article>
-          <p class="feature-credit">Objava: Amer Šunja · <a href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener noreferrer">Instagram profil</a></p>
+            <span class="photo-index">Stvarni radovi <span aria-hidden="true">·</span> 01</span>
+          </div>
+          <div class="visual-caption"><span>@sunja_servis_peugeot</span><a href="https://www.instagram.com/p/Dcts18Glm7R/" target="_blank" rel="noopener noreferrer">Izvorna objava ↗</a></div>
         </div>
       </div>
     </section>
 
-    <section class="service-band" aria-label="Kontakt za dogovor">
-      <div class="container service-band-inner">
-        <p>Popravka i održavanje Peugeot vozila i drugih automobila.</p>
-        <a href="tel:+38761297847">Nazovite prije dolaska <span aria-hidden="true">→</span></a>
+    <section class="info-ribbon" aria-label="Usluge i kontakt">
+      <div class="container ribbon-inner">
+        <span class="ribbon-label">Auto Servis Šunja</span>
+        <div class="ribbon-services" aria-label="Peugeot, održavanje, automehaničarske popravke">
+          <span>Peugeot servis</span><i aria-hidden="true"></i><span>Održavanje</span><i aria-hidden="true"></i><span>Automehanika</span>
+        </div>
+        <a class="ribbon-link" href="tel:+38761297847">Nazovite prije dolaska <span aria-hidden="true">→</span></a>
       </div>
     </section>
 
     <section class="section services" id="usluge">
       <div class="container">
         <div class="section-head">
-          <div><p class="section-kicker mono">Usluge</p><h2>Šta radimo</h2></div>
-          <p class="section-intro">Servis je specijalizovan za Peugeot, a prima i druga vozila. Za konkretan zahvat ili termin, provjerite telefonom.</p>
+          <div>
+            <p class="eyebrow">Šta radimo <span aria-hidden="true">/</span> 01</p>
+            <h2 class="section-title">Servis koji počinje<br>dobrim razgovorom.</h2>
+          </div>
+          <p class="section-intro">Fokus je na Peugeot vozilima, a servis prima i druge marke. Za konkretan kvar ili zahvat, nazovite i provjerite prije dolaska.</p>
         </div>
-        <div class="service-table">
-          <article class="service-line"><span class="service-index">01</span><h3>Peugeot servis</h3><p>Servisiranje, održavanje i popravka Peugeot vozila.</p></article>
-          <article class="service-line"><span class="service-index">02</span><h3>Redovno održavanje</h3><p>Servisni radovi i zamjena potrošnih dijelova prema potrebi vozila.</p></article>
-          <article class="service-line"><span class="service-index">03</span><h3>Druga vozila</h3><p>Automehaničarske usluge za druge marke — javite se s opisom problema.</p></article>
+        <div class="service-layout">
+          <article class="service-primary" data-reveal>
+            <div class="service-primary-top">
+              <span class="service-number">01 / PEUGEOT</span>
+              <span class="service-symbol" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none"><path d="M14.6 6.1a5.2 5.2 0 0 0-6.8 6.6L3.7 16.8a2.1 2.1 0 0 0 3 3l4.1-4.1a5.2 5.2 0 0 0 6.8-6.6l-3.2 3.2-3.5-3.5 3.7-2.7Z" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+            </div>
+            <div class="service-primary-copy">
+              <h3>Peugeot servis</h3>
+              <p>Servisiranje, održavanje i popravka Peugeot vozila. Nazovite da opišete vozilo i dogovorite sljedeći korak.</p>
+              <a class="text-link service-action" href="tel:+38761297847">Razgovaraj s majstorom <span aria-hidden="true">↗</span></a>
+            </div>
+          </article>
+          <div class="service-stack">
+            <article class="service-card" data-reveal>
+              <div>
+                <div class="service-card-top"><span class="service-number">02 / ODRŽAVANJE</span><svg class="service-card-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 7h14M5 12h14M5 17h9" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="3.5" cy="7" r=".75" fill="currentColor"/><circle cx="3.5" cy="12" r=".75" fill="currentColor"/><circle cx="3.5" cy="17" r=".75" fill="currentColor"/></svg></div>
+                <h3>Redovno održavanje</h3>
+                <p>Servisni radovi i zamjena potrošnih dijelova prema stanju i potrebama vozila.</p>
+              </div>
+            </article>
+            <article class="service-card" data-reveal>
+              <div>
+                <div class="service-card-top"><span class="service-number">03 / DRUGA VOZILA</span><svg class="service-card-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 14.5 5.7 9a2 2 0 0 1 1.9-1.4h8.8A2 2 0 0 1 18.3 9l1.7 5.5v3H4v-3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M5 13h14M7 17.5h.1m9.8 0h.1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="7" cy="17.5" r="1.4" stroke="currentColor" stroke-width="1.3"/><circle cx="17" cy="17.5" r="1.4" stroke="currentColor" stroke-width="1.3"/></svg></div>
+                <h3>I druge marke</h3>
+                <p>Treba vam automehaničarska usluga? Javite se s opisom problema i markom vozila.</p>
+              </div>
+            </article>
+          </div>
         </div>
-        <p class="service-foot">Niste sigurni da li servis radi baš vaš zahvat? Nazovite prije dolaska.</p>
+        <p class="service-note">Niste sigurni da li servis radi baš vaš zahvat? Pozovite prije dolaska.</p>
+      </div>
+    </section>
+
+    <section class="visit" aria-labelledby="visit-heading">
+      <div class="container">
+        <div class="visit-panel" data-reveal>
+          <div class="visit-title">
+            <p class="eyebrow">Prije dolaska <span aria-hidden="true">/</span> 02</p>
+            <h2 id="visit-heading">Dogovorite servis u tri koraka.</h2>
+            <p>Pozivom možete provjeriti da li servis može preuzeti vaše vozilo i kada da dođete.</p>
+          </div>
+          <div class="visit-steps">
+            <div class="visit-step"><span class="service-number">01</span><h3>Pozovite servis</h3></div>
+            <div class="visit-step"><span class="service-number">02</span><h3>Opišite vozilo i problem</h3></div>
+            <div class="visit-step"><span class="service-number">03</span><h3>Dogovorite dolazak</h3></div>
+          </div>
+        </div>
       </div>
     </section>
 
     <section class="section work" id="radovi">
       <div class="container">
-        <div class="section-head">
-          <div><p class="section-kicker mono">Iz radione</p><h2>Objave iz servisa</h2></div>
-          <a class="instagram-profile" href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener noreferrer">@sunja_servis_peugeot ↗</a>
+        <div class="section-head work-head">
+          <div>
+            <p class="eyebrow">Iz radionice <span aria-hidden="true">/</span> 03</p>
+            <h2 class="section-title">Radovi i svakodnevica.</h2>
+            <a class="social-link" href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener noreferrer">@sunja_servis_peugeot <span aria-hidden="true">↗</span></a>
+          </div>
+          <p class="section-intro">Fotografije su preuzete iz javnih objava servisa. Otvorite objavu na Instagramu za original i dodatne detalje.</p>
         </div>
-        <div class="post-grid">
-          <article class="post-shell">
-            <div class="insta-lazy" data-post="https://www.instagram.com/p/DbLgbVQDXFl/" data-label="Objava · 24. juli 2026.">
-              <div class="embed-fallback"><div class="embed-fallback-top"><span class="mono">Objava · 24. 07. 2026.</span><span class="mono">Instagram</span></div><div class="embed-fallback-mid"><span class="mono">Amer Šunja</span><strong>Fotografija sa profila servisa</strong></div><div class="embed-fallback-bottom"><span class="mono">@sunja_servis_peugeot</span><a href="https://www.instagram.com/p/DbLgbVQDXFl/" target="_blank" rel="noopener noreferrer">Otvori objavu ↗</a></div></div>
+        <div class="gallery-grid">
+          <article class="gallery-card" data-reveal>
+            <div class="gallery-frame insta-lazy" data-post="https://www.instagram.com/p/DbLgbVQDXFl/" aria-label="Fotografija iz objave Auto Servisa Šunja">
+              <div class="media-fallback" aria-hidden="true">
+                <div class="fallback-meta"><span>AŠ / 02</span><span>Instagram objava</span></div>
+                <svg class="fallback-illustration" viewBox="0 0 680 420" fill="none" aria-hidden="true">
+                  <path d="M94 294h488M142 294v-74l65-55h228l76 55v74m-326-128 50 54h216l48-54M243 239v55m166-55v55" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="216" cy="298" r="48" stroke="currentColor" stroke-width="2"/><circle cx="482" cy="298" r="48" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="216" cy="298" r="18" stroke="currentColor" stroke-width="1.5"/><circle cx="482" cy="298" r="18" stroke="currentColor" stroke-width="1.5"/>
+                  <path d="M110 345h460M275 122h126M338 59v126M116 105h77M155 66v77" stroke="currentColor" stroke-width="1.2" opacity=".55"/>
+                  <circle cx="338" cy="185" r="5" fill="currentColor"/>
+                </svg>
+                <div class="fallback-bottom"><div class="fallback-heading"><span>Iz radionice</span><strong>Otvori fotografiju sa profila servisa.</strong></div><a href="https://www.instagram.com/p/DbLgbVQDXFl/" target="_blank" rel="noopener noreferrer">Otvori objavu ↗</a></div>
+              </div>
+            </div>
+            <div class="gallery-caption">
+              <div><span class="gallery-meta">Objava / Auto Servis Šunja</span><h3>Iz radionice</h3></div>
+              <a href="https://www.instagram.com/p/DbLgbVQDXFl/" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">↗</span></a>
             </div>
           </article>
-          <article class="post-shell">
-            <div class="insta-lazy" data-post="https://www.instagram.com/p/DZijDj6Forp/" data-label="Objava · 13. juni 2026.">
-              <div class="embed-fallback"><div class="embed-fallback-top"><span class="mono">Objava · 13. 06. 2026.</span><span class="mono">Instagram</span></div><div class="embed-fallback-mid"><span class="mono">Amer Šunja</span><strong>Fotografija sa profila servisa</strong></div><div class="embed-fallback-bottom"><span class="mono">@sunja_servis_peugeot</span><a href="https://www.instagram.com/p/DZijDj6Forp/" target="_blank" rel="noopener noreferrer">Otvori objavu ↗</a></div></div>
+
+          <article class="gallery-card" data-reveal>
+            <div class="gallery-frame insta-lazy" data-post="https://www.instagram.com/p/DZijDj6Forp/" aria-label="Fotografija iz objave Auto Servisa Šunja">
+              <div class="media-fallback" aria-hidden="true">
+                <div class="fallback-meta"><span>AŠ / 03</span><span>Instagram objava</span></div>
+                <svg class="fallback-illustration" viewBox="0 0 680 420" fill="none" aria-hidden="true">
+                  <path d="M177 298h330m-268-18v-85c0-18 15-33 33-33h137c18 0 33 15 33 33v85M239 205h205M272 161v-37h138v37M214 298v37m256-37v37" stroke="currentColor" stroke-width="2"/>
+                  <path d="M253 240h178m-140 0v38m102-38v38M288 127v-30h102v30M127 344h427" stroke="currentColor" stroke-width="1.3" opacity=".58"/>
+                  <circle cx="237" cy="313" r="44" stroke="currentColor" stroke-width="2"/><circle cx="449" cy="313" r="44" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="237" cy="313" r="15" stroke="currentColor" stroke-width="1.4"/><circle cx="449" cy="313" r="15" stroke="currentColor" stroke-width="1.4"/>
+                  <path d="M107 127h74m-37-37v74m348 11h82m-41-41v82" stroke="currentColor" stroke-width="1.2" opacity=".55"/>
+                  <circle cx="341" cy="204" r="5" fill="currentColor"/>
+                </svg>
+                <div class="fallback-bottom"><div class="fallback-heading"><span>Iz radionice</span><strong>Pogledaj još stvarnih radova.</strong></div><a href="https://www.instagram.com/p/DZijDj6Forp/" target="_blank" rel="noopener noreferrer">Otvori objavu ↗</a></div>
+              </div>
+            </div>
+            <div class="gallery-caption">
+              <div><span class="gallery-meta">Objava / Auto Servis Šunja</span><h3>Detalji našeg rada</h3></div>
+              <a href="https://www.instagram.com/p/DZijDj6Forp/" target="_blank" rel="noopener noreferrer">Instagram <span aria-hidden="true">↗</span></a>
             </div>
           </article>
         </div>
@@ -294,68 +1092,158 @@
 
     <section class="section contact" id="kontakt">
       <div class="container contact-grid">
-        <div><p class="section-kicker mono">Kontakt</p><h2>Auto Servis<br>Šunja</h2><p class="contact-lede">Za informacije i dogovor oko dolaska pozovite servis. Radno vrijeme provjerite ponovo oko praznika.</p></div>
         <div>
-          <div class="contact-info">
-            <div class="contact-row"><span class="mono">Telefon</span><a href="tel:+38761297847">+387 61 297 847</a></div>
-            <div class="contact-row"><span class="mono">Adresa</span><strong>Hajra Lakovića 38<br>73000 Goražde, Bosna i Hercegovina</strong></div>
-            <div class="contact-row"><span class="mono">Radno vrijeme</span><div><div class="hours-row"><span>Ponedjeljak – subota</span><strong>10:00 – 18:00</strong></div><div class="hours-row"><span>Nedjelja</span><strong>Zatvoreno</strong></div></div></div>
+          <p class="eyebrow contact-eyebrow">Kontakt <span aria-hidden="true">/</span> Goražde</p>
+          <h2>Razgovarajmo o vašem vozilu.</h2>
+          <p class="contact-lede">Nazovite za informacije, provjeru usluge i dogovor oko dolaska. Oko praznika provjerite radno vrijeme telefonom.</p>
+        </div>
+        <div>
+          <div class="contact-details">
+            <div class="contact-row">
+              <span class="contact-row-label">Telefon</span>
+              <div class="contact-row-value"><a href="tel:+38761297847">+387 61 297 847</a></div>
+            </div>
+            <div class="contact-row">
+              <span class="contact-row-label">Adresa</span>
+              <div class="contact-row-value">Hajra Lakovića 38<br>73000 Goražde, Bosna i Hercegovina</div>
+            </div>
+            <div class="contact-row">
+              <span class="contact-row-label">Radno vrijeme</span>
+              <div class="contact-row-value">
+                <div class="hours-line"><span>Ponedjeljak – subota</span><strong>10:00 – 18:00</strong></div>
+                <div class="hours-line"><span>Nedjelja</span><strong>Zatvoreno</strong></div>
+              </div>
+            </div>
           </div>
-          <div class="contact-actions"><a class="button" href="tel:+38761297847">Pozovi servis</a><a class="button map-link" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+Šunja%2C+Hajra+Lakovića+38%2C+Goražde" target="_blank" rel="noopener noreferrer">Otvori mapu ↗</a></div>
+          <div class="contact-actions">
+            <a class="button" href="tel:+38761297847">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6.2 3.5 8 6.8 6.6 8.2c.8 1.8 2.2 3.2 4 4l1.4-1.4 3.3 1.8-.5 3c-.1.6-.7 1-1.3.9C7 15.7 3.2 11.8 2.4 5.3c-.1-.6.3-1.2.9-1.3l2.9-.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Pozovi servis
+            </a>
+            <a class="button button-outline" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+Šunja%2C+Hajra+Lakovića+38%2C+Goražde" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M16 8.2c0 4.3-6 9.3-6 9.3s-6-5-6-9.3a6 6 0 1 1 12 0Z" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>
+              Otvori mapu
+            </a>
+          </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer><div class="container footer-inner"><p><span class="footer-brand">AUTO SERVIS ŠUNJA</span><br>Hajra Lakovića 38 · Goražde</p><p>© <span id="year">2026</span> Auto Servis Šunja</p><a href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener noreferrer">Instagram ↗</a></div></footer>
-  <a class="mobile-call" href="tel:+38761297847">Pozovi 061 297 847</a>
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div>
+        <span class="footer-brand">AUTO SERVIS ŠUNJA</span>
+        <p class="footer-address">Hajra Lakovića 38 · Goražde</p>
+      </div>
+      <p class="footer-copy">© <span id="year">2026</span> Auto Servis Šunja</p>
+      <a class="footer-social" href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+    </div>
+  </footer>
+
+  <div class="mobile-actions" aria-label="Brze radnje">
+    <a href="tel:+38761297847">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M6.2 3.5 8 6.8 6.6 8.2c.8 1.8 2.2 3.2 4 4l1.4-1.4 3.3 1.8-.5 3c-.1.6-.7 1-1.3.9C7 15.7 3.2 11.8 2.4 5.3c-.1-.6.3-1.2.9-1.3l2.9-.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Pozovi servis
+    </a>
+    <a href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+Šunja%2C+Hajra+Lakovića+38%2C+Goražde" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M16 8.2c0 4.3-6 9.3-6 9.3s-6-5-6-9.3a6 6 0 1 1 12 0Z" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/></svg>
+      Upute
+    </a>
+  </div>
+
   <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
     (function () {
-      var scriptStarted = false;
-      function loadInstagramEmbed(block) {
-        if (block.dataset.loaded === 'true') return;
-        block.dataset.loaded = 'true';
-        var postUrl = block.dataset.post;
-        var quote = document.createElement('blockquote');
-        quote.className = 'instagram-media';
-        quote.setAttribute('data-instgrm-permalink', postUrl);
-        quote.setAttribute('data-instgrm-version', '14');
-        quote.style.cssText = 'background:#fff;border:0;border-radius:0;margin:0 auto;max-width:540px;min-width:260px;padding:0;width:100%';
-        var link = document.createElement('a');
-        link.href = postUrl;
-        link.target = '_blank';
-        link.rel = 'noopener noreferrer';
-        link.textContent = 'Pogledajte objavu na Instagramu';
-        quote.appendChild(link);
-        block.replaceChildren(quote);
+      var year = document.getElementById("year");
+      if (year) year.textContent = String(new Date().getFullYear());
+
+      var menuButton = document.getElementById("menu-toggle");
+      var menu = document.getElementById("primary-nav");
+      function closeMenu() {
+        if (!menuButton || !menu) return;
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "Otvori navigaciju");
+        menu.classList.remove("is-open");
+        document.body.classList.remove("menu-open");
+      }
+      if (menuButton && menu) {
+        menuButton.addEventListener("click", function () {
+          var open = menuButton.getAttribute("aria-expanded") === "true";
+          menuButton.setAttribute("aria-expanded", String(!open));
+          menuButton.setAttribute("aria-label", open ? "Otvori navigaciju" : "Zatvori navigaciju");
+          menu.classList.toggle("is-open", !open);
+          document.body.classList.toggle("menu-open", !open);
+        });
+        menu.querySelectorAll("a").forEach(function (link) { link.addEventListener("click", closeMenu); });
+        document.addEventListener("keydown", function (event) { if (event.key === "Escape") closeMenu(); });
+        window.addEventListener("resize", function () { if (window.innerWidth > 760) closeMenu(); });
+      }
+
+      if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches && "IntersectionObserver" in window) {
+        document.documentElement.classList.add("motion-ready");
+        var revealObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-visible");
+            revealObserver.unobserve(entry.target);
+          });
+        }, { threshold: 0.12, rootMargin: "0px 0px -5% 0px" });
+        document.querySelectorAll("[data-reveal]").forEach(function (item) { revealObserver.observe(item); });
+      }
+
+      var embedScriptStarted = false;
+      function armEmbedFrame(block) {
+        var observer = new MutationObserver(function () {
+          var frame = block.querySelector("iframe");
+          if (!frame || frame.dataset.visibilityHandler === "true") return;
+          frame.dataset.visibilityHandler = "true";
+          frame.addEventListener("load", function () { block.classList.add("has-embed"); }, { once: true });
+          observer.disconnect();
+        });
+        observer.observe(block, { childList: true, subtree: true });
+        return observer;
+      }
+      function processInstagram(block) {
+        if (block.dataset.loaded === "true") return;
+        block.dataset.loaded = "true";
+        var quote = document.createElement("blockquote");
+        quote.className = "instagram-media";
+        quote.setAttribute("data-instgrm-permalink", block.dataset.post);
+        quote.setAttribute("data-instgrm-version", "14");
+        quote.setAttribute("data-instgrm-captioned", "");
+        quote.style.cssText = "background:transparent;border:0;margin:0 auto;max-width:none;min-width:0;padding:0;width:100%";
+        block.appendChild(quote);
+        armEmbedFrame(block);
+
         if (window.instgrm && window.instgrm.Embeds) {
           window.instgrm.Embeds.process();
           return;
         }
-        if (scriptStarted) return;
-        scriptStarted = true;
-        var script = document.createElement('script');
-        script.src = 'https://www.instagram.com/embed.js';
+        if (embedScriptStarted) return;
+        embedScriptStarted = true;
+        var script = document.createElement("script");
+        script.src = "https://www.instagram.com/embed.js";
         script.async = true;
         script.onload = function () {
           if (window.instgrm && window.instgrm.Embeds) window.instgrm.Embeds.process();
         };
         document.body.appendChild(script);
       }
-      if ('IntersectionObserver' in window) {
-        var observer = new IntersectionObserver(function (entries) {
+
+      if ("IntersectionObserver" in window) {
+        var mediaObserver = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
             if (!entry.isIntersecting) return;
-            loadInstagramEmbed(entry.target);
-            observer.unobserve(entry.target);
+            processInstagram(entry.target);
+            mediaObserver.unobserve(entry.target);
           });
-        }, { rootMargin: '80px' });
-        document.querySelectorAll('.insta-lazy').forEach(function (block) { observer.observe(block); });
+        }, { rootMargin: "280px 0px" });
+        document.querySelectorAll(".insta-lazy[data-post]").forEach(function (block) { mediaObserver.observe(block); });
       } else {
-        document.querySelectorAll('.insta-lazy').forEach(loadInstagramEmbed);
+        document.querySelectorAll(".insta-lazy[data-post]").forEach(processInstagram);
       }
     }());
   </script>
 </body>
 </html>
+
