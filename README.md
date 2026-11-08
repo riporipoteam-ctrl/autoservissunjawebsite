@@ -20,9 +20,13 @@ The website source is committed on `main`. To serve it from this repository:
 
 A `CNAME` file alone does not enable GitHub Pages or attach a custom domain in repository settings.
 
-## Instagram photos
+## Instagram
 
-The gallery embeds public posts from [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/). Each embed loads when it scrolls near the visitor's screen. The original posts remain linked as a fallback.
+The "Iz radionice" section links to the official profile [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/) and its latest post. No third-party embeds are loaded, so the page stays fast and reliable.
+
+## Design (Nov 2026 redesign by Bob)
+
+Clean light UI in the logo's blue/white: sticky header with call button, live open/closed badge (Europe/Sarajevo, Mon–Sat 10:00–18:00), services grid, 3-step "how it works", about, Instagram + Google review, FAQ, contact cards with an hours table (today highlighted), and a sticky call/directions bar on mobile. Single self-contained `index.html` (~39 KB, no JS libraries).
 
 ## Business information
 
