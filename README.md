@@ -1,33 +1,19 @@
-# Auto Servis Šunja
+# Auto Servis Šunja — autosunja.sitey.my
 
-Responsive one-page website for Auto Servis Šunja in Goražde.
+Public website for **Auto Servis Šunja** (Peugeot specialist), Hajra Lakovića 38, 73000 Goražde.
+Served by GitHub Pages at [autosunja.sitey.my](https://autosunja.sitey.my).
 
-## Files
+## V4 design (Nov 2026)
+- White, clean layout based on the free **CarServ** car-repair template structure (HTML Codex), in Šunja blue.
+- Sections: topbar + sticky nav, hero with photo car and floating chips, blue facts counters strip, services, **interactive 3D viewer**, about, steps, Google review + Instagram, SMS booking form, contact + hours, FAQ, footer.
+- Animations: GSAP + ScrollTrigger reveals and counters, Lenis smooth scrolling, hero car mouse-tilt.
+- Logo: transparent versions generated from the original (`assets/sunja-logo-transparent.webp/.png`).
 
-- `index.html` — complete static website (HTML, CSS, and a small progressive-enhancement script)
-- `CNAME` — intended custom domain: `autosunja.sitey.my`
-- `.nojekyll` — disables Jekyll processing
+## 3D model
+- `assets/peugeot-308.glb` — a real **Peugeot 308 CC** (model: Scopia/SweetHome3D library, converted from OBJ).
+- Three.js is **self-hosted** under `assets/vendor/` (incl. the Draco decoder under `assets/vendor/draco/`), so the viewer has no CDN dependency.
+- In the viewer the model gets position-welded smooth shading and a clearcoat "paint" material; visitors can rotate, zoom and change the body colour.
 
-## Publish with GitHub Pages
-
-The website source is committed on `main`. To serve it from this repository:
-
-1. Open **Settings → Pages**.
-2. Under **Build and deployment**, choose **Deploy from a branch**.
-3. Select branch `main` and folder `/(root)`, then save.
-4. In **Custom domain**, enter `autosunja.sitey.my` and save.
-5. Wait for GitHub to validate the domain and issue HTTPS, then enable **Enforce HTTPS** when available.
-
-A `CNAME` file alone does not enable GitHub Pages or attach a custom domain in repository settings.
-
-## Instagram
-
-The "Iz radionice" section links to the official profile [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/) and its latest post. No third-party embeds are loaded, so the page stays fast and reliable.
-
-## Design (Nov 2026 redesign by Bob)
-
-Clean light UI in the logo's blue/white: sticky header with call button, live open/closed badge (Europe/Sarajevo, Mon–Sat 10:00–18:00), services grid, 3-step "how it works", about, Instagram + Google review, FAQ, contact cards with an hours table (today highlighted), and a sticky call/directions bar on mobile. Single self-contained `index.html` (~39 KB, no JS libraries).
-
-## Business information
-
-The page uses the public listing details for the shop: Hajra Lakovića 38, 73000 Goražde; +387 61 297 847; Monday–Saturday 10:00–18:00, Sunday closed. Review these details with the business before changing them.
+## Good to know
+- The open/closed badge and the highlighted hours row compute the time in Europe/Sarajevo.
+- The booking form composes an SMS to the shop number (061 297 847) — no backend needed.
