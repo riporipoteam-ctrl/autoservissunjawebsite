@@ -378,7 +378,7 @@
               <div class="paint" role="group" aria-label="Odabir boje karoserije">
                 <span class="lab">Boja:</span>
                 <button class="swatch active" data-paint="#ffffff" data-name="Bijela" style="background:#f2f4f6" aria-label="Bijela"></button>
-                <button class="swatch" data-paint="#2f7fd0" data-name="Šunja plava" style="background:#2f7fd0" aria-label="Šunja plava"></button>
+                <button class="swatch" data-paint="#1c6cc4" data-name="Šunja plava" style="background:#1c6cc4" aria-label="Šunja plava"></button>
                 <button class="swatch" data-paint="#c8102e" data-name="Crvena" style="background:#c8102e" aria-label="Crvena"></button>
                 <button class="swatch" data-paint="#17191d" data-name="Crna" style="background:#17191d" aria-label="Crna"></button>
                 <button class="swatch" data-paint="#9aa3ab" data-name="Siva" style="background:#9aa3ab" aria-label="Siva"></button>
@@ -707,12 +707,38 @@
         import('three/addons/loaders/GLTFLoader.js'),
         import('three/addons/loaders/DRACOLoader.js'),
         import('three/addons/controls/OrbitControls.js'),
-        import('three/addons/environments/RoomEnvironment.js'),
-        import('three/addons/utils/BufferGeometryUtils.js')
+        import('three/addons/environments/RoomEnvironment.js')
       ]).then(function(mods){
         var THREE = mods[0], GLTFLoader = mods[1].GLTFLoader, DRACOLoader = mods[2].DRACOLoader,
-            OrbitControls = mods[3].OrbitControls, RoomEnvironment = mods[4].RoomEnvironment,
-            mergeVertices = mods[5].mergeVertices;
+            OrbitControls = mods[3].OrbitControls, RoomEnvironment = mods[4].RoomEnvironment;
+
+        /* smooth shading welded by POSITION (ignores UV seams that keep facets split) */
+        function smoothByPosition(geometry){
+          var pos = geometry.attributes.position, index = geometry.index;
+          var acc = new Map(), keys = new Array(pos.count);
+          function keyOf(i){
+            return Math.round(pos.getX(i) * 2000) + '_' + Math.round(pos.getY(i) * 2000) + '_' + Math.round(pos.getZ(i) * 2000);
+          }
+          for (var i = 0; i < pos.count; i++) { var k = keyOf(i); keys[i] = k; if (!acc.has(k)) acc.set(k, [0, 0, 0]); }
+          var ax, ay, az, bx, by, bz, cx, cy, cz, ux, uy, uz, vx, vy, vz, nx, ny, nz;
+          function accum(a, b, c){
+            ax = pos.getX(a); ay = pos.getY(a); az = pos.getZ(a);
+            bx = pos.getX(b); by = pos.getY(b); bz = pos.getZ(b);
+            cx = pos.getX(c); cy = pos.getY(c); cz = pos.getZ(c);
+            ux = bx - ax; uy = by - ay; uz = bz - az;
+            vx = cx - ax; vy = cy - ay; vz = cz - az;
+            nx = uy * vz - uz * vy; ny = uz * vx - ux * vz; nz = ux * vy - uy * vx;
+            [a, b, c].forEach(function(idx){ var t = acc.get(keys[idx]); t[0] += nx; t[1] += ny; t[2] += nz; });
+          }
+          if (index) { for (var f = 0; f < index.count; f += 3) accum(index.getX(f), index.getX(f + 1), index.getX(f + 2)); }
+          else { for (var f2 = 0; f2 < pos.count; f2 += 3) accum(f2, f2 + 1, f2 + 2); }
+          var normals = new Float32Array(pos.count * 3);
+          for (var j = 0; j < pos.count; j++) {
+            var t2 = acc.get(keys[j]), len = Math.hypot(t2[0], t2[1], t2[2]) || 1;
+            normals[j * 3] = t2[0] / len; normals[j * 3 + 1] = t2[1] / len; normals[j * 3 + 2] = t2[2] / len;
+          }
+          geometry.setAttribute('normal', new THREE.BufferAttribute(normals, 3));
+        }
 
         var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -734,6 +760,9 @@
         key.shadow.camera.left = -4; key.shadow.camera.right = 4;
         key.shadow.camera.top = 4; key.shadow.camera.bottom = -4;
         scene.add(key);
+        var fill = new THREE.DirectionalLight(0xd6e9ff, .55);
+        fill.position.set(-5, 3, -4);
+        scene.add(fill);
 
         /* soft radial ground shadow texture */
         var cnv = document.createElement('canvas'); cnv.width = cnv.height = 256;
@@ -766,16 +795,16 @@
           model.traverse(function(o){
             if (!o.isMesh) return;
             o.castShadow = true;
-            try { o.geometry = mergeVertices(o.geometry, 1e-4); o.geometry.computeVertexNormals(); } catch (e) {}
+            try { smoothByPosition(o.geometry); } catch (e) {}
             var mats = Array.isArray(o.material) ? o.material : [o.material];
             mats.forEach(function(m){
               if (!m) return;
               if (m.name === 'color-exterior') {
                 var phys = new THREE.MeshPhysicalMaterial({
                   map: m.map || null, color: 0xffffff,
-                  metalness: .25, roughness: .3,
-                  clearcoat: .8, clearcoatRoughness: .22,
-                  envMapIntensity: 1.25
+                  metalness: .2, roughness: .22,
+                  clearcoat: 1, clearcoatRoughness: .18,
+                  envMapIntensity: 1.6
                 });
                 if (Array.isArray(o.material)) { o.material[o.material.indexOf(m)] = phys; } else { o.material = phys; }
                 paintMat = phys;
