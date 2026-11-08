@@ -378,7 +378,7 @@
               <div class="paint" role="group" aria-label="Odabir boje karoserije">
                 <span class="lab">Boja:</span>
                 <button class="swatch active" data-paint="#ffffff" data-name="Bijela" style="background:#f2f4f6" aria-label="Bijela"></button>
-                <button class="swatch" data-paint="#0d4f9e" data-name="Šunja plava" style="background:#0d4f9e" aria-label="Šunja plava"></button>
+                <button class="swatch" data-paint="#0a3d78" data-name="Šunja plava" style="background:#0a3d78" aria-label="Šunja plava"></button>
                 <button class="swatch" data-paint="#c8102e" data-name="Crvena" style="background:#c8102e" aria-label="Crvena"></button>
                 <button class="swatch" data-paint="#17191d" data-name="Crna" style="background:#17191d" aria-label="Crna"></button>
                 <button class="swatch" data-paint="#9aa3ab" data-name="Siva" style="background:#9aa3ab" aria-label="Siva"></button>
@@ -745,7 +745,7 @@
         renderer.shadowMap.enabled = true;
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.05;
+        renderer.toneMappingExposure = .95;
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         stage.appendChild(renderer.domElement);
 
@@ -754,7 +754,7 @@
         scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
 
         scene.add(new THREE.HemisphereLight(0xffffff, 0xdfe9f2, .35));
-        var key = new THREE.DirectionalLight(0xffffff, 1.6);
+        var key = new THREE.DirectionalLight(0xffffff, 1.2);
         key.position.set(4, 7, 3); key.castShadow = true;
         key.shadow.mapSize.set(2048, 2048); key.shadow.radius = 6;
         key.shadow.camera.left = -4; key.shadow.camera.right = 4;
