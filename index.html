@@ -85,7 +85,7 @@
     .dot{width:10px;height:10px;border-radius:50%;background:var(--amber);flex:0 0 auto}
     .dot.open{background:var(--green);box-shadow:0 0 0 5px rgba(47,191,113,.18)}
     .hero h1{margin:26px auto 0;max-width:15ch;font-size:clamp(42px,7.4vw,84px);line-height:1.02;letter-spacing:-.02em;font-weight:700;text-wrap:balance}
-    .hero h1 .grad{background:linear-gradient(92deg,#6fd3ff 0%,#45a5f5 45%,#1a83d8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero h1 .grad .w{background:linear-gradient(92deg,#6fd3ff 0%,#45a5f5 55%,#1a83d8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
     .hero h1 .w{display:inline-block}
     .hero .lead{margin:22px auto 0;max-width:600px;font-size:18px;line-height:1.65;color:var(--muted)}
     .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px}
@@ -734,10 +734,10 @@
 
       /* hero intro */
       var intro = gsap.timeline({defaults:{ease:'power3.out'}});
-      intro.from('#heroTitle .w', {yPercent: 60, opacity: 0, duration: .9, stagger: .05})
-           .from('[data-hero]', {y: 26, opacity: 0, duration: .8, stagger: .09}, '-=.55')
-           .from('#carStage', {y: 70, opacity: 0, scale: .96, duration: 1.1, ease: 'power3.out'}, '-=.5')
-           .from('[data-chip]', {scale: .6, opacity: 0, duration: .6, ease: 'back.out(2.2)', stagger: .12}, '-=.55');
+      intro.from('#heroTitle .w', {yPercent: 55, opacity: 0, duration: .55, stagger: .03})
+           .from('[data-hero]', {y: 20, opacity: 0, duration: .5, stagger: .06}, '-=.3')
+           .from('#carStage', {y: 50, opacity: 0, scale: .97, duration: .8, ease: 'power3.out'}, '-=.35')
+           .from('[data-chip]', {scale: .6, opacity: 0, duration: .45, ease: 'back.out(2.2)', stagger: .08}, '-=.4');
 
       /* floating chips */
       gsap.utils.toArray('[data-chip]').forEach(function(chip, i){
@@ -823,8 +823,8 @@
 
   <script type="importmap">
   {"imports":{
-    "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
-    "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    "three":"./assets/vendor/three.module.min.js",
+    "three/addons/":"./assets/vendor/addons/"
   }}
   </script>
   <script type="module">
@@ -840,6 +840,10 @@
         if(loaded) return;
         loader.classList.add('done');
         fallback.classList.add('show');
+        var paint = document.querySelector('.paint');
+        if(paint){ paint.style.opacity = '.45'; paint.style.pointerEvents = 'none'; }
+        var pn = document.getElementById('paintName');
+        if(pn){ pn.textContent = 'Boja radi u 3D prikazu'; }
       }
       setTimeout(function(){ if(!loaded) fail(); }, 20000);
 
@@ -848,10 +852,11 @@
         Promise.all([
           import('three'),
           import('three/addons/loaders/GLTFLoader.js'),
+          import('three/addons/loaders/DRACOLoader.js'),
           import('three/addons/controls/OrbitControls.js'),
           import('three/addons/environments/RoomEnvironment.js')
         ]).then(function(mods){
-          var THREE = mods[0], GLTFLoader = mods[1].GLTFLoader, OrbitControls = mods[2].OrbitControls, RoomEnvironment = mods[3].RoomEnvironment;
+          var THREE = mods[0], GLTFLoader = mods[1].GLTFLoader, DRACOLoader = mods[2].DRACOLoader, OrbitControls = mods[3].OrbitControls, RoomEnvironment = mods[4].RoomEnvironment;
           var container = document.getElementById('car3d');
           var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
           renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -892,7 +897,10 @@
           scene.add(ground);
 
           var group = new THREE.Group(); scene.add(group);
+          var draco = new DRACOLoader();
+          draco.setDecoderPath('assets/vendor/draco/');
           var loader3 = new GLTFLoader();
+          loader3.setDRACOLoader(draco);
           loader3.load('assets/car-3d.glb', function(gltf){
             var model = gltf.scene;
             var box = new THREE.Box3().setFromObject(model);
@@ -913,13 +921,14 @@
             camera.position.set(4.4, h * 1.05 + .7, 4.6);
             camera.lookAt(controls.target);
             loaded = true;
+            pct.textContent = '100%';
             loader.classList.add('done');
             if(window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
               gsap.from(group.rotation, {y: '-=2.2', duration: 1.6, ease: 'power3.out'});
               gsap.from(camera.position, {x: 7.5, z: 8, duration: 1.6, ease: 'power3.out'});
             }
           }, function(xhr){
-            if(xhr.total){ pct.textContent = Math.round(xhr.loaded / xhr.total * 100) + '%'; }
+            if(xhr.total){ pct.textContent = Math.min(99, Math.round(xhr.loaded / xhr.total * 100)) + '%'; }
           }, function(){ fail(); });
 
           function resize(){
