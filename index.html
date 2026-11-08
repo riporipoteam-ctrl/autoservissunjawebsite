@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0a2540">
+  <meta name="theme-color" content="#04070d">
   <meta name="description" content="Auto Servis Šunja u Goraždu — Peugeot servis, autodijagnostika, mali i veliki servis, autoelektrika te popravka ključeva i daljinskih upravljača. Hajra Lakovića 38 · 061 297 847">
   <meta property="og:title" content="Auto Servis Šunja — Peugeot servis u Goraždu">
   <meta property="og:description" content="Peugeot servis i automehaničarske usluge u Goraždu. Nazovite 061 297 847.">
@@ -11,256 +11,294 @@
   <meta property="og:url" content="https://autosunja.sitey.my/">
   <meta property="og:image" content="https://autosunja.sitey.my/assets/sunja-car.webp">
   <link rel="canonical" href="https://autosunja.sitey.my/">
-  <link rel="icon" type="image/webp" href="assets/sunja-logo.webp">
+  <link rel="icon" type="image/webp" href="assets/sunja-logo-transparent.webp">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
   <title>Auto Servis Šunja — Peugeot servis u Goraždu</title>
   <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"AutoRepair","name":"Auto Servis Šunja","description":"Peugeot servis i automehaničarske usluge u Goraždu.","telephone":"+38761297847","url":"https://autosunja.sitey.my/","image":"https://autosunja.sitey.my/assets/sunja-car.webp","logo":"https://autosunja.sitey.my/assets/sunja-logo.webp","address":{"@type":"PostalAddress","streetAddress":"Hajra Lakovića 38","addressLocality":"Goražde","postalCode":"73000","addressCountry":"BA"},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"10:00","closes":"18:00"}],"sameAs":["https://www.instagram.com/sunja_servis_peugeot/"]}
+  {"@context":"https://schema.org","@type":"AutoRepair","name":"Auto Servis Šunja","description":"Peugeot servis i automehaničarske usluge u Goraždu.","telephone":"+38761297847","url":"https://autosunja.sitey.my/","image":"https://autosunja.sitey.my/assets/sunja-car.webp","logo":"https://autosunja.sitey.my/assets/sunja-logo-transparent.webp","address":{"@type":"PostalAddress","streetAddress":"Hajra Lakovića 38","addressLocality":"Goražde","postalCode":"73000","addressCountry":"BA"},"openingHoursSpecification":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"opens":"10:00","closes":"18:00"}],"sameAs":["https://www.instagram.com/sunja_servis_peugeot/"]}
   </script>
   <style>
     :root{
-      --blue:#0b5fa5; --blue-dark:#084a83; --blue-bright:#2f8fd6;
-      --navy:#0a2540; --navy-2:#0d2f52;
-      --ink:#14232f; --muted:#5b6f7f; --soft:#f2f6f9; --soft-2:#e8eff5;
-      --line:#dce6ee; --white:#fff;
-      --green:#178a4c; --amber:#b7791f;
-      --radius:18px; --max:1160px;
-      --shadow:0 18px 45px rgba(10,37,64,.12);
+      --bg:#04070d; --bg-2:#070d18; --panel:#0b1524; --panel-2:#0e1a2d;
+      --line:rgba(140,190,235,.15); --line-soft:rgba(140,190,235,.09);
+      --blue:#1273c4; --blue-dark:#0b5fa5; --bright:#45a5f5; --cyan:#6fd3ff;
+      --text:#edf5fc; --muted:#9db6ca; --muted-2:#6e879c;
+      --green:#2fbf71; --amber:#e8a33d;
+      --radius:20px; --max:1180px;
       --font:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+      --display:"Space Grotesk","Inter",system-ui,sans-serif;
     }
     *,*::before,*::after{box-sizing:border-box}
-    html{scroll-behavior:smooth;scroll-padding-top:96px}
-    body{margin:0;font-family:var(--font);color:var(--ink);background:var(--white);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+    html{scroll-behavior:smooth;scroll-padding-top:92px}
+    html.lenis,html.lenis body{height:auto}
+    .lenis.lenis-smooth{scroll-behavior:auto!important}
+    body{margin:0;font-family:var(--font);background:var(--bg);color:var(--text);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
     img{display:block;max-width:100%}
     a{color:inherit}
-    .wrap{width:min(calc(100% - 40px),var(--max));margin-inline:auto}
-    ::selection{background:#bfe0f7}
-    a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--blue-bright);outline-offset:3px;border-radius:6px}
-    .topbar{background:var(--navy);color:#cfe2f2;font-size:13.5px}
-    .topbar .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap}
-    .topbar a{color:#fff;font-weight:700;text-decoration:none}
-    .topbar a:hover{text-decoration:underline}
-    .topbar .tb-item{display:inline-flex;align-items:center;gap:7px}
-    .topbar svg{width:15px;height:15px;flex:0 0 auto;opacity:.85}
-    .topbar .tb-right{display:flex;gap:22px;flex-wrap:wrap}
-    @media(max-width:640px){.topbar .tb-hide{display:none}}
-    header.site{position:sticky;top:0;z-index:90;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-    .nav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:12px 0}
-    .brand{display:flex;align-items:center;gap:14px;text-decoration:none;min-width:0}
-    .brand img{width:148px;height:auto}
-    .brand-text{display:none}
-    @media(min-width:900px){
-      .brand-text{display:block;border-left:1px solid var(--line);padding-left:14px}
-      .brand-text strong{display:block;font-size:15px;line-height:1.25;color:var(--navy);letter-spacing:-.01em}
-      .brand-text span{font-size:12.5px;color:var(--muted)}
-    }
+    .wrap{width:min(calc(100% - 40px),var(--max));margin-inline:auto;position:relative}
+    ::selection{background:var(--blue);color:#fff}
+    a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid var(--bright);outline-offset:3px;border-radius:8px}
+    h1,h2,h3{font-family:var(--display)}
+    .scroll-progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:200;background:linear-gradient(90deg,var(--blue),var(--cyan));transform:scaleX(0);transform-origin:left}
+
+    /* header */
+    header.site{position:fixed;top:0;left:0;right:0;z-index:120;transition:background .3s ease,border-color .3s ease,backdrop-filter .3s ease;border-bottom:1px solid transparent}
+    header.site.scrolled{background:rgba(4,9,16,.82);backdrop-filter:blur(16px);border-bottom-color:var(--line-soft)}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:14px 0}
+    .brand{display:flex;align-items:center;text-decoration:none}
+    .brand img{width:138px;height:auto;filter:drop-shadow(0 4px 14px rgba(0,0,0,.45))}
     .nav-links{display:flex;align-items:center;gap:30px}
-    .nav-links a{font-size:15px;font-weight:600;color:var(--ink);text-decoration:none}
-    .nav-links a:hover{color:var(--blue)}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:50px;padding:0 22px;border-radius:12px;border:1px solid transparent;font-size:15.5px;font-weight:700;text-decoration:none;cursor:pointer;transition:transform .18s ease,background .18s ease,box-shadow .18s ease;white-space:nowrap}
+    .nav-links a{font-size:15px;font-weight:600;color:#cfe2f2;text-decoration:none;position:relative;padding:6px 0}
+    .nav-links a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:100%;background:var(--bright);transform:scaleX(0);transform-origin:right;transition:transform .3s cubic-bezier(.2,.72,.2,1)}
+    .nav-links a:hover{color:#fff}
+    .nav-links a:hover::after{transform:scaleX(1);transform-origin:left}
+    .btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:50px;padding:0 22px;border-radius:13px;border:1px solid transparent;font-size:15.5px;font-weight:700;text-decoration:none;cursor:pointer;white-space:nowrap;transition:background .2s ease,border-color .2s ease,color .2s ease,box-shadow .2s ease;overflow:hidden}
     .btn svg{width:18px;height:18px;flex:0 0 auto}
-    .btn:active{transform:scale(.98)}
-    .btn-call{background:var(--blue);color:#fff;box-shadow:0 10px 24px rgba(11,95,165,.28)}
-    .btn-call:hover{background:var(--blue-dark)}
-    .btn-ghost{background:#fff;border-color:var(--line);color:var(--navy)}
-    .btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
-    .btn-white{background:#fff;color:var(--navy)}
-    .btn-white:hover{background:var(--soft)}
-    .btn-sm{min-height:46px;padding:0 18px;font-size:14.5px;border-radius:11px}
-    .menu-btn{display:none;width:46px;height:46px;border:1px solid var(--line);border-radius:11px;background:#fff;cursor:pointer;place-items:center}
+    .btn-call{background:linear-gradient(135deg,#1a83d8,#0b5fa5);color:#fff;box-shadow:0 12px 30px rgba(18,115,196,.4)}
+    .btn-call:hover{box-shadow:0 16px 38px rgba(18,115,196,.55)}
+    .btn-ghost{background:rgba(255,255,255,.04);border-color:var(--line);color:var(--text)}
+    .btn-ghost:hover{border-color:var(--bright);color:#fff;background:rgba(69,165,245,.1)}
+    .btn-sm{min-height:45px;padding:0 17px;font-size:14.5px;border-radius:11px}
+    .menu-btn{display:none;width:46px;height:46px;border:1px solid var(--line);border-radius:11px;background:rgba(255,255,255,.04);color:#fff;cursor:pointer;place-items:center}
     .menu-btn svg{width:22px;height:22px}
-    @media(max-width:860px){
-      .nav-links{position:absolute;top:100%;left:0;right:0;display:none;flex-direction:column;align-items:stretch;gap:0;background:#fff;border-bottom:1px solid var(--line);padding:8px 20px 14px;box-shadow:0 24px 40px rgba(10,37,64,.12)}
+    @media(max-width:900px){
+      .nav-links{position:absolute;top:calc(100% + 6px);left:20px;right:20px;display:none;flex-direction:column;align-items:stretch;gap:0;background:rgba(7,13,24,.97);border:1px solid var(--line);border-radius:16px;padding:10px 18px 14px;box-shadow:0 30px 60px rgba(0,0,0,.5)}
       .nav-links.open{display:flex}
-      .nav-links a{padding:13px 2px;border-bottom:1px solid var(--soft-2);font-size:16px}
+      .nav-links a{padding:13px 2px;border-bottom:1px solid var(--line-soft);font-size:16px}
       .nav-links a:last-child{border-bottom:0}
+      .nav-links a::after{display:none}
       .menu-btn{display:grid}
       .nav .btn-call{display:none}
-      header.site .wrap{position:relative}
+      .brand img{width:118px}
     }
-    .hero{background:linear-gradient(180deg,#f7fafc 0%,#eef4f9 100%);overflow:hidden}
-    .hero-grid{display:grid;grid-template-columns:1.02fr .98fr;gap:52px;align-items:center;padding:64px 0 72px}
-    .badge-open{display:inline-flex;align-items:center;gap:9px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 14px 7px 10px;font-size:13.5px;font-weight:600;color:var(--ink);box-shadow:0 4px 14px rgba(10,37,64,.06)}
+
+    /* hero */
+    .hero{position:relative;padding:158px 0 30px;overflow:hidden;background:
+      radial-gradient(ellipse 90% 55% at 50% -5%,rgba(18,115,196,.28),transparent 60%),
+      radial-gradient(ellipse 55% 40% at 85% 30%,rgba(111,211,255,.09),transparent 65%),
+      linear-gradient(180deg,#050a13 0%,var(--bg) 90%)}
+    .hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(140,190,235,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(140,190,235,.05) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%);pointer-events:none}
+    .hero-inner{position:relative;text-align:center}
+    .badge-open{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:999px;padding:8px 15px 8px 11px;font-size:13.5px;font-weight:600;color:#d7e9f8;backdrop-filter:blur(8px)}
     .dot{width:10px;height:10px;border-radius:50%;background:var(--amber);flex:0 0 auto}
-    .dot.open{background:var(--green);box-shadow:0 0 0 4px rgba(23,138,76,.15)}
-    h1{margin:20px 0 0;font-size:clamp(38px,5.2vw,58px);line-height:1.06;letter-spacing:-.03em;color:var(--navy);font-weight:900;text-wrap:balance}
-    h1 .blue{color:var(--blue)}
-    .hero p.lead{margin:18px 0 0;font-size:18px;line-height:1.65;color:var(--muted);max-width:520px}
-    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
-    .hero-actions .btn{min-height:56px;padding:0 26px;font-size:16.5px;border-radius:13px}
-    .hero-meta{display:grid;grid-template-columns:repeat(3,1fr);margin-top:38px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;overflow:hidden}
-    .hero-meta div{padding:16px 18px}
-    .hero-meta div + div{border-left:1px solid var(--line)}
-    .hero-meta span{display:block;font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
-    .hero-meta strong{font-size:15px;color:var(--navy);line-height:1.35;display:block}
-    .hero-visual{position:relative}
-    .hero-card{position:relative;background:linear-gradient(150deg,var(--navy) 0%,var(--navy-2) 55%,#0a3a66 100%);border-radius:26px;padding:30px 10px 0;box-shadow:var(--shadow);overflow:hidden}
-    .hero-card::before{content:"";position:absolute;left:-20%;right:-20%;bottom:-55%;height:80%;background:radial-gradient(ellipse at center,rgba(47,143,214,.35),transparent 65%)}
-    .hero-card img{position:relative;width:100%;max-width:100%;margin:0 auto}
-    .hero-card .hc-tag{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:0 22px;color:#dceefb}
-    .hero-card .hc-tag strong{font-size:14px;letter-spacing:.08em;text-transform:uppercase}
-    .hero-card .hc-tag span{font-size:13px;color:#9fc6e8}
-    .hero-chip{position:absolute;left:-14px;bottom:26px;background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:12px 16px}
-    .hero-chip .stars{color:#f2a81d;font-size:15px;letter-spacing:2px;line-height:1.2}
-    .hero-chip strong{display:block;font-size:14.5px;color:var(--navy);line-height:1.3}
-    .hero-chip span{font-size:12.5px;color:var(--muted)}
-    @media(max-width:920px){
-      .hero-grid{grid-template-columns:1fr;gap:36px;padding:42px 0 54px}
-      .hero-chip{left:10px}
-    }
-    @media(max-width:560px){
-      .hero-meta{grid-template-columns:1fr}
-      .hero-meta div + div{border-left:0;border-top:1px solid var(--line)}
-      .hero-actions .btn{flex:1 1 100%}
-      .brand img{width:126px}
-    }
-    section{padding:84px 0}
-    .kicker{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--blue)}
-    .kicker::before{content:"";width:26px;height:2px;background:var(--blue);border-radius:2px}
-    h2{margin:12px 0 0;font-size:clamp(29px,3.6vw,42px);line-height:1.14;letter-spacing:-.025em;color:var(--navy);font-weight:800;text-wrap:balance}
-    .section-sub{margin:14px 0 0;color:var(--muted);font-size:17px;max-width:640px}
-    .section-head{margin-bottom:42px}
-    .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .svc{background:var(--soft);border:1px solid transparent;border-radius:var(--radius);padding:28px 26px;transition:transform .2s ease,box-shadow .2s ease,background .2s ease,border-color .2s ease}
-    .svc:hover{transform:translateY(-4px);background:#fff;border-color:var(--line);box-shadow:0 16px 36px rgba(10,37,64,.10)}
-    .svc.feature{background:linear-gradient(150deg,var(--blue) 0%,var(--blue-dark) 100%);color:#fff}
-    .svc.feature p{color:#d6e9f8}
-    .svc.feature .svc-icon{background:rgba(255,255,255,.16);color:#fff}
-    .svc-icon{width:52px;height:52px;border-radius:14px;background:#fff;color:var(--blue);display:grid;place-items:center;box-shadow:0 6px 16px rgba(10,37,64,.07);margin-bottom:18px}
-    .svc-icon svg{width:26px;height:26px}
-    .svc h3{margin:0;font-size:19.5px;letter-spacing:-.015em;color:var(--navy)}
-    .svc.feature h3{color:#fff}
-    .svc p{margin:8px 0 0;font-size:15.5px;line-height:1.6;color:var(--muted)}
-    .svc-note{margin-top:26px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;background:var(--soft);border:1px dashed #b9cfdf;border-radius:var(--radius);padding:20px 24px}
-    .svc-note p{margin:0;font-size:16px;color:var(--ink)}
+    .dot.open{background:var(--green);box-shadow:0 0 0 5px rgba(47,191,113,.18)}
+    .hero h1{margin:26px auto 0;max-width:15ch;font-size:clamp(42px,7.4vw,84px);line-height:1.02;letter-spacing:-.02em;font-weight:700;text-wrap:balance}
+    .hero h1 .grad{background:linear-gradient(92deg,#6fd3ff 0%,#45a5f5 45%,#1a83d8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero h1 .w{display:inline-block}
+    .hero .lead{margin:22px auto 0;max-width:600px;font-size:18px;line-height:1.65;color:var(--muted)}
+    .hero-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:30px}
+    .hero-actions .btn{min-height:56px;padding:0 27px;font-size:16.5px;border-radius:14px}
+    .hero-giant{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);font-family:var(--display);font-weight:700;font-size:clamp(120px,24vw,340px);letter-spacing:.02em;color:transparent;-webkit-text-stroke:1px rgba(111,211,255,.13);white-space:nowrap;pointer-events:none;user-select:none;line-height:1}
+    .car-stage{position:relative;margin:34px auto 0;max-width:1020px;perspective:1400px}
+    .car-glow{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);width:78%;height:120px;background:radial-gradient(ellipse at center,rgba(18,115,196,.5),rgba(18,115,196,.12) 55%,transparent 75%);filter:blur(28px);pointer-events:none}
+    .car-ring{position:absolute;left:50%;bottom:-4%;transform:translateX(-50%) rotateX(74deg);width:min(88%,820px);aspect-ratio:1;border:1px solid rgba(111,211,255,.22);border-radius:50%;pointer-events:none}
+    .car-ring::after{content:"";position:absolute;inset:9%;border:1px dashed rgba(111,211,255,.14);border-radius:50%}
+    .car-tilt{position:relative;transform-style:preserve-3d;will-change:transform}
+    .car-tilt img{width:100%;height:auto;filter:drop-shadow(0 42px 42px rgba(0,0,0,.6));position:relative;z-index:2}
+    .chip{position:absolute;z-index:3;display:flex;align-items:center;gap:10px;background:rgba(10,20,35,.72);border:1px solid var(--line);border-radius:14px;padding:11px 15px;backdrop-filter:blur(12px);box-shadow:0 18px 40px rgba(0,0,0,.4);transform:translateZ(70px);text-align:left}
+    .chip .stars{color:#f5b93f;font-size:14px;letter-spacing:2px;line-height:1.1}
+    .chip strong{display:block;font-size:14px;line-height:1.25;color:#fff}
+    .chip span{font-size:12px;color:var(--muted)}
+    .chip .ic{width:36px;height:36px;border-radius:10px;background:rgba(69,165,245,.16);color:var(--cyan);display:grid;place-items:center;flex:0 0 auto}
+    .chip .ic svg{width:19px;height:19px}
+    .chip-1{top:9%;left:0}
+    .chip-2{top:22%;right:0}
+    .chip-3{bottom:13%;left:3%}
+    @media(max-width:760px){.chip-1{top:2%;left:0}.chip-2{top:auto;bottom:26%;right:0}.chip-3{display:none}}
+    .hero-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:900px;margin:46px auto 0}
+    .hero-meta .hm{background:rgba(255,255,255,.035);border:1px solid var(--line-soft);border-radius:16px;padding:17px 20px;text-align:left}
+    .hero-meta span{display:block;font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2);margin-bottom:4px}
+    .hero-meta strong{font-size:15.5px;color:#fff;line-height:1.35;display:block}
+    @media(max-width:700px){.hero-meta{grid-template-columns:1fr}.hero{padding-top:126px}}
+    .scroll-hint{display:flex;flex-direction:column;align-items:center;gap:8px;margin:40px auto 8px;color:var(--muted-2);font-size:11px;font-weight:700;letter-spacing:.22em;text-transform:uppercase}
+    .scroll-hint .wheel{width:24px;height:40px;border:2px solid rgba(157,182,202,.4);border-radius:13px;position:relative}
+    .scroll-hint .wheel::after{content:"";position:absolute;left:50%;top:7px;width:4px;height:8px;margin-left:-2px;border-radius:3px;background:var(--cyan);animation:wheel 1.8s ease-in-out infinite}
+    @keyframes wheel{0%{transform:translateY(0);opacity:1}70%{transform:translateY(12px);opacity:0}100%{opacity:0}}
+
+    /* marquee */
+    .marquee{margin-top:26px;background:linear-gradient(90deg,#0b5fa5,#1273c4,#0b5fa5);transform:rotate(-1.1deg) scale(1.02);overflow:hidden;border-block:1px solid rgba(255,255,255,.15)}
+    .marquee-track{display:flex;width:max-content;animation:marq 30s linear infinite}
+    .marquee-group{display:flex;align-items:center;gap:30px;padding:13px 15px 12px}
+    .marquee-group span{font-family:var(--display);font-size:clamp(17px,2.1vw,25px);font-weight:700;letter-spacing:.01em;color:#fff;white-space:nowrap}
+    .marquee-group i{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.65);flex:0 0 auto}
+    @keyframes marq{to{transform:translateX(-50%)}}
+
+    /* sections */
+    section{padding:96px 0;position:relative}
+    .kicker{display:inline-flex;align-items:center;gap:9px;font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan)}
+    .kicker::before{content:"";width:26px;height:2px;background:var(--cyan);border-radius:2px}
+    h2{margin:13px 0 0;font-size:clamp(30px,4vw,46px);line-height:1.1;letter-spacing:-.02em;font-weight:700;text-wrap:balance}
+    .section-sub{margin:15px 0 0;color:var(--muted);font-size:17px;max-width:640px}
+    .section-head{margin-bottom:46px}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:54px}
+    .stat{background:linear-gradient(160deg,var(--panel-2),var(--panel));border:1px solid var(--line-soft);border-radius:var(--radius);padding:26px;text-align:center}
+    .stat .num{font-family:var(--display);font-size:clamp(34px,4.4vw,50px);font-weight:700;line-height:1;background:linear-gradient(90deg,#fff,#9fd0f7);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .stat p{margin:8px 0 0;color:var(--muted);font-size:14.5px}
+    @media(max-width:700px){.stats{grid-template-columns:1fr}}
+
+    /* services */
+    .svc-section{background:linear-gradient(180deg,var(--bg) 0%,var(--bg-2) 100%)}
+    .svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+    .svc{position:relative;background:linear-gradient(165deg,var(--panel-2),var(--panel));border:1px solid var(--line-soft);border-radius:var(--radius);padding:30px 27px;overflow:hidden;transform-style:preserve-3d;will-change:transform}
+    .svc::before{content:"";position:absolute;inset:0;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(69,165,245,.14),transparent 45%);opacity:0;transition:opacity .3s ease;pointer-events:none}
+    .svc:hover::before{opacity:1}
+    .svc .no{position:absolute;top:20px;right:24px;font-family:var(--display);font-size:15px;font-weight:700;color:rgba(111,211,255,.4)}
+    .svc-icon{width:54px;height:54px;border-radius:15px;background:rgba(69,165,245,.13);border:1px solid rgba(111,211,255,.22);color:var(--cyan);display:grid;place-items:center;margin-bottom:20px}
+    .svc-icon svg{width:27px;height:27px}
+    .svc h3{margin:0;font-size:20px;letter-spacing:-.01em}
+    .svc p{margin:9px 0 0;font-size:15.5px;line-height:1.6;color:var(--muted)}
+    .svc.feature{background:linear-gradient(150deg,#1479c9,#0b5fa5 70%);border-color:rgba(111,211,255,.35)}
+    .svc.feature p{color:#d3e9fa}
+    .svc.feature .svc-icon{background:rgba(255,255,255,.15);border-color:rgba(255,255,255,.3);color:#fff}
+    .svc.feature .no{color:rgba(255,255,255,.45)}
+    .svc-note{margin-top:24px;display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;background:rgba(69,165,245,.07);border:1px dashed rgba(111,211,255,.35);border-radius:var(--radius);padding:21px 25px}
+    .svc-note p{margin:0;font-size:16px}
     @media(max-width:920px){.svc-grid{grid-template-columns:1fr 1fr}}
-    @media(max-width:600px){.svc-grid{grid-template-columns:1fr} section{padding:62px 0}}
-    .steps{background:var(--soft)}
-    .steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-    .step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:30px 28px}
-    .step-num{width:46px;height:46px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800;font-size:17px;margin-bottom:18px}
-    .step h3{margin:0;font-size:19px;color:var(--navy);letter-spacing:-.015em}
-    .step p{margin:8px 0 0;color:var(--muted);font-size:15.5px}
-    @media(max-width:860px){.steps-grid{grid-template-columns:1fr}}
-    .about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
+    @media(max-width:600px){.svc-grid{grid-template-columns:1fr}section{padding:68px 0}}
+
+    /* 3D viewer */
+    .model3d{background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(18,115,196,.16),transparent 65%),var(--bg)}
+    .viewer-shell{position:relative;border:1px solid var(--line);border-radius:28px;background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.015));overflow:hidden;box-shadow:0 40px 90px rgba(0,0,0,.45)}
+    .viewer-stage{position:relative;height:min(62vh,560px);min-height:380px}
+    #car3d{position:absolute;inset:0}
+    #car3d canvas{display:block}
+    .viewer-stage::after{content:"";position:absolute;left:50%;bottom:9%;transform:translateX(-50%);width:62%;height:56px;background:radial-gradient(ellipse at center,rgba(18,115,196,.34),transparent 70%);filter:blur(20px);pointer-events:none}
+    .viewer-loader{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:rgba(5,9,16,.55);backdrop-filter:blur(3px);z-index:5;transition:opacity .5s ease;color:#d7e9f8;font-weight:600;font-size:15px}
+    .viewer-loader.done{opacity:0;pointer-events:none}
+    .spinner{width:46px;height:46px;border-radius:50%;border:3px solid rgba(111,211,255,.25);border-top-color:var(--cyan);animation:spin 0.9s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .viewer-fallback{position:absolute;inset:0;display:none;place-items:center;padding:30px;z-index:4}
+    .viewer-fallback.show{display:grid}
+    .viewer-fallback img{max-height:300px;width:auto}
+    .viewer-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding:18px 22px;border-top:1px solid var(--line-soft);background:rgba(4,8,14,.5)}
+    .paint{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+    .paint .lbl{font-size:13px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+    .swatch{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.25);cursor:pointer;padding:0;transition:transform .18s ease,border-color .18s ease}
+    .swatch:hover{transform:scale(1.15)}
+    .swatch.active{border-color:#fff;transform:scale(1.15);box-shadow:0 0 0 3px rgba(255,255,255,.25)}
+    .paint-name{font-size:14px;color:#d7e9f8;font-weight:600;min-width:86px}
+    .viewer-hint{font-size:13.5px;color:var(--muted);display:flex;align-items:center;gap:8px}
+    .viewer-hint svg{width:17px;height:17px;color:var(--cyan)}
+
+    /* steps */
+    .steps-section{background:var(--bg-2)}
+    .steps-wrap{position:relative;display:grid;gap:16px}
+    .steps-line{position:absolute;left:35px;top:12px;bottom:12px;width:2px;background:rgba(111,211,255,.15);overflow:hidden}
+    .steps-line i{display:block;width:100%;height:100%;background:linear-gradient(180deg,var(--cyan),var(--blue));transform:scaleY(0);transform-origin:top}
+    .step{position:relative;display:grid;grid-template-columns:72px 1fr;gap:24px;align-items:start;background:linear-gradient(165deg,var(--panel-2),var(--panel));border:1px solid var(--line-soft);border-radius:var(--radius);padding:30px 30px 30px 26px;margin-left:0}
+    .step-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(145deg,#1a83d8,#0b5fa5);color:#fff;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:20px;box-shadow:0 12px 28px rgba(18,115,196,.4);position:relative;z-index:2}
+    .step h3{margin:4px 0 0;font-size:21px}
+    .step p{margin:8px 0 0;color:var(--muted);font-size:15.5px;max-width:560px}
+    @media(max-width:560px){.step{grid-template-columns:52px 1fr;gap:16px;padding:24px 20px}.step-num{width:46px;height:46px;font-size:17px}.steps-line{left:25px}}
+
+    /* about */
+    .about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:54px;align-items:center}
     .about-copy p{color:var(--muted);font-size:17px;margin:16px 0 0}
-    .about-copy p strong{color:var(--ink)}
+    .about-copy p strong{color:var(--text)}
     .about-list{margin:24px 0 0;padding:0;list-style:none;display:grid;gap:12px}
     .about-list li{display:flex;gap:11px;align-items:flex-start;font-size:16px;font-weight:550}
     .about-list svg{width:21px;height:21px;flex:0 0 auto;color:var(--green);margin-top:2px}
-    .about-card{background:#fff;border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:34px 30px;text-align:center}
-    .about-card img{width:min(100%,380px);margin:0 auto}
-    .about-card .ac-line{margin-top:22px;padding-top:20px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;text-align:left}
-    .about-card .ac-line span{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);display:block}
-    .about-card .ac-line strong{font-size:15px;color:var(--navy)}
+    .about-card{position:relative;background:linear-gradient(170deg,#0c1830,#081120);border:1px solid var(--line);border-radius:26px;padding:38px 32px;text-align:center;overflow:hidden}
+    .about-card::before{content:"";position:absolute;left:50%;top:-30%;transform:translateX(-50%);width:80%;height:60%;background:radial-gradient(ellipse,rgba(69,165,245,.22),transparent 70%);filter:blur(18px)}
+    .about-card img{position:relative;width:min(100%,400px);margin:6px auto 0}
+    .about-card .ac-line{position:relative;margin-top:24px;padding-top:20px;border-top:1px solid var(--line-soft);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;text-align:left}
+    .about-card .ac-line span{font-size:12px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--muted-2);display:block}
+    .about-card .ac-line strong{font-size:15px;color:#fff}
+    .about-card .btn{position:relative;margin-top:22px}
     @media(max-width:920px){.about-grid{grid-template-columns:1fr;gap:36px}}
-    .social{background:var(--navy);color:#e7f2fa}
-    .social h2{color:#fff}
-    .social .section-sub{color:#a9c6de}
-    .social .kicker{color:#7db9e8}
-    .social .kicker::before{background:#7db9e8}
-    .social-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .ig-card,.review-card{border-radius:var(--radius);padding:32px 30px}
-    .ig-card{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.14)}
-    .ig-card h3{margin:14px 0 0;font-size:21px;color:#fff;letter-spacing:-.015em}
-    .ig-card p{margin:8px 0 0;color:#b9d2e6;font-size:15.5px}
-    .ig-card .ig-links{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
+
+    /* social */
+    .social-section{background:linear-gradient(180deg,var(--bg-2),var(--bg))}
+    .social-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .ig-card,.review-card{border-radius:var(--radius);padding:32px 30px;transform-style:preserve-3d}
+    .ig-card{background:linear-gradient(160deg,rgba(69,165,245,.12),rgba(255,255,255,.03));border:1px solid var(--line)}
+    .ig-card h3{margin:15px 0 0;font-size:21px}
+    .ig-card p{margin:8px 0 0;color:var(--muted);font-size:15.5px}
+    .ig-links{margin-top:20px;display:flex;gap:10px;flex-wrap:wrap}
     .ig-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);display:grid;place-items:center;color:#fff}
     .ig-icon svg{width:27px;height:27px}
-    .btn-ig-ghost{background:transparent;border-color:rgba(255,255,255,.35);color:#fff}
-    .review-card{background:#fff;color:var(--ink)}
-    .review-card .stars{color:#f2a81d;font-size:21px;letter-spacing:3px}
-    .review-card blockquote{margin:16px 0 0;font-size:clamp(20px,2.4vw,25px);line-height:1.4;font-weight:650;color:var(--navy);letter-spacing:-.015em}
+    .review-card{background:linear-gradient(165deg,#102036,#0b1524);border:1px solid var(--line)}
+    .review-card .stars{color:#f5b93f;font-size:21px;letter-spacing:3px}
+    .review-card blockquote{margin:16px 0 0;font-size:clamp(20px,2.4vw,25px);line-height:1.4;font-weight:650;color:#fff;font-family:var(--display);letter-spacing:-.01em}
     .review-card .who{margin-top:18px;font-size:14.5px;color:var(--muted)}
-    .review-card .who strong{color:var(--ink)}
+    .review-card .who strong{color:var(--text)}
     @media(max-width:860px){.social-grid{grid-template-columns:1fr}}
-    .faq-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:56px;align-items:start}
+
+    /* faq */
+    .faq-grid{display:grid;grid-template-columns:.85fr 1.15fr;gap:54px;align-items:start}
     .faq-list{border-top:1px solid var(--line)}
     .faq-list details{border-bottom:1px solid var(--line)}
-    .faq-list summary{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 4px;font-size:16.5px;font-weight:700;color:var(--navy);cursor:pointer;list-style:none}
+    .faq-list summary{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:20px 4px;font-size:16.5px;font-weight:700;color:var(--text);cursor:pointer;list-style:none;font-family:var(--display)}
     .faq-list summary::-webkit-details-marker{display:none}
-    .faq-list summary::after{content:"+";font-size:24px;font-weight:400;color:var(--blue);transition:transform .2s ease;flex:0 0 auto}
+    .faq-list summary::after{content:"+";font-size:24px;font-weight:400;color:var(--cyan);transition:transform .25s ease;flex:0 0 auto}
     .faq-list details[open ] summary::after{transform:rotate(45deg)}
     .faq-list details p{margin:0;padding:0 34px 20px 4px;color:var(--muted);font-size:15.5px}
     @media(max-width:860px){.faq-grid{grid-template-columns:1fr;gap:30px}}
-    .contact{background:var(--soft)}
-    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}
-    .contact-card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:34px 32px}
-    .contact-card.dark{background:linear-gradient(150deg,var(--navy),var(--navy-2));color:#e7f2fa;border:0}
-    .contact-card.dark h3{color:#fff}
-    .contact-card h3{margin:0;font-size:22px;color:var(--navy);letter-spacing:-.02em}
-    .phone-big{display:block;margin-top:14px;font-size:clamp(30px,4.4vw,42px);font-weight:900;letter-spacing:-.02em;color:#fff;text-decoration:none;line-height:1.1}
+
+    /* contact */
+    .contact-section{background:radial-gradient(ellipse 65% 55% at 50% 110%,rgba(18,115,196,.2),transparent 65%),var(--bg-2)}
+    .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
+    .contact-card{border-radius:24px;padding:34px 32px;border:1px solid var(--line-soft)}
+    .contact-card.dark{background:linear-gradient(155deg,#123f6e,#0b5fa5 55%,#084a83);border-color:rgba(111,211,255,.3)}
+    .contact-card.light{background:linear-gradient(165deg,var(--panel-2),var(--panel))}
+    .contact-card h3{margin:0;font-size:22px}
+    .phone-big{display:block;margin-top:14px;font-size:clamp(31px,4.4vw,43px);font-weight:700;letter-spacing:-.01em;color:#fff;text-decoration:none;line-height:1.1;font-family:var(--display)}
     .phone-big:hover{text-decoration:underline}
-    .contact-card.dark p{color:#a9c6de;font-size:15.5px;margin:10px 0 0}
+    .contact-card.dark p{color:#cfe6f8;font-size:15.5px;margin:10px 0 0}
     .contact-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:24px}
-    .btn-outline-light{background:transparent;border-color:rgba(255,255,255,.35);color:#fff}
+    .btn-white{background:#fff;color:#0a2540}
+    .btn-white:hover{background:#e8f2fa}
+    .btn-outline-light{background:transparent;border-color:rgba(255,255,255,.4);color:#fff}
+    .btn-outline-light:hover{border-color:#fff}
     .hours{width:100%;border-collapse:collapse;margin-top:8px}
-    .hours td{padding:11px 0;border-bottom:1px solid var(--line);font-size:15.5px}
+    .hours td{padding:11px 0;border-bottom:1px solid var(--line-soft);font-size:15.5px;color:var(--muted)}
     .hours tr:last-child td{border-bottom:0}
-    .hours td:last-child{text-align:right;font-weight:700;color:var(--navy)}
-    .hours tr.today td{color:var(--blue);font-weight:700}
-    .hours tr.today td:last-child{color:var(--blue)}
-    .addr-row{display:flex;gap:12px;align-items:flex-start;margin-top:22px;font-size:16px;color:#e7f2fa}
-    .addr-row svg{width:21px;height:21px;color:#7db9e8;flex:0 0 auto;margin-top:2px}
+    .hours td:last-child{text-align:right;font-weight:700;color:var(--text)}
+    .hours tr.today td{color:var(--cyan);font-weight:700}
+    .addr-row{display:flex;gap:12px;align-items:flex-start;margin-top:22px;font-size:16px;color:#eaf4fc}
+    .addr-row svg{width:21px;height:21px;color:#a8d4f5;flex:0 0 auto;margin-top:2px}
     @media(max-width:860px){.contact-grid{grid-template-columns:1fr}}
-    footer{background:#071a2e;color:#8fa9bf;padding:30px 0 96px}
+
+    footer{background:#02050a;color:#7e97ab;padding:34px 0 100px;border-top:1px solid var(--line-soft)}
     .footer-in{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;font-size:13.5px}
-    footer a{color:#d7e8f5;font-weight:600;text-decoration:none}
+    .footer-brand{display:flex;align-items:center;gap:16px}
+    .footer-brand img{width:110px;height:auto}
+    footer a{color:#cfe2f2;font-weight:600;text-decoration:none}
     footer a:hover{text-decoration:underline}
     .footer-links{display:flex;gap:22px;flex-wrap:wrap}
-    @media(min-width:861px){footer{padding-bottom:30px}}
-    .callbar{position:fixed;left:0;right:0;bottom:0;z-index:95;display:none;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);backdrop-filter:blur(14px);border-top:1px solid var(--line)}
+    @media(min-width:901px){footer{padding-bottom:34px}}
+
+    .callbar{position:fixed;left:0;right:0;bottom:0;z-index:110;display:none;gap:10px;padding:10px 14px calc(10px + env(safe-area-inset-bottom));background:rgba(5,9,16,.92);backdrop-filter:blur(16px);border-top:1px solid var(--line)}
     .callbar .btn{flex:1;min-height:52px}
-    @media(max-width:860px){.callbar{display:flex}}
-    .reveal{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
-    .reveal.in{opacity:1;transform:none}
+    @media(max-width:900px){.callbar{display:flex}}
     @media(prefers-reduced-motion:reduce){
       html{scroll-behavior:auto}
-      .reveal{opacity:1;transform:none;transition:none}
-      *{transition:none!important}
+      .marquee-track{animation:none}
+      .scroll-hint .wheel::after{animation:none}
+      .spinner{animation-duration:2s}
     }
   </style>
 </head>
 <body id="pocetak">
+  <div class="scroll-progress" id="scrollProgress"></div>
 
-  <div class="topbar">
-    <div class="wrap">
-      <span class="tb-item">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-        Hajra Lakovića 38, Goražde
-      </span>
-      <span class="tb-right">
-        <span class="tb-item tb-hide">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          Pon – Sub · 10:00–18:00
-        </span>
-        <a href="tel:+38761297847">
-          <span class="tb-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.9z"/></svg>
-            061 297 847
-          </span>
-        </a>
-      </span>
-    </div>
-  </div>
-
-  <header class="site">
+  <header class="site" id="siteHeader">
     <div class="wrap">
       <nav class="nav" aria-label="Glavna navigacija">
         <a class="brand" href="#pocetak" aria-label="Auto Servis Šunja — početak">
-          <img src="assets/sunja-logo.webp" alt="Auto Servis Šunja — logo" width="713" height="389">
-          <span class="brand-text"><strong>Auto Servis Šunja</strong><span>Peugeot servis · Goražde</span></span>
+          <img src="assets/sunja-logo-light.webp" alt="Auto Servis Šunja — logo" width="785" height="462">
         </a>
         <div class="nav-links" id="navLinks">
           <a href="#usluge">Usluge</a>
+          <a href="#model3d">3D model</a>
           <a href="#onama">O servisu</a>
           <a href="#radovi">Radovi</a>
           <a href="#faq">Česta pitanja</a>
           <a href="#kontakt">Kontakt</a>
         </div>
-        <a class="btn btn-call btn-sm" href="tel:+38761297847">
+        <a class="btn btn-call btn-sm magnetic" href="tel:+38761297847">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.9z"/></svg>
           061 297 847
         </a>
@@ -272,120 +310,186 @@
   </header>
 
   <main>
-    <div class="hero">
+    <!-- HERO -->
+    <div class="hero" id="hero">
       <div class="wrap">
-        <div class="hero-grid">
-          <div>
-            <span class="badge-open"><span class="dot" id="openDot"></span><span id="openText">Radno vrijeme: Pon – Sub · 10:00–18:00</span></span>
-            <h1>Kad auto traži majstora, <span class="blue">zovite Šunju.</span></h1>
-            <p class="lead">Peugeot servis, dijagnostika i automehaničarski radovi u Goraždu. Pozovite, opišite vozilo i problem — dogovorit ćemo sljedeći korak.</p>
-            <div class="hero-actions">
-              <a class="btn btn-call" href="tel:+38761297847">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.9z"/></svg>
-                Pozovite 061 297 847
-              </a>
-              <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+%C5%A0unja%2C+Hajra+Lakovi%C4%87a+38%2C+Gora%C5%BEde" target="_blank" rel="noopener noreferrer">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                Upute do servisa
-              </a>
-            </div>
-            <div class="hero-meta" aria-label="Osnovne informacije">
-              <div><span>Radionica</span><strong>Hajra Lakovića 38, Goražde</strong></div>
-              <div><span>Radno vrijeme</span><strong>Pon – Sub · 10:00–18:00</strong></div>
-              <div><span>Poseban fokus</span><strong>Peugeot vozila</strong></div>
+        <div class="hero-inner">
+          <span class="badge-open" data-hero><span class="dot" id="openDot"></span><span id="openText">Radno vrijeme: Pon – Sub · 10:00–18:00</span></span>
+          <h1 id="heroTitle">Kad auto traži majstora, <span class="grad">zovite Šunju.</span></h1>
+          <p class="lead" data-hero>Peugeot servis, dijagnostika i automehaničarski radovi u Goraždu. Pozovite, opišite vozilo i problem — dogovorit ćemo sljedeći korak.</p>
+          <div class="hero-actions" data-hero>
+            <a class="btn btn-call magnetic" href="tel:+38761297847">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7A2 2 0 0 1 22 16.9z"/></svg>
+              Pozovite 061 297 847
+            </a>
+            <a class="btn btn-ghost magnetic" href="#model3d">Pogledajte auto u 3D ↓</a>
+          </div>
+
+          <div class="car-stage" id="carStage">
+            <div class="hero-giant" id="heroGiant" aria-hidden="true">ŠUNJA</div>
+            <div class="car-glow"></div>
+            <div class="car-ring" aria-hidden="true"></div>
+            <div class="car-tilt" id="carTilt">
+              <img src="assets/sunja-car.webp" alt="Plavi Peugeot — vozilo kakva servisira Auto Servis Šunja" width="1774" height="887" fetchpriority="high" id="heroCar">
+              <div class="chip chip-1" data-chip>
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4.5 4.5 0 0 0-6 6L3 18l3 3 5.7-5.7a4.5 4.5 0 0 0 6-6L14 13l-3-3 3.7-3.7z"/></svg></span>
+                <span><strong>Peugeot specijalista</strong><span>Servis i održavanje</span></span>
+              </div>
+              <div class="chip chip-2" data-chip>
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="13" rx="2"/><path d="M8 21h8M12 17v4M8.5 10.5 11 13l4.5-5"/></svg></span>
+                <span><strong>Autodijagnostika</strong><span>Prvo uzrok, onda popravka</span></span>
+              </div>
+              <div class="chip chip-3" data-chip>
+                <span><span class="stars" aria-hidden="true">★★★★★</span><strong>5,0 ocjena kupaca</strong><span>Google recenzije</span></span>
+              </div>
             </div>
           </div>
-          <div class="hero-visual">
-            <div class="hero-card">
-              <div class="hc-tag"><strong>Auto Servis Šunja</strong><span>Goražde</span></div>
-              <img src="assets/sunja-car.webp" alt="Plavi Peugeot — vozilo kakva servisira Auto Servis Šunja" width="1774" height="887" fetchpriority="high">
-            </div>
-            <div class="hero-chip" aria-label="Ocjena kupaca 5 od 5">
-              <div class="stars" aria-hidden="true">★★★★★</div>
-              <strong>5,0 ocjena kupaca</strong>
-              <span>Google recenzije</span>
-            </div>
+
+          <div class="hero-meta" data-hero>
+            <div class="hm"><span>Radionica</span><strong>Hajra Lakovića 38, Goražde</strong></div>
+            <div class="hm"><span>Radno vrijeme</span><strong>Pon – Sub · 10:00–18:00</strong></div>
+            <div class="hm"><span>Poseban fokus</span><strong>Peugeot vozila</strong></div>
+          </div>
+
+          <div class="scroll-hint" aria-hidden="true"><span>Skrolajte</span><span class="wheel"></span></div>
+        </div>
+      </div>
+      <div class="marquee" aria-hidden="true">
+        <div class="marquee-track" id="marqueeTrack">
+          <div class="marquee-group">
+            <span>PEUGEOT SERVIS</span><i></i><span>DIJAGNOSTIKA</span><i></i><span>MALI SERVIS</span><i></i><span>VELIKI SERVIS</span><i></i><span>AUTOELEKTRIKA</span><i></i><span>KLJUČEVI I DALJINSKI</span><i></i>
           </div>
         </div>
       </div>
     </div>
 
-    <section id="usluge">
+    <!-- SERVICES -->
+    <section class="svc-section" id="usluge">
       <div class="wrap">
-        <div class="section-head reveal">
+        <div class="section-head" data-reveal>
           <span class="kicker">Šta radimo</span>
           <h2>Prvo pronaći uzrok.<br>Onda popraviti kako treba.</h2>
           <p class="section-sub">Najviše radimo s Peugeot vozilima. Za druge marke nazovite i provjerite možemo li preuzeti konkretan zahvat.</p>
         </div>
         <div class="svc-grid">
-          <article class="svc feature reveal">
+          <article class="svc feature" data-reveal data-tilt>
+            <span class="no">01</span>
             <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4.5 4.5 0 0 0-6 6L3 18l3 3 5.7-5.7a4.5 4.5 0 0 0 6-6L14 13l-3-3 3.7-3.7z"/></svg></div>
             <h3>Peugeot servis</h3>
             <p>Održavanje i popravke Peugeot vozila — specijalizacija servisa, uz dogovor o potrebnom zahvatu prije dolaska.</p>
           </article>
-          <article class="svc reveal">
+          <article class="svc" data-reveal data-tilt>
+            <span class="no">02</span>
             <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="13" rx="2"/><path d="M8 21h8M12 17v4M8.5 10.5 11 13l4.5-5"/></svg></div>
             <h3>Autodijagnostika</h3>
             <p>Provjera grešaka i pregled elektronskih sistema vozila — da se kvar pronađe, a ne nagađa.</p>
           </article>
-          <article class="svc reveal">
-            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M19.4 15a7.9 7.9 0 0 0 .1-6 8 8 0 0 0-6-4.6A8 8 0 0 0 4.6 9 7.9 7.9 0 0 0 4.5 15 8 8 0 0 0 10.4 19.5 8 8 0 0 0 19.4 15z"/><path d="M12 8v4l2.5 2.5"/></svg></div>
+          <article class="svc" data-reveal data-tilt>
+            <span class="no">03</span>
+            <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.6"/><path d="M12 7.5V12l3 2"/></svg></div>
             <h3>Mali servis</h3>
             <p>Zamjena ulja i filtera te redovni servisni radovi koji auto drže ispravnim i sigurnim.</p>
           </article>
-          <article class="svc reveal">
+          <article class="svc" data-reveal data-tilt>
+            <span class="no">04</span>
             <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.8v3M12 18.2v3M2.8 12h3M18.2 12h3M5.5 5.5l2.1 2.1M16.4 16.4l2.1 2.1M18.5 5.5l-2.1 2.1M7.6 16.4l-2.1 2.1"/></svg></div>
             <h3>Veliki servis</h3>
             <p>Radovi velikog servisa, uključujući zamjenu zupčastog remena — na vrijeme, bez rizika za motor.</p>
           </article>
-          <article class="svc reveal">
+          <article class="svc" data-reveal data-tilt>
+            <span class="no">05</span>
             <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5L13 2z"/></svg></div>
             <h3>Autoelektrika</h3>
             <p>Pregled i popravka električnih instalacija motora i povezanih kvarova.</p>
           </article>
-          <article class="svc reveal">
+          <article class="svc" data-reveal data-tilt>
+            <span class="no">06</span>
             <div class="svc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="14" r="4.5"/><path d="M11.2 10.8 20 2M16.5 5.5l3 3M13.8 8.2l2.4 2.4"/></svg></div>
             <h3>Ključevi i daljinski</h3>
             <p>Popravka ključeva i daljinskih upravljača za vozila.</p>
           </article>
         </div>
-        <div class="svc-note reveal">
+        <div class="svc-note" data-reveal>
           <p><strong>Imate specifičan kvar ili drugu marku vozila?</strong> Nazovite i provjerite možemo li preuzeti zahvat.</p>
-          <a class="btn btn-call btn-sm" href="tel:+38761297847">Nazovite servis</a>
+          <a class="btn btn-call btn-sm magnetic" href="tel:+38761297847">Nazovite servis</a>
+        </div>
+        <div class="stats">
+          <div class="stat" data-reveal><div class="num"><span data-count="5" data-decimals="1">0</span></div><p>Google ocjena kupaca</p></div>
+          <div class="stat" data-reveal><div class="num"><span data-count="6">0</span></div><p>specijalizovanih usluga</p></div>
+          <div class="stat" data-reveal><div class="num"><span data-count="6">0</span></div><p>dana sedmično smo otvoreni</p></div>
         </div>
       </div>
     </section>
 
-    <section class="steps" id="kako">
+    <!-- 3D MODEL -->
+    <section class="model3d" id="model3d">
       <div class="wrap">
-        <div class="section-head reveal">
+        <div class="section-head" data-reveal>
+          <span class="kicker">Interaktivno · pravi 3D</span>
+          <h2>Okrenite auto. Promijenite boju.</h2>
+          <p class="section-sub">Ovo je pravi 3D model koji se vrti u vašem browseru — uhvatite ga prstom ili mišem, okrenite sa svih strana i probajte boje.</p>
+        </div>
+        <div class="viewer-shell" data-reveal>
+          <div class="viewer-stage" id="viewerStage">
+            <div id="car3d" role="img" aria-label="Interaktivni 3D model automobila — prevucite za okretanje"></div>
+            <div class="viewer-loader" id="viewerLoader"><span class="spinner" aria-hidden="true"></span><span>Učitavanje 3D modela… <span id="loadPct">0%</span></span></div>
+            <div class="viewer-fallback" id="viewerFallback">
+              <div style="text-align:center">
+                <img src="assets/sunja-car.webp" alt="Plavi Peugeot" width="1774" height="887">
+                <p style="color:var(--muted);margin-top:12px">3D model se nije mogao učitati na ovom uređaju — ali servis radi punom parom. Nazovite nas!</p>
+              </div>
+            </div>
+          </div>
+          <div class="viewer-bar">
+            <div class="paint" role="group" aria-label="Boja automobila">
+              <span class="lbl">Boja</span>
+              <button class="swatch active" data-color="#0b5fa5" data-name="Šunja plava" style="background:#0b5fa5" aria-label="Šunja plava"></button>
+              <button class="swatch" data-color="#b3001b" data-name="Crvena" style="background:#b3001b" aria-label="Crvena"></button>
+              <button class="swatch" data-color="#101216" data-name="Crna" style="background:#101216" aria-label="Crna"></button>
+              <button class="swatch" data-color="#9aa3ab" data-name="Siva" style="background:#9aa3ab" aria-label="Siva"></button>
+              <button class="swatch" data-color="#e6e8ea" data-name="Bijela" style="background:#e6e8ea" aria-label="Bijela"></button>
+              <button class="swatch" data-color="#e8a812" data-name="Žuta" style="background:#e8a812" aria-label="Žuta"></button>
+              <span class="paint-name" id="paintName">Šunja plava</span>
+            </div>
+            <span class="viewer-hint">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.3M21 3v6h-6"/></svg>
+              Prevucite za okretanje · skrol za zoom
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STEPS -->
+    <section class="steps-section" id="kako">
+      <div class="wrap">
+        <div class="section-head" data-reveal>
           <span class="kicker">Kako do popravke</span>
           <h2>Tri koraka i auto je u radionici</h2>
         </div>
-        <div class="steps-grid">
-          <article class="step reveal">
+        <div class="steps-wrap">
+          <div class="steps-line" aria-hidden="true"><i id="stepsProgress"></i></div>
+          <article class="step" data-reveal>
             <div class="step-num">1</div>
-            <h3>Pozovite servis</h3>
-            <p>Nazovite <strong>061 297 847</strong> u radnom vremenu, ponedjeljak – subota od 10 do 18 sati.</p>
+            <div><h3>Pozovite servis</h3><p>Nazovite <strong>061 297 847</strong> u radnom vremenu, ponedjeljak – subota od 10 do 18 sati.</p></div>
           </article>
-          <article class="step reveal">
+          <article class="step" data-reveal>
             <div class="step-num">2</div>
-            <h3>Opišite vozilo i kvar</h3>
-            <p>Model i simptomi pomažu nam da provjerimo koji je zahvat potreban i šta treba pripremiti.</p>
+            <div><h3>Opišite vozilo i kvar</h3><p>Model i simptomi pomažu nam da provjerimo koji je zahvat potreban i šta treba pripremiti.</p></div>
           </article>
-          <article class="step reveal">
+          <article class="step" data-reveal>
             <div class="step-num">3</div>
-            <h3>Dogovorite dolazak</h3>
-            <p>Potvrdite termin i dovezite vozilo u dogovoreno vrijeme — bez čekanja i bez iznenađenja.</p>
+            <div><h3>Dogovorite dolazak</h3><p>Potvrdite termin i dovezite vozilo u dogovoreno vrijeme — bez čekanja i bez iznenađenja.</p></div>
           </article>
         </div>
       </div>
     </section>
 
+    <!-- ABOUT -->
     <section id="onama">
       <div class="wrap">
         <div class="about-grid">
-          <div class="about-copy reveal">
+          <div class="about-copy" data-reveal>
             <span class="kicker">O servisu</span>
             <h2>U Goraždu, s posebnim fokusom na Peugeot</h2>
             <p>Auto Servis Šunja nalazi se u ulici <strong>Hajra Lakovića 38 u Goraždu</strong>. Servisiramo Peugeot vozila i obavljamo automehaničarske radove na drugim automobilima — prema vrsti potrebnog zahvata.</p>
@@ -396,38 +500,37 @@
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Za cijenu i termin — jedan poziv je dovoljan</li>
             </ul>
           </div>
-          <div class="about-card reveal">
-            <img src="assets/sunja-logo-full.webp" alt="Logo Auto Servisa Šunja" width="785" height="462" loading="lazy">
+          <div class="about-card" data-reveal data-tilt>
+            <img src="assets/sunja-logo-light.webp" alt="Logo Auto Servisa Šunja (transparentna verzija)" width="785" height="462" loading="lazy">
             <div class="ac-line">
               <div><span>Adresa</span><strong>Hajra Lakovića 38 · Goražde</strong></div>
               <div><span>Telefon</span><strong>061 297 847</strong></div>
             </div>
-            <div style="margin-top:22px">
-              <a class="btn btn-ghost btn-sm" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+%C5%A0unja%2C+Hajra+Lakovi%C4%87a+38%2C+Gora%C5%BEde" target="_blank" rel="noopener noreferrer">Pronađite servis na mapi</a>
-            </div>
+            <a class="btn btn-ghost btn-sm magnetic" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+%C5%A0unja%2C+Hajra+Lakovi%C4%87a+38%2C+Gora%C5%BEde" target="_blank" rel="noopener noreferrer">Pronađite servis na mapi</a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="social" id="radovi">
+    <!-- SOCIAL -->
+    <section class="social-section" id="radovi">
       <div class="wrap">
-        <div class="section-head reveal">
+        <div class="section-head" data-reveal>
           <span class="kicker">Iz radionice</span>
           <h2>Radovi i recenzije, bez uljepšavanja</h2>
           <p class="section-sub">Fotografije radova objavljujemo na zvaničnom Instagram profilu servisa — a kupci nas ocjenjuju na Googleu.</p>
         </div>
         <div class="social-grid">
-          <article class="ig-card reveal">
+          <article class="ig-card" data-reveal data-tilt>
             <div class="ig-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="2.5" width="19" height="19" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.4" cy="6.6" r=".6" fill="currentColor"/></svg></div>
             <h3>@sunja_servis_peugeot</h3>
             <p>Pogledajte objave iz radionice — dijagnostika, servisi i radovi na vozilima, direktno s profila servisa.</p>
             <div class="ig-links">
-              <a class="btn btn-white btn-sm" href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener noreferrer">Otvorite Instagram profil</a>
-              <a class="btn btn-ig-ghost btn-sm" href="https://www.instagram.com/p/DZijDj6Forp/" target="_blank" rel="noopener noreferrer">Najnovija objava</a>
+              <a class="btn btn-call btn-sm magnetic" href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener noreferrer">Otvorite Instagram profil</a>
+              <a class="btn btn-ghost btn-sm magnetic" href="https://www.instagram.com/p/DZijDj6Forp/" target="_blank" rel="noopener noreferrer">Najnovija objava</a>
             </div>
           </article>
-          <article class="review-card reveal" aria-label="Recenzija kupca, ocjena 5 od 5">
+          <article class="review-card" data-reveal data-tilt aria-label="Recenzija kupca, ocjena 5 od 5">
             <div class="stars" aria-hidden="true">★★★★★</div>
             <blockquote>„Odličan izbor za vaš automobil — kompetentan, kompletan i kvalitetan servis!“</blockquote>
             <p class="who"><strong>Nermin Hadžimešić</strong> · Google recenzija · 28. mart 2024.</p>
@@ -436,16 +539,17 @@
       </div>
     </section>
 
+    <!-- FAQ -->
     <section id="faq">
       <div class="wrap">
         <div class="faq-grid">
-          <div class="reveal">
+          <div data-reveal>
             <span class="kicker">Prije poziva</span>
             <h2>Kratko i jasno</h2>
             <p class="section-sub">Ako ovdje nema vašeg pitanja — nazovite, odgovorit ćemo direktno.</p>
-            <div style="margin-top:24px"><a class="btn btn-call" href="tel:+38761297847">Pozovite 061 297 847</a></div>
+            <div style="margin-top:24px"><a class="btn btn-call magnetic" href="tel:+38761297847">Pozovite 061 297 847</a></div>
           </div>
-          <div class="faq-list reveal">
+          <div class="faq-list" data-reveal>
             <details>
               <summary>Servisirate li i vozila drugih marki?</summary>
               <p>Da — servis obavlja automehaničarske radove i na drugim automobilima. Nazovite i opišite vozilo i kvar da potvrdimo mogućnost zahvata.</p>
@@ -471,27 +575,28 @@
       </div>
     </section>
 
-    <section class="contact" id="kontakt">
+    <!-- CONTACT -->
+    <section class="contact-section" id="kontakt">
       <div class="wrap">
-        <div class="section-head reveal">
+        <div class="section-head" data-reveal>
           <span class="kicker">Kontakt</span>
           <h2>Dogovorite svoj termin</h2>
         </div>
         <div class="contact-grid">
-          <div class="contact-card dark reveal">
+          <div class="contact-card dark" data-reveal>
             <h3>Nazovite servis</h3>
             <a class="phone-big" href="tel:+38761297847">061 297 847</a>
             <p>Opišite vozilo i problem — provjerit ćemo mogućnost popravke i dogovoriti dolazak.</p>
             <div class="contact-actions">
-              <a class="btn btn-white" href="tel:+38761297847">Pozovite sada</a>
-              <a class="btn btn-outline-light" href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener noreferrer">Instagram profil</a>
+              <a class="btn btn-white magnetic" href="tel:+38761297847">Pozovite sada</a>
+              <a class="btn btn-outline-light magnetic" href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener noreferrer">Instagram profil</a>
             </div>
             <div class="addr-row">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
               <span><strong>Auto Servis Šunja</strong><br>Hajra Lakovića 38, 73000 Goražde</span>
             </div>
           </div>
-          <div class="contact-card reveal">
+          <div class="contact-card light" data-reveal>
             <h3>Radno vrijeme</h3>
             <table class="hours" aria-label="Radno vrijeme servisa">
               <tr data-day="1"><td>Ponedjeljak</td><td>10:00 – 18:00</td></tr>
@@ -503,7 +608,7 @@
               <tr data-day="0"><td>Nedjelja</td><td>Zatvoreno</td></tr>
             </table>
             <div style="margin-top:22px">
-              <a class="btn btn-ghost btn-sm" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+%C5%A0unja%2C+Hajra+Lakovi%C4%87a+38%2C+Gora%C5%BEde" target="_blank" rel="noopener noreferrer">Upute do servisa (Google Maps)</a>
+              <a class="btn btn-ghost btn-sm magnetic" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+%C5%A0unja%2C+Hajra+Lakovi%C4%87a+38%2C+Gora%C5%BEde" target="_blank" rel="noopener noreferrer">Upute do servisa (Google Maps)</a>
             </div>
           </div>
         </div>
@@ -514,7 +619,10 @@
   <footer>
     <div class="wrap">
       <div class="footer-in">
-        <span>© <span id="year">2026</span> Auto Servis Šunja · Hajra Lakovića 38, Goražde</span>
+        <span class="footer-brand">
+          <img src="assets/sunja-logo-light.webp" alt="Auto Servis Šunja — logo" width="785" height="462" loading="lazy">
+          <span>© <span id="year">2026</span> Auto Servis Šunja<br>Hajra Lakovića 38, Goražde</span>
+        </span>
         <span class="footer-links">
           <a href="tel:+38761297847">061 297 847</a>
           <a href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener noreferrer">Instagram</a>
@@ -532,8 +640,15 @@
     <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+%C5%A0unja%2C+Hajra+Lakovi%C4%87a+38%2C+Gora%C5%BEde" target="_blank" rel="noopener noreferrer">Upute</a>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
   <script>
     (function(){
+      var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var finePointer = window.matchMedia('(pointer: fine)').matches;
+
+      /* menu */
       var btn = document.getElementById('menuBtn');
       var links = document.getElementById('navLinks');
       btn.addEventListener('click', function(){
@@ -544,6 +659,18 @@
       links.addEventListener('click', function(e){
         if(e.target.tagName === 'A'){ links.classList.remove('open'); btn.setAttribute('aria-expanded','false'); }
       });
+
+      /* header state */
+      var header = document.getElementById('siteHeader');
+      function onScrollState(){
+        if(window.scrollY > 40) header.classList.add('scrolled'); else header.classList.remove('scrolled');
+        var h = document.documentElement;
+        var p = h.scrollTop / Math.max(1, (h.scrollHeight - h.clientHeight));
+        document.getElementById('scrollProgress').style.transform = 'scaleX(' + p + ')';
+      }
+      window.addEventListener('scroll', onScrollState, {passive:true}); onScrollState();
+
+      /* open-now badge + today highlight */
       try{
         var now = new Date(new Date().toLocaleString('en-US',{timeZone:'Europe/Sarajevo'}));
         var day = now.getDay();
@@ -557,14 +684,284 @@
         if(row) row.classList.add('today');
       }catch(e){}
       document.getElementById('year').textContent = new Date().getFullYear();
-      if('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
-        var io = new IntersectionObserver(function(entries){
-          entries.forEach(function(en){ if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } });
-        },{threshold:.12});
-        document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
-      } else {
-        document.querySelectorAll('.reveal').forEach(function(el){ el.classList.add('in'); });
+
+      /* marquee: duplicate group for seamless loop */
+      var track = document.getElementById('marqueeTrack');
+      track.appendChild(track.children[0].cloneNode(true));
+
+      if(!window.gsap || reduced){ return; }
+      gsap.registerPlugin(ScrollTrigger);
+
+      /* Lenis smooth scroll */
+      var lenis = null;
+      if(window.Lenis){
+        lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add(function(time){ lenis.raf(time * 1000); });
+        gsap.ticker.lagSmoothing(0);
+        document.querySelectorAll('a[href^="#"]').forEach(function(a){
+          a.addEventListener('click', function(e){
+            var id = a.getAttribute('href');
+            if(id.length > 1 && document.querySelector(id)){
+              e.preventDefault(); lenis.scrollTo(id, {offset: -84});
+            }
+          });
+        });
       }
+
+      /* hero title word split */
+      var title = document.getElementById('heroTitle');
+      (function splitWords(el){
+        var nodes = Array.prototype.slice.call(el.childNodes);
+        el.innerHTML = '';
+        nodes.forEach(function(node){
+          if(node.nodeType === 3){
+            node.textContent.split(/\s+/).filter(Boolean).forEach(function(word){
+              var s = document.createElement('span'); s.className = 'w'; s.textContent = word;
+              el.appendChild(s); el.appendChild(document.createTextNode(' '));
+            });
+          } else if(node.nodeType === 1){
+            var wrap = document.createElement(node.tagName.toLowerCase());
+            wrap.className = node.className;
+            node.textContent.split(/\s+/).filter(Boolean).forEach(function(word){
+              var s = document.createElement('span'); s.className = 'w'; s.textContent = word;
+              wrap.appendChild(s); wrap.appendChild(document.createTextNode(' '));
+            });
+            el.appendChild(wrap);
+          }
+        });
+      })(title);
+
+      /* hero intro */
+      var intro = gsap.timeline({defaults:{ease:'power3.out'}});
+      intro.from('#heroTitle .w', {yPercent: 60, opacity: 0, duration: .9, stagger: .05})
+           .from('[data-hero]', {y: 26, opacity: 0, duration: .8, stagger: .09}, '-=.55')
+           .from('#carStage', {y: 70, opacity: 0, scale: .96, duration: 1.1, ease: 'power3.out'}, '-=.5')
+           .from('[data-chip]', {scale: .6, opacity: 0, duration: .6, ease: 'back.out(2.2)', stagger: .12}, '-=.55');
+
+      /* floating chips */
+      gsap.utils.toArray('[data-chip]').forEach(function(chip, i){
+        gsap.to(chip, {y: i % 2 ? 10 : -10, duration: 2.4 + i * .4, yoyo: true, repeat: -1, ease: 'sine.inOut'});
+      });
+
+      /* hero scroll scrub */
+      gsap.to('#heroGiant', {xPercent: -58, ease: 'none',
+        scrollTrigger: {trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1}});
+      gsap.to('#heroCar', {yPercent: 7, scale: 1.045, ease: 'none',
+        scrollTrigger: {trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1}});
+      gsap.to('.car-ring', {rotate: 24, ease: 'none',
+        scrollTrigger: {trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1}});
+
+      /* hero car 3D tilt (mouse) */
+      if(finePointer){
+        var stage = document.getElementById('carStage');
+        var tiltEl = document.getElementById('carTilt');
+        var rx = gsap.quickTo(tiltEl, 'rotationX', {duration: .7, ease: 'power3'});
+        var ry = gsap.quickTo(tiltEl, 'rotationY', {duration: .7, ease: 'power3'});
+        stage.addEventListener('mousemove', function(e){
+          var r = stage.getBoundingClientRect();
+          var px = (e.clientX - r.left) / r.width - .5;
+          var py = (e.clientY - r.top) / r.height - .5;
+          ry(px * 10); rx(-py * 7);
+        });
+        stage.addEventListener('mouseleave', function(){ rx(0); ry(0); });
+      }
+
+      /* reveals */
+      gsap.utils.toArray('[data-reveal]').forEach(function(el){
+        gsap.from(el, {y: 40, opacity: 0, duration: .95, ease: 'power3.out',
+          scrollTrigger: {trigger: el, start: 'top 87%'}});
+      });
+
+      /* counters */
+      gsap.utils.toArray('[data-count]').forEach(function(el){
+        var target = parseFloat(el.getAttribute('data-count'));
+        var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
+        var obj = {v: 0};
+        ScrollTrigger.create({trigger: el, start: 'top 88%', once: true, onEnter: function(){
+          gsap.to(obj, {v: target, duration: 1.6, ease: 'power2.out', onUpdate: function(){
+            el.textContent = obj.v.toFixed(dec).replace('.', ',');
+          }});
+        }});
+      });
+
+      /* steps progress line */
+      gsap.to('#stepsProgress', {scaleY: 1, ease: 'none',
+        scrollTrigger: {trigger: '.steps-wrap', start: 'top 70%', end: 'bottom 55%', scrub: .6}});
+
+      /* service / card tilts + glow tracking */
+      if(finePointer){
+        document.querySelectorAll('[data-tilt]').forEach(function(card){
+          var rX = gsap.quickTo(card, 'rotationX', {duration: .6, ease: 'power3'});
+          var rY = gsap.quickTo(card, 'rotationY', {duration: .6, ease: 'power3'});
+          gsap.set(card, {transformPerspective: 900});
+          card.addEventListener('mousemove', function(e){
+            var r = card.getBoundingClientRect();
+            var px = (e.clientX - r.left) / r.width;
+            var py = (e.clientY - r.top) / r.height;
+            card.style.setProperty('--mx', (px * 100) + '%');
+            card.style.setProperty('--my', (py * 100) + '%');
+            rY((px - .5) * 8); rX(-(py - .5) * 8);
+          });
+          card.addEventListener('mouseleave', function(){ rX(0); rY(0); });
+        });
+
+        /* magnetic buttons */
+        document.querySelectorAll('.magnetic').forEach(function(el){
+          var xTo = gsap.quickTo(el, 'x', {duration: .4, ease: 'power3'});
+          var yTo = gsap.quickTo(el, 'y', {duration: .4, ease: 'power3'});
+          el.addEventListener('mousemove', function(e){
+            var r = el.getBoundingClientRect();
+            xTo((e.clientX - r.left - r.width / 2) * .25);
+            yTo((e.clientY - r.top - r.height / 2) * .35);
+          });
+          el.addEventListener('mouseleave', function(){ xTo(0); yTo(0); });
+        });
+      }
+    })();
+  </script>
+
+  <script type="importmap">
+  {"imports":{
+    "three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }}
+  </script>
+  <script type="module">
+    (function(){
+      var stage = document.getElementById('viewerStage');
+      var loader = document.getElementById('viewerLoader');
+      var pct = document.getElementById('loadPct');
+      var fallback = document.getElementById('viewerFallback');
+      var started = false, loaded = false;
+      window.__paintMaterial = null;
+
+      function fail(){
+        if(loaded) return;
+        loader.classList.add('done');
+        fallback.classList.add('show');
+      }
+      setTimeout(function(){ if(!loaded) fail(); }, 20000);
+
+      function init(){
+        if(started) return; started = true;
+        Promise.all([
+          import('three'),
+          import('three/addons/loaders/GLTFLoader.js'),
+          import('three/addons/controls/OrbitControls.js'),
+          import('three/addons/environments/RoomEnvironment.js')
+        ]).then(function(mods){
+          var THREE = mods[0], GLTFLoader = mods[1].GLTFLoader, OrbitControls = mods[2].OrbitControls, RoomEnvironment = mods[3].RoomEnvironment;
+          var container = document.getElementById('car3d');
+          var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          renderer.shadowMap.enabled = true;
+          renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+          renderer.toneMapping = THREE.ACESFilmicToneMapping;
+          renderer.toneMappingExposure = 1.05;
+          container.appendChild(renderer.domElement);
+
+          var scene = new THREE.Scene();
+          var pmrem = new THREE.PMREMGenerator(renderer);
+          scene.environment = pmrem.fromScene(new RoomEnvironment(), .04).texture;
+
+          var camera = new THREE.PerspectiveCamera(38, 1, .1, 100);
+          var controls = new OrbitControls(camera, renderer.domElement);
+          controls.enableDamping = true; controls.dampingFactor = .06;
+          controls.enablePan = false;
+          controls.autoRotate = true; controls.autoRotateSpeed = 1.1;
+          controls.minDistance = 3.4; controls.maxDistance = 11;
+          controls.maxPolarAngle = Math.PI * .52;
+
+          var key = new THREE.DirectionalLight(0xffffff, 2.2);
+          key.position.set(4, 7, 3);
+          key.castShadow = true;
+          key.shadow.mapSize.set(2048, 2048);
+          key.shadow.camera.left = -5; key.shadow.camera.right = 5;
+          key.shadow.camera.top = 5; key.shadow.camera.bottom = -5;
+          key.shadow.radius = 6;
+          scene.add(key);
+          var rim = new THREE.DirectionalLight(0x6fd3ff, 1.1);
+          rim.position.set(-5, 3, -4); scene.add(rim);
+
+          var ground = new THREE.Mesh(
+            new THREE.CircleGeometry(7, 48),
+            new THREE.ShadowMaterial({opacity: .34})
+          );
+          ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true;
+          scene.add(ground);
+
+          var group = new THREE.Group(); scene.add(group);
+          var loader3 = new GLTFLoader();
+          loader3.load('assets/car-3d.glb', function(gltf){
+            var model = gltf.scene;
+            var box = new THREE.Box3().setFromObject(model);
+            var size = box.getSize(new THREE.Vector3());
+            var center = box.getCenter(new THREE.Vector3());
+            var scale = 4.6 / Math.max(size.x, size.z);
+            model.scale.setScalar(scale);
+            model.position.set(-center.x * scale, -box.min.y * scale, -center.z * scale);
+            model.traverse(function(o){
+              if(o.isMesh){ o.castShadow = true; }
+              if(o.material && o.material.name === 'Body_Color'){ window.__paintMaterial = o.material; }
+            });
+            if(window.__paintMaterial){ window.__paintMaterial.color.set('#0b5fa5'); }
+            group.add(model);
+            group.rotation.y = -.6;
+            var h = size.y * scale;
+            controls.target.set(0, h * .45, 0);
+            camera.position.set(4.4, h * 1.05 + .7, 4.6);
+            camera.lookAt(controls.target);
+            loaded = true;
+            loader.classList.add('done');
+            if(window.gsap && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+              gsap.from(group.rotation, {y: '-=2.2', duration: 1.6, ease: 'power3.out'});
+              gsap.from(camera.position, {x: 7.5, z: 8, duration: 1.6, ease: 'power3.out'});
+            }
+          }, function(xhr){
+            if(xhr.total){ pct.textContent = Math.round(xhr.loaded / xhr.total * 100) + '%'; }
+          }, function(){ fail(); });
+
+          function resize(){
+            var w = stage.clientWidth, h = stage.clientHeight;
+            renderer.setSize(w, h);
+            camera.aspect = w / h; camera.updateProjectionMatrix();
+          }
+          resize();
+          new ResizeObserver(resize).observe(stage);
+
+          var visible = true;
+          new IntersectionObserver(function(en){ visible = en[0].isIntersecting; }, {threshold: .02}).observe(stage);
+          renderer.setAnimationLoop(function(){
+            if(!visible) return;
+            controls.update();
+            renderer.render(scene, camera);
+          });
+
+          /* extra rotation while scrolling through the section */
+          if(window.gsap && window.ScrollTrigger){
+            gsap.to(group.rotation, {y: '+=2.4', ease: 'none',
+              scrollTrigger: {trigger: '#model3d', start: 'top bottom', end: 'bottom top', scrub: 1}});
+          }
+        }).catch(fail);
+      }
+
+      if('IntersectionObserver' in window){
+        var io = new IntersectionObserver(function(en){
+          if(en[0].isIntersecting){ init(); io.disconnect(); }
+        }, {rootMargin: '320px'});
+        io.observe(stage);
+      } else { init(); }
+
+      /* paint swatches */
+      document.querySelectorAll('.swatch').forEach(function(sw){
+        sw.addEventListener('click', function(){
+          document.querySelectorAll('.swatch').forEach(function(s){ s.classList.remove('active'); });
+          sw.classList.add('active');
+          document.getElementById('paintName').textContent = sw.getAttribute('data-name');
+          if(window.__paintMaterial){ window.__paintMaterial.color.set(sw.getAttribute('data-color')); }
+        });
+      });
     })();
   </script>
 </body>
