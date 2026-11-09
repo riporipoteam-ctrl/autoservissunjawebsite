@@ -1,17 +1,31 @@
 # Auto Servis Šunja — autosunja.sitey.my
 
-Public website for **Auto Servis Šunja** (Peugeot specialist), Hajra Lakovića 38, 73000 Goražde.
-Served by GitHub Pages at [autosunja.sitey.my](https://autosunja.sitey.my).
+Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
+Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
+Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
-## V4 design (Nov 2026)
-- White, clean layout based on the free **CarServ** car-repair template structure (HTML Codex), in Šunja blue.
-- Sections: topbar + sticky nav, hero with photo car and floating chips, blue facts counters strip, services, **gallery with the shop's official Instagram photos**, about, steps, Google review + Instagram, SMS booking form, contact + hours, FAQ, footer.
-- Animations: GSAP + ScrollTrigger reveals and counters, Lenis smooth scrolling, hero car mouse-tilt.
-- Logo: transparent versions generated from the original (`assets/sunja-logo-transparent.webp/.png`).
+## v5 (2026-11-09) — built on the real CarServ template
 
-## Gallery photos
-- `assets/gallery/*.webp` — real photos from the shop's official Instagram **@sunja_servis_peugeot**, self-hosted (Instagram CDN links expire), each linking back to its original post.
+The site is built directly on the free **CarServ** car-repair template by
+[HTML Codex](https://htmlcodex.com/car-repair-html-template) (Bootstrap 5),
+downloaded and adapted — not a hand-made imitation:
 
-## Good to know
-- The open/closed badge and the highlighted hours row compute the time in Europe/Sarajevo.
-- The booking form composes an SMS to the shop number (061 297 847) — no backend needed.
+- Template palette recolored to Šunja blue (`--primary: #0B5FA5`), white + clean
+- Real template parts: topbar, sticky navbar, hero carousel, about, tabbed
+  services, contact with Google Map, dark footer
+- Custom additions: live open/closed status pill (Europe/Sarajevo), today
+  highlight in the hours list, gallery with the shop's OWN Instagram photos,
+  Google review block, SMS booking form (composes an `sms:` message to the
+  shop number — no backend), mobile Pozovi/Upute call bar
+- All photos are the shop's own (Peugeot photo + official Instagram photos);
+  the template's stock/demo images were replaced everywhere
+- License: CarServ is CC BY 4.0 — the "Designed By HTML Codex" credit in the
+  footer must stay (see the template's LICENSE terms)
+
+Structure: `index.html`, `css/`, `js/`, `lib/` (template),
+`img/` (crops of the shop's photos), `assets/` (logos + gallery originals).
+
+## Earlier versions
+- v4 (2026-11-08): hand-coded page *following* CarServ's structure — rejected
+  by the owner as not professional enough, superseded by v5.
+- v3 dark/3D and v2 plain light: rejected, removed.
