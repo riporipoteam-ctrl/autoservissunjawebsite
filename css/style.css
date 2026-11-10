@@ -333,7 +333,7 @@
 .border-primary { border-color: #0B5FA5 !important; }
 
 /*** v5.1 polish: anchor offset under sticky nav, hero type, iPhone safe area ***/
-#pocetna, #o-nama, #usluge, #galerija, #kontakt, #termin { scroll-margin-top: 84px; }
+#pocetna, #o-nama, #usluge, #galerija, #lokacija, #kontakt, #termin { scroll-margin-top: 104px; }
 .carousel-caption h1 { text-shadow: 0 2px 18px rgba(0,0,0,.45); }
 @media (max-width: 575.98px) {
     .carousel-caption h1 { font-size: 2.1rem; }
@@ -440,7 +440,7 @@ html { scroll-behavior: smooth; }
 #header-carousel .carousel-item { height: min(86vh, 760px); min-height: 540px; }
 #header-carousel .carousel-item > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 #header-carousel .carousel-item::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(6,20,45,.5), rgba(6,20,45,0) 42%); pointer-events: none; }
-#header-carousel .carousel-caption { background: linear-gradient(90deg, rgba(6,20,45,.80) 0%, rgba(6,20,45,.48) 55%, rgba(6,20,45,.06) 100%); z-index: 3; }
+#header-carousel .carousel-caption { background: linear-gradient(90deg, rgba(6,20,45,.87) 0%, rgba(6,20,45,.52) 55%, rgba(6,20,45,.08) 100%); z-index: 3; }
 #header-carousel .carousel-caption h6 { display: inline-block; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.35); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); padding: .45rem 1.1rem; border-radius: 50rem; letter-spacing: .08em; }
 #header-carousel .carousel-caption h1 { font-size: clamp(2.7rem, 6vw, 4.7rem); font-weight: 800; letter-spacing: -.01em; text-shadow: 0 4px 30px rgba(0,0,0,.35); }
 #header-carousel .carousel-caption p { font-size: 1.08rem; max-width: 560px; }
@@ -458,7 +458,7 @@ html { scroll-behavior: smooth; }
 .hero-indicators { position: absolute; z-index: 5; bottom: 2rem; left: max(1.25rem, calc(50% - 660px + 12px)); right: auto; margin: 0; display: flex; gap: .55rem; }
 .hero-indicators button { width: 64px !important; height: 5px !important; border: none !important; border-radius: 50rem; background: rgba(255,255,255,.35) !important; overflow: hidden; padding: 0; position: relative; text-indent: 0 !important; opacity: 1 !important; }
 .hero-indicators button span { position: absolute; inset: 0; width: 0; background: #fff; border-radius: 50rem; }
-.hero-indicators button.active span { animation: heroFill 6s linear forwards; }
+.hero-indicators button.active span { animation: heroFill 8s linear forwards; }
 @keyframes heroFill { from { width: 0; } to { width: 100%; } }
 .hero-nav { top: auto !important; bottom: 1.4rem; width: 52px !important; height: 52px; border-radius: 50%; background: rgba(11,33,84,.38) !important; backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,.35); opacity: 1 !important; display: flex; align-items: center; justify-content: center; z-index: 5; transition: background .3s; }
 .hero-nav:hover { background: rgba(11,95,165,.75) !important; }
@@ -583,3 +583,7 @@ h6.text-primary.text-uppercase { background: transparent; border: none; padding:
 #header-carousel .carousel-item picture { position: absolute; inset: 0; z-index: 1; display: block; }
 #header-carousel .carousel-item picture img { width: 100%; height: 100%; object-fit: contain; display: block; }
 #header-carousel .carousel-item::after { z-index: 2; }
+
+/*** v17.3 sweep fixes ***/
+.status-pill { white-space: nowrap; }
+#header-carousel .carousel-caption p { text-wrap: pretty; }
