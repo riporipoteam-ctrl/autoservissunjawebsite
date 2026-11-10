@@ -512,3 +512,6 @@ body { -webkit-tap-highlight-color: transparent; }
     .counters-band { border-radius: 18px; }
     .counter-cell { padding: 1.4rem .5rem; }
 }
+
+/*** v9.1: gallery hover overlay is a translucent tint, not a solid blue wall ***/
+.team-item .team-overlay { background: rgba(6, 20, 45, .48); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
