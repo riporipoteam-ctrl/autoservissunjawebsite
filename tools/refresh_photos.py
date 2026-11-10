@@ -101,10 +101,16 @@ def from_tikwm():
                       "url": f"https://www.tiktok.com/@{HANDLE}/{'photo' if is_photo else 'video'}/{pid}"})
     return posts
 
+VISION_BUDGET = [6]
+
 def vision_cat(img_url):
-    """Ask a free vision model which service category a photo shows.
-    Returns a category word, or None when the service did not answer."""
+    """Ask a vision model (GitHub Models, via the workflow's own token)
+    which service category a photo shows. Category word or None."""
     import requests
+    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+    if not token or not img_url or VISION_BUDGET[0] <= 0:
+        return None
+    VISION_BUDGET[0] -= 1
     prompt = ("Look at this car repair workshop photo and reply with exactly one word, the category: "
               "kljucevi = car keys, key fob or key programming device; "
               "dijagnostika = diagnostic tablet or computer used on a car; "
@@ -114,8 +120,10 @@ def vision_cat(img_url):
               "peugeot = a Peugeot car as the main subject; "
               "opcenito = anything else.")
     try:
-        r = requests.post("https://text.pollinations.ai/openai",
-                          json={"model": "openai", "messages": [{"role": "user", "content": [
+        r = requests.post("https://models.github.ai/inference/chat/completions",
+                          headers={"Authorization": "Bearer " + token,
+                                   "Content-Type": "application/json"},
+                          json={"model": "openai/gpt-4o-mini", "messages": [{"role": "user", "content": [
                               {"type": "text", "text": prompt},
                               {"type": "image_url", "image_url": {"url": img_url}}]}]},
                           timeout=90)
@@ -126,7 +134,7 @@ def vision_cat(img_url):
                 return cat
         log("vision answered unrecognised:", txt[:60])
     except Exception as ex:
-        log("vision failed:", str(ex)[:100])
+        log("vision failed:", str(ex)[:120])
     return None
 
 def fetch_full(pid):
@@ -151,10 +159,10 @@ MONTHS_BS = ["januar", "februar", "mart", "april", "maj", "juni", "juli",
              "august", "septembar", "oktobar", "novembar", "decembar"]
 
 def clean_title(raw, date_s):
-    if (raw or "").strip().lower() in ("tiktok video", "tiktok photo", "tiktok"):
-        raw = ""
     t = re.sub(r"[#@]\S+", "", raw or "")
     t = re.sub(r"\s+", " ", t).strip(" -–—|")
+    if t.lower() in ("tiktok video", "tiktok photo", "tiktok"):
+        t = ""
     if len(t) < 4:
         try:
             d = datetime.strptime(date_s, "%Y-%m-%d")
@@ -219,7 +227,6 @@ def main():
                 return c, True
         if allow_fetch:
             t, desc = fetch_full(p["id"])
-            log("DIAG fetch_full", p["id"], "title:", repr(t)[:90], "| desc:", repr(desc)[:60])
             if t:
                 p["title"] = t
             c = classify((t or "") + " " + (desc or ""))
@@ -280,7 +287,6 @@ def main():
             pid = post_id_of(e)
             if e.get("title") in ("U radionici", "TikTok video", "TikTok photo"):
                 e["title"] = clean_title("", e.get("date", ""))
-                log("DIAG repaired", pid, "->", repr(e["title"]))
             if pid and pid in by_id and not e.get("cat_v"):
                 e["cat"], ok = cat_for(by_id[pid], allow_fetch=True, entry_title=e.get("title", ""))
                 e["cat_checked"] = ok
