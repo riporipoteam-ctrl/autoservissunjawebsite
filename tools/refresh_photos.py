@@ -102,18 +102,22 @@ def from_tikwm():
     return posts
 
 def fetch_full(pid):
-    """Full metadata for one post: (title, description) or ('', '')."""
-    try:
-        out = subprocess.run(
-            [sys.executable, "-m", "yt_dlp", "-J", "--no-warnings",
-             "--socket-timeout", "20", f"https://www.tiktok.com/@{HANDLE}/photo/{pid}"],
-            capture_output=True, text=True, timeout=120)
-        if out.returncode != 0:
-            return "", ""
-        d = json.loads(out.stdout)
-        return d.get("title") or "", d.get("description") or ""
-    except Exception:
-        return "", ""
+    """Full metadata for one post: (title, description) or ('', '').
+    Tries the /photo/ URL, then the /video/ URL (posts can be either)."""
+    for kind in ("photo", "video"):
+        try:
+            out = subprocess.run(
+                [sys.executable, "-m", "yt_dlp", "-J", "--no-warnings",
+                 "--socket-timeout", "20", f"https://www.tiktok.com/@{HANDLE}/{kind}/{pid}"],
+                capture_output=True, text=True, timeout=120)
+            if out.returncode != 0:
+                continue
+            d = json.loads(out.stdout)
+            if d:
+                return d.get("title") or "", d.get("description") or ""
+        except Exception:
+            continue
+    return "", ""
 
 MONTHS_BS = ["januar", "februar", "mart", "april", "maj", "juni", "juli",
              "august", "septembar", "oktobar", "novembar", "decembar"]
@@ -235,27 +239,52 @@ def main():
             if e.get("title") == "U radionici":
                 e["title"] = clean_title("", e.get("date", ""))
             if pid and pid in by_id and not e.get("cat"):
-                e["cat"] = cat_for(by_id[pid], allow_fetch=False)
+                e["cat"] = cat_for(by_id[pid], allow_fetch=True)
 
-    # deletion sync: post gone from TikTok -> gone from the site
+    # deletion sync: post gone from TikTok -> gone from the site.
+    # Careful on purpose: a post must be missing from the profile list AND
+    # unresolvable at its direct URL on two consecutive runs before removal.
     removed = 0
+    missing_map = pools.get("_missing") or {}
     if len(posts) >= 50:
+        candidates = set()
         for pool in ("hero", "heroMobile", "gallery"):
-            keep = []
             for e in pools[pool]:
                 pid = post_id_of(e)
                 if pid and pid not in fetched_ids and e.get("date", "9999") >= oldest_fetched:
-                    removed += 1
-                    src = e.get("src", "")
-                    base = os.path.basename(src)
-                    if re.match(r"tt-\d{8}-\d+\.webp$", base) or re.match(r"tt-wide-\d{8}-\d+\.webp$", base):
-                        fp = os.path.join(ROOT, src)
-                        if os.path.isfile(fp):
-                            os.remove(fp)
-                    log("removed (post deleted on TikTok):", pid, src)
-                    continue
-                keep.append(e)
-            pools[pool] = keep
+                    candidates.add(pid)
+        confirmed_gone = set()
+        for pid in candidates:
+            t, desc = fetch_full(pid)
+            if t or desc:
+                log("kept (missing from list but post still resolvable):", pid)
+                missing_map.pop(pid, None)
+                continue
+            missing_map[pid] = int(missing_map.get(pid, 0)) + 1
+            if missing_map[pid] >= 2:
+                confirmed_gone.add(pid)
+            else:
+                log("missing strike 1 (will verify once more before removing):", pid)
+        if confirmed_gone:
+            for pool in ("hero", "heroMobile", "gallery"):
+                keep = []
+                for e in pools[pool]:
+                    pid = post_id_of(e)
+                    if pid in confirmed_gone:
+                        removed += 1
+                        src = e.get("src", "")
+                        base = os.path.basename(src)
+                        if re.match(r"tt-\d{8}-\d+\.webp$", base) or re.match(r"tt-wide-\d{8}-\d+\.webp$", base):
+                            fp = os.path.join(ROOT, src)
+                            if os.path.isfile(fp):
+                                os.remove(fp)
+                        log("removed (post deleted on TikTok, verified twice):", pid, src)
+                        continue
+                    keep.append(e)
+                pools[pool] = keep
+            for pid in confirmed_gone:
+                missing_map.pop(pid, None)
+    pools["_missing"] = missing_map
 
     # prune by age (keep pool minimums with the newest)
     retired = 0
