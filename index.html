@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=13.0" rel="stylesheet">
+    <link href="css/style.css?v=14.0" rel="stylesheet">
 </head>
 
 <body>
@@ -221,34 +221,6 @@
 
 
 
-    <!-- Counters Start -->
-    <div class="container-xxl pb-5">
-        <div class="container">
-            <div class="counters-band row g-0 text-center text-white wow fadeInUp" data-wow-delay="0.1s">
-                <div class="col-6 col-lg-3 counter-cell">
-                    <i class="fa fa-star"></i>
-                    <div class="counter-num"><span data-count="4.6" data-dec="1">0,0</span></div>
-                    <div class="counter-label">Google ocjena</div>
-                </div>
-                <div class="col-6 col-lg-3 counter-cell">
-                    <i class="fa fa-comments"></i>
-                    <div class="counter-num"><span data-count="33">0</span></div>
-                    <div class="counter-label">Google recenzija</div>
-                </div>
-                <div class="col-6 col-lg-3 counter-cell">
-                    <i class="fab fa-tiktok"></i>
-                    <div class="counter-num"><span data-count="959">0</span></div>
-                    <div class="counter-label">TikTok pratilaca</div>
-                </div>
-                <div class="col-6 col-lg-3 counter-cell">
-                    <i class="fa fa-tools"></i>
-                    <div class="counter-num"><span data-count="6">0</span></div>
-                    <div class="counter-label">Usluga na jednom mjestu</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Counters End -->
 
 
     <!-- About Start -->
@@ -259,9 +231,11 @@
                     <div class="position-relative h-100 wow fadeIn" data-wow-delay="0.1s">
                         <img class="img-fluid w-100 svc-photo" src="img/o-nama.jpg" loading="lazy" alt="Programiranje ključeva u servisu Šunja">
                         <div class="position-absolute top-0 end-0 mt-n4 me-n4 py-4 px-5" style="background: rgba(11, 33, 84, .85);">
-                            <h1 class="display-4 text-white mb-0"><span data-rating>4,6</span> <span class="fs-4">★</span></h1>
-                            <h4 class="text-white">Google ocjena</h4>
-                            <p class="text-white-50 mb-0">(<span data-reviews>33</span> recenzija)</p>
+                            <h4 class="text-white mb-2">Google ocjena</h4>
+                            <span class="stars" data-stars style="--fillw:92%">
+                                <span class="stars-row stars-bg"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span>
+                                <span class="stars-fg"><span class="stars-row"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span></span>
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -565,10 +539,12 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="bg-white text-center p-5 shadow-sm">
-                        <div class="mb-3" style="color: #f5a623; font-size: 1.6rem;">
-                            <i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-alt"></i>
+                        <div class="mb-3 stars-big">
+                            <span class="stars" data-stars style="--fillw:92%">
+                                <span class="stars-row stars-bg"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span>
+                                <span class="stars-fg"><span class="stars-row"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span></span>
+                            </span>
                         </div>
-                        <h1 class="display-4 mb-3"><span data-rating>4,6</span> <span class="fs-4 text-muted">od 5</span></h1>
                         <p class="mb-4">Prosječna ocjena servisa na Google kartama, na osnovu <strong><span data-reviews>33</span> recenzija</strong> naših mušterija. Hvala vam na povjerenju!</p>
                         <a class="btn btn-primary py-3 px-5" href="https://www.google.com/maps/search/?api=1&query=Auto+Servis+%C5%A0unja+Gora%C5%BEde" target="_blank" rel="noopener">Pogledajte na Google kartama<i class="fa fa-arrow-right ms-3"></i></a>
                     </div>
@@ -826,15 +802,26 @@
         setInterval(update, 60000);
     })();
 
-    // Google rating — loaded from rating.json so it stays current
+    // Google rating — loaded from rating.json; drives the animated stars
     fetch('rating.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
         if (!d || typeof d.rating !== 'number') return;
-        var rTxt = d.rating.toFixed(1).replace('.', ',');
-        document.querySelectorAll('[data-rating]').forEach(function (el) { el.textContent = rTxt; });
+        var pct = Math.max(0, Math.min(100, d.rating / 5 * 100));
+        document.querySelectorAll('[data-stars]').forEach(function (el) { el.style.setProperty('--fillw', pct + '%'); });
         if (typeof d.count === 'number') {
             document.querySelectorAll('[data-reviews]').forEach(function (el) { el.textContent = d.count; });
         }
     }).catch(function () {});
+
+    // Stars fill up when scrolled into view
+    (function () {
+        var els = document.querySelectorAll('[data-stars]');
+        if (!els.length) return;
+        if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('on'); }); return; }
+        var io = new IntersectionObserver(function (entries) {
+            entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('on'); io.unobserve(en.target); } });
+        }, { threshold: 0.4 });
+        els.forEach(function (e) { io.observe(e); });
+    })();
 
     // Service preselect from the service tabs and hero slides
     function pickServiceVal(v) {
@@ -862,30 +849,6 @@
         if (msg) lines.push('Opis: ' + msg);
         window.location.href = 'sms:+38761297847?&body=' + encodeURIComponent(lines.join('\n'));
     });
-
-    // Animated counters
-    (function () {
-        var els = document.querySelectorAll('[data-count]');
-        function fmt(e, v) { var dec = parseInt(e.getAttribute('data-dec') || '0', 10); return v.toFixed(dec).replace('.', ','); }
-        function final(e) { e.textContent = fmt(e, parseFloat(e.getAttribute('data-count'))); }
-        if (!els.length) return;
-        if (!('IntersectionObserver' in window)) { els.forEach(final); return; }
-        var io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (en) {
-                if (!en.isIntersecting) return;
-                io.unobserve(en.target);
-                var e = en.target, target = parseFloat(e.getAttribute('data-count')), t0 = null;
-                function step(ts) {
-                    if (!t0) t0 = ts;
-                    var pr = Math.min(1, (ts - t0) / 1400);
-                    e.textContent = fmt(e, target * (1 - Math.pow(1 - pr, 3)));
-                    if (pr < 1) requestAnimationFrame(step);
-                }
-                requestAnimationFrame(step);
-            });
-        }, { threshold: 0.4 });
-        els.forEach(function (e) { io.observe(e); });
-    })();
 
     // Photo randomizer — fresh picks from photos.json on every visit
     fetch('photos.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
