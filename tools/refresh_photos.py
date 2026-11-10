@@ -181,7 +181,7 @@ def main():
         if portrait.width > 860:
             portrait = portrait.resize((860, round(portrait.height * 860 / portrait.width)), Image.LANCZOS)
         pfile = f"tt-{tag}.webp"
-        portrait.save(os.path.join(PHOTO_DIR, pfile), "WEBP", quality=84)
+        portrait.save(os.path.join(PHOTO_DIR, pfile), "WEBP", quality=80, method=6)
         # hero version: blur-pad to 1600x1000 so the WHOLE photo stays visible
         tw, th = 1600, 1000
         wide = im.copy()
@@ -195,7 +195,7 @@ def main():
         fg = fg.resize((round(fg.width * s2), round(fg.height * s2)), Image.LANCZOS)
         wide.paste(fg, ((tw - fg.width) // 2, (th - fg.height) // 2))
         wfile = f"tt-wide-{tag}.webp"
-        wide.save(os.path.join(PHOTO_DIR, wfile), "WEBP", quality=82)
+        wide.save(os.path.join(PHOTO_DIR, wfile), "WEBP", quality=79, method=6)
         title = clean_title(p["title"], p["date"])
         pools.setdefault("gallery", []).insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"]})
         pools.setdefault("hero", []).insert(0, {"src": f"assets/photos/{wfile}", "href": p["url"], "title": title, "date": p["date"]})
