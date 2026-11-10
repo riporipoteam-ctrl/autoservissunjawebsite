@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=15.0" rel="stylesheet">
+    <link href="css/style.css?v=15.1" rel="stylesheet">
 </head>
 
 <body>
@@ -118,6 +118,7 @@
         <div id="header-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000" data-bs-pause="false">
             <div class="carousel-inner">
                 <div class="carousel-item active">
+                    <div class="hero-bg" id="heroMainBg" style="background-image:url('assets/photos/tt-wide-01.webp')"></div>
                     <picture><source id="heroMainSrc" media="(max-width: 767.98px)" srcset="assets/photos/tt-01.webp"><img class="w-100" id="heroMainImg" src="assets/photos/tt-wide-01.webp" alt="Vozila ispred radionice Auto Servis Šunja" fetchpriority="high"></picture>
                     <div class="carousel-caption d-flex align-items-center">
                         <div class="container">
@@ -137,6 +138,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
+                    <div class="hero-bg" style="background-image:url('img/hero-1.jpg')"></div>
                     <picture><source media="(max-width: 767.98px)" srcset="img/hero-1-m.jpg"><img class="w-100" src="img/hero-1.jpg" alt="Autodijagnostika u radionici Auto Servis Šunja"></picture>
                     <div class="carousel-caption d-flex align-items-center">
                         <div class="container">
@@ -153,6 +155,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
+                    <div class="hero-bg" style="background-image:url('img/hero-3.jpg')"></div>
                     <picture><source media="(max-width: 767.98px)" srcset="img/hero-3-m.jpg"><img class="w-100" src="img/hero-3.jpg" alt="Izrada i programiranje ključeva u servisu Šunja"></picture>
                     <div class="carousel-caption d-flex align-items-center">
                         <div class="container">
@@ -867,6 +870,8 @@
             var item = heroPool[Math.floor(Math.random() * heroPool.length)];
             var pick = typeof item === 'string' ? item : item.src;
             if (pick) {
+                var heroBg = document.getElementById('heroMainBg');
+                if (heroBg) heroBg.style.backgroundImage = 'url(' + pick + ')';
                 if (isMobile && heroSrc) { heroSrc.srcset = pick; if (item.alt && heroImg) heroImg.alt = item.alt; }
                 else if (heroImg && pick !== heroImg.getAttribute('src')) { heroImg.src = pick; if (item.alt) heroImg.alt = item.alt; }
             }
