@@ -563,3 +563,17 @@ h6.text-primary.text-uppercase { background: transparent; border: none; padding:
     .animated, .wow { animation: none !important; transition: none !important; }
     #header-carousel .carousel-item { transition: none !important; }
 }
+
+/*** v14: animated Google stars (fill up to the rating) ***/
+.stars { position: relative; display: inline-block; line-height: 1; font-size: 1.9rem; }
+.stars-row { display: inline-flex; gap: .14em; white-space: nowrap; }
+.stars-bg { color: rgba(140,155,175,.55); }
+.stars-fg { position: absolute; left: 0; top: 0; width: 0; overflow: hidden; color: #FFC107; transition: width 1.5s cubic-bezier(.25,.8,.3,1) .15s; }
+.stars.on .stars-fg { width: var(--fillw, 92%); }
+.stars.on .stars-fg i { animation: starPop .45s ease both; }
+.stars.on .stars-fg i:nth-child(2) { animation-delay: .18s; }
+.stars.on .stars-fg i:nth-child(3) { animation-delay: .36s; }
+.stars.on .stars-fg i:nth-child(4) { animation-delay: .54s; }
+.stars.on .stars-fg i:nth-child(5) { animation-delay: .72s; }
+@keyframes starPop { 0% { transform: scale(.4); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.stars-big .stars { font-size: 2.3rem; }
