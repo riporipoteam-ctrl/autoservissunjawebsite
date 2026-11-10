@@ -87,11 +87,19 @@ def fetch_title(pid):
     except Exception:
         return ""
 
+MONTHS_BS = ["januar", "februar", "mart", "april", "maj", "juni", "juli",
+             "august", "septembar", "oktobar", "novembar", "decembar"]
+
 def clean_title(raw, date_s):
     t = re.sub(r"[#@]\S+", "", raw or "")
     t = re.sub(r"\s+", " ", t).strip(" -–—|")
     if len(t) < 4:
-        t = "U radionici"
+        # captionless post: factual label from its date, never an invented title
+        try:
+            d = datetime.strptime(date_s, "%Y-%m-%d")
+            t = "Radionica, " + MONTHS_BS[d.month - 1] + " " + str(d.year)
+        except Exception:
+            t = "U radionici"
     return t[:48]
 
 def main():
@@ -134,6 +142,12 @@ def main():
             pid = post_id(e)
             if pid:
                 known.add(pid)
+
+    # repair existing fallback titles to factual date labels
+    for pool in ("hero", "heroMobile", "gallery"):
+        for e in pools.get(pool, []):
+            if e.get("title") == "U radionici":
+                e["title"] = clean_title("", e.get("date", ""))
 
     # enrich titles: real captions for new posts, and repair generic ones
     for p in fresh:
