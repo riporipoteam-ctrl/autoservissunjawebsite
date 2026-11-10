@@ -1,10 +1,25 @@
 {
  "hero": [
-  "img/hero-2.jpg",
-  "assets/photos/tt-wide-01.webp",
-  "assets/photos/tt-wide-03.webp",
-  "assets/photos/tt-wide-04.webp",
-  "assets/photos/tt-wide-10.webp"
+  {
+   "src": "img/hero-2.jpg",
+   "alt": "Plavi Peugeot ispred servisa Šunja"
+  },
+  {
+   "src": "assets/photos/tt-wide-01.webp",
+   "alt": "Vozila ispred radionice Šunja"
+  },
+  {
+   "src": "assets/photos/tt-wide-03.webp",
+   "alt": "Peugeot u radionici Šunja"
+  },
+  {
+   "src": "assets/photos/tt-wide-04.webp",
+   "alt": "Renault Clio na dizalici u Šunja servisu"
+  },
+  {
+   "src": "assets/photos/tt-wide-10.webp",
+   "alt": "Peugeot na dizalici u Šunja servisu"
+  }
  ],
  "gallery": [
   {
