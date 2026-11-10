@@ -540,3 +540,7 @@ h6.text-primary.text-uppercase { background: transparent; border: none; padding:
     #kontakt .btn-light, #kontakt .btn-outline-light { display: block; width: 100%; margin: .55rem 0 0 0 !important; }
     .shop-photo-marker { width: 54px; height: 54px; }
 }
+
+/*** v11.1: navbar CTA normal-sized; back-to-top tidy ***/
+.navbar .btn { align-self: center; height: auto; margin: .5rem .8rem .5rem .5rem; padding: .62rem 1.35rem !important; border-radius: 10px; }
+.back-to-top { right: 24px; bottom: 24px; width: 46px; height: 46px; border-radius: 12px !important; box-shadow: 0 8px 20px rgba(6,20,45,.28); z-index: 999; }
