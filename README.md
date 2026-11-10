@@ -55,3 +55,9 @@ Structure: `index.html`, `css/`, `js/`, `lib/` (template),
 - Preloader is FAST on repeat visits within a session (sessionStorage flag: ~1s instead of ~2.5s).
 - Marquee pauses on hover; html smooth scrolling.
 - NOTE: the first v8 push attempt pushed CSS but the index.html edit script died on a meta-tag anchor mismatch (attribute order) — pushes reported OK for an UNCHANGED index. Always grep the live HTML for the new markers after pushing (done on the retry: all present).
+
+## v8.1 (2026-11-10) — owner fixes
+- ALL `// X //` kickers stripped to plain text site-wide (hero, sections, Kontakt cards) — owner disliked the slashes.
+- "Porodični" REMOVED everywhere (About paragraph sentence deleted; footer now "Auto Servis Šunja — Goražde. …"). Owner: never invent family/fluff claims in copy.
+- Map: pixelRatio capped at 1.5 + fadeDuration 0 + tiles preconnect → smoother flight. ONE-SHOT flight: when scroll progress hits the end, finish() sets final view, adds .globe-done (section collapses 250vh → static 70vh map block), and removes the scroll listeners — scrolling back up/down afterwards passes a normal map, no replay until page refresh. Verified both ways + reload reset.
+- Gallery images switched lazy→eager (the randomizer's src swap stalled under lazy loading; a photo sat on the placeholder for a minute when scrolling back). NOTE: Pages deploy can lag ~1-2 min; a too-early curl shows the previous build — re-check before concluding a push failed.
