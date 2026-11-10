@@ -2,7 +2,7 @@ name: Fresh photos from TikTok
 
 on:
   schedule:
-    - cron: '23 */6 * * *'
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 permissions:
