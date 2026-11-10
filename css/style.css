@@ -544,3 +544,10 @@ h6.text-primary.text-uppercase { background: transparent; border: none; padding:
 /*** v11.1: navbar CTA normal-sized; back-to-top tidy ***/
 .navbar .btn { align-self: center; height: auto; margin: .5rem .8rem .5rem .5rem; padding: .62rem 1.35rem !important; border-radius: 10px; }
 .back-to-top { right: 24px; bottom: 24px; width: 46px; height: 46px; border-radius: 12px !important; box-shadow: 0 8px 20px rgba(6,20,45,.28); z-index: 999; }
+
+/*** v12.1: navbar CTA height (template forces 75px) + back-to-top pinned by ID ***/
+.navbar-light a.btn { height: auto !important; min-height: 0 !important; padding: .62rem 1.35rem !important; align-self: center; }
+#backTop { position: fixed !important; left: auto !important; right: 24px !important; bottom: 24px !important; width: 46px; height: 46px; z-index: 999; }
+@media (max-width: 767.98px) {
+    #backTop { bottom: 92px !important; }
+}
