@@ -1,6 +1,12 @@
 {
  "hero": [
   {
+   "src": "assets/photos/tt-wide-20261110-216852.webp",
+   "href": "https://www.tiktok.com/@autoservissunja/photo/7706671380024216852",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-10"
+  },
+  {
    "src": "assets/photos/tt-wide-01.webp",
    "alt": "Vozila ispred radionice Šunja",
    "date": "2026-11-08"
@@ -88,6 +94,12 @@
   }
  ],
  "gallery": [
+  {
+   "src": "assets/photos/tt-20261110-216852.webp",
+   "href": "https://www.tiktok.com/@autoservissunja/photo/7706671380024216852",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-10"
+  },
   {
    "src": "assets/photos/tt-01.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7705912434296491284",
@@ -228,6 +240,12 @@
   }
  ],
  "heroMobile": [
+  {
+   "src": "assets/photos/tt-20261110-216852.webp",
+   "href": "https://www.tiktok.com/@autoservissunja/photo/7706671380024216852",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-10"
+  },
   {
    "src": "assets/photos/tt-01.webp",
    "alt": "Vozila ispred radionice Auto Servis Šunja",
