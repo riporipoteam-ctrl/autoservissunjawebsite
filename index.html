@@ -886,9 +886,14 @@
             pool = pool.slice().sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
             var newestFirst = pool.shift();
             for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
-            if (newestFirst) pool.unshift(newestFirst);
+            var seq = [];
+            var usedTitles = {};
+            if (newestFirst) { seq.push(newestFirst); usedTitles[newestFirst.title] = 1; }
+            pool.forEach(function (e) { if (seq.length < 5 && !usedTitles[e.title]) { seq.push(e); usedTitles[e.title] = 1; } });
+            pool.forEach(function (e) { if (seq.length < 5 && seq.indexOf(e) === -1) seq.push(e); });
+            if (!seq.length) seq = pool;
             document.querySelectorAll('[data-gallery-img]').forEach(function (img, idx) {
-                var item = pool[idx % pool.length];
+                var item = seq[idx % seq.length];
                 img.src = item.src; img.alt = item.title;
                 var card = img.closest('.team-item');
                 if (!card) return;
