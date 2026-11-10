@@ -330,7 +330,7 @@
                             <div class="row g-4">
                                 <div class="col-md-6" style="min-height: 350px;">
                                     <div>
-                                        <img class="img-fluid w-100 svc-photo" src="img/svc-dijagnostika-3.webp" loading="lazy" alt="Autodijagnostika">
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="dijagnostika" src="img/svc-dijagnostika-3.webp" loading="lazy" alt="Autodijagnostika">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -347,7 +347,7 @@
                             <div class="row g-4">
                                 <div class="col-md-6" style="min-height: 350px;">
                                     <div>
-                                        <img class="img-fluid w-100 svc-photo" src="img/svc-peugeot-2.webp" loading="lazy" alt="Peugeot servis">
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="peugeot" src="img/svc-peugeot-2.webp" loading="lazy" alt="Peugeot servis">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -364,7 +364,7 @@
                             <div class="row g-4">
                                 <div class="col-md-6" style="min-height: 350px;">
                                     <div>
-                                        <img class="img-fluid w-100 svc-photo" src="img/svc-mali.webp" loading="lazy" alt="Mali servis">
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="mali" src="img/svc-mali.webp" loading="lazy" alt="Mali servis">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -381,7 +381,7 @@
                             <div class="row g-4">
                                 <div class="col-md-6" style="min-height: 350px;">
                                     <div>
-                                        <img class="img-fluid w-100 svc-photo" src="img/svc-veliki.webp" loading="lazy" alt="Veliki servis">
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="veliki" src="img/svc-veliki.webp" loading="lazy" alt="Veliki servis">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -398,7 +398,7 @@
                             <div class="row g-4">
                                 <div class="col-md-6" style="min-height: 350px;">
                                     <div>
-                                        <img class="img-fluid w-100 svc-photo" src="img/svc-elektrika.webp" loading="lazy" alt="Autoelektrika">
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="elektrika" src="img/svc-elektrika.webp" loading="lazy" alt="Autoelektrika">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -415,7 +415,7 @@
                             <div class="row g-4">
                                 <div class="col-md-6" style="min-height: 350px;">
                                     <div>
-                                        <img class="img-fluid w-100 svc-photo" src="img/svc-kljucevi.webp" loading="lazy" alt="Ključevi i daljinski">
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="kljucevi" src="img/svc-kljucevi.webp" loading="lazy" alt="Ključevi i daljinski">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -865,7 +865,8 @@
             var heroSrc = document.getElementById('heroMainSrc');
             var isMobile = window.innerWidth < 768 && d.heroMobile && d.heroMobile.length;
             var heroPool = isMobile ? freshPool(d.heroMobile, 1) : freshPool(d.hero, 1);
-            var item = heroPool[Math.floor(Math.random() * heroPool.length)];
+            heroPool = heroPool.slice().sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
+            var item = heroPool[0];
             var pick = typeof item === 'string' ? item : item.src;
             if (pick) {
                 var heroBg = document.getElementById('heroMainBg');
@@ -874,9 +875,18 @@
                 else if (heroImg && pick !== heroImg.getAttribute('src')) { heroImg.src = pick; if (item.alt) heroImg.alt = item.alt; }
             }
         }
+        if (d.services) {
+            document.querySelectorAll('[data-svc-cat]').forEach(function (img) {
+                var s = d.services[img.getAttribute('data-svc-cat')];
+                if (s && s.src && s.src !== img.getAttribute('src')) { img.src = s.src; }
+            });
+        }
         if (d.gallery && d.gallery.length) {
             var pool = freshPool(d.gallery, 5);
+            pool = pool.slice().sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
+            var newestFirst = pool.shift();
             for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
+            if (newestFirst) pool.unshift(newestFirst);
             document.querySelectorAll('[data-gallery-img]').forEach(function (img, idx) {
                 var item = pool[idx % pool.length];
                 img.src = item.src; img.alt = item.title;
