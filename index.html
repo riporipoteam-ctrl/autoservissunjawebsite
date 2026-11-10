@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=12.3" rel="stylesheet">
+    <link href="css/style.css?v=13.0" rel="stylesheet">
 </head>
 
 <body>
@@ -595,7 +595,6 @@
             <div class="globe-stage" id="globeStage">Svijet</div>
         </div>
     </div>
-    <p class="text-center small mt-2" id="mapCredit" style="color:#8a94a6;">Podaci karte: © OpenStreetMap, © OpenMapTiles, OpenFreeMap</p>
     <!-- Globe Map End -->
 
 
@@ -792,7 +791,6 @@
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
     <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
-    <script src="https://unpkg.com/three@0.149.0/build/three.min.js"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
@@ -1001,135 +999,9 @@
                 loaded = true;
                 clearTimeout(safetyTimer);
                 try { map.setProjection({ type: 'globe' }); } catch (e) {}
-                try { buildShopModel(map); } catch (e) { shop3dStatus('3D: greška ' + String(e).slice(0, 60)); }
                 render();
             });
 
-            // 3D model of the actual shop + house, built from the shop's own exterior photos
-            function shop3dStatus(msg) {
-                var elc = document.getElementById('mapCredit');
-                if (elc) elc.textContent = elc.textContent + ' · ' + msg;
-            }
-            function buildShopModel(map) {
-                if (typeof THREE === 'undefined') { shop3dStatus('3D: three.js nije učitan'); return; }
-                shop3dStatus('3D: start');
-                var mc = maplibregl.MercatorCoordinate.fromLngLat(SHOP, 0);
-                var mScale = mc.meterInMercatorCoordinateUnits();
-                var azimuth = 160 * Math.PI / 180;
-                function canvasTex(w, hgt, draw) {
-                    var c = document.createElement('canvas'); c.width = w; c.height = hgt;
-                    draw(c.getContext('2d'), w, hgt);
-                    var t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t;
-                }
-                var shutterTex = canvasTex(256, 256, function (g, w, hgt) {
-                    g.fillStyle = '#eef1f3'; g.fillRect(0, 0, w, hgt);
-                    g.fillStyle = 'rgba(20,30,40,.20)';
-                    for (var y = 6; y < hgt; y += 15) g.fillRect(0, y, w, 3);
-                    g.fillStyle = 'rgba(255,255,255,.5)'; g.fillRect(0, 0, w, 5);
-                });
-                var signTex = canvasTex(1024, 128, function (g, w, hgt) {
-                    g.fillStyle = '#0B5FA5'; g.fillRect(0, 0, w, hgt);
-                    g.fillStyle = '#ffffff'; g.font = '700 74px Arial'; g.textAlign = 'center'; g.textBaseline = 'middle';
-                    g.fillText('AUTO SERVIS ŠUNJA', w / 2, hgt / 2 + 3);
-                });
-                var totemTex = canvasTex(512, 640, function (g, w, hgt) {
-                    g.fillStyle = '#0d1b2e'; g.fillRect(0, 0, w, hgt);
-                    g.strokeStyle = '#ffffff'; g.lineWidth = 6; g.strokeRect(14, 14, w - 28, hgt - 28);
-                    g.fillStyle = '#ffffff'; g.textAlign = 'center';
-                    g.font = '600 46px Arial'; g.fillText('AUTO SERVIS', w / 2, 105);
-                    g.font = '800 104px Arial'; g.fillText('ŠUNJA', w / 2, 205);
-                    g.fillRect(90, 262, w - 180, 4);
-                    g.font = '600 44px Arial'; g.fillText('PEUGEOT', w / 2, 345);
-                    g.font = '600 40px Arial'; g.fillText('DIJAGNOSTIKA', w / 2, 425);
-                    g.font = '600 40px Arial'; g.fillText('PUNJENJE KLIME', w / 2, 500);
-                });
-                function box(w, hgt, d, color, x, y, z, map) {
-                    var mat = map ? new THREE.MeshLambertMaterial({ map: map }) : new THREE.MeshLambertMaterial({ color: color });
-                    var ms = new THREE.Mesh(new THREE.BoxGeometry(w, hgt, d), mat);
-                    ms.position.set(x, y, z); return ms;
-                }
-                function plane(w, hgt, color, x, y, z, map) {
-                    var mat = map ? new THREE.MeshLambertMaterial({ map: map }) : new THREE.MeshLambertMaterial({ color: color });
-                    var ms = new THREE.Mesh(new THREE.PlaneGeometry(w, hgt), mat);
-                    ms.position.set(x, y, z); return ms;
-                }
-                var g = new THREE.Group();
-                // ground: asphalt parking lot
-                var ground = plane(38, 28, 0x50535a, 0, 0, 0); ground.rotation.x = -Math.PI / 2; ground.position.y = 0.02; g.add(ground);
-                // WORKSHOP: blue metal building, white roller shutter, big blue sign band
-                g.add(box(12, 4.3, 8, 0x1668b0, -6.5, 2.15, 1.5));
-                g.add(box(12.7, 0.22, 8.7, 0x565b61, -6.5, 4.41, 1.5));
-                g.add(plane(6.8, 3.2, 0, -8.7, 1.8, 5.53, shutterTex));
-                g.add(plane(1.1, 2.3, 0x1d2a35, -2.6, 1.35, 5.53));
-                g.add(plane(2.2, 1.1, 0x27333f, -4.3, 2.9, 5.53));
-                g.add(box(12.5, 1.05, 0.3, 0x0B5FA5, -6.5, 4.95, 5.35));
-                g.add(plane(12.5, 1.05, 0, -6.5, 4.95, 5.52, signTex));
-                // HOUSE: two floors, cream walls, pitched tile roof, balcony
-                g.add(box(9, 6.2, 7.5, 0xecdcab, 5.0, 3.1, -4.0));
-                var roofShape = new THREE.Shape();
-                roofShape.moveTo(-5.2, 0); roofShape.lineTo(5.2, 0); roofShape.lineTo(0, 2.6); roofShape.closePath();
-                var roofGeo = new THREE.ExtrudeGeometry(roofShape, { depth: 8.1, bevelEnabled: false });
-                var roof = new THREE.Mesh(roofGeo, new THREE.MeshLambertMaterial({ color: 0x7e4636 }));
-                roof.position.set(5.0, 6.2, -8.05); g.add(roof);
-                [[2.8, 4.7], [7.2, 4.7], [2.8, 1.9], [7.2, 1.9]].forEach(function (pt) {
-                    g.add(plane(1.35, 1.45, 0xaebfca, pt[0], pt[1], -0.21));
-                });
-                g.add(box(3.4, 0.18, 1.1, 0xd8cfb4, 3.4, 3.35, 0.3));
-                g.add(box(3.4, 0.7, 0.06, 0x8b8578, 3.4, 3.8, 0.82));
-                g.add(box(0.85, 0.62, 0.26, 0xf0f0f0, 7.9, 4.5, -0.12));
-                // roadside totem sign
-                var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 4.8, 10), new THREE.MeshLambertMaterial({ color: 0x2c3138 }));
-                pole.position.set(7.5, 2.4, 6.0); g.add(pole);
-                g.add(box(2.0, 2.5, 0.16, 0x0d1b2e, 7.5, 3.6, 6.0));
-                var t1 = plane(2.0, 2.5, 0, 7.5, 3.6, 6.1, totemTex); g.add(t1);
-                var t2 = plane(2.0, 2.5, 0, 7.5, 3.6, 5.9, totemTex); t2.rotation.y = Math.PI; g.add(t2);
-                // two simple parked cars
-                function car(color, x, z, rot) {
-                    var cg = new THREE.Group();
-                    cg.add(box(4.3, 0.62, 1.78, color, 0, 0.62, 0));
-                    cg.add(box(2.2, 0.55, 1.62, 0x141a20, -0.2, 1.18, 0));
-                    [[-1.45, 0.86], [1.45, 0.86], [-1.45, -0.86], [1.45, -0.86]].forEach(function (wp) {
-                        var wh = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.24, 14), new THREE.MeshLambertMaterial({ color: 0x14161a }));
-                        wh.rotation.x = Math.PI / 2; wh.position.set(wp[0], 0.34, wp[1]); cg.add(wh);
-                    });
-                    cg.position.set(x, 0, z); cg.rotation.y = rot; return cg;
-                }
-                g.add(car(0x454e59, -2.2, 9.0, 0.18));
-                g.add(car(0x7d8894, 3.0, 9.6, -0.08));
-                var layer = {
-                    id: 'sunja-3d-model', type: 'custom', renderingMode: '3d',
-                    onAdd: function (mapObj, gl) {
-                        this.scene = new THREE.Scene();
-                        this.scene.add(new THREE.HemisphereLight(0xffffff, 0x3a4a5a, 1.05));
-                        var sun = new THREE.DirectionalLight(0xffffff, 0.85);
-                        sun.position.set(40, 60, 25); this.scene.add(sun);
-                        g.traverse(function (o) {
-                            o.frustumCulled = false;
-                            if (o.material) { o.material.depthWrite = false; }
-                        });
-                        this.scene.add(g);
-                        this.camera = new THREE.Camera();
-                        this.renderer = new THREE.WebGLRenderer({ canvas: mapObj.getCanvas(), context: gl, antialias: true });
-                        this.renderer.autoClear = false;
-                    },
-                    render: function (gl, args) {
-                        if (!this._rpt) { this._rpt = 1; shop3dStatus('3D: render radi'); }
-                        var matArr = (args && args.defaultProjectionData) ? args.defaultProjectionData.mainMatrix : args;
-                        var rotX = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
-                        var rotZ = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0, 0, 1), azimuth);
-                        var m = new THREE.Matrix4().fromArray(matArr);
-                        var l = new THREE.Matrix4().makeTranslation(mc.x, mc.y, mc.z)
-                            .scale(new THREE.Vector3(mScale, mScale, mScale))
-                            .multiply(rotX).multiply(rotZ);
-                        this.camera.projectionMatrix = m.multiply(l);
-                        this.renderer.resetState();
-                        this.renderer.clearDepth();
-                        this.renderer.render(this.scene, this.camera);
-                    }
-                };
-                var firstSymbol = (map.getStyle().layers || []).filter(function (l) { return l.type === 'symbol'; })[0];
-                if (!map.getLayer('sunja-3d-model')) { map.addLayer(layer, firstSymbol ? firstSymbol.id : undefined); shop3dStatus('3D: sloj dodan'); }
-            }
             var stops = [
                 { p: 0.00, c: [12, 32], z: 1.6, pitch: 0, bearing: -15, label: 'Svijet' },
                 { p: 0.30, c: [15, 46], z: 3.4, pitch: 0, bearing: -6, label: 'Evropa' },
