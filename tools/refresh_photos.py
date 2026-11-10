@@ -232,7 +232,9 @@ def main():
             c = classify((t or "") + " " + (desc or ""))
             if c != "opcenito":
                 return c, True
-            vc = vision_cat(p.get("img", ""))
+            if "_vision" not in p:
+                p["_vision"] = vision_cat(p.get("img", ""))
+            vc = p["_vision"]
             if vc is not None:
                 return vc, True
             return "opcenito", False
