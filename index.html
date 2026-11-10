@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=12.1" rel="stylesheet">
+    <link href="css/style.css?v=12.2" rel="stylesheet">
 </head>
 
 <body>
@@ -595,7 +595,7 @@
             <div class="globe-stage" id="globeStage">Svijet</div>
         </div>
     </div>
-    <p class="text-center small mt-2" style="color:#8a94a6;">Podaci karte: © OpenStreetMap, © OpenMapTiles, OpenFreeMap</p>
+    <p class="text-center small mt-2" id="mapCredit" style="color:#8a94a6;">Podaci karte: © OpenStreetMap, © OpenMapTiles, OpenFreeMap</p>
     <!-- Globe Map End -->
 
 
@@ -1001,13 +1001,18 @@
                 loaded = true;
                 clearTimeout(safetyTimer);
                 try { map.setProjection({ type: 'globe' }); } catch (e) {}
-                try { buildShopModel(map); } catch (e) {}
+                try { buildShopModel(map); } catch (e) { shop3dStatus('3D: greška ' + String(e).slice(0, 60)); }
                 render();
             });
 
             // 3D model of the actual shop + house, built from the shop's own exterior photos
+            function shop3dStatus(msg) {
+                var elc = document.getElementById('mapCredit');
+                if (elc) elc.textContent = elc.textContent + ' · ' + msg;
+            }
             function buildShopModel(map) {
-                if (typeof THREE === 'undefined') return;
+                if (typeof THREE === 'undefined') { shop3dStatus('3D: three.js nije učitan'); return; }
+                shop3dStatus('3D: start');
                 var mc = maplibregl.MercatorCoordinate.fromLngLat(SHOP, 0);
                 var mScale = mc.meterInMercatorCoordinateUnits();
                 var azimuth = 160 * Math.PI / 180;
@@ -1104,9 +1109,11 @@
                         this.renderer.autoClear = false;
                     },
                     render: function (gl, args) {
+                        if (!this._rpt) { this._rpt = 1; shop3dStatus('3D: render radi'); }
+                        var matArr = (args && args.defaultProjectionData) ? args.defaultProjectionData.mainMatrix : args;
                         var rotX = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(1, 0, 0), Math.PI / 2);
                         var rotZ = new THREE.Matrix4().makeRotationAxis(new THREE.Vector3(0, 0, 1), azimuth);
-                        var m = new THREE.Matrix4().fromArray(args.defaultProjectionData.mainMatrix);
+                        var m = new THREE.Matrix4().fromArray(matArr);
                         var l = new THREE.Matrix4().makeTranslation(mc.x, mc.y, mc.z)
                             .scale(new THREE.Vector3(mScale, mScale, mScale))
                             .multiply(rotX).multiply(rotZ);
@@ -1116,7 +1123,7 @@
                     }
                 };
                 var firstSymbol = (map.getStyle().layers || []).filter(function (l) { return l.type === 'symbol'; })[0];
-                if (!map.getLayer('sunja-3d-model')) map.addLayer(layer, firstSymbol ? firstSymbol.id : undefined);
+                if (!map.getLayer('sunja-3d-model')) { map.addLayer(layer, firstSymbol ? firstSymbol.id : undefined); shop3dStatus('3D: sloj dodan'); }
             }
             var stops = [
                 { p: 0.00, c: [12, 32], z: 1.6, pitch: 0, bearing: -15, label: 'Svijet' },
