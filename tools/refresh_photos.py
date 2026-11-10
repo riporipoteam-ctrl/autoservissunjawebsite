@@ -101,6 +101,34 @@ def from_tikwm():
                       "url": f"https://www.tiktok.com/@{HANDLE}/{'photo' if is_photo else 'video'}/{pid}"})
     return posts
 
+def vision_cat(img_url):
+    """Ask a free vision model which service category a photo shows.
+    Returns a category word, or None when the service did not answer."""
+    import requests
+    prompt = ("Look at this car repair workshop photo and reply with exactly one word, the category: "
+              "kljucevi = car keys, key fob or key programming device; "
+              "dijagnostika = diagnostic tablet or computer used on a car; "
+              "elektrika = ECU circuit board, wiring or battery; "
+              "veliki = engine internals, timing belt or cylinder head; "
+              "mali = oil change, filters, brakes or general servicing; "
+              "peugeot = a Peugeot car as the main subject; "
+              "opcenito = anything else.")
+    try:
+        r = requests.post("https://text.pollinations.ai/openai",
+                          json={"model": "openai", "messages": [{"role": "user", "content": [
+                              {"type": "text", "text": prompt},
+                              {"type": "image_url", "image_url": {"url": img_url}}]}]},
+                          timeout=90)
+        r.raise_for_status()
+        txt = (r.json()["choices"][0]["message"]["content"] or "").strip().lower()
+        for cat in CATS + ["opcenito"]:
+            if cat in txt:
+                return cat
+        log("vision answered unrecognised:", txt[:60])
+    except Exception as ex:
+        log("vision failed:", str(ex)[:100])
+    return None
+
 def fetch_full(pid):
     """Full metadata for one post: (title, description) or ('', '').
     Tries the /photo/ URL, then the /video/ URL (posts can be either)."""
@@ -123,6 +151,8 @@ MONTHS_BS = ["januar", "februar", "mart", "april", "maj", "juni", "juli",
              "august", "septembar", "oktobar", "novembar", "decembar"]
 
 def clean_title(raw, date_s):
+    if (raw or "").strip().lower() in ("tiktok video", "tiktok photo", "tiktok"):
+        raw = ""
     t = re.sub(r"[#@]\S+", "", raw or "")
     t = re.sub(r"\s+", " ", t).strip(" -–—|")
     if len(t) < 4:
@@ -177,15 +207,28 @@ def main():
             if pid:
                 known.add(pid)
 
-    # classification (flat caption first; full metadata if still generic)
-    def cat_for(p, allow_fetch):
+    # classification: caption text -> known entry title -> full metadata -> vision.
+    # Returns (category, definitive). Not definitive = retry on a later run.
+    def cat_for(p, allow_fetch, entry_title=""):
         c = classify(p.get("raw", ""))
-        if c == "opcenito" and allow_fetch:
+        if c != "opcenito":
+            return c, True
+        if entry_title and not entry_title.startswith("Radionica, "):
+            c = classify(entry_title)
+            if c != "opcenito":
+                return c, True
+        if allow_fetch:
             t, desc = fetch_full(p["id"])
             if t:
                 p["title"] = t
-            return classify((t or "") + " " + (desc or ""))
-        return c
+            c = classify((t or "") + " " + (desc or ""))
+            if c != "opcenito":
+                return c, True
+            vc = vision_cat(p.get("img", ""))
+            if vc is not None:
+                return vc, True
+            return "opcenito", False
+        return "opcenito", False
 
     # add new posts
     import requests
@@ -195,7 +238,7 @@ def main():
     for p in fresh:
         if p["id"] in known:
             continue
-        cat = cat_for(p, allow_fetch=True)
+        cat, cat_ok = cat_for(p, allow_fetch=True)
         try:
             resp = requests.get(p["img"], headers=UA, timeout=40)
             resp.raise_for_status()
@@ -223,7 +266,7 @@ def main():
         wfile = f"tt-wide-{tag}.webp"
         wide.save(os.path.join(PHOTO_DIR, wfile), "WEBP", quality=79, method=6)
         title = clean_title(p["title"], p["date"])
-        pools["gallery"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat, "cat_checked": True})
+        pools["gallery"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat, "cat_checked": cat_ok})
         pools["hero"].insert(0, {"src": f"assets/photos/{wfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat})
         pools["heroMobile"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat})
         known.add(p["id"])
@@ -234,11 +277,10 @@ def main():
     for pool in ("hero", "heroMobile", "gallery"):
         for e in pools[pool]:
             pid = post_id_of(e)
-            if e.get("title") == "U radionici":
+            if e.get("title") in ("U radionici", "TikTok video", "TikTok photo"):
                 e["title"] = clean_title("", e.get("date", ""))
             if pid and pid in by_id and not e.get("cat_checked"):
-                e["cat"] = cat_for(by_id[pid], allow_fetch=True)
-                e["cat_checked"] = True
+                e["cat"], e["cat_checked"] = cat_for(by_id[pid], allow_fetch=True, entry_title=e.get("title", ""))
                 if e.get("title", "").startswith("Radionica, "):
                     better = clean_title(by_id[pid].get("title", ""), e.get("date", ""))
                     if not better.startswith("Radionica, "):
