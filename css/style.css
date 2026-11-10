@@ -421,3 +421,16 @@ h6.text-primary.text-uppercase { display: inline-block; background: rgba(11,95,1
 .footer-wave svg { width: 100%; height: 70px; display: block; }
 .footer.mt-5 { margin-top: 0 !important; }
 .globe-scroll { height: 250vh; }
+
+/*** v7 traced-logo preloader + MapLibre globe ***/
+.pl-trace-wrap { position: relative; }
+#plTrace { width: 100%; height: auto; display: block; animation: plSvgFade .5s ease 1.8s forwards; }
+.trace-path { fill-opacity: 0; stroke-width: 2; stroke-linejoin: round; }
+.pl-final { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; opacity: 0; animation: plFinalIn .5s ease 1.8s forwards; }
+@keyframes plFinalIn { to { opacity: 1; } }
+@keyframes plSvgFade { to { opacity: 0; } }
+.pl-bar span { animation-duration: 2.3s; }
+#globeMap { background: #dcebf7; }
+#globeMap .maplibregl-canvas { outline: none; }
+.maplibregl-popup-content { border-radius: 14px; font-size: .95rem; line-height: 1.5; padding: 14px 16px; box-shadow: 0 12px 32px rgba(11,33,84,.25); }
+.maplibregl-popup-tip { display: none; }
