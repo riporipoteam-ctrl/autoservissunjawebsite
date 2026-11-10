@@ -577,3 +577,9 @@ h6.text-primary.text-uppercase { background: transparent; border: none; padding:
 .stars.on .stars-fg i:nth-child(5) { animation-delay: .72s; }
 @keyframes starPop { 0% { transform: scale(.4); } 60% { transform: scale(1.25); } 100% { transform: scale(1); } }
 .stars-big .stars { font-size: 2.3rem; }
+
+/*** v15.1: hero photos shown WHOLE (blur-fill backdrop, no more zoom-crop) ***/
+#header-carousel .hero-bg { position: absolute; inset: 0; z-index: 0; background-size: cover; background-position: center; filter: blur(28px) brightness(.48) saturate(1.15); transform: scale(1.12); }
+#header-carousel .carousel-item picture { position: absolute; inset: 0; z-index: 1; display: block; }
+#header-carousel .carousel-item picture img { width: 100%; height: 100%; object-fit: contain; display: block; }
+#header-carousel .carousel-item::after { z-index: 2; }
