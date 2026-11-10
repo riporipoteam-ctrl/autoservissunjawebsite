@@ -2,109 +2,119 @@
  "hero": [
   {
    "src": "assets/photos/tt-wide-01.webp",
-   "alt": "Vozila ispred radionice Šunja"
+   "alt": "Vozila ispred radionice Šunja",
+   "date": "2026-11-08"
   },
   {
    "src": "assets/photos/tt-wide-03.webp",
-   "alt": "Peugeot u radionici Šunja"
+   "alt": "Peugeot u radionici Šunja",
+   "date": "2026-11-08"
   },
   {
    "src": "assets/photos/tt-wide-04.webp",
-   "alt": "Renault Clio na dizalici u Šunja servisu"
+   "alt": "Renault Clio na dizalici u Šunja servisu",
+   "date": "2026-10-31"
   },
   {
    "src": "assets/photos/tt-wide-10.webp",
-   "alt": "Peugeot na dizalici u Šunja servisu"
+   "alt": "Peugeot na dizalici u Šunja servisu",
+   "date": "2026-10-13"
   }
  ],
  "gallery": [
   {
    "src": "assets/photos/tt-01.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7705912434296491284",
-   "title": "Ispred radionice"
+   "title": "Ispred radionice",
+   "date": "2026-11-08"
   },
   {
    "src": "assets/photos/tt-02.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7705911264454675764",
-   "title": "Elektronika vozila (ECU)"
+   "title": "Elektronika vozila (ECU)",
+   "date": "2026-11-08"
   },
   {
    "src": "assets/photos/tt-03.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7705910839328509205",
-   "title": "Peugeot u radionici"
+   "title": "Peugeot u radionici",
+   "date": "2026-11-08"
   },
   {
    "src": "assets/photos/tt-04.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7702943115132325141",
-   "title": "Renault Clio na dizalici"
+   "title": "Renault Clio na dizalici",
+   "date": "2026-10-31"
   },
   {
    "src": "assets/photos/tt-05.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7701450413211520276",
-   "title": "Citroën C3 na dizalici"
+   "title": "Citroën C3 na dizalici",
+   "date": "2026-10-27"
   },
   {
    "src": "assets/photos/tt-06.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7699972445880536341",
-   "title": "Motor pod haubom"
+   "title": "Motor pod haubom",
+   "date": "2026-10-23"
   },
   {
    "src": "assets/photos/tt-07.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7699972162886618388",
-   "title": "Dijagnostika u kabini"
+   "title": "Dijagnostika u kabini",
+   "date": "2026-10-23"
   },
   {
    "src": "assets/photos/tt-08.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7699971396864134421",
-   "title": "Pregled motora"
+   "title": "Pregled motora",
+   "date": "2026-10-23"
   },
   {
    "src": "assets/photos/tt-09.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7697738557175123220",
-   "title": "ECU jedinica"
+   "title": "ECU jedinica",
+   "date": "2026-10-17"
   },
   {
    "src": "assets/photos/tt-10.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7696249910995258645",
-   "title": "Peugeot na dizalici"
+   "title": "Peugeot na dizalici",
+   "date": "2026-10-13"
   },
   {
    "src": "assets/photos/tt-11-full.webp",
    "href": "https://www.tiktok.com/@autoservissunja/video/7695407758627278100",
-   "title": "PSA DiagBox dijagnostika"
+   "title": "PSA DiagBox dijagnostika",
+   "date": "2026-10-11"
   },
   {
    "src": "assets/photos/tt-12.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7692814793178107188",
-   "title": "Glava motora"
-  },
-  {
-   "src": "assets/gallery/radionica-dijagnostika.webp",
-   "href": "https://www.instagram.com/sunja_servis_peugeot/",
-   "title": "Dijagnostika u radionici"
-  },
-  {
-   "src": "assets/gallery/kljucevi-programiranje.webp",
-   "href": "https://www.instagram.com/sunja_servis_peugeot/",
-   "title": "Ključevi i programiranje"
+   "title": "Glava motora",
+   "date": "2026-10-04"
   }
  ],
  "heroMobile": [
   {
    "src": "assets/photos/tt-01.webp",
-   "alt": "Vozila ispred radionice Auto Servis Šunja"
+   "alt": "Vozila ispred radionice Auto Servis Šunja",
+   "date": "2026-11-08"
   },
   {
    "src": "assets/photos/tt-03.webp",
-   "alt": "Peugeot u radionici Šunja"
+   "alt": "Peugeot u radionici Šunja",
+   "date": "2026-11-08"
   },
   {
    "src": "assets/photos/tt-04.webp",
-   "alt": "Renault Clio na dizalici u Šunja servisu"
+   "alt": "Renault Clio na dizalici u Šunja servisu",
+   "date": "2026-10-31"
   },
   {
    "src": "assets/photos/tt-10.webp",
-   "alt": "Peugeot na dizalici u Šunja servisu"
+   "alt": "Peugeot na dizalici u Šunja servisu",
+   "date": "2026-10-13"
   }
  ]
 }
