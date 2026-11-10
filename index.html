@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=10.1" rel="stylesheet">
+    <link href="css/style.css?v=11.0" rel="stylesheet">
 </head>
 
 <body>
@@ -107,7 +107,7 @@
                 <a href="#galerija" class="nav-item nav-link">Galerija</a>
                 <a href="#kontakt" class="nav-item nav-link">Kontakt</a>
             </div>
-            <a href="#termin" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Zakažite termin<i class="fa fa-arrow-right ms-3"></i></a>
+            <a href="#termin" class="btn btn-primary py-3 px-lg-5 d-none d-lg-block">Zakažite termin<i class="fa fa-arrow-right ms-3"></i></a>
         </div>
     </nav>
     <!-- Navbar End -->
@@ -354,7 +354,7 @@
                             <div class="row g-4">
                                 <div class="col-md-6" style="min-height: 350px;">
                                     <div>
-                                        <img class="img-fluid w-100 svc-photo" src="img/svc-dijagnostika-2.jpg" loading="lazy" alt="Autodijagnostika">
+                                        <img class="img-fluid w-100 svc-photo" src="img/svc-dijagnostika-3.jpg" loading="lazy" alt="Autodijagnostika">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -528,14 +528,14 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/gallery/radionica-dijagnostika.webp" loading="eager" decoding="async" alt="Dijagnostika u radionici">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-12.webp" loading="eager" decoding="async" alt="Glava motora">
                             <div class="team-overlay position-absolute start-0 top-0 w-100 h-100">
-                                <a class="btn btn-square mx-1" data-gallery-link href="https://www.instagram.com/p/DZijDj6Forp/" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><i class="fab fa-instagram"></i></a>
+                                <a class="btn btn-square mx-1" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7703407661504920856" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><i class="fab fa-tiktok"></i></a>
                             </div>
                         </div>
                         <div class="bg-light text-center p-4">
-                            <h5 class="fw-bold mb-0" data-gallery-title>Dijagnostika u radionici</h5>
-                            <small data-gallery-sub>Objava s Instagrama</small>
+                            <h5 class="fw-bold mb-0" data-gallery-title>Glava motora</h5>
+                            <small data-gallery-sub>Objava s TikToka</small>
                         </div>
                     </div>
                 </div>
@@ -595,6 +595,7 @@
             <div class="globe-stage" id="globeStage">Svijet</div>
         </div>
     </div>
+    <p class="text-center small mt-2" style="color:#8a94a6;">Podaci karte: © OpenStreetMap, © OpenMapTiles, OpenFreeMap</p>
     <!-- Globe Map End -->
 
 
@@ -889,11 +890,18 @@
 
     // Photo randomizer — fresh picks from photos.json on every visit
     fetch('photos.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+        function freshPool(list, min) {
+            if (!list || !list.length) return [];
+            var maxAge = 60 * 24 * 3600 * 1000, now = Date.now();
+            var fresh = list.filter(function (e) { return e.date && (now - new Date(e.date + 'T12:00:00').getTime()) <= maxAge; });
+            if (fresh.length >= (min || 1)) return fresh;
+            return list.slice().sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
+        }
         if (d.hero && d.hero.length) {
             var heroImg = document.getElementById('heroMainImg');
             var heroSrc = document.getElementById('heroMainSrc');
             var isMobile = window.innerWidth < 768 && d.heroMobile && d.heroMobile.length;
-            var heroPool = isMobile ? d.heroMobile : d.hero;
+            var heroPool = isMobile ? freshPool(d.heroMobile, 1) : freshPool(d.hero, 1);
             var item = heroPool[Math.floor(Math.random() * heroPool.length)];
             var pick = typeof item === 'string' ? item : item.src;
             if (pick) {
@@ -902,7 +910,7 @@
             }
         }
         if (d.gallery && d.gallery.length) {
-            var pool = d.gallery.slice();
+            var pool = freshPool(d.gallery, 5);
             for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
             document.querySelectorAll('[data-gallery-img]').forEach(function (img, idx) {
                 var item = pool[idx % pool.length];
@@ -974,6 +982,7 @@
             el.innerHTML = '<div style="padding:3rem 1.5rem;text-align:center;"><p class="mb-3">Kartu nije moguće učitati na ovom uređaju. (' + reason + ')</p><a class="btn btn-primary py-3 px-4" href="https://www.google.com/maps/search/?api=1&query=Auto+Servis+%C5%A0unja+Gora%C5%BEde" target="_blank" rel="noopener">Otvorite lokaciju na Google kartama</a></div>';
             if (wrap) wrap.style.height = '70vh';
         }
+        function startGlobe() {
         var safetyTimer = setTimeout(function () { fallback('isteklo vrijeme učitavanja'); }, 9000);
         try {
             if (!wrap || !el) { clearTimeout(safetyTimer); return; }
@@ -1000,7 +1009,7 @@
                 { p: 0.80, c: [18.95, 43.69], z: 9.5, pitch: 28, bearing: 0, label: 'Goražde' },
                 { p: 1.00, c: SHOP, z: 15.5, pitch: 50, bearing: 0, label: 'Auto Servis Šunja' }
             ];
-            var marker = null, ticking = false, lastBucket = -1, finished = false;
+            var marker = null, photoMarker = null, ticking = false, lastBucket = -1, finished = false;
             function finish() {
                 if (finished) return;
                 finished = true;
@@ -1037,8 +1046,13 @@
                         .setHTML('<strong>Auto Servis Šunja</strong><br>Hajra Lakovi\u0107a 38, Goražde<br><a href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a> · <a href="tel:+38761297847">061 297 847</a>');
                     marker = new maplibregl.Marker({ color: '#0B5FA5' }).setLngLat(SHOP).setPopup(popup).addTo(map);
                     marker.togglePopup();
+                    var photoEl = document.createElement('div');
+                    photoEl.className = 'shop-photo-marker';
+                    photoEl.style.backgroundImage = 'url(assets/photos/tt-01.webp)';
+                    photoMarker = new maplibregl.Marker({ element: photoEl, offset: [0, -78] }).setLngLat(SHOP).addTo(map);
                 } else if (p <= 0.96 && marker) {
                     marker.remove(); marker = null;
+                    if (photoMarker) { photoMarker.remove(); photoMarker = null; }
                 }
                 if (p >= 0.999 && loaded) finish();
             }
@@ -1049,6 +1063,11 @@
         } catch (e) {
             fallback('iznimka: ' + String(e).slice(0, 80));
         }
+        }
+        if ('IntersectionObserver' in window && wrap) {
+            var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); startGlobe(); } }, { rootMargin: '500px' });
+            io.observe(wrap);
+        } else { startGlobe(); }
     })();
     </script>
 </body>
