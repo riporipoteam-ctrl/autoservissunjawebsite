@@ -27,20 +27,23 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
 
     <!-- Leaflet (custom globe map) -->
-    <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet">
-    <link rel="preconnect" href="https://basemaps.cartocdn.com" crossorigin>
+    <link href="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css" rel="stylesheet">
+    <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=6.2" rel="stylesheet">
+    <link href="css/style.css?v=7.0" rel="stylesheet">
 </head>
 
 <body>
     <!-- Preloader Start -->
     <div id="preloader">
         <div class="pl-stage">
-            <div class="pl-draw-wrap">
-                <img class="pl-logo" src="assets/sunja-logo-transparent.webp" alt="Auto Servis Šunja">
-                <span class="pl-pen"></span>
+            <div class="pl-trace-wrap">
+                <svg id="plTrace" viewBox="0 0 785 462" fill="none" aria-hidden="true">
+                    <path class="trace-path" fill="#0B5FA5" stroke="#0B5FA5" fill-rule="evenodd" d="M432,341 L429,343 L429,349 L438,356 L428,357 L428,359 L436,361 L441,358 L441,352 L432,345 L440,344 L440,342 Z M419,341 L419,360 L422,360 L422,341 Z M396,341 L401,359 L408,360 L414,341 L410,341 L405,356 L400,342 Z M392,341 L386,343 L382,341 L382,360 L385,360 L385,349 L393,343 Z M363,341 L358,349 L360,358 L365,361 L374,360 L374,357 L365,358 L362,354 L364,351 L375,351 L374,343 Z M362,347 L366,343 L372,346 L371,349 Z M307,342 L304,346 L305,358 L311,361 L318,360 L322,354 L321,344 L317,341 Z M312,343 L316,344 L319,350 L315,358 L311,358 L307,353 L307,348 Z M266,341 L267,359 L282,360 L282,341 L279,341 L279,354 L274,358 L269,354 L269,341 Z M291,336 L287,342 L290,345 L290,356 L292,360 L297,361 L299,358 L294,356 L294,345 L299,344 L299,341 L295,341 L294,336 Z M246,334 L237,360 L241,360 L244,354 L254,354 L260,361 L252,334 Z M248,339 L251,342 L252,351 L244,349 Z M419,333 L419,337 L422,337 L422,333 Z M351,334 L345,333 L338,337 L338,344 L350,353 L346,358 L337,356 L339,360 L346,361 L353,356 L353,349 L342,342 L345,336 L352,338 Z M268,288 L268,295 L663,294 L663,288 Z M149,211 L144,217 L145,221 L154,225 L158,222 L159,215 L155,211 Z M148,217 L153,214 L156,219 L151,222 Z M124,201 L124,225 L133,226 L142,234 L169,234 L172,227 L181,227 L183,233 L186,232 L185,210 L181,217 L172,217 L170,210 L161,201 Z M158,205 L159,210 L162,209 L162,214 L165,215 L162,217 L165,219 L162,221 L164,224 L160,225 L160,229 L156,228 L155,231 L151,229 L149,232 L148,228 L144,229 L144,225 L139,224 L141,222 L138,219 L141,217 L139,215 L142,214 L140,210 L145,210 L144,207 L149,207 L150,204 L154,207 Z M43,164 L43,203 L82,203 L71,188 Z M268,97 L299,101 L331,114 L355,135 L359,143 L352,145 L372,161 L386,144 L378,144 L360,122 L329,105 L301,98 Z M43,136 L43,153 L65,169 L90,196 L102,177 L116,162 L143,146 L156,144 L152,152 L123,167 L103,190 L98,201 L104,204 L105,232 L114,236 L103,241 L90,252 L84,263 L81,278 L43,279 L43,283 L80,283 L84,295 L43,296 L43,306 L36,308 L36,319 L449,319 L449,308 L221,308 L219,306 L219,136 L180,136 L179,134 L193,120 L211,109 L245,98 L263,97 L233,98 L204,105 L178,118 L160,136 Z M165,293 L169,283 L186,285 L180,294 L167,295 Z M151,244 L189,243 L193,245 L204,261 L204,274 L198,279 L169,279 L163,258 Z M103,250 L115,244 L130,243 L142,247 L151,254 L159,267 L161,284 L157,297 L149,307 L126,307 L129,303 L136,305 L138,299 L143,300 L145,298 L143,294 L150,290 L147,285 L152,281 L147,274 L150,269 L143,265 L144,260 L139,261 L136,258 L137,255 L128,256 L126,252 L119,257 L114,254 L110,261 L107,259 L104,262 L106,266 L99,270 L102,276 L98,278 L98,281 L102,283 L99,290 L105,292 L105,298 L107,300 L110,298 L113,305 L121,303 L123,307 L102,308 L95,301 L89,288 L88,276 L93,261 Z M108,199 L113,196 L114,207 L118,208 L118,199 L121,196 L138,195 L137,191 L127,189 L129,185 L157,185 L158,189 L148,191 L148,196 L164,196 L175,206 L176,212 L181,205 L187,205 L192,213 L191,234 L184,239 L180,238 L177,232 L173,239 L140,239 L131,231 L119,229 L118,215 L114,216 L114,229 L111,230 L107,211 Z M191,142 L185,147 L173,147 L177,139 L188,138 Z"/>
+                    <path class="trace-path" fill="#191C22" stroke="#191C22" fill-rule="evenodd" d="M747,243 L744,257 L734,275 L703,306 L648,337 L573,365 L494,385 L399,401 L309,411 L152,422 L234,425 L370,416 L492,396 L574,375 L643,349 L677,332 L705,314 L727,294 L739,277 L746,259 Z M515,175 L515,260 L511,267 L500,268 L499,281 L501,283 L522,282 L530,275 L533,268 L534,174 Z M330,173 L328,175 L328,232 L333,246 L342,254 L359,256 L368,253 L380,243 L382,254 L397,254 L398,175 L395,173 L379,174 L379,226 L366,238 L358,239 L350,233 L347,224 L347,174 Z M559,179 L557,185 L559,193 L577,186 L595,187 L600,193 L601,205 L599,207 L578,207 L562,213 L555,221 L553,237 L557,247 L573,256 L589,255 L602,246 L605,254 L619,254 L620,193 L616,182 L606,174 L592,171 L577,172 Z M600,218 L601,232 L593,240 L582,243 L573,237 L572,227 L577,221 L585,218 Z M479,175 L467,171 L456,172 L439,184 L436,183 L434,173 L420,175 L421,254 L439,253 L439,201 L454,188 L463,189 L471,201 L471,253 L490,253 L490,194 L487,184 Z M301,174 L288,171 L274,172 L263,177 L255,189 L257,207 L264,214 L287,224 L292,231 L291,236 L284,242 L272,242 L255,235 L254,248 L258,252 L272,256 L291,255 L302,250 L308,243 L310,224 L307,217 L299,210 L278,202 L273,196 L274,189 L284,184 L305,191 L306,178 Z M514,143 L516,159 L534,158 L536,149 L532,140 L524,139 Z M258,136 L274,160 L291,160 L308,137 L294,136 L282,151 L272,136 Z M154,39 L154,50 L258,54 L375,66 L481,85 L567,108 L637,134 L698,168 L733,201 L743,218 L747,234 L746,218 L739,200 L728,184 L708,165 L665,137 L583,102 L494,77 L394,58 L273,44 Z"/>
+                </svg>
+                <img class="pl-final" src="assets/sunja-logo-transparent.webp" alt="Auto Servis Šunja">
             </div>
             <div class="pl-bar"><span></span></div>
             <p class="pl-text">Učitavanje…</p>
@@ -782,7 +785,7 @@
 
     <!-- Template Javascript -->
     <script src="js/main.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
@@ -910,57 +913,72 @@
         }
     }).catch(function () {});
 
-    // Preloader — logo draws itself, then lifts
+    // Preloader — the shop's exact logo (traced from the original file) draws itself
     (function () {
         var pre = document.getElementById('preloader');
         if (!pre) return;
+        var paths = pre.querySelectorAll('#plTrace .trace-path');
+        paths.forEach(function (path) {
+            var len = path.getTotalLength();
+            path.style.strokeDasharray = len;
+            path.style.strokeDashoffset = len;
+        });
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                paths.forEach(function (path) {
+                    path.style.transition = 'stroke-dashoffset 1.2s ease 0.05s, fill-opacity 0.6s ease 1.1s';
+                    path.style.strokeDashoffset = '0';
+                    path.style.fillOpacity = '1';
+                });
+            });
+        });
         function hide() { pre.classList.add('done'); setTimeout(function () { pre.remove(); }, 800); }
-        setTimeout(hide, 2050);
-        window.addEventListener('load', function () { setTimeout(hide, 2150); });
+        setTimeout(hide, 2550);
+        window.addEventListener('load', function () { setTimeout(hide, 2700); });
     })();
 
-    // Globe map — scroll zooms from the whole planet into the shop
+    // Globe map (MapLibre 3D globe) — scroll flies from space into the shop
     (function () {
         var wrap = document.getElementById('globeScroll');
         var el = document.getElementById('globeMap');
-        if (!wrap || !el || typeof L === 'undefined') {
-            if (el) el.innerHTML = '<div class="p-5 text-center"><a href="https://www.google.com/maps/search/?api=1&query=Auto+Servis+%C5%A0unja+Gora%C5%BEde" target="_blank" rel="noopener">Otvorite lokaciju na Google kartama</a></div>';
-            return;
-        }
-        var SHOP = [43.6651456, 18.982064];
-        var map = L.map(el, { zoomControl: false, attributionControl: true, scrollWheelZoom: false, dragging: false, doubleClickZoom: false, zoomSnap: 0, keyboard: false });
-        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, keepBuffer: 6, attribution: '&copy; OpenStreetMap' }).addTo(map);
-        var stops = [
-            { p: 0.00, c: [27, 8], z: 3, label: 'Svijet' },
-            { p: 0.35, c: [46, 14], z: 5, label: 'Evropa' },
-            { p: 0.60, c: [43.95, 18.40], z: 7.5, label: 'Bosna i Hercegovina' },
-            { p: 0.82, c: [43.69, 18.95], z: 11, label: 'Goražde' },
-            { p: 1.00, c: SHOP, z: 16.5, label: 'Auto Servis Šunja' }
-        ];
-        // Prefetch tiles for the zoom stages visitors reach later (final zoom = instant)
-        setTimeout(function () {
-            function tileXY(lat, lng, z) {
-                var n = Math.pow(2, z);
-                var x = Math.floor((lng + 180) / 360 * n);
-                var latRad = lat * Math.PI / 180;
-                var y = Math.floor((1 - Math.log(Math.tan(latRad) + 1 / Math.cos(latRad)) / Math.PI) / 2 * n);
-                return [x, y];
-            }
-            [[17, SHOP[0], SHOP[1]], [16, SHOP[0], SHOP[1]], [12, 43.69, 18.95], [8, 43.95, 18.40]].forEach(function (cfg) {
-                var z = cfg[0], c = tileXY(cfg[1], cfg[2], z);
-                for (var dx = -1; dx <= 1; dx++) for (var dy = -1; dy <= 1; dy++) {
-                    var im = new Image();
-                    im.src = 'https://tile.openstreetmap.org/' + z + '/' + (c[0] + dx) + '/' + (c[1] + dy) + '.png';
-                }
-            });
-        }, 1200);
         var stageEl = document.getElementById('globeStage');
         var hintEl = document.getElementById('globeHint');
+        function fallback() {
+            if (!el) return;
+            el.innerHTML = '<div style="padding:3rem 1.5rem;text-align:center;"><p class="mb-3">Kartu nije moguće učitati na ovom uređaju.</p><a class="btn btn-primary py-3 px-4" href="https://www.google.com/maps/search/?api=1&query=Auto+Servis+%C5%A0unja+Gora%C5%BEde" target="_blank" rel="noopener">Otvorite lokaciju na Google kartama</a></div>';
+            if (wrap) wrap.style.height = '70vh';
+        }
+        if (!wrap || !el || typeof maplibregl === 'undefined' || !maplibregl.supported()) { fallback(); return; }
+        var SHOP = [18.982064, 43.6651456];
+        var map;
+        try {
+            map = new maplibregl.Map({
+                container: el,
+                style: 'https://tiles.openfreemap.org/styles/liberty',
+                center: [12, 32], zoom: 1.6, pitch: 0, bearing: -15,
+                interactive: false, attributionControl: { compact: true }
+            });
+        } catch (e) { fallback(); return; }
+        var loaded = false;
+        map.on('load', function () {
+            loaded = true;
+            try { map.setProjection({ type: 'globe' }); } catch (e) {}
+            render();
+        });
+        setTimeout(function () { if (!loaded) fallback(); }, 9000);
+        var stops = [
+            { p: 0.00, c: [12, 32], z: 1.6, pitch: 0, bearing: -15, label: 'Svijet' },
+            { p: 0.30, c: [15, 46], z: 3.4, pitch: 0, bearing: -6, label: 'Evropa' },
+            { p: 0.55, c: [18.40, 43.95], z: 5.6, pitch: 12, bearing: 0, label: 'Bosna i Hercegovina' },
+            { p: 0.80, c: [18.95, 43.69], z: 9.5, pitch: 28, bearing: 0, label: 'Goražde' },
+            { p: 1.00, c: SHOP, z: 15.5, pitch: 50, bearing: 0, label: 'Auto Servis Šunja' }
+        ];
         var marker = null, ticking = false, lastBucket = -1;
         function lerp(a, b, t) { return a + (b - a) * t; }
         function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
         function render() {
             ticking = false;
+            if (!loaded) return;
             var r = wrap.getBoundingClientRect();
             var total = r.height - window.innerHeight;
             var p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0;
@@ -971,22 +989,22 @@
             while (i < stops.length - 2 && p > stops[i + 1].p) i++;
             var a = stops[i], b = stops[i + 1];
             var t = ease((p - a.p) / Math.max(0.0001, b.p - a.p));
-            map.setView([lerp(a.c[0], b.c[0], t), lerp(a.c[1], b.c[1], t)], lerp(a.z, b.z, t), { animate: false });
+            map.jumpTo({ center: [lerp(a.c[0], b.c[0], t), lerp(a.c[1], b.c[1], t)], zoom: lerp(a.z, b.z, t), pitch: lerp(a.pitch, b.pitch, t), bearing: lerp(a.bearing, b.bearing, t) });
             var label = p >= stops[stops.length - 1].p - 0.001 ? stops[stops.length - 1].label : (t < 0.5 ? a.label : b.label);
             if (stageEl) stageEl.textContent = label;
             if (hintEl) hintEl.style.opacity = p > 0.04 ? '0' : '1';
-            if (p > 0.965 && !marker) {
-                marker = L.marker(SHOP).addTo(map)
-                    .bindPopup('<strong>Auto Servis Šunja</strong><br>Hajra Lakovi\u0107a 38, Goražde<br><a href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a> · <a href="tel:+38761297847">061 297 847</a>')
-                    .openPopup();
-            } else if (p <= 0.965 && marker) {
-                map.removeLayer(marker); marker = null;
+            if (p > 0.96 && !marker) {
+                var popup = new maplibregl.Popup({ offset: 28, closeOnClick: false })
+                    .setHTML('<strong>Auto Servis Šunja</strong><br>Hajra Lakovi\u0107a 38, Goražde<br><a href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a> · <a href="tel:+38761297847">061 297 847</a>');
+                marker = new maplibregl.Marker({ color: '#0B5FA5' }).setLngLat(SHOP).setPopup(popup).addTo(map);
+                marker.togglePopup();
+            } else if (p <= 0.96 && marker) {
+                marker.remove(); marker = null;
             }
         }
         function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(render); } }
         window.addEventListener('scroll', onScroll, { passive: true });
         window.addEventListener('resize', onScroll);
-        render();
     })();
     </script>
 </body>
