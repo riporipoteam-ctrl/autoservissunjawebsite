@@ -525,3 +525,6 @@ h6.text-primary.text-uppercase { background: transparent; border: none; padding:
 .svc-photo { border-radius: 14px; }
 .maplibregl-popup-content a { color: #0B5FA5 !important; }
 #globeScroll.globe-done .globe-hud, #globeScroll.globe-done .globe-hint { display: none !important; }
+
+/*** v10.1: hide the stage pill once the flight has finished (correct class) ***/
+#globeScroll.globe-done .globe-stage { display: none !important; }
