@@ -360,3 +360,33 @@ h6.text-primary.text-uppercase { display: inline-block; background: rgba(11,95,1
 .form-control, .form-select { border-radius: 10px; }
 .mobile-callbar { border-radius: 16px 16px 0 0; overflow: hidden; }
 .social-tile span, .social-tile i { text-shadow: 0 1px 8px rgba(0,0,0,.35); }
+
+/*** v6: preloader, ken-burns, marquee, globe map ***/
+#preloader { position: fixed; inset: 0; background: #ffffff; z-index: 10000; display: flex; align-items: center; justify-content: center; transition: opacity .6s ease, visibility .6s ease; }
+#preloader.done { opacity: 0; visibility: hidden; }
+.pl-stage { position: relative; width: min(560px, 86vw); }
+.pl-svg { width: 100%; height: auto; display: block; animation: plSvgOut .45s ease 1.6s forwards; }
+.pl-draw { stroke-dasharray: 1; stroke-dashoffset: 1; animation: plDraw 1s ease forwards; }
+.pl-word { opacity: 0; transform: translateY(14px); animation: plFade .5s ease 1s forwards; font-family: 'Barlow', Arial, sans-serif; }
+.pl-sub { opacity: 0; animation: plFade .5s ease 1.25s forwards; font-family: 'Ubuntu', Arial, sans-serif; }
+.pl-head { opacity: 0; animation: plFade .3s ease 1s forwards; }
+.pl-real { position: absolute; inset: 0; margin: auto; width: 82%; height: auto; opacity: 0; animation: plFade .5s ease 1.65s forwards; }
+@keyframes plDraw { to { stroke-dashoffset: 0; } }
+@keyframes plFade { to { opacity: 1; transform: none; } }
+@keyframes plSvgOut { to { opacity: 0; } }
+.carousel-item.active > img { animation: kenburns 7s ease-out forwards; }
+@keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.07); } }
+.marquee { overflow: hidden; background: linear-gradient(90deg, #084D87, #0B5FA5, #084D87); border-radius: 18px; margin: 0 auto 3rem; max-width: 1320px; width: calc(100% - 3rem); }
+.marquee-track { display: flex; width: max-content; white-space: nowrap; animation: marqueeMove 26s linear infinite; padding: .8rem 0; }
+.marquee-track span { color: #fff; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; font-size: .95rem; }
+.marquee-track i { color: #9fd0f5; font-style: normal; margin: 0 .9rem; }
+@keyframes marqueeMove { to { transform: translateX(-50%); } }
+.globe-scroll { height: 320vh; position: relative; }
+.globe-sticky { position: sticky; top: 0; height: 100vh; height: 100svh; }
+#globeMap { width: 100%; height: 100%; background: #dbe9f4; z-index: 1; }
+.globe-stage { position: absolute; left: 50%; bottom: 88px; transform: translateX(-50%); z-index: 500; background: rgba(11,33,84,.88); color: #fff; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; padding: .55rem 1.3rem; border-radius: 50rem; font-size: .95rem; pointer-events: none; }
+.globe-hint { position: absolute; left: 50%; top: 26px; transform: translateX(-50%); z-index: 500; background: rgba(255,255,255,.92); color: #0B2154; font-weight: 600; padding: .5rem 1.2rem; border-radius: 50rem; box-shadow: 0 6px 20px rgba(0,0,0,.18); transition: opacity .4s; pointer-events: none; animation: hintBob 1.8s ease-in-out infinite; }
+@keyframes hintBob { 0%,100% { transform: translate(-50%, 0); } 50% { transform: translate(-50%, 6px); } }
+#globeMap .leaflet-popup-content-wrapper { border-radius: 14px; }
+#globeMap .leaflet-popup-content { font-size: .95rem; line-height: 1.5; }
+@media (max-width: 991.98px) { .globe-stage { bottom: 132px; } }
