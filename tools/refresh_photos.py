@@ -70,6 +70,23 @@ def from_tikwm():
                       "url": f"https://www.tiktok.com/@{HANDLE}/{'photo' if is_photo else 'video'}/{pid}"})
     return posts
 
+def fetch_title(pid):
+    """Full metadata for one post (flat listings often lack real titles)."""
+    try:
+        out = subprocess.run(
+            [sys.executable, "-m", "yt_dlp", "-J", "--no-warnings",
+             "--socket-timeout", "20", f"https://www.tiktok.com/@{HANDLE}/photo/{pid}"],
+            capture_output=True, text=True, timeout=120)
+        if out.returncode != 0:
+            return ""
+        d = json.loads(out.stdout)
+        t = d.get("title") or ""
+        if len(re.sub(r"[#@]\S+", "", t).strip()) < 4:
+            t = (d.get("description") or "").split("\n")[0]
+        return clean_title(t, "")
+    except Exception:
+        return ""
+
 def clean_title(raw, date_s):
     t = re.sub(r"[#@]\S+", "", raw or "")
     t = re.sub(r"\s+", " ", t).strip(" -–—|")
@@ -117,6 +134,19 @@ def main():
             pid = post_id(e)
             if pid:
                 known.add(pid)
+
+    # enrich titles: real captions for new posts, and repair generic ones
+    for p in fresh:
+        if clean_title(p["title"], p["date"]) == "U radionici":
+            better = fetch_title(p["id"])
+            if better and better != "U radionici":
+                p["title"] = better
+        want = clean_title(p["title"], p["date"])
+        if want != "U radionici":
+            for pool in ("hero", "heroMobile", "gallery"):
+                for e in pools.get(pool, []):
+                    if post_id(e) == p["id"] and e.get("title") == "U radionici":
+                        e["title"] = want
 
     import requests
     from PIL import Image
