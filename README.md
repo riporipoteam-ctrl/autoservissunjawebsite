@@ -86,3 +86,8 @@ Structure: `index.html`, `css/`, `js/`, `lib/` (template),
 ## v13 (2026-11-10): cleanup + polish (live, verified)
 - Map credit line ("Podaci karte...") removed entirely per Armin's order; map area is clean; pin, popup and photo marker intact.
 - Polish: gallery hover zoom, blue text selection, navbar shadow, form focus states, prefers-reduced-motion support.
+
+## v14 (2026-11-10): counters band removed, animated stars, REAL auto photo system
+- The blue counters band (4,6 / 33 / 959 / 6) is deleted entirely.
+- The numeric rating is replaced by animated 5-star displays (About overlay + Recenzije card): grey stars fill up in yellow to the exact rating from rating.json (4,6 = 92%, so the 5th star fills ~60%) with a staggered pop when scrolled into view. The "33 recenzija" sentence remains in Recenzije.
+- Photo automation is now a REAL system inside the repo, not an agent task: `.github/workflows/fresh-photos.yml` runs every 6 hours on GitHub Actions; `tools/refresh_photos.py` pulls @autoservissunja posts via yt-dlp (tikwm fallback), mirrors images to assets/photos/, keeps pools ≤60 days old (with pool minimums), uses real captions when a post has one and factual date labels ("Radionica, septembar 2026") for captionless posts, and commits as "sunja-photos-bot". Proven live 2026-11-10: first run found 140 posts, 22 within 60 days, added 11 photos the manual pool had missed, and committed on its own. Armin's agent cron for photos was deleted on his order. Facebook cannot be auto-pulled (login/API wall) — TikTok is the automated source.
