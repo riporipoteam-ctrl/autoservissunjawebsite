@@ -834,8 +834,12 @@
     fetch('photos.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
         if (d.hero && d.hero.length) {
             var heroImg = document.getElementById('heroMainImg');
-            var pick = d.hero[Math.floor(Math.random() * d.hero.length)];
-            if (heroImg && pick && pick !== heroImg.getAttribute('src')) heroImg.src = pick;
+            var item = d.hero[Math.floor(Math.random() * d.hero.length)];
+            var pick = typeof item === 'string' ? item : item.src;
+            if (heroImg && pick && pick !== heroImg.getAttribute('src')) {
+                heroImg.src = pick;
+                if (item.alt) heroImg.alt = item.alt;
+            }
         }
         if (d.gallery && d.gallery.length) {
             var pool = d.gallery.slice();
