@@ -61,7 +61,7 @@
   {
    "src": "assets/photos/tt-09.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7697738557175123220",
-   "title": "ECU — više snage"
+   "title": "ECU jedinica"
   },
   {
    "src": "assets/photos/tt-10.webp",
@@ -87,6 +87,24 @@
    "src": "assets/gallery/kljucevi-programiranje.webp",
    "href": "https://www.instagram.com/sunja_servis_peugeot/",
    "title": "Ključevi i programiranje"
+  }
+ ],
+ "heroMobile": [
+  {
+   "src": "assets/photos/tt-01.webp",
+   "alt": "Vozila ispred radionice Auto Servis Šunja"
+  },
+  {
+   "src": "assets/photos/tt-03.webp",
+   "alt": "Peugeot u radionici Šunja"
+  },
+  {
+   "src": "assets/photos/tt-04.webp",
+   "alt": "Renault Clio na dizalici u Šunja servisu"
+  },
+  {
+   "src": "assets/photos/tt-10.webp",
+   "alt": "Peugeot na dizalici u Šunja servisu"
   }
  ]
 }
