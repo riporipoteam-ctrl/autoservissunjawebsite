@@ -69,3 +69,20 @@ Structure: `index.html`, `css/`, `js/`, `lib/` (template),
 - Less-AI pass: ghost numbers, scroll chevron, ken-burns zoom, footer wave and button shine all removed; kicker is plain text with a small blue bar.
 - Mobile hardening: overflow-x: clip (no sideways scroll), form fields 16px (no iOS focus zoom), svh hero units.
 - GALLERY "BROKEN IMAGE" MYSTERY SOLVED: the template's .team-overlay is SOLID --primary blue on hover (scale 0→1) — a hovered card looks exactly like a dead image, which fooled the checker (and would fool visitors). Overlay is now a translucent dark tint (photo stays visible). An image self-heal retry (one cache-busted reload if naturalWidth==0) was also added for real transient failures. Hover behaviour verified on 3 cards.
+
+## v10 (2026-11-10): professional copy + whole images
+- Playful copy removed ("Lokacija servisa" heading, no "Letimo"), all em-dashes removed from visible texts, kicker decorations stripped.
+- Images shown whole: hero uses portrait sources on mobile; the DiagBox screen photo is blur-padded (the photo itself is a tight close-up; its own edges are cut in the source). Services Autodijagnostika later switched to the whole cabin scene photo (tt-07) as svc-dijagnostika-3.jpg.
+
+## v11 (2026-11-10): fresh-photo system + buttons + map
+- photos.json entries carry TikTok post dates (decoded from post IDs); the page randomizer enforces Armin's rule: only photos up to 60 days old (safety fallback keeps newest if a pool would empty). The two 2025 Instagram photos left the gallery pool.
+- Weekly (later Mon+Thu) cron `autosunja-fresh-photos-weekly` pulls new posts from TikTok @autoservissunja and the shop Facebook page, self-hosts them, retires >60-day photos, verifies live, reports only on change/failure.
+- Map: on-map attribution bar hidden; round photo marker of the shop exterior added at the pin; map now initializes lazily when scrolled near (mobile data saving).
+- Buttons: navbar CTA was forced to 75px by a template rule (`.navbar-light a.btn`) — fixed with an !important override (now ~46px); back-to-top misplacement fixed by pinning `#backTop` by ID (now bottom-right, verified by pixel measurement); Kontakt card buttons stack on mobile.
+
+## v12 (2026-11-10): 3D shop model — attempted, then REMOVED on Armin's order
+- A three.js custom layer modeled the compound from tt-01 (blue workshop + sign band, cream house with pitched roof, totem sign, cars). The layer loaded and rendered without errors but the model never became visible in the MapLibre v5 globe/mercator pipeline despite depth/culling fixes. Armin ordered it dropped ("nah you cant do it so dont do the 3D") — all model code, three.js and the debug status text removed in v13. Do not retry without a new approach.
+
+## v13 (2026-11-10): cleanup + polish (live, verified)
+- Map credit line ("Podaci karte...") removed entirely per Armin's order; map area is clean; pin, popup and photo marker intact.
+- Polish: gallery hover zoom, blue text selection, navbar shadow, form focus states, prefers-reduced-motion support.
