@@ -919,6 +919,19 @@
         }
     }).catch(function () {});
 
+    // Image self-heal — if any swapped photo fails to paint, retry it once fresh
+    document.querySelectorAll('[data-gallery-img], #heroMainImg').forEach(function (img) {
+        function heal() {
+            if (img.dataset.healed === '1') return;
+            if (img.complete && img.naturalWidth === 0) {
+                img.dataset.healed = '1';
+                img.src = img.src.split('?')[0] + '?r=1';
+            }
+        }
+        img.addEventListener('error', heal);
+        setTimeout(heal, 3000);
+    });
+
     // Preloader — the shop's exact logo (traced from the original file) draws itself
     (function () {
         var pre = document.getElementById('preloader');
