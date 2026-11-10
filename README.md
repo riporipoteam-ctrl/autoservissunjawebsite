@@ -95,3 +95,18 @@ Structure: `index.html`, `css/`, `js/`, `lib/` (template),
 ## v15 (2026-11-10): the blue stock car is gone EVERYWHERE + hero zoom fixed
 - Armin caught the shiny blue stock Peugeot 208 still living in two places the v9 hero removal missed: the Peugeot servis tab photo (`img/svc-peugeot.jpg`) and the FOOTER background (`img/carousel-bg-1.jpg`, under the dark overlay). Both replaced with real shop photos (Peugeot tab = tt-10 white Peugeot in the workshop, new file `img/svc-peugeot-2.jpg`; footer bg = the real outside view, `img/footer-bg.jpg`) and all three blue-car files (svc-peugeot.jpg, carousel-bg-1.jpg, hero-2.jpg) DELETED from the repo — 404 verified.
 - v15.1 hero zoom fix: slides now show the WHOLE photo (object-fit: contain) over a blurred, darkened copy of the same photo filling the frame (`.hero-bg` blur-fill); the randomizer updates the backdrop with the pick. The photo bot now generates blur-padded 1600x1000 hero versions for new posts instead of hard center-crops. Verified on first paint + reloads + slides 2/3.
+
+## v16 (2026-11-10): footer photo recomposed, image optimization, lazy map library
+- Footer background recomposed from the original tt-01 (band with the AUTO-SERVIS shutter sign, the ŠUNJA totem and the car row — the old center-crop was mostly asphalt/car rears), overlay lightened (.93 → .88, later .84 in v17.2).
+- All page JPEGs converted to WebP and every photo recompressed: page-loadable image weight 5,240 KB → 3,618 KB (−31%); old JPEGs deleted from the repo. Slides 2/3 lazy-load.
+- MapLibre JS+CSS are no longer loaded with the page — they load on demand when the map section approaches (the globe init is unchanged). Flight verified end-to-end twice after the change.
+
+## v17 (2026-11-10): photo system v2 — 15-min sync, newest first, categories, deletion sync
+- Schedule tightened from 6h to every 15 minutes (TikTok offers no push for outsiders; 15 min is the practical "instant").
+- The site now FEATURES the newest photo: hero slide 1 and gallery card 1 are always the latest post (previously the newest was buried in a random pool — that is why a new post "wasn't on the site" even though the system had added it). Gallery never repeats a title in one draw.
+- Categories: the bot reads what text it can get (captions are NOT exposed by TikTok to outside tools — yt-dlp gets placeholder titles and empty descriptions; oEmbed 400s; free vision endpoints are paywalled, all proven from the runner) and classifies posts into the six service categories; the newest photo of a category automatically becomes that service tab's photo (data-svc-cat + photos.json "services" map). Live categories: dijagnostika, elektrika, veliki, peugeot. Captionless posts stay "opcenito".
+- Deletion sync: a post that disappears from TikTok is removed from the site too, but only after it is ALSO unresolvable at its direct URL on two consecutive runs (a listing glitch can never nuke a good photo; first version removed one entry on absence alone — hardened the same night).
+- Freshness unchanged: pools hold only the last 60 days; minimums keep hero ≥1 / gallery ≥5.
+
+## v17.3 (2026-11-10): bug-sweep fixes
+Full-site sweep fixes: "Lokacija" added to the navbar and footer menu (+ its scroll-margin; all anchors now 104px so headings never clip under the sticky nav); hero interval 6s → 8s with pause-on-hover and a stronger caption gradient; footer "Usluge" links now also activate the matching service tab; "Točnu" → "Tačnu"; TikTok links stripped of tracking parameters; rating badge padding tightened; status pill no longer wraps.
