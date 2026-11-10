@@ -479,3 +479,7 @@ html { scroll-behavior: smooth; }
     .hero-nav.carousel-control-prev { right: 5.6rem; }
     .hero-nav.carousel-control-next { right: 1.25rem; }
 }
+
+/*** v8.1 globe release: after the flight completes, the section becomes a normal static map ***/
+#globeScroll.globe-done { height: auto; }
+#globeScroll.globe-done .globe-sticky { position: relative; top: auto; height: 70vh; }
