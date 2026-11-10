@@ -359,3 +359,4 @@ h6.text-primary.text-uppercase { display: inline-block; background: rgba(11,95,1
 #recenzije .bg-white { border-radius: 20px; box-shadow: 0 16px 40px rgba(11,33,84,.10) !important; }
 .form-control, .form-select { border-radius: 10px; }
 .mobile-callbar { border-radius: 16px 16px 0 0; overflow: hidden; }
+.social-tile span, .social-tile i { text-shadow: 0 1px 8px rgba(0,0,0,.35); }
