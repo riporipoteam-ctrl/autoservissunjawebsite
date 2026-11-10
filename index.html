@@ -858,7 +858,7 @@
     document.querySelectorAll('[data-svc-link]').forEach(function (a) {
         a.addEventListener('click', function () {
             var btn = document.querySelector('[data-bs-target="#tab-pane-' + a.getAttribute('data-svc-link') + '"]');
-            if (btn && window.bootstrap) { try { bootstrap.Tab.getOrCreateInstance(btn).show(); } catch (e) {} }
+            if (btn) { btn.click(); }
         });
     });
 
