@@ -266,7 +266,7 @@ def main():
         wfile = f"tt-wide-{tag}.webp"
         wide.save(os.path.join(PHOTO_DIR, wfile), "WEBP", quality=79, method=6)
         title = clean_title(p["title"], p["date"])
-        pools["gallery"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat, "cat_checked": cat_ok})
+        pools["gallery"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat, "cat_checked": cat_ok, "cat_v": cat_ok})
         pools["hero"].insert(0, {"src": f"assets/photos/{wfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat})
         pools["heroMobile"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat})
         known.add(p["id"])
@@ -279,8 +279,10 @@ def main():
             pid = post_id_of(e)
             if e.get("title") in ("U radionici", "TikTok video", "TikTok photo"):
                 e["title"] = clean_title("", e.get("date", ""))
-            if pid and pid in by_id and not e.get("cat_checked"):
-                e["cat"], e["cat_checked"] = cat_for(by_id[pid], allow_fetch=True, entry_title=e.get("title", ""))
+            if pid and pid in by_id and not e.get("cat_v"):
+                e["cat"], ok = cat_for(by_id[pid], allow_fetch=True, entry_title=e.get("title", ""))
+                e["cat_checked"] = ok
+                e["cat_v"] = ok
                 if e.get("title", "").startswith("Radionica, "):
                     better = clean_title(by_id[pid].get("title", ""), e.get("date", ""))
                     if not better.startswith("Radionica, "):
