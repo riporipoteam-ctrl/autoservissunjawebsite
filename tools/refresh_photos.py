@@ -101,44 +101,6 @@ def from_tikwm():
                       "url": f"https://www.tiktok.com/@{HANDLE}/{'photo' if is_photo else 'video'}/{pid}"})
     return posts
 
-VISION_BUDGET = [6]
-
-def vision_cat(img_url):
-    """Ask a vision model (GitHub Models, via the workflow's own token)
-    which service category a photo shows. Category word or None."""
-    import requests
-    token = os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
-    if not token or not img_url or VISION_BUDGET[0] <= 0:
-        return None
-    VISION_BUDGET[0] -= 1
-    prompt = ("Look at this car repair workshop photo and reply with exactly one word, the category: "
-              "kljucevi = car keys, key fob or key programming device; "
-              "dijagnostika = diagnostic tablet or computer used on a car; "
-              "elektrika = ECU circuit board, wiring or battery; "
-              "veliki = engine internals, timing belt or cylinder head; "
-              "mali = oil change, filters, brakes or general servicing; "
-              "peugeot = a Peugeot car as the main subject; "
-              "opcenito = anything else.")
-    try:
-        r = requests.post("https://models.github.ai/inference/chat/completions",
-                          headers={"Authorization": "Bearer " + token,
-                                   "Content-Type": "application/json"},
-                          json={"model": "openai/gpt-4o-mini", "messages": [{"role": "user", "content": [
-                              {"type": "text", "text": prompt},
-                              {"type": "image_url", "image_url": {"url": img_url}}]}]},
-                          timeout=90)
-        if r.status_code != 200:
-            log("vision http", r.status_code, ":", r.text[:150])
-            return None
-        txt = (r.json()["choices"][0]["message"]["content"] or "").strip().lower()
-        for cat in CATS + ["opcenito"]:
-            if cat in txt:
-                return cat
-        log("vision answered unrecognised:", txt[:60])
-    except Exception as ex:
-        log("vision failed:", str(ex)[:120])
-    return None
-
 def fetch_full(pid):
     """Full metadata for one post: (title, description) or ('', '').
     Tries the /photo/ URL, then the /video/ URL (posts can be either)."""
@@ -192,15 +154,6 @@ def main():
         log("all sources failed; leaving the site unchanged")
         return 0
     log("source:", source, "| posts fetched:", len(posts))
-    # --- temporary diagnostics (remove after) ---
-    try:
-        import requests as _rq
-        for probe in (posts[0], posts[5]):
-            rr = _rq.get("https://www.tiktok.com/oembed", params={"url": probe["url"]}, headers=UA, timeout=25)
-            log("DIAG oembed", probe["id"], "http", rr.status_code, "| title:", (rr.json().get("title") or "")[:140] if rr.status_code == 200 else rr.text[:80])
-    except Exception as ex:
-        log("DIAG oembed failed:", str(ex)[:140])
-    # --- end diagnostics ---
 
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=MAX_AGE_DAYS)
@@ -240,16 +193,8 @@ def main():
             t, desc = fetch_full(p["id"])
             if t:
                 p["title"] = t
-            c = classify((t or "") + " " + (desc or ""))
-            if c != "opcenito":
-                return c, True
-            if "_vision" not in p:
-                p["_vision"] = vision_cat(p.get("img", ""))
-            vc = p["_vision"]
-            if vc is not None:
-                return vc, True
-            return "opcenito", False
-        return "opcenito", False
+            return classify((t or "") + " " + (desc or "")), True
+        return "opcenito", True
 
     # add new posts
     import requests
