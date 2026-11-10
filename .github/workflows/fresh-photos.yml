@@ -1,0 +1,37 @@
+name: Fresh photos from TikTok
+
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: fresh-photos
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install tools
+        run: pip install yt-dlp pillow requests
+      - name: Refresh photos (last 60 days only)
+        run: python tools/refresh_photos.py
+      - name: Commit and push if anything changed
+        run: |
+          git config user.name "sunja-photos-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "Auto: fresh photos from TikTok"
+            git push
+          else
+            echo "No changes."
+          fi
