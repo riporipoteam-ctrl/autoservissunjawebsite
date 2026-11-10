@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  models: read
 
 concurrency:
   group: fresh-photos
@@ -24,8 +23,6 @@ jobs:
       - name: Install tools
         run: pip install yt-dlp pillow requests
       - name: Refresh photos (last 60 days only)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python tools/refresh_photos.py
       - name: Commit and push if anything changed
         run: |
