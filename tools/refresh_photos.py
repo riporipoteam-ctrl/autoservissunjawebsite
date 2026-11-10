@@ -219,6 +219,7 @@ def main():
                 return c, True
         if allow_fetch:
             t, desc = fetch_full(p["id"])
+            log("DIAG fetch_full", p["id"], "title:", repr(t)[:90], "| desc:", repr(desc)[:60])
             if t:
                 p["title"] = t
             c = classify((t or "") + " " + (desc or ""))
@@ -279,6 +280,7 @@ def main():
             pid = post_id_of(e)
             if e.get("title") in ("U radionici", "TikTok video", "TikTok photo"):
                 e["title"] = clean_title("", e.get("date", ""))
+                log("DIAG repaired", pid, "->", repr(e["title"]))
             if pid and pid in by_id and not e.get("cat_v"):
                 e["cat"], ok = cat_for(by_id[pid], allow_fetch=True, entry_title=e.get("title", ""))
                 e["cat_checked"] = ok
