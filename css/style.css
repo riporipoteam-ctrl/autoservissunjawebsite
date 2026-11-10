@@ -515,3 +515,13 @@ body { -webkit-tap-highlight-color: transparent; }
 
 /*** v9.1: gallery hover overlay is a translucent tint, not a solid blue wall ***/
 .team-item .team-overlay { background: rgba(6, 20, 45, .48); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
+
+/*** v10: professional copy pass + images shown whole, not zoom-cropped ***/
+#header-carousel .carousel-caption h6::before { content: none !important; }
+h6.text-primary.text-uppercase { background: transparent; border: none; padding: 0; border-radius: 0; }
+#header-carousel .carousel-item picture { position: absolute; inset: 0; display: block; }
+#header-carousel .carousel-item picture img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.gallery-img { height: auto; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 22%; }
+.svc-photo { border-radius: 14px; }
+.maplibregl-popup-content a { color: #0B5FA5 !important; }
+#globeScroll.globe-done .globe-hud, #globeScroll.globe-done .globe-hint { display: none !important; }
