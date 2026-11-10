@@ -152,6 +152,20 @@ def main():
         log("all sources failed; leaving the site unchanged")
         return 0
     log("source:", source, "| posts fetched:", len(posts))
+    # --- temporary diagnostics (remove after) ---
+    for p in posts[:3]:
+        log("DIAG flat title len:", len(p.get("raw") or ""), "| sample:", (p.get("raw") or "")[:80])
+    try:
+        t0, d0 = fetch_full(posts[0]["id"])
+        log("DIAG fetch_full newest: title len", len(t0), "| desc len", len(d0), "| desc:", d0[:120])
+    except Exception as ex:
+        log("DIAG fetch_full error:", str(ex)[:120])
+    try:
+        alt = from_tikwm()
+        log("DIAG tikwm posts:", len(alt), "| sample title:", (alt[0].get("raw") or "")[:100] if alt else "-")
+    except Exception as ex:
+        log("DIAG tikwm failed:", str(ex)[:120])
+    # --- end diagnostics ---
 
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=MAX_AGE_DAYS)
