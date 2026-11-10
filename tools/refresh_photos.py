@@ -152,20 +152,6 @@ def main():
         log("all sources failed; leaving the site unchanged")
         return 0
     log("source:", source, "| posts fetched:", len(posts))
-    # --- temporary diagnostics (remove after) ---
-    for p in posts[:3]:
-        log("DIAG flat title len:", len(p.get("raw") or ""), "| sample:", (p.get("raw") or "")[:80])
-    try:
-        t0, d0 = fetch_full(posts[0]["id"])
-        log("DIAG fetch_full newest: title len", len(t0), "| desc len", len(d0), "| desc:", d0[:120])
-    except Exception as ex:
-        log("DIAG fetch_full error:", str(ex)[:120])
-    try:
-        alt = from_tikwm()
-        log("DIAG tikwm posts:", len(alt), "| sample title:", (alt[0].get("raw") or "")[:100] if alt else "-")
-    except Exception as ex:
-        log("DIAG tikwm failed:", str(ex)[:120])
-    # --- end diagnostics ---
 
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=MAX_AGE_DAYS)
@@ -196,11 +182,9 @@ def main():
         c = classify(p.get("raw", ""))
         if c == "opcenito" and allow_fetch:
             t, desc = fetch_full(p["id"])
-            c2 = classify((t or "") + " " + (desc or ""))
-            if c2 != "opcenito":
-                return c2
             if t:
                 p["title"] = t
+            return classify((t or "") + " " + (desc or ""))
         return c
 
     # add new posts
@@ -239,7 +223,7 @@ def main():
         wfile = f"tt-wide-{tag}.webp"
         wide.save(os.path.join(PHOTO_DIR, wfile), "WEBP", quality=79, method=6)
         title = clean_title(p["title"], p["date"])
-        pools["gallery"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat})
+        pools["gallery"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat, "cat_checked": True})
         pools["hero"].insert(0, {"src": f"assets/photos/{wfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat})
         pools["heroMobile"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat})
         known.add(p["id"])
@@ -252,8 +236,13 @@ def main():
             pid = post_id_of(e)
             if e.get("title") == "U radionici":
                 e["title"] = clean_title("", e.get("date", ""))
-            if pid and pid in by_id and not e.get("cat"):
+            if pid and pid in by_id and not e.get("cat_checked"):
                 e["cat"] = cat_for(by_id[pid], allow_fetch=True)
+                e["cat_checked"] = True
+                if e.get("title", "").startswith("Radionica, "):
+                    better = clean_title(by_id[pid].get("title", ""), e.get("date", ""))
+                    if not better.startswith("Radionica, "):
+                        e["title"] = better
 
     # deletion sync: post gone from TikTok -> gone from the site.
     # Careful on purpose: a post must be missing from the profile list AND
