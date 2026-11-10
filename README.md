@@ -29,3 +29,11 @@ Structure: `index.html`, `css/`, `js/`, `lib/` (template),
 - v4 (2026-11-08): hand-coded page *following* CarServ's structure — rejected
   by the owner as not professional enough, superseded by v5.
 - v3 dark/3D and v2 plain light: rejected, removed.
+
+## v6 (2026-11-10) — animations, globe map, TikTok photos + randomizer
+- Loading screen: the Šunja logo DRAWS ITSELF (SVG stroke animation of the swoosh, engine square, gear, arrow, wordmark), then the real logo fades in and the screen lifts (~2.5s).
+- Ken-burns zoom on hero slides + a blue scrolling services marquee under the hero.
+- Photos: 12 real workshop photos pulled from the shop's TikTok @autoservissunja (assets/photos/tt-*.webp + wide crops). Service images now match their service (DiagBox screen = dijagnostika, ECU board = autoelektrika, valve train = veliki servis, engine bay = mali servis).
+- Randomizer: photos.json pools — hero slide 1 picks 1 of 5 photos per visit; the gallery shows 5 random of 14 photos per visit (each links to its TikTok/Instagram post). NOTE: the first verifier "hero doesn't randomize" report was a measurement artifact (it read the static ALT text); src-level checks confirm all 5 hero images rotate.
+- Custom map: Leaflet/OpenStreetMap scroll experience (replaces the Google iframe) — a 320vh pinned section zooms Svijet → Evropa → Bosna i Hercegovina → Goražde → the shop (exact pin 43.6651456, 18.982064 from Google Maps) ending with a marker + bubble (address, directions link, phone). Kontakt now has a navy info card with an "Upute za vožnju" button.
+- Gallery's bottom card is now a black TikTok follow card (Instagram demoted per owner's order).
