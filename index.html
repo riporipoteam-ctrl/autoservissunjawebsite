@@ -38,7 +38,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=12.2" rel="stylesheet">
+    <link href="css/style.css?v=12.3" rel="stylesheet">
 </head>
 
 <body>
@@ -1103,6 +1103,10 @@
                         this.scene.add(new THREE.HemisphereLight(0xffffff, 0x3a4a5a, 1.05));
                         var sun = new THREE.DirectionalLight(0xffffff, 0.85);
                         sun.position.set(40, 60, 25); this.scene.add(sun);
+                        g.traverse(function (o) {
+                            o.frustumCulled = false;
+                            if (o.material) { o.material.depthWrite = false; }
+                        });
                         this.scene.add(g);
                         this.camera = new THREE.Camera();
                         this.renderer = new THREE.WebGLRenderer({ canvas: mapObj.getCanvas(), context: gl, antialias: true });
@@ -1119,6 +1123,7 @@
                             .multiply(rotX).multiply(rotZ);
                         this.camera.projectionMatrix = m.multiply(l);
                         this.renderer.resetState();
+                        this.renderer.clearDepth();
                         this.renderer.render(this.scene, this.camera);
                     }
                 };
