@@ -339,3 +339,23 @@
     .carousel-caption h1 { font-size: 2.1rem; }
     .mobile-callbar a { padding-bottom: calc(.85rem + env(safe-area-inset-bottom)); }
 }
+
+/*** v5.3 modern rounded UI ***/
+::selection { background: #0B5FA5; color: #fff; }
+.btn { border-radius: 10px; }
+.btn-primary { background-image: linear-gradient(135deg, #1273C4, #0B5FA5 60%, #084D87); }
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active { background-image: linear-gradient(135deg, #0B5FA5, #084D87); }
+#header-carousel { border-radius: 0 0 28px 28px; overflow: hidden; }
+h6.text-primary.text-uppercase { display: inline-block; background: rgba(11,95,165,.10); border: 1px solid rgba(11,95,165,.18); padding: .45rem 1.1rem; border-radius: 50rem; letter-spacing: .06em; }
+.service .nav .nav-link { border-radius: 14px; }
+.service .tab-pane .position-relative { border-radius: 18px; overflow: hidden; }
+#o-nama img.position-absolute { border-radius: 18px; }
+.team-item { border-radius: 18px; overflow: hidden; box-shadow: 0 12px 30px rgba(11,33,84,.10); transition: transform .3s ease, box-shadow .3s ease; }
+.team-item:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(11,33,84,.16); }
+.social-tile { border-radius: 16px; box-shadow: 0 10px 24px rgba(0,0,0,.12); transition: transform .25s ease; }
+.social-tile:hover { transform: translateY(-3px); }
+#kontakt .bg-light { border-radius: 14px; }
+#kontakt iframe { border-radius: 18px; }
+#recenzije .bg-white { border-radius: 20px; box-shadow: 0 16px 40px rgba(11,33,84,.10) !important; }
+.form-control, .form-select { border-radius: 10px; }
+.mobile-callbar { border-radius: 16px 16px 0 0; overflow: hidden; }
