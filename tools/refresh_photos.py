@@ -163,7 +163,7 @@ def main():
                         e["title"] = want
 
     import requests
-    from PIL import Image
+    from PIL import Image, ImageFilter
     os.makedirs(PHOTO_DIR, exist_ok=True)
     added = 0
     for p in fresh:
@@ -182,13 +182,18 @@ def main():
             portrait = portrait.resize((860, round(portrait.height * 860 / portrait.width)), Image.LANCZOS)
         pfile = f"tt-{tag}.webp"
         portrait.save(os.path.join(PHOTO_DIR, pfile), "WEBP", quality=84)
-        wide = im.copy()
+        # hero version: blur-pad to 1600x1000 so the WHOLE photo stays visible
         tw, th = 1600, 1000
+        wide = im.copy()
         s = max(tw / wide.width, th / wide.height)
         wide = wide.resize((round(wide.width * s), round(wide.height * s)), Image.LANCZOS)
         x = (wide.width - tw) // 2
         y = (wide.height - th) // 2
-        wide = wide.crop((x, y, x + tw, y + th))
+        wide = wide.crop((x, y, x + tw, y + th)).filter(ImageFilter.GaussianBlur(30))
+        fg = im.copy()
+        s2 = min(tw / fg.width, th / fg.height)
+        fg = fg.resize((round(fg.width * s2), round(fg.height * s2)), Image.LANCZOS)
+        wide.paste(fg, ((tw - fg.width) // 2, (th - fg.height) // 2))
         wfile = f"tt-wide-{tag}.webp"
         wide.save(os.path.join(PHOTO_DIR, wfile), "WEBP", quality=82)
         title = clean_title(p["title"], p["date"])
