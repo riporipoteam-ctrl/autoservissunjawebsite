@@ -127,7 +127,9 @@ def vision_cat(img_url):
                               {"type": "text", "text": prompt},
                               {"type": "image_url", "image_url": {"url": img_url}}]}]},
                           timeout=90)
-        r.raise_for_status()
+        if r.status_code != 200:
+            log("vision http", r.status_code, ":", r.text[:150])
+            return None
         txt = (r.json()["choices"][0]["message"]["content"] or "").strip().lower()
         for cat in CATS + ["opcenito"]:
             if cat in txt:
@@ -190,6 +192,15 @@ def main():
         log("all sources failed; leaving the site unchanged")
         return 0
     log("source:", source, "| posts fetched:", len(posts))
+    # --- temporary diagnostics (remove after) ---
+    try:
+        import requests as _rq
+        for probe in (posts[0], posts[5]):
+            rr = _rq.get("https://www.tiktok.com/oembed", params={"url": probe["url"]}, headers=UA, timeout=25)
+            log("DIAG oembed", probe["id"], "http", rr.status_code, "| title:", (rr.json().get("title") or "")[:140] if rr.status_code == 200 else rr.text[:80])
+    except Exception as ex:
+        log("DIAG oembed failed:", str(ex)[:140])
+    # --- end diagnostics ---
 
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=MAX_AGE_DAYS)
