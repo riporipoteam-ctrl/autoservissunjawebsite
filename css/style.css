@@ -483,3 +483,32 @@ html { scroll-behavior: smooth; }
 /*** v8.1 globe release: after the flight completes, the section becomes a normal static map ***/
 #globeScroll.globe-done { height: auto; }
 #globeScroll.globe-done .globe-sticky { position: relative; top: auto; height: 70vh; }
+
+/*** v9: slider fix (mobile overlap), marquee removed, plainer/professional look ***/
+html, body { overflow-x: clip; }
+body { -webkit-tap-highlight-color: transparent; }
+.marquee { display: none !important; }
+.carousel-item.active > img { animation: none !important; }
+.btn-primary::after { display: none !important; }
+.footer-wave { display: none !important; }
+.hero-ghost, .hero-scroll { display: none !important; }
+#header-carousel .carousel-caption h6 { background: transparent; border: none; backdrop-filter: none; -webkit-backdrop-filter: none; padding: 0; border-radius: 0; letter-spacing: .14em; font-size: .82rem; }
+#header-carousel .carousel-caption h6::before { content: ''; display: inline-block; width: 36px; height: 3px; background: #4EA8E0; vertical-align: middle; margin-right: .65rem; border-radius: 2px; }
+.hero-nav { background: #0B5FA5 !important; border: none; }
+.hero-nav:hover { background: #084A82 !important; }
+.hero-indicators button { width: 48px !important; }
+@media (max-width: 767.98px) {
+    #header-carousel .carousel-item { height: 94svh; min-height: 640px; max-height: 820px; }
+    #header-carousel .carousel-caption { align-items: flex-end !important; padding-bottom: 5.6rem; background: linear-gradient(to top, rgba(6,20,45,.90) 0%, rgba(6,20,45,.58) 55%, rgba(6,20,45,.28) 100%); }
+    #header-carousel .carousel-caption h1 { font-size: clamp(2.15rem, 9.5vw, 2.7rem); margin-bottom: .8rem !important; padding-bottom: 0 !important; }
+    #header-carousel .carousel-caption p { font-size: .98rem; margin-bottom: 1rem !important; }
+    #header-carousel .carousel-caption h6 { font-size: .72rem; margin-bottom: .7rem !important; }
+    #header-carousel .carousel-caption .btn { display: block; width: 100%; margin: 0 0 .6rem 0 !important; padding-top: .85rem !important; padding-bottom: .85rem !important; }
+    #header-carousel .carousel-caption .status-pill { font-size: .85rem; padding: .5rem .95rem; margin-bottom: .2rem; }
+    .hero-nav { display: none !important; }
+    .hero-indicators { left: 1.25rem; bottom: 1.15rem; }
+    .hero-indicators button { width: 40px !important; }
+    input, select, textarea { font-size: 16px !important; }
+    .counters-band { border-radius: 18px; }
+    .counter-cell { padding: 1.4rem .5rem; }
+}
