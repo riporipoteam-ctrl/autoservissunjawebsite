@@ -528,3 +528,15 @@ h6.text-primary.text-uppercase { background: transparent; border: none; padding:
 
 /*** v10.1: hide the stage pill once the flight has finished (correct class) ***/
 #globeScroll.globe-done .globe-stage { display: none !important; }
+
+/*** v11: buttons normalized, map attribution bar off, shop photo marker ***/
+.btn { border-radius: 10px; }
+.btn:active { transform: scale(.98); }
+.maplibregl-ctrl-attrib { display: none !important; }
+.shop-photo-marker { width: 66px; height: 66px; border-radius: 50%; background-size: cover; background-position: center; border: 3px solid #fff; box-shadow: 0 10px 24px rgba(6,20,45,.45); }
+@media (max-width: 767.98px) {
+    .back-to-top { bottom: 92px !important; }
+    #header-carousel .carousel-caption .btn { padding-top: .8rem !important; padding-bottom: .8rem !important; font-size: 1rem; }
+    #kontakt .btn-light, #kontakt .btn-outline-light { display: block; width: 100%; margin: .55rem 0 0 0 !important; }
+    .shop-photo-marker { width: 54px; height: 54px; }
+}
