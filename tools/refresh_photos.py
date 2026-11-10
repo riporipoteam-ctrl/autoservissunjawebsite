@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-"""Auto fresh-photos for autosunja.sitey.my.
+"""Auto fresh-photos for autosunja.sitey.my — v2.
 
-Runs from GitHub Actions (see .github/workflows/fresh-photos.yml).
-Pulls the shop's newest TikTok posts (@autoservissunja), mirrors the
-images into assets/photos/, and keeps photos.json pools (hero,
+Runs from GitHub Actions (see .github/workflows/fresh-photos.yml, every
+15 min). Pulls the shop's newest TikTok posts (@autoservissunja),
+mirrors images into assets/photos/, and keeps photos.json pools (hero,
 heroMobile, gallery) limited to posts at most 60 days old.
+v2 adds: post categories (from caption/hashtags) feeding the matching
+service tab on the site, deletion sync (a post deleted on TikTok is
+removed from the site too), and a "latest" pointer so the site can
+feature the newest photo first.
 Fail-soft: if every source fails, nothing changes and the run passes.
 """
-import json, os, re, subprocess, sys, time
+import json, os, re, subprocess, sys, unicodedata
 from datetime import datetime, timezone, timedelta
 from io import BytesIO
 
@@ -17,9 +21,36 @@ PHOTO_DIR = os.path.join(ROOT, "assets", "photos")
 HANDLE = "autoservissunja"
 MAX_AGE_DAYS = 60
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"}
+CATS = ["kljucevi", "dijagnostika", "elektrika", "veliki", "mali", "peugeot"]
 
 def log(*a):
     print("[refresh]", *a, flush=True)
+
+def norm(text):
+    t = unicodedata.normalize("NFKD", (text or "").lower())
+    t = "".join(c for c in t if not unicodedata.combining(c))
+    return t.replace("dj", "d")
+
+KEYWORDS = {
+    "kljucevi": ["kljuc", "daljinsk", "immo", "immobil", "key", "remote", "fob"],
+    "dijagnostika": ["dijagnost", "diagbox", "diagnos", "tester", "obd", "gresk"],
+    "elektrika": ["elektrik", "elektronik", "ecu", "akumulator", "alternator", "instalac", "anlaser"],
+    "veliki": ["zupcast", "remen", "glava motora", "kvacil", "veliki servis", "lanac"],
+    "mali": ["ulje", "mali servis", "filter", "kocnic", "svjecic", "servis ulja"],
+    "peugeot": ["peugeot", "puretech"],
+}
+
+def classify(raw):
+    t = norm(raw)
+    tokens = set(re.findall(r"[a-z0-9]+", t))
+    for cat in CATS:
+        for kw in KEYWORDS[cat]:
+            if " " in kw:
+                if kw in t:
+                    return cat
+            elif any(tok.startswith(kw) for tok in tokens):
+                return cat
+    return "opcenito"
 
 def from_ytdlp():
     url = f"https://www.tiktok.com/@{HANDLE}"
@@ -43,7 +74,7 @@ def from_ytdlp():
         if not img:
             continue
         posts.append({"id": pid, "ts": int(ts), "img": img,
-                      "title": e.get("title") or "",
+                      "title": e.get("title") or "", "raw": e.get("title") or "",
                       "url": e.get("webpage_url") or f"https://www.tiktok.com/@{HANDLE}/photo/{pid}"})
     return posts
 
@@ -66,26 +97,23 @@ def from_tikwm():
             continue
         is_photo = bool(v.get("images"))
         posts.append({"id": pid, "ts": int(ts), "img": img,
-                      "title": v.get("title") or "",
+                      "title": v.get("title") or "", "raw": v.get("title") or "",
                       "url": f"https://www.tiktok.com/@{HANDLE}/{'photo' if is_photo else 'video'}/{pid}"})
     return posts
 
-def fetch_title(pid):
-    """Full metadata for one post (flat listings often lack real titles)."""
+def fetch_full(pid):
+    """Full metadata for one post: (title, description) or ('', '')."""
     try:
         out = subprocess.run(
             [sys.executable, "-m", "yt_dlp", "-J", "--no-warnings",
              "--socket-timeout", "20", f"https://www.tiktok.com/@{HANDLE}/photo/{pid}"],
             capture_output=True, text=True, timeout=120)
         if out.returncode != 0:
-            return ""
+            return "", ""
         d = json.loads(out.stdout)
-        t = d.get("title") or ""
-        if len(re.sub(r"[#@]\S+", "", t).strip()) < 4:
-            t = (d.get("description") or "").split("\n")[0]
-        return clean_title(t, "")
+        return d.get("title") or "", d.get("description") or ""
     except Exception:
-        return ""
+        return "", ""
 
 MONTHS_BS = ["januar", "februar", "mart", "april", "maj", "juni", "juli",
              "august", "septembar", "oktobar", "novembar", "decembar"]
@@ -94,13 +122,16 @@ def clean_title(raw, date_s):
     t = re.sub(r"[#@]\S+", "", raw or "")
     t = re.sub(r"\s+", " ", t).strip(" -–—|")
     if len(t) < 4:
-        # captionless post: factual label from its date, never an invented title
         try:
             d = datetime.strptime(date_s, "%Y-%m-%d")
             t = "Radionica, " + MONTHS_BS[d.month - 1] + " " + str(d.year)
         except Exception:
             t = "U radionici"
     return t[:48]
+
+def post_id_of(entry):
+    m = re.search(r"/(\d{10,})(?:[/?#]|$)", entry.get("href", ""))
+    return m.group(1) if m else None
 
 def main():
     posts, source = [], None
@@ -120,48 +151,41 @@ def main():
 
     now = datetime.now(timezone.utc)
     cutoff = now - timedelta(days=MAX_AGE_DAYS)
-    fresh = []
+    by_id = {}
     for p in posts:
-        dt = datetime.fromtimestamp(p["ts"], timezone.utc)
-        if dt >= cutoff:
-            p["date"] = dt.strftime("%Y-%m-%d")
-            fresh.append(p)
+        p["date"] = datetime.fromtimestamp(p["ts"], timezone.utc).strftime("%Y-%m-%d")
+        by_id[p["id"]] = p
+    fetched_ids = set(by_id)
+    oldest_fetched = min(p["date"] for p in posts)
+    fresh = [p for p in posts if datetime.fromtimestamp(p["ts"], timezone.utc) >= cutoff]
     fresh.sort(key=lambda p: -p["ts"])
     log("posts within", MAX_AGE_DAYS, "days:", len(fresh))
 
     with open(PHOTOS_JSON, encoding="utf-8") as f:
         pools = json.load(f)
-
-    def post_id(entry):
-        m = re.search(r"/(\d{10,})(?:[/?#]|$)", entry.get("href", ""))
-        return m.group(1) if m else None
+    for pool in ("hero", "heroMobile", "gallery"):
+        pools.setdefault(pool, [])
 
     known = set()
     for pool in ("hero", "heroMobile", "gallery"):
-        for e in pools.get(pool, []):
-            pid = post_id(e)
+        for e in pools[pool]:
+            pid = post_id_of(e)
             if pid:
                 known.add(pid)
 
-    # repair existing fallback titles to factual date labels
-    for pool in ("hero", "heroMobile", "gallery"):
-        for e in pools.get(pool, []):
-            if e.get("title") == "U radionici":
-                e["title"] = clean_title("", e.get("date", ""))
+    # classification (flat caption first; full metadata if still generic)
+    def cat_for(p, allow_fetch):
+        c = classify(p.get("raw", ""))
+        if c == "opcenito" and allow_fetch:
+            t, desc = fetch_full(p["id"])
+            c2 = classify((t or "") + " " + (desc or ""))
+            if c2 != "opcenito":
+                return c2
+            if t:
+                p["title"] = t
+        return c
 
-    # enrich titles: real captions for new posts, and repair generic ones
-    for p in fresh:
-        if clean_title(p["title"], p["date"]) == "U radionici":
-            better = fetch_title(p["id"])
-            if better and better != "U radionici":
-                p["title"] = better
-        want = clean_title(p["title"], p["date"])
-        if want != "U radionici":
-            for pool in ("hero", "heroMobile", "gallery"):
-                for e in pools.get(pool, []):
-                    if post_id(e) == p["id"] and e.get("title") == "U radionici":
-                        e["title"] = want
-
+    # add new posts
     import requests
     from PIL import Image, ImageFilter
     os.makedirs(PHOTO_DIR, exist_ok=True)
@@ -169,6 +193,7 @@ def main():
     for p in fresh:
         if p["id"] in known:
             continue
+        cat = cat_for(p, allow_fetch=True)
         try:
             resp = requests.get(p["img"], headers=UA, timeout=40)
             resp.raise_for_status()
@@ -182,7 +207,6 @@ def main():
             portrait = portrait.resize((860, round(portrait.height * 860 / portrait.width)), Image.LANCZOS)
         pfile = f"tt-{tag}.webp"
         portrait.save(os.path.join(PHOTO_DIR, pfile), "WEBP", quality=80, method=6)
-        # hero version: blur-pad to 1600x1000 so the WHOLE photo stays visible
         tw, th = 1600, 1000
         wide = im.copy()
         s = max(tw / wide.width, th / wide.height)
@@ -197,15 +221,44 @@ def main():
         wfile = f"tt-wide-{tag}.webp"
         wide.save(os.path.join(PHOTO_DIR, wfile), "WEBP", quality=79, method=6)
         title = clean_title(p["title"], p["date"])
-        pools.setdefault("gallery", []).insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"]})
-        pools.setdefault("hero", []).insert(0, {"src": f"assets/photos/{wfile}", "href": p["url"], "title": title, "date": p["date"]})
-        pools.setdefault("heroMobile", []).insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"]})
+        pools["gallery"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat})
+        pools["hero"].insert(0, {"src": f"assets/photos/{wfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat})
+        pools["heroMobile"].insert(0, {"src": f"assets/photos/{pfile}", "href": p["url"], "title": title, "date": p["date"], "cat": cat})
         known.add(p["id"])
         added += 1
-        log("added", p["id"], p["date"], title)
+        log("added", p["id"], p["date"], "| cat:", cat, "|", title)
 
-    # prune entries older than the cutoff (keep pool minimums with the newest)
+    # backfill categories + repair fallback titles on known entries
+    for pool in ("hero", "heroMobile", "gallery"):
+        for e in pools[pool]:
+            pid = post_id_of(e)
+            if e.get("title") == "U radionici":
+                e["title"] = clean_title("", e.get("date", ""))
+            if pid and pid in by_id and not e.get("cat"):
+                e["cat"] = cat_for(by_id[pid], allow_fetch=False)
+
+    # deletion sync: post gone from TikTok -> gone from the site
     removed = 0
+    if len(posts) >= 50:
+        for pool in ("hero", "heroMobile", "gallery"):
+            keep = []
+            for e in pools[pool]:
+                pid = post_id_of(e)
+                if pid and pid not in fetched_ids and e.get("date", "9999") >= oldest_fetched:
+                    removed += 1
+                    src = e.get("src", "")
+                    base = os.path.basename(src)
+                    if re.match(r"tt-\d{8}-\d+\.webp$", base) or re.match(r"tt-wide-\d{8}-\d+\.webp$", base):
+                        fp = os.path.join(ROOT, src)
+                        if os.path.isfile(fp):
+                            os.remove(fp)
+                    log("removed (post deleted on TikTok):", pid, src)
+                    continue
+                keep.append(e)
+            pools[pool] = keep
+
+    # prune by age (keep pool minimums with the newest)
+    retired = 0
     minimums = {"hero": 1, "heroMobile": 1, "gallery": 5}
     for pool, minimum in minimums.items():
         entries = pools.get(pool, [])
@@ -225,15 +278,38 @@ def main():
                 drop.append(e)
         pools[pool] = keep
         for e in drop:
-            removed += 1
+            retired += 1
             fp = os.path.join(ROOT, e.get("src", ""))
             if os.path.isfile(fp):
                 os.remove(fp)
-                log("retired", e["src"])
+                log("retired (too old)", e["src"])
+
+    # services map: newest photo per category (drives the service tabs)
+    services = {}
+    gal = pools.get("gallery", [])
+    for cat in CATS:
+        cands = [e for e in gal if e.get("cat") == cat]
+        if cands:
+            cands.sort(key=lambda e: e.get("date", ""), reverse=True)
+            services[cat] = {"src": cands[0]["src"], "date": cands[0]["date"], "href": cands[0]["href"]}
+    pools["services"] = services
+
+    # latest post overall (the site features it first)
+    if gal:
+        newest = sorted(gal, key=lambda e: e.get("date", ""), reverse=True)[0]
+        wide_src = newest["src"]
+        for e in pools.get("hero", []):
+            if post_id_of(e) == post_id_of(newest):
+                wide_src = e["src"]
+                break
+        pools["latest"] = {"src": newest["src"], "wide": wide_src, "href": newest["href"],
+                           "title": newest["title"], "date": newest["date"], "cat": newest.get("cat", "opcenito")}
+    log("services map:", {k: v["date"] for k, v in services.items()})
+    log("latest:", pools.get("latest", {}).get("date"), pools.get("latest", {}).get("title"))
 
     with open(PHOTOS_JSON, "w", encoding="utf-8") as f:
         json.dump(pools, f, ensure_ascii=False, indent=1)
-    log("done. added:", added, "| retired:", removed,
+    log("done. added:", added, "| removed:", removed, "| retired:", retired,
         "| pool sizes:", {k: len(pools.get(k, [])) for k in minimums})
     return 0
 
