@@ -331,3 +331,11 @@
 .text-primary { color: #0B5FA5 !important; }
 .bg-primary { background-color: #0B5FA5 !important; }
 .border-primary { border-color: #0B5FA5 !important; }
+
+/*** v5.1 polish: anchor offset under sticky nav, hero type, iPhone safe area ***/
+#pocetna, #o-nama, #usluge, #galerija, #kontakt, #termin { scroll-margin-top: 84px; }
+.carousel-caption h1 { text-shadow: 0 2px 18px rgba(0,0,0,.45); }
+@media (max-width: 575.98px) {
+    .carousel-caption h1 { font-size: 2.1rem; }
+    .mobile-callbar a { padding-bottom: calc(.85rem + env(safe-area-inset-bottom)); }
+}
