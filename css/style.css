@@ -734,3 +734,48 @@ h6.text-primary.text-uppercase { background: transparent; border: none; padding:
         transition: none !important;
     }
 }
+
+
+/*** v18.3: adaptive animation/performance pass ***/
+html.perf-lite #header-carousel .hero-bg {
+    filter: brightness(.5) saturate(.95) !important;
+    transform: scale(1.025) !important;
+}
+
+html.perf-lite .team-item .position-relative::before {
+    filter: none !important;
+    opacity: .42;
+    transform: scale(1.025);
+}
+
+html.perf-lite .wow {
+    animation-duration: .35s !important;
+}
+
+html.perf-lite .team-item,
+html.perf-lite .sticky-top,
+html.perf-lite #backTop {
+    box-shadow: none !important;
+}
+
+@media (max-width: 767.98px) {
+    .team-item .position-relative::before {
+        filter: blur(12px) brightness(.9);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+
+    #header-carousel .hero-bg {
+        transform: none !important;
+        filter: brightness(.5) saturate(.95) !important;
+    }
+
+    .hero-scroll,
+    .marquee-track {
+        animation: none !important;
+    }
+}
