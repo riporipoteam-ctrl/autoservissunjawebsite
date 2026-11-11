@@ -1,7 +1,7 @@
 {
  "hero": [
   {
-   "src": "assets/photos/tt-wide-20261110-216852.webp",
+   "src": "assets/photos/tt-wide-20261110-5ab64c5a.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7706671380024216852",
    "title": "Radionica, novembar 2026",
    "date": "2026-11-10",
@@ -11,7 +11,8 @@
    "source": "tiktok",
    "post_id": "7706671380024216852",
    "media_id": "tiktok:7706671380024216852:0",
-   "media_index": 0
+   "media_index": 0,
+   "quality_v": 2
   },
   {
    "src": "assets/photos/tt-wide-01.webp",
@@ -183,7 +184,7 @@
  ],
  "gallery": [
   {
-   "src": "assets/photos/tt-20261110-216852.webp",
+   "src": "assets/photos/tt-20261110-5ab64c5a.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7706671380024216852",
    "title": "Radionica, novembar 2026",
    "date": "2026-11-10",
@@ -193,7 +194,8 @@
    "source": "tiktok",
    "post_id": "7706671380024216852",
    "media_id": "tiktok:7706671380024216852:0",
-   "media_index": 0
+   "media_index": 0,
+   "quality_v": 2
   },
   {
    "src": "assets/photos/tt-01.webp",
@@ -484,7 +486,7 @@
  ],
  "heroMobile": [
   {
-   "src": "assets/photos/tt-20261110-216852.webp",
+   "src": "assets/photos/tt-20261110-5ab64c5a.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7706671380024216852",
    "title": "Radionica, novembar 2026",
    "date": "2026-11-10",
@@ -494,7 +496,8 @@
    "source": "tiktok",
    "post_id": "7706671380024216852",
    "media_id": "tiktok:7706671380024216852:0",
-   "media_index": 0
+   "media_index": 0,
+   "quality_v": 2
   },
   {
    "src": "assets/photos/tt-01.webp",
@@ -691,8 +694,8 @@
   }
  },
  "latest": {
-  "src": "assets/photos/tt-20261110-216852.webp",
-  "wide": "assets/photos/tt-wide-20261110-216852.webp",
+  "src": "assets/photos/tt-20261110-5ab64c5a.webp",
+  "wide": "assets/photos/tt-wide-20261110-5ab64c5a.webp",
   "href": "https://www.tiktok.com/@autoservissunja/photo/7706671380024216852",
   "title": "Radionica, novembar 2026",
   "date": "2026-11-10",
@@ -707,7 +710,7 @@
    "status": "photo",
    "count": 1,
    "attempts": 1,
-   "last": 1794419965
+   "last": 1794426300
   }
  }
 }
