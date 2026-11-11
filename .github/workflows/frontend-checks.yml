@@ -1,0 +1,28 @@
+name: Frontend regression checks
+
+on:
+  push:
+    paths:
+      - 'index.html'
+      - 'css/style.css'
+      - 'js/main.js'
+      - 'tools/test_frontend_static.py'
+      - '.github/workflows/frontend-checks.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Frontend static regression tests
+        run: python -m unittest tools/test_frontend_static.py
+      - name: JavaScript syntax
+        run: node --check js/main.js
