@@ -1336,3 +1336,26 @@ h6.text-primary.text-uppercase::before {
         height: 320px;
     }
 }
+
+
+/*** v18.9: no lingering map scroll trap, especially on iPhone ***/
+/* The flight completes within one short screen segment. After completion
+   the section is normal-height, so scrolling back up never sticks. */
+#globeScroll:not(.globe-complete) {
+    height: 140svh !important;
+}
+#globeScroll.globe-complete,
+#globeScroll.globe-complete .globe-sticky {
+    height: 85svh !important;
+    min-height: 0 !important;
+}
+@media (max-width: 767.98px) {
+    #globeScroll:not(.globe-complete) {
+        height: 118svh !important;
+    }
+    #globeScroll.globe-complete,
+    #globeScroll.globe-complete .globe-sticky {
+        height: 82svh !important;
+        min-height: 0 !important;
+    }
+}
