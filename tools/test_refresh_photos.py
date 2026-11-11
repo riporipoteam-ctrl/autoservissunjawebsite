@@ -106,6 +106,16 @@ class SocialPhotoTests(unittest.TestCase):
         )
         self.assertEqual("original", posts[0]["quality_source"])
 
+    def test_rejected_outside_photo_never_reenters_display_pools(self):
+        banned = {"source":"tiktok","post_id":"7705912434296491284","media_id":"tiktok:7705912434296491284:0","src":"assets/photos/tt-20261108-59603d89.webp","quality_v":2}
+        self.assertTrue(rp.is_banned_photo(banned))
+        self.assertTrue(rp.is_banned_photo({"src":"assets/photos/tt-01.webp"}))
+        self.assertFalse(rp.is_banned_photo({"src":"assets/photos/tt-20260919-d3b7439d.webp"}))
+        pools = {"gallery":[banned, {"src":"assets/photos/tt-20260919-d3b7439d.webp","quality_v":2,"date":"2026-09-19"}]}
+        rebuilt = rp.rebuild_display_pools(pools)
+        self.assertEqual(1, len(rebuilt["hero"]))
+        self.assertEqual("assets/photos/tt-20260919-d3b7439d.webp",rebuilt["heroMobile"][0]["src"])
+
     def test_known_media_without_quality_v_needs_upgrade(self):
         pools = {
             "gallery": [{"media_id": "tiktok:123:0", "quality_v": 1}],
