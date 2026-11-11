@@ -42,8 +42,13 @@
 
 <body>
     <!-- Preloader Start -->
-    <div id="preloader">
+    <div id="preloader" role="status" aria-label="Učitavanje stranice">
+        <div class="pl-atmosphere" aria-hidden="true"></div>
         <div class="pl-stage">
+            <div class="pl-kicker"><span class="pl-signal"></span><span>AUTO SERVIS ŠUNJA</span><span class="pl-kicker-place">GORAŽDE · BiH</span></div>
+            <div class="pl-core">
+                <span class="pl-orbit pl-orbit-outer" aria-hidden="true"></span>
+                <span class="pl-orbit pl-orbit-inner" aria-hidden="true"></span>
             <div class="pl-trace-wrap">
                 <svg id="plTrace" viewBox="0 0 785 462" fill="none" aria-hidden="true">
                     <path class="trace-path" fill="#0B5FA5" stroke="#0B5FA5" fill-rule="evenodd" d="M432,341 L429,343 L429,349 L438,356 L428,357 L428,359 L436,361 L441,358 L441,352 L432,345 L440,344 L440,342 Z M419,341 L419,360 L422,360 L422,341 Z M396,341 L401,359 L408,360 L414,341 L410,341 L405,356 L400,342 Z M392,341 L386,343 L382,341 L382,360 L385,360 L385,349 L393,343 Z M363,341 L358,349 L360,358 L365,361 L374,360 L374,357 L365,358 L362,354 L364,351 L375,351 L374,343 Z M362,347 L366,343 L372,346 L371,349 Z M307,342 L304,346 L305,358 L311,361 L318,360 L322,354 L321,344 L317,341 Z M312,343 L316,344 L319,350 L315,358 L311,358 L307,353 L307,348 Z M266,341 L267,359 L282,360 L282,341 L279,341 L279,354 L274,358 L269,354 L269,341 Z M291,336 L287,342 L290,345 L290,356 L292,360 L297,361 L299,358 L294,356 L294,345 L299,344 L299,341 L295,341 L294,336 Z M246,334 L237,360 L241,360 L244,354 L254,354 L260,361 L252,334 Z M248,339 L251,342 L252,351 L244,349 Z M419,333 L419,337 L422,337 L422,333 Z M351,334 L345,333 L338,337 L338,344 L350,353 L346,358 L337,356 L339,360 L346,361 L353,356 L353,349 L342,342 L345,336 L352,338 Z M268,288 L268,295 L663,294 L663,288 Z M149,211 L144,217 L145,221 L154,225 L158,222 L159,215 L155,211 Z M148,217 L153,214 L156,219 L151,222 Z M124,201 L124,225 L133,226 L142,234 L169,234 L172,227 L181,227 L183,233 L186,232 L185,210 L181,217 L172,217 L170,210 L161,201 Z M158,205 L159,210 L162,209 L162,214 L165,215 L162,217 L165,219 L162,221 L164,224 L160,225 L160,229 L156,228 L155,231 L151,229 L149,232 L148,228 L144,229 L144,225 L139,224 L141,222 L138,219 L141,217 L139,215 L142,214 L140,210 L145,210 L144,207 L149,207 L150,204 L154,207 Z M43,164 L43,203 L82,203 L71,188 Z M268,97 L299,101 L331,114 L355,135 L359,143 L352,145 L372,161 L386,144 L378,144 L360,122 L329,105 L301,98 Z M43,136 L43,153 L65,169 L90,196 L102,177 L116,162 L143,146 L156,144 L152,152 L123,167 L103,190 L98,201 L104,204 L105,232 L114,236 L103,241 L90,252 L84,263 L81,278 L43,279 L43,283 L80,283 L84,295 L43,296 L43,306 L36,308 L36,319 L449,319 L449,308 L221,308 L219,306 L219,136 L180,136 L179,134 L193,120 L211,109 L245,98 L263,97 L233,98 L204,105 L178,118 L160,136 Z M165,293 L169,283 L186,285 L180,294 L167,295 Z M151,244 L189,243 L193,245 L204,261 L204,274 L198,279 L169,279 L163,258 Z M103,250 L115,244 L130,243 L142,247 L151,254 L159,267 L161,284 L157,297 L149,307 L126,307 L129,303 L136,305 L138,299 L143,300 L145,298 L143,294 L150,290 L147,285 L152,281 L147,274 L150,269 L143,265 L144,260 L139,261 L136,258 L137,255 L128,256 L126,252 L119,257 L114,254 L110,261 L107,259 L104,262 L106,266 L99,270 L102,276 L98,278 L98,281 L102,283 L99,290 L105,292 L105,298 L107,300 L110,298 L113,305 L121,303 L123,307 L102,308 L95,301 L89,288 L88,276 L93,261 Z M108,199 L113,196 L114,207 L118,208 L118,199 L121,196 L138,195 L137,191 L127,189 L129,185 L157,185 L158,189 L148,191 L148,196 L164,196 L175,206 L176,212 L181,205 L187,205 L192,213 L191,234 L184,239 L180,238 L177,232 L173,239 L140,239 L131,231 L119,229 L118,215 L114,216 L114,229 L111,230 L107,211 Z M191,142 L185,147 L173,147 L177,139 L188,138 Z"/>
@@ -52,8 +57,11 @@
                 <img class="pl-final" src="assets/sunja-logo-transparent.webp" alt="Auto Servis Šunja">
                 <span class="pl-ink" aria-hidden="true"></span>
             </div>
+                <span class="pl-scanner" aria-hidden="true"></span>
+            </div>
+            <div class="pl-system-status"><span class="pl-system-title">Preciznost u svakom detalju</span><span class="pl-system-counter">01 <span>/</span> 03</span></div>
             <div class="pl-bar"><span></span></div>
-            <p class="pl-text">Učitavanje…</p>
+            <p class="pl-text">Pripremamo vaše iskustvo <span class="pl-loader-dots" aria-hidden="true">•••</span></p>
         </div>
     </div>
     <!-- Preloader End -->
@@ -963,63 +971,60 @@
         setTimeout(heal, 3000);
     });
 
-    // Preloader — the real logo is traced, then revealed by an ink sweep.
+    // Ignition-style signature intro. The exact, original logo is never redrawn.
     (function () {
         var pre = document.getElementById('preloader');
         if (!pre) return;
-
-        var reduce = false;
-        try { reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-
+        var reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        var finished = false;
         var paths = Array.prototype.slice.call(pre.querySelectorAll('#plTrace .trace-path'));
-        paths.forEach(function (path) {
-            var len = Math.max(1, path.getTotalLength());
-            path.style.strokeDasharray = len + ' ' + len;
-            path.style.strokeDashoffset = String(len);
-            path.style.fillOpacity = '0';
-        });
+
+        function finishIntro() {
+            if (finished) return;
+            finished = true;
+            pre.classList.add('pl-ready', 'done');
+            window.setTimeout(function () {
+                if (pre.parentNode) pre.remove();
+            }, 460);
+        }
 
         if (reduce) {
-            pre.classList.add('pl-draw-finished', 'pl-logo-complete');
-            setTimeout(function () {
-                pre.classList.add('done');
-                setTimeout(function () { if (pre.parentNode) pre.remove(); }, 220);
-            }, 180);
+            pre.classList.add('pl-draw-finished', 'pl-logo-complete', 'pl-ready');
+            window.setTimeout(finishIntro, 90);
             return;
         }
 
+        paths.forEach(function (path) {
+            try {
+                var length = Math.max(1, path.getTotalLength());
+                path.style.strokeDasharray = length + ' ' + length;
+                path.style.strokeDashoffset = String(length);
+                path.style.fillOpacity = '0';
+            } catch (e) {}
+        });
+
         requestAnimationFrame(function () {
+            pre.classList.add('pl-ignition');
             requestAnimationFrame(function () {
                 paths.forEach(function (path, i) {
-                    var duration = 760 + i * 220;
-                    var delay = 80 + i * 170;
+                    var duration = 650 + i * 130;
+                    var delay = 130 + i * 90;
                     path.style.transition =
-                        'stroke-dashoffset ' + duration + 'ms cubic-bezier(.2,.75,.25,1) ' + delay + 'ms,' +
-                        ' fill-opacity 260ms ease ' + (delay + duration - 120) + 'ms';
+                        'stroke-dashoffset ' + duration + 'ms cubic-bezier(.22,.75,.2,1) ' + delay + 'ms,' +
+                        ' fill-opacity 280ms ease ' + (delay + duration - 140) + 'ms';
                     path.style.strokeDashoffset = '0';
                     path.style.fillOpacity = '1';
                 });
             });
         });
 
-        // Phase 2 is intentionally obvious even on repeat visits: the exact
-        // logo wipes in behind a bright "ink" edge instead of just fading.
-        setTimeout(function () { pre.classList.add('pl-draw-finished'); }, 920);
-        setTimeout(function () { pre.classList.add('pl-logo-complete'); }, 1640);
-
-        var removed = false;
-        function hide() {
-            if (removed) return;
-            removed = true;
-            pre.classList.add('done');
-            setTimeout(function () {
-                if (pre.parentNode) pre.remove();
-            }, 460);
-        }
-
-        setTimeout(hide, 2180);
-        window.addEventListener('load', function () {
-            setTimeout(hide, 2180);
+        window.setTimeout(function () { pre.classList.add('pl-draw-finished'); }, 760);
+        window.setTimeout(function () { pre.classList.add('pl-logo-complete'); }, 1280);
+        window.setTimeout(function () { pre.classList.add('pl-ready'); }, 1840);
+        // Hard timeout: slow map, font, or external resources cannot trap visitors.
+        window.setTimeout(finishIntro, 2350);
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) finishIntro();
         }, { once: true });
     })();
 
