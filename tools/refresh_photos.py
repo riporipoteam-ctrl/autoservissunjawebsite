@@ -466,9 +466,7 @@ def rebuild_display_pools(pools):
         base = os.path.basename(src)
         if base.startswith("tt-") and not base.startswith("tt-wide-"):
             wide_base = "tt-wide-" + base[len("tt-"):]
-            wide_path = os.path.join(PHOTO_DIR, wide_base)
-            if os.path.isfile(wide_path):
-                desktop["src"] = "assets/photos/" + wide_base
+            desktop["src"] = "assets/photos/" + wide_base
         hero.append(desktop)
 
     pools["heroMobile"] = hero_mobile
