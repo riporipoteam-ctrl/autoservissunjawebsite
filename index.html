@@ -37,7 +37,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=18.3" rel="stylesheet">
+    <link href="css/style.css?v=18.4" rel="stylesheet">
 </head>
 
 <body>
@@ -50,6 +50,7 @@
                     <path class="trace-path" fill="#191C22" stroke="#191C22" fill-rule="evenodd" d="M747,243 L744,257 L734,275 L703,306 L648,337 L573,365 L494,385 L399,401 L309,411 L152,422 L234,425 L370,416 L492,396 L574,375 L643,349 L677,332 L705,314 L727,294 L739,277 L746,259 Z M515,175 L515,260 L511,267 L500,268 L499,281 L501,283 L522,282 L530,275 L533,268 L534,174 Z M330,173 L328,175 L328,232 L333,246 L342,254 L359,256 L368,253 L380,243 L382,254 L397,254 L398,175 L395,173 L379,174 L379,226 L366,238 L358,239 L350,233 L347,224 L347,174 Z M559,179 L557,185 L559,193 L577,186 L595,187 L600,193 L601,205 L599,207 L578,207 L562,213 L555,221 L553,237 L557,247 L573,256 L589,255 L602,246 L605,254 L619,254 L620,193 L616,182 L606,174 L592,171 L577,172 Z M600,218 L601,232 L593,240 L582,243 L573,237 L572,227 L577,221 L585,218 Z M479,175 L467,171 L456,172 L439,184 L436,183 L434,173 L420,175 L421,254 L439,253 L439,201 L454,188 L463,189 L471,201 L471,253 L490,253 L490,194 L487,184 Z M301,174 L288,171 L274,172 L263,177 L255,189 L257,207 L264,214 L287,224 L292,231 L291,236 L284,242 L272,242 L255,235 L254,248 L258,252 L272,256 L291,255 L302,250 L308,243 L310,224 L307,217 L299,210 L278,202 L273,196 L274,189 L284,184 L305,191 L306,178 Z M514,143 L516,159 L534,158 L536,149 L532,140 L524,139 Z M258,136 L274,160 L291,160 L308,137 L294,136 L282,151 L272,136 Z M154,39 L154,50 L258,54 L375,66 L481,85 L567,108 L637,134 L698,168 L733,201 L743,218 L747,234 L746,218 L739,200 L728,184 L708,165 L665,137 L583,102 L494,77 L394,58 L273,44 Z"/>
                 </svg>
                 <img class="pl-final" src="assets/sunja-logo-transparent.webp" alt="Auto Servis Šunja">
+                <span class="pl-ink" aria-hidden="true"></span>
             </div>
             <div class="pl-bar"><span></span></div>
             <p class="pl-text">Učitavanje…</p>
@@ -91,7 +92,7 @@
 
 
     <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+    <nav class="navbar navbar-expand-lg nav-bar bg-white navbar-light shadow sticky-top p-0">
         <a href="#pocetna" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
             <img src="assets/sunja-logo-transparent.webp" alt="Auto Servis Šunja">
         </a>
@@ -770,7 +771,7 @@
     <script src="lib/waypoints/waypoints.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=18.3"></script>
+    <script src="js/main.js?v=18.4"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
@@ -951,16 +952,13 @@
         setTimeout(heal, 3000);
     });
 
-    // Preloader — traced from the shop's real logo; final frame is the exact original image
+    // Preloader — the real logo is traced, then revealed by an ink sweep.
     (function () {
         var pre = document.getElementById('preloader');
         if (!pre) return;
 
         var reduce = false;
         try { reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) {}
-        var fast = false;
-        try { fast = !!sessionStorage.getItem('sunja_seen'); sessionStorage.setItem('sunja_seen', '1'); } catch (e) {}
-        if (fast) pre.classList.add('pl-fast');
 
         var paths = Array.prototype.slice.call(pre.querySelectorAll('#plTrace .trace-path'));
         paths.forEach(function (path) {
@@ -970,39 +968,47 @@
             path.style.fillOpacity = '0';
         });
 
-        var drawMs = reduce ? 80 : (fast ? 620 : 1380);
-        var fillDelay = reduce ? 0 : Math.round(drawMs * .72);
+        if (reduce) {
+            pre.classList.add('pl-draw-finished', 'pl-logo-complete');
+            setTimeout(function () {
+                pre.classList.add('done');
+                setTimeout(function () { if (pre.parentNode) pre.remove(); }, 220);
+            }, 180);
+            return;
+        }
 
         requestAnimationFrame(function () {
             requestAnimationFrame(function () {
                 paths.forEach(function (path, i) {
-                    var stagger = reduce ? 0 : i * (fast ? 18 : 34);
+                    var duration = 760 + i * 220;
+                    var delay = 80 + i * 170;
                     path.style.transition =
-                        'stroke-dashoffset ' + drawMs + 'ms cubic-bezier(.22,.61,.36,1) ' + stagger + 'ms,' +
-                        ' fill-opacity 260ms ease ' + (fillDelay + stagger) + 'ms';
+                        'stroke-dashoffset ' + duration + 'ms cubic-bezier(.2,.75,.25,1) ' + delay + 'ms,' +
+                        ' fill-opacity 260ms ease ' + (delay + duration - 120) + 'ms';
                     path.style.strokeDashoffset = '0';
                     path.style.fillOpacity = '1';
                 });
             });
         });
 
-        var revealAt = reduce ? 40 : drawMs + (fast ? 90 : 140);
-        var leaveAt = reduce ? 170 : revealAt + (fast ? 300 : 420);
-        var removed = false;
+        // Phase 2 is intentionally obvious even on repeat visits: the exact
+        // logo wipes in behind a bright "ink" edge instead of just fading.
+        setTimeout(function () { pre.classList.add('pl-draw-finished'); }, 920);
+        setTimeout(function () { pre.classList.add('pl-logo-complete'); }, 1640);
 
+        var removed = false;
         function hide() {
             if (removed) return;
             removed = true;
             pre.classList.add('done');
             setTimeout(function () {
                 if (pre.parentNode) pre.remove();
-            }, 520);
+            }, 460);
         }
 
-        setTimeout(function () { pre.classList.add('pl-logo-complete'); }, revealAt);
-        setTimeout(hide, leaveAt);
+        setTimeout(hide, 2180);
         window.addEventListener('load', function () {
-            setTimeout(hide, Math.max(leaveAt, fast ? 950 : 2050));
+            setTimeout(hide, 2180);
         }, { once: true });
     })();
 
