@@ -701,5 +701,13 @@
   "post_id": "7706671380024216852",
   "media_id": "tiktok:7706671380024216852:0"
  },
- "_missing": {}
+ "_missing": {},
+ "_carousel_probe": {
+  "7706671380024216852": {
+   "status": "photo",
+   "count": 1,
+   "attempts": 1,
+   "last": 1794419965
+  }
+ }
 }
