@@ -15,21 +15,21 @@
         document.documentElement.classList.add("perf-lite");
     }
 
-    // Template spinner is separate from the branded exact-logo preloader.
-    setTimeout(function () {
-        if ($("#spinner").length) {
-            $("#spinner").removeClass("show");
-        }
-    }, 1);
-
-    // Scroll reveal animations are kept on capable devices and disabled for
-    // users/devices that explicitly benefit from less motion/work.
-    if (!reduceMotion && typeof WOW !== "undefined") {
-        new WOW({ mobile: !perfLite }).init();
+    // Content is interactive on the first paint; no preloader or delayed reveal.
+    if (!reduceMotion && !perfLite && 'IntersectionObserver' in window) {
+        var revealObserver = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (!entry.isIntersecting) return;
+                entry.target.classList.add('is-revealed');
+                revealObserver.unobserve(entry.target);
+            });
+        }, { threshold: 0.08 });
+        document.querySelectorAll('.wow').forEach(function (node) {
+            revealObserver.observe(node);
+        });
     }
 
     var $win = $(window);
-    var $sticky = $(".sticky-top");
     var $backTop = $(".back-to-top");
     var chromeVisible = null;
     var scrollRaf = 0;
@@ -40,7 +40,7 @@
         if (show === chromeVisible) return;
         chromeVisible = show;
 
-        $sticky.css("top", show ? "0px" : "-100px");
+        document.documentElement.classList.toggle("is-scrolled", show);
         $backTop.toggleClass("is-visible", show);
     }
 
@@ -90,65 +90,10 @@
     }, { passive: true });
     bindDropdownHover();
 
-    var topScrollFrame = 0;
-
+    // Native scrolling avoids the multi-second JavaScript animation and
+    // handles interruption immediately when someone taps another control.
     function scrollToTopSmoothly() {
-        if (topScrollFrame) {
-            cancelAnimationFrame(topScrollFrame);
-            topScrollFrame = 0;
-        }
-
-        var root = document.documentElement;
-        var body = document.body;
-        var scroller = document.scrollingElement || root;
-        var startY = Math.max(
-            window.pageYOffset || 0,
-            scroller.scrollTop || 0,
-            body.scrollTop || 0
-        );
-
-        if (startY <= 1) {
-            window.scrollTo(0, 0);
-            return;
-        }
-
-        // Safari applies CSS scroll-behavior to JS scrollTo calls as well.
-        // Disable it during this one animation so rAF controls every frame.
-        var oldRootBehavior = root.style.scrollBehavior;
-        var oldBodyBehavior = body.style.scrollBehavior;
-        root.style.scrollBehavior = "auto";
-        body.style.scrollBehavior = "auto";
-
-        // One tap = one controlled trip. Longer pages get more time so the
-        // motion stays smooth rather than racing thousands of pixels at once.
-        var duration = Math.min(1900, Math.max(760, startY / 4.8));
-        var startedAt = performance.now();
-
-        function finish() {
-            topScrollFrame = 0;
-            window.scrollTo(0, 0);
-            scroller.scrollTop = 0;
-            body.scrollTop = 0;
-            root.style.scrollBehavior = oldRootBehavior;
-            body.style.scrollBehavior = oldBodyBehavior;
-            syncScrollChrome();
-        }
-
-        function step(now) {
-            var progress = Math.min(1, (now - startedAt) / duration);
-            var eased = 1 - Math.pow(1 - progress, 4);
-            var y = Math.round(startY * (1 - eased));
-
-            window.scrollTo(0, y);
-
-            if (progress < 1 && y > 0) {
-                topScrollFrame = requestAnimationFrame(step);
-            } else {
-                finish();
-            }
-        }
-
-        topScrollFrame = requestAnimationFrame(step);
+        window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
     }
 
     $backTop.on("click", function (event) {
@@ -190,6 +135,24 @@
 
         sections.forEach(function (section) { observer.observe(section); });
     })();
+
+    // Same-page buttons use one native click: no hover-to-activate state,
+    // synthetic double taps, or overlay timers.
+    document.addEventListener('click', function (event) {
+        var element = event.target;
+        var link = element && element.closest ? element.closest('a[href^="#"]') : null;
+        if (!link || event.defaultPrevented || event.button > 0 ||
+            event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+        var id = link.getAttribute('href').slice(1);
+        if (!id) return;
+        var target = document.getElementById(id);
+        if (!target) return;
+
+        event.preventDefault();
+        try { history.replaceState(null, '', '#' + encodeURIComponent(id)); } catch (e) {}
+        target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    });
 
     // On phones/tablets, collapse the menu after choosing a section.
     document.querySelectorAll("#navbarCollapse .nav-link").forEach(function (link) {
