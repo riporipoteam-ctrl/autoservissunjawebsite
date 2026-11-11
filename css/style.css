@@ -1239,3 +1239,65 @@ h6.text-primary.text-uppercase::before {
         transition: none !important;
     }
 }
+
+
+/*** v18.7: map release + maximum image sharpness ***/
+#globeScroll.globe-complete {
+    height: 70vh !important;
+    min-height: 520px;
+}
+
+#globeScroll.globe-complete .globe-sticky {
+    position: relative !important;
+    top: auto !important;
+    height: 70vh !important;
+    min-height: 520px;
+}
+
+#globeScroll.globe-complete .globe-stage,
+#globeScroll.globe-complete .globe-hint {
+    display: none !important;
+}
+
+/* Keep actual media pixels untouched. Avoid blur/compositing effects that can
+   make high-resolution photos look soft on Safari/iOS. */
+#header-carousel .carousel-item picture,
+#header-carousel .carousel-item picture img,
+.gallery-img,
+.svc-photo,
+[data-svc-cat],
+#o-nama img {
+    filter: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    image-rendering: auto !important;
+}
+
+#header-carousel .carousel-item picture img,
+.gallery-img,
+.svc-photo,
+[data-svc-cat],
+#o-nama .position-relative.h-100 > img {
+    transform: none !important;
+}
+
+.team-item .team-overlay {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}
+
+#o-nama .position-relative.h-100:hover > img {
+    transform: none !important;
+}
+
+@media (max-width: 767.98px) {
+    #globeScroll.globe-complete {
+        height: 62vh !important;
+        min-height: 460px;
+    }
+
+    #globeScroll.globe-complete .globe-sticky {
+        height: 62vh !important;
+        min-height: 460px;
+    }
+}
