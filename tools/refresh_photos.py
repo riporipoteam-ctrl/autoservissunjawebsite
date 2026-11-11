@@ -555,11 +555,23 @@ def main():
                         return True
         return False
 
+    known_photo_posts_needing_upgrade = set()
+    for entry in pools.get("gallery", []):
+        if (
+            source_of(entry) == "tiktok"
+            and "/photo/" in str(entry.get("href") or "")
+            and int(entry.get("quality_v") or 0) < 2
+        ):
+            pid = post_id_of(entry)
+            if pid:
+                known_photo_posts_needing_upgrade.add(pid)
+
     candidates = sorted(unique_tiktok.values(), key=lambda p: -p["ts"])
     candidates = [
         p for p in candidates
         if (
-            (
+            p["post_id"] in known_photo_posts_needing_upgrade
+            or (
                 p["post_id"] not in carousel_probe
                 and (p["post_id"] not in known_tiktok_posts or p["ts"] >= probe_cutoff)
             )
@@ -568,7 +580,7 @@ def main():
                 and post_needs_quality_upgrade(p["post_id"])
             )
         )
-    ][:5]
+    ][:25]
 
     expanded_by_media = {p["media_id"]: p for p in fresh}
     for p in candidates:
