@@ -37,7 +37,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=18.5" rel="stylesheet">
+    <link href="css/style.css?v=18.6" rel="stylesheet">
 </head>
 
 <body>
@@ -760,7 +760,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top" aria-label="Nazad na vrh" title="Nazad na vrh"><i class="bi bi-arrow-up"></i></a>
+    <button type="button" id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top" aria-label="Nazad na vrh" title="Nazad na vrh"><i class="bi bi-arrow-up"></i></button>
 
 
     <!-- JavaScript Libraries -->
@@ -771,7 +771,7 @@
     <script src="lib/waypoints/waypoints.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=18.5"></script>
+    <script src="js/main.js?v=18.6"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
@@ -1080,6 +1080,7 @@
             var photoMarker = null;
             var ticking = false;
             var lastBucket = -1;
+            var flightLocked = false;
 
             function lerp(a, b, t) { return a + (b - a) * t; }
             function clamp01(v) { return Math.min(1, Math.max(0, v)); }
@@ -1125,10 +1126,16 @@
                 var total = Math.max(1, rect.height - window.innerHeight);
                 var p = clamp01(-rect.top / total);
 
+                // Once the flight reaches the shop it stays finished until the
+                // document is refreshed. Scrolling back up never replays it.
+                if (!flightLocked && p >= FLIGHT_END - 0.002) {
+                    flightLocked = true;
+                }
+
                 // Use the full section for scrolling, but finish the camera
-                // flight earlier. The remaining 28% is a deliberate hold zone:
-                // the map stays pinned on the shop until the user keeps scrolling.
-                var flightP = Math.min(p, FLIGHT_END);
+                // flight earlier. After it locks, every later render remains
+                // parked on the shop regardless of scroll direction.
+                var flightP = flightLocked ? FLIGHT_END : Math.min(p, FLIGHT_END);
                 var bucket = Math.round(p * (perfLite ? 180 : 520));
                 if (bucket === lastBucket && p < 0.999) return;
                 lastBucket = bucket;
@@ -1151,7 +1158,7 @@
                     return;
                 }
 
-                var arrived = p >= FLIGHT_END - 0.002;
+                var arrived = flightLocked;
                 if (wrap) wrap.classList.toggle('globe-arrived', arrived);
 
                 if (stageEl) {
@@ -1164,7 +1171,7 @@
                     hintEl.style.opacity = p > 0.04 ? '0' : '1';
                 }
 
-                setShopMarker(p >= FLIGHT_END - 0.018);
+                setShopMarker(flightLocked || p >= FLIGHT_END - 0.018);
             }
             function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(render); } }
             window.addEventListener('scroll', onScroll, { passive: true });
