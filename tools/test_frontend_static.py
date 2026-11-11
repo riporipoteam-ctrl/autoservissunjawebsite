@@ -8,21 +8,23 @@ JS = (ROOT / "js" / "main.js").read_text(encoding="utf-8")
 
 
 class FrontendStaticTests(unittest.TestCase):
-    def test_exact_logo_loader_uses_real_asset(self):
-        self.assertIn('class="pl-final" src="assets/sunja-logo-transparent.webp', INDEX)
-        self.assertIn('id="plTrace"', INDEX)
-
-    def test_v184_loader_has_visible_ink_sweep(self):
-        self.assertIn('class="pl-ink"', INDEX)
-        self.assertIn('pl-draw-finished', JS + INDEX)
-        self.assertIn("/*** v18.4: controlled visual polish ***/", CSS)
+    def test_fullscreen_loaders_are_removed(self):
+        self.assertNotIn('id="preloader"', INDEX)
+        self.assertNotIn('plTrace', INDEX)
+        self.assertNotIn('pl-ignition', INDEX + JS + CSS)
+        self.assertNotIn('#preloader', CSS)
+        self.assertNotIn('#spinner', CSS)
+        self.assertNotIn('Ignition-style signature intro', INDEX)
+        self.assertNotIn('globe-loading-spinner', INDEX + CSS)
+        self.assertNotIn('lib/wow/wow.min.js', INDEX)
+        self.assertNotIn('lib/animate/animate.min.css', INDEX)
 
     def test_navbar_polish_is_actually_attached(self):
         self.assertIn('class="navbar navbar-expand-lg nav-bar ', INDEX)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=19.0", INDEX)
-        self.assertIn("js/main.js?v=19.0", INDEX)
+        self.assertIn("css/style.css?v=20.0", INDEX)
+        self.assertIn("js/main.js?v=20.0", INDEX)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -34,13 +36,32 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("--footer-photo", CSS)
 
 
-    def test_back_to_top_is_one_click_controlled_scroll(self):
+    def test_back_to_top_uses_one_native_scroll(self):
         self.assertIn('<button type="button" id="backTop"', INDEX)
-        self.assertIn("function scrollToTopSmoothly()", JS)
-        self.assertIn('root.style.scrollBehavior = "auto"', JS)
-        self.assertIn("requestAnimationFrame(step)", JS)
-        self.assertNotIn('href="#" id="backTop"', INDEX)
-        self.assertNotIn('animate({ scrollTop: 0 }', JS)
+        self.assertIn('window.scrollTo({ top: 0, behavior:', JS)
+        self.assertNotIn('function step(now)', JS)
+        self.assertNotIn('requestAnimationFrame(step)', JS)
+        self.assertIn('touch-action: manipulation', CSS)
+
+    def test_section_navigation_works_on_first_click(self):
+        self.assertIn("document.addEventListener('click', function (event)", JS)
+        self.assertIn("target.scrollIntoView(", JS)
+        self.assertIn("history.replaceState(null, '',", JS)
+        self.assertIn('top: 0 !important;', CSS)
+
+    def test_book_service_is_a_direct_link(self):
+        self.assertIn('href="#termin" data-service="Autodijagnostika"', INDEX)
+        self.assertNotIn('<button class="btn btn-primary py-3 px-5 mt-3" data-service=', INDEX)
+
+    def test_gallery_tile_is_entirely_clickable(self):
+        self.assertIn('class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link"', INDEX)
+        self.assertIn('data-gallery-link', INDEX)
+        self.assertIn('.gallery-tile-link', CSS)
+
+    def test_type_and_buttons_are_compact(self):
+        self.assertIn('/* v20.0: instant, compact and loader-free */', CSS)
+        self.assertIn('#o-nama h1', CSS)
+        self.assertIn('touch-action: manipulation', CSS)
 
     def test_map_does_not_collapse_or_replay_after_arrival(self):
         self.assertNotIn("wrap.classList.add('globe-done')", INDEX)
@@ -84,8 +105,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=19.0", INDEX)
-        self.assertIn("js/main.js?v=19.0", INDEX)
+        self.assertIn("css/style.css?v=20.0", INDEX)
+        self.assertIn("js/main.js?v=20.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
@@ -119,13 +140,11 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn(".contact-spotlight .status-pill", CSS)
         self.assertIn("overflow-wrap: anywhere", CSS)
 
-    def test_rebuilt_ignition_logo_preloader_respects_motion(self):
-        self.assertIn("pl-orbit", INDEX)
-        self.assertIn("pl-scanner", INDEX)
-        self.assertIn("pl-system-status", INDEX)
-        self.assertIn("pl-ready", INDEX)
-        self.assertIn("prefers-reduced-motion: reduce", INDEX)
-        self.assertIn("v19.0", CSS)
+    def test_permanent_slides_and_map_survive_cleanup(self):
+        self.assertIn('id="header-carousel"', INDEX)
+        self.assertIn('id="globeMap"', INDEX)
+        self.assertIn("globe-complete", INDEX)
+        self.assertNotIn("sunjaV19Scanner", CSS)
 
 
 if __name__ == "__main__":
