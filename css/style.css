@@ -779,3 +779,301 @@ html.perf-lite #backTop {
         animation: none !important;
     }
 }
+
+
+/*** v18.4: controlled visual polish ***/
+:root {
+    --sunja-blue: #0B5FA5;
+    --sunja-navy: #0B2154;
+    --sunja-border: rgba(11, 33, 84, .09);
+    --sunja-shadow: 0 16px 42px rgba(11, 33, 84, .10);
+}
+
+/* Exact-logo loader: trace -> ink sweep -> exact original logo. */
+#preloader {
+    background:
+        radial-gradient(circle at 50% 42%, rgba(11, 95, 165, .075), transparent 34%),
+        linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%) !important;
+}
+#preloader .pl-stage {
+    width: min(500px, 84vw);
+}
+#preloader .pl-trace-wrap {
+    position: relative;
+    overflow: visible;
+    transform: translateZ(0);
+}
+#preloader #plTrace {
+    position: relative;
+    z-index: 2;
+    opacity: 1;
+    filter: drop-shadow(0 8px 20px rgba(11, 33, 84, .08));
+    transition: opacity .3s ease, transform .45s cubic-bezier(.2,.75,.25,1);
+}
+#preloader .trace-path {
+    stroke-width: 1.6 !important;
+    fill-opacity: 0;
+}
+#preloader .pl-final {
+    z-index: 1;
+    opacity: 0 !important;
+    clip-path: inset(0 100% 0 0);
+    transform: scale(.985);
+    filter: drop-shadow(0 14px 24px rgba(11, 33, 84, .10));
+    transition:
+        clip-path .72s cubic-bezier(.2,.75,.25,1),
+        opacity .16s ease,
+        transform .72s cubic-bezier(.2,.75,.25,1);
+}
+#preloader .pl-ink {
+    position: absolute;
+    z-index: 4;
+    top: 8%;
+    left: -3%;
+    width: 3px;
+    height: 84%;
+    border-radius: 999px;
+    opacity: 0;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent, #56b8ff 18%, #ffffff 50%, #0B5FA5 82%, transparent);
+    box-shadow: 0 0 12px rgba(86,184,255,.9), 0 0 28px rgba(11,95,165,.45);
+}
+#preloader.pl-draw-finished .pl-final {
+    opacity: 1 !important;
+    clip-path: inset(0 0 0 0);
+    transform: scale(1);
+}
+#preloader.pl-draw-finished .pl-ink {
+    animation: sunjaInkSweep .72s cubic-bezier(.2,.75,.25,1) both;
+}
+#preloader.pl-logo-complete #plTrace {
+    opacity: 0;
+    transform: scale(1.012);
+}
+#preloader.pl-logo-complete .pl-final {
+    filter: drop-shadow(0 12px 20px rgba(11, 33, 84, .08));
+}
+@keyframes sunjaInkSweep {
+    0% { left: -3%; opacity: 0; }
+    10% { opacity: 1; }
+    88% { opacity: 1; }
+    100% { left: 103%; opacity: 0; }
+}
+
+/* Header polish that was previously defined but never attached to the navbar. */
+.nav-bar {
+    border-bottom: 1px solid rgba(11, 33, 84, .06);
+}
+.navbar-brand img {
+    height: 56px;
+    transition: transform .28s cubic-bezier(.2,.75,.25,1), filter .28s ease;
+}
+.navbar-brand:hover img {
+    transform: translateY(-1px) scale(1.02);
+    filter: drop-shadow(0 7px 12px rgba(11, 33, 84, .12));
+}
+.navbar-light .navbar-nav .nav-link {
+    position: relative;
+    transition: color .22s ease, transform .22s ease;
+}
+.navbar-light .navbar-nav .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 30px;
+    bottom: 18px;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #0B5FA5, #4EA8E0);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .24s cubic-bezier(.2,.75,.25,1);
+}
+.navbar-light .navbar-nav .nav-link:hover::after,
+.navbar-light .navbar-nav .nav-link.active::after {
+    transform: scaleX(1);
+}
+
+/* Buttons: a little more depth without changing the site's shape language. */
+.btn {
+    transition: transform .22s cubic-bezier(.2,.75,.25,1), box-shadow .22s ease, background-color .22s ease, border-color .22s ease !important;
+}
+.btn-primary {
+    box-shadow: 0 8px 18px rgba(11,95,165,.18);
+}
+.btn-primary:hover,
+.btn-outline-light:hover,
+.btn-light:hover {
+    transform: translateY(-2px);
+}
+.btn-primary:hover {
+    box-shadow: 0 12px 24px rgba(11,95,165,.24);
+}
+.btn:active {
+    transform: translateY(0) scale(.985) !important;
+}
+
+/* Section labels + headings get slightly cleaner hierarchy. */
+h6.text-primary.text-uppercase {
+    position: relative;
+    padding-left: 34px !important;
+    letter-spacing: .13em;
+    font-size: .78rem;
+    font-weight: 700;
+}
+h6.text-primary.text-uppercase::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 24px;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #0B5FA5, #66b9ee);
+    transform: translateY(-50%);
+}
+
+/* About + services: subtle card treatment, not a redesign. */
+#o-nama .position-relative.h-100 {
+    overflow: hidden;
+    border-radius: 22px;
+    box-shadow: var(--sunja-shadow);
+    border: 1px solid var(--sunja-border);
+}
+#o-nama .position-relative.h-100 > img {
+    transition: transform .7s cubic-bezier(.2,.75,.25,1);
+}
+@media (hover:hover) {
+    #o-nama .position-relative.h-100:hover > img {
+        transform: scale(1.018);
+    }
+}
+.service .nav .nav-link {
+    border: 1px solid rgba(11,33,84,.07);
+    box-shadow: 0 6px 18px rgba(11,33,84,.05);
+    transition: transform .24s cubic-bezier(.2,.75,.25,1), box-shadow .24s ease, background .24s ease !important;
+}
+.service .nav .nav-link:hover {
+    transform: translateX(3px);
+    box-shadow: 0 10px 24px rgba(11,33,84,.09);
+}
+.service .nav .nav-link.active {
+    transform: translateX(4px);
+    box-shadow: 0 12px 28px rgba(11,95,165,.20);
+}
+.service .tab-content {
+    background: rgba(255,255,255,.96);
+    border: 1px solid var(--sunja-border);
+    border-radius: 22px;
+    padding: clamp(1rem, 1.7vw, 1.55rem);
+    box-shadow: 0 14px 36px rgba(11,33,84,.07);
+}
+.service .tab-pane.active {
+    animation: sunjaTabIn .42s cubic-bezier(.2,.75,.25,1) both;
+}
+@keyframes sunjaTabIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* Gallery overlay no longer pops in as a scale-from-zero wall. */
+.team-item {
+    border: 1px solid rgba(11,33,84,.07);
+    background: #fff;
+    transition: transform .28s cubic-bezier(.2,.75,.25,1), box-shadow .28s ease, border-color .28s ease !important;
+}
+.team-item .team-overlay {
+    transform: none !important;
+    opacity: 0;
+    background: linear-gradient(180deg, rgba(6,20,45,.08), rgba(6,20,45,.58)) !important;
+    backdrop-filter: blur(1.5px);
+    -webkit-backdrop-filter: blur(1.5px);
+    transition: opacity .28s ease !important;
+}
+.team-item .team-overlay .btn {
+    opacity: 0;
+    transform: translateY(8px) scale(.96);
+    transition: opacity .25s ease .04s, transform .28s cubic-bezier(.2,.75,.25,1) .04s;
+}
+@media (hover:hover) {
+    .team-item:hover {
+        transform: translateY(-6px);
+        border-color: rgba(11,95,165,.18);
+        box-shadow: 0 20px 42px rgba(11,33,84,.14);
+    }
+    .team-item:hover .team-overlay {
+        opacity: 1;
+    }
+    .team-item:hover .team-overlay .btn {
+        opacity: 1;
+        transform: none;
+    }
+}
+@media (hover:none) {
+    .team-item .team-overlay {
+        opacity: 1;
+        background: linear-gradient(180deg, transparent 66%, rgba(6,20,45,.48)) !important;
+        align-items: flex-end;
+        justify-content: flex-end;
+        padding: 1rem;
+    }
+    .team-item .team-overlay .btn {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* Softer, more consistent reveal timing across the existing WOW animations. */
+.wow {
+    animation-duration: .72s !important;
+    animation-timing-function: cubic-bezier(.2,.75,.25,1) !important;
+}
+
+/* Mobile: retain the same layout, just make the nav panel/card edges cleaner. */
+@media (max-width: 991.98px) {
+    .navbar-brand img {
+        height: 50px;
+    }
+    .navbar-collapse {
+        background: rgba(255,255,255,.98);
+        border-top: 1px solid rgba(11,33,84,.06);
+        box-shadow: 0 14px 24px rgba(11,33,84,.08);
+    }
+    .navbar-light .navbar-nav .nav-link::after {
+        right: auto;
+        width: 28px;
+        bottom: 5px;
+    }
+    .service .nav .nav-link:hover,
+    .service .nav .nav-link.active {
+        transform: none;
+    }
+}
+@media (max-width: 575.98px) {
+    #preloader .pl-stage {
+        width: min(420px, 88vw);
+    }
+    .service .tab-content {
+        border-radius: 18px;
+        padding: .9rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #preloader .pl-ink {
+        display: none !important;
+    }
+    .service .tab-pane.active,
+    .wow {
+        animation: none !important;
+    }
+    .navbar-brand img,
+    .navbar-light .navbar-nav .nav-link,
+    .btn,
+    .service .nav .nav-link,
+    .team-item,
+    .team-item .team-overlay,
+    .team-item .team-overlay .btn {
+        transition: none !important;
+    }
+}
