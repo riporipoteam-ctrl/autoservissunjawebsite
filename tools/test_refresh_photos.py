@@ -93,5 +93,31 @@ class SocialPhotoTests(unittest.TestCase):
         )
 
 
+    @patch.object(rp, "_gallery_dl")
+    def test_direct_tiktok_photo_is_marked_as_original_quality(self, mock_gallery):
+        mock_gallery.return_value = [
+            ("https://cdn.invalid/full.jpg", {"extension": "jpg", "post_type": "image"}),
+        ]
+        posts = rp.expand_tiktok_photo(
+            "7700000000000000002",
+            "https://www.tiktok.com/@autoservissunja/photo/7700000000000000002",
+            1794326400,
+            "Servis",
+        )
+        self.assertEqual("original", posts[0]["quality_source"])
+
+    def test_known_media_without_quality_v_needs_upgrade(self):
+        pools = {
+            "gallery": [{"media_id": "tiktok:123:0", "quality_v": 1}],
+            "hero": [{"media_id": "tiktok:123:0"}],
+            "heroMobile": [{"media_id": "tiktok:123:0", "quality_v": 2}],
+        }
+        self.assertTrue(rp.needs_quality_upgrade(pools, "tiktok:123:0"))
+        for pool in pools.values():
+            for entry in pool:
+                entry["quality_v"] = 2
+        self.assertFalse(rp.needs_quality_upgrade(pools, "tiktok:123:0"))
+
+
 if __name__ == "__main__":
     unittest.main()
