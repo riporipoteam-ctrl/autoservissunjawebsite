@@ -11,7 +11,7 @@ Current site **does not use a full-screen logo preloader** or map loading spinne
 - All five gallery photo tiles link directly to their original social posts (full-image touch target); the “Objava s…” source caption remains.
 - All six service booking actions are direct `#termin` links and still preselect the service. Same-page links scroll on one click; navbar stays in place; back-to-top uses native smooth scroll instead of a custom multi-second rAF loop.
 - Hero booking links are interactive from the first frame; touch controls use `touch-action: manipulation` and no hover-dependent positional movement.
-- Section headings and hero titles were reduced, buttons made more compact while retaining accessible touch targets, and the WOW/animate/easing/waypoints page dependencies removed. Optional lightweight reveals use IntersectionObserver; reduced-motion and low-resource devices skip them.
+- Section headings and hero titles were reduced, buttons made more compact while retaining accessible touch targets, and the jQuery/WOW/animate/easing/waypoints and redundant Bootstrap Icons page dependencies removed. Optional lightweight reveals use IntersectionObserver; reduced-motion and low-resource devices skip them.
 - Gallery, photo sync, six service tabs, fixed three-slide photos, map flight, SMS form, mobile callbar and status display remain intact.
 - `tools/test_frontend_static.py` now guards against loader regressions, missing one-tap controls and broken content hooks.
 - Browser-specific validation on iOS Safari must still be checked separately; source-level tests do not prove every device's runtime behaviour.
