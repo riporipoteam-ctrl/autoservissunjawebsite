@@ -1,9 +1,14 @@
-name: Fresh photos from TikTok
+name: Fresh photos from socials
 
 on:
   schedule:
     - cron: '*/15 * * * *'
   workflow_dispatch:
+  push:
+    paths:
+      - 'tools/refresh_photos.py'
+      - 'tools/test_refresh_photos.py'
+      - '.github/workflows/fresh-photos.yml'
 
 permissions:
   contents: write
@@ -15,22 +20,34 @@ concurrency:
 jobs:
   refresh:
     runs-on: ubuntu-latest
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
       - name: Install tools
         run: pip install yt-dlp pillow requests
-      - name: Refresh photos (last 60 days only)
+
+      - name: Run importer unit tests
+        run: python -m unittest tools/test_refresh_photos.py
+
+      - name: Refresh photos from linked socials
+        env:
+          META_ACCESS_TOKEN: ${{ secrets.META_ACCESS_TOKEN }}
+          INSTAGRAM_USER_ID: ${{ secrets.INSTAGRAM_USER_ID }}
+          FACEBOOK_PAGE_ID: ${{ secrets.FACEBOOK_PAGE_ID }}
         run: python tools/refresh_photos.py
+
       - name: Commit and push if anything changed
         run: |
           git config user.name "sunja-photos-bot"
           git config user.email "actions@users.noreply.github.com"
           git add -A
           if ! git diff --cached --quiet; then
-            git commit -m "Auto: fresh photos from TikTok"
+            git commit -m "Auto: fresh photos from socials"
             git push
           else
             echo "No changes."
