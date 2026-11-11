@@ -21,8 +21,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('class="navbar navbar-expand-lg nav-bar ', INDEX)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=18.5", INDEX)
-        self.assertIn("js/main.js?v=18.5", INDEX)
+        self.assertIn("css/style.css?v=18.6", INDEX)
+        self.assertIn("js/main.js?v=18.6", INDEX)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -34,19 +34,32 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("--footer-photo", CSS)
 
 
-    def test_back_to_top_is_one_click_instant(self):
-        self.assertIn("function jumpToTopInstantly()", JS)
-        self.assertIn("window.scrollTo(0, 0)", JS)
+    def test_back_to_top_is_one_click_controlled_scroll(self):
+        self.assertIn('<button type="button" id="backTop"', INDEX)
+        self.assertIn("function scrollToTopSmoothly()", JS)
+        self.assertIn("requestAnimationFrame(step)", JS)
+        self.assertNotIn('href="#" id="backTop"', INDEX)
         self.assertNotIn('animate({ scrollTop: 0 }', JS)
 
-    def test_map_does_not_collapse_when_camera_arrives(self):
+    def test_map_does_not_collapse_or_replay_after_arrival(self):
         self.assertNotIn("wrap.classList.add('globe-done')", INDEX)
         self.assertIn("var FLIGHT_END = 0.72;", INDEX)
+        self.assertIn("var flightLocked = false;", INDEX)
+        self.assertIn("if (!flightLocked && p >= FLIGHT_END", INDEX)
+        self.assertIn("var flightP = flightLocked ? FLIGHT_END", INDEX)
         self.assertIn("wrap.classList.toggle('globe-arrived'", INDEX)
 
     def test_map_has_a_hold_zone_after_flight(self):
         self.assertIn("height: 300vh;", CSS)
         self.assertIn("#globeScroll.globe-arrived .globe-stage", CSS)
+
+
+    def test_images_are_not_presented_with_blur_effects(self):
+        self.assertIn("/*** v18.6: sharp media presentation ***/", CSS)
+        self.assertIn("#header-carousel .hero-bg", CSS)
+        self.assertIn("filter: none !important;", CSS)
+        self.assertIn(".team-item .position-relative::before", CSS)
+        self.assertIn("display: none !important;", CSS)
 
 
 if __name__ == "__main__":
