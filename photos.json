@@ -15,20 +15,6 @@
    "quality_v": 2
   },
   {
-   "src": "assets/photos/tt-wide-20261108-59603d89.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7705912434296491284",
-   "title": "Ispred radionice",
-   "date": "2026-11-08",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7705912434296491284",
-   "media_id": "tiktok:7705912434296491284:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
    "src": "assets/photos/tt-wide-20261108-234cf88c.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7705911264454675764",
    "title": "Elektronika vozila (ECU)",
@@ -335,20 +321,6 @@
    "source": "tiktok",
    "post_id": "7706671380024216852",
    "media_id": "tiktok:7706671380024216852:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20261108-59603d89.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7705912434296491284",
-   "title": "Ispred radionice",
-   "date": "2026-11-08",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7705912434296491284",
-   "media_id": "tiktok:7705912434296491284:0",
    "media_index": 0,
    "quality_v": 2
   },
@@ -672,20 +644,6 @@
    "source": "tiktok",
    "post_id": "7706671380024216852",
    "media_id": "tiktok:7706671380024216852:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20261108-59603d89.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7705912434296491284",
-   "title": "Ispred radionice",
-   "date": "2026-11-08",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7705912434296491284",
-   "media_id": "tiktok:7705912434296491284:0",
    "media_index": 0,
    "quality_v": 2
   },
@@ -1153,7 +1111,7 @@
    "status": "not-photo",
    "count": 0,
    "attempts": 1,
-   "last": 1794431344
+   "last": 1794433530
   },
   "7685022963149704468": {
    "status": "photo",
