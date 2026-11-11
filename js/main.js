@@ -97,13 +97,32 @@
     }, { passive: true });
     bindDropdownHover();
 
+    function jumpToTopInstantly() {
+        var root = document.documentElement;
+        var body = document.body;
+        var rootBehavior = root.style.scrollBehavior;
+        var bodyBehavior = body.style.scrollBehavior;
+
+        // The site uses smooth scrolling for normal anchor links. Override it
+        // only for this control so one press always returns to the top now.
+        root.style.scrollBehavior = "auto";
+        body.style.scrollBehavior = "auto";
+        $("html, body").stop(true, true);
+
+        window.scrollTo(0, 0);
+        root.scrollTop = 0;
+        body.scrollTop = 0;
+
+        requestAnimationFrame(function () {
+            root.style.scrollBehavior = rootBehavior;
+            body.style.scrollBehavior = bodyBehavior;
+            syncScrollChrome();
+        });
+    }
+
     $backTop.on("click", function (event) {
         event.preventDefault();
-        if (reduceMotion) {
-            window.scrollTo(0, 0);
-        } else {
-            $("html, body").stop(true).animate({ scrollTop: 0 }, 700, "easeInOutExpo");
-        }
+        jumpToTopInstantly();
     });
 
     // Keep the navbar state synced with the section the visitor is viewing.
