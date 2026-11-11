@@ -68,8 +68,76 @@ def _media_record(source, post_id, ts, img, title, url, media_index=0):
         "url": url,
     }
 
+def _gallery_dl_url_rows(raw):
+    """Return (url, metadata) rows from gallery-dl -j output.
+
+    gallery-dl can emit either one nested JSON document or JSON Lines,
+    depending on version/configuration, so support both formats.
+    """
+    docs = []
+    try:
+        docs = [json.loads(raw)]
+    except Exception:
+        for line in (raw or "").splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            try:
+                docs.append(json.loads(line))
+            except Exception:
+                continue
+
+    rows = []
+    def walk(value):
+        if isinstance(value, list):
+            if len(value) >= 3 and value[0] == 3 and isinstance(value[1], str):
+                rows.append((value[1], value[2] if isinstance(value[2], dict) else {}))
+                return
+            for child in value:
+                walk(child)
+    for doc in docs:
+        walk(doc)
+    return rows
+
+def _gallery_dl(url, limit=None, timeout=90):
+    cmd = [
+        "gallery-dl", "--config-ignore", "--no-input", "--no-colors",
+        "-j",
+    ]
+    if limit:
+        cmd += ["--range", f"1-{int(limit)}"]
+    cmd.append(url)
+    out = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+    if out.returncode != 0:
+        raise RuntimeError("gallery-dl exit " + str(out.returncode))
+    return _gallery_dl_url_rows(out.stdout)
+
+def expand_tiktok_photo(post_id, post_url, ts, title=""):
+    """Resolve every image from one TikTok /photo/ post with gallery-dl."""
+    try:
+        rows = _gallery_dl(post_url, timeout=75)
+    except Exception as ex:
+        log("gallery-dl TikTok photo unavailable:", post_id, str(ex)[:100])
+        return []
+
+    images = []
+    for url, meta in rows:
+        ext = str(meta.get("extension") or "").lower().lstrip(".")
+        post_type = str(meta.get("post_type") or meta.get("type") or "").lower()
+        if ext and ext not in ("jpg", "jpeg", "png", "webp", "avif", "heic"):
+            continue
+        if post_type and post_type not in ("image", "photo", "carousel"):
+            continue
+        if url and url not in images:
+            images.append(url)
+
+    return [
+        _media_record("tiktok", post_id, ts, img, title, post_url, idx)
+        for idx, img in enumerate(images)
+    ]
+
 def from_ytdlp():
-    """TikTok fallback. Flat playlists expose one representative image/post."""
+    """TikTok profile fallback, with direct slideshow expansion when possible."""
     url = f"https://www.tiktok.com/@{HANDLE}"
     out = subprocess.run(
         [sys.executable, "-m", "yt_dlp", "--flat-playlist", "-J", "--no-warnings",
@@ -79,21 +147,38 @@ def from_ytdlp():
         raise RuntimeError("yt-dlp exit " + str(out.returncode))
     data = json.loads(out.stdout)
     posts = []
+    photo_candidates = 0
+    expanded_photos = 0
+
     for e in data.get("entries") or []:
         pid = str(e.get("id") or "")
         ts = e.get("timestamp")
         if not pid or not ts:
             continue
+
+        raw_url = str(e.get("webpage_url") or e.get("url") or "")
+        post_url = raw_url if raw_url.startswith("http") else f"https://www.tiktok.com/@{HANDLE}/video/{pid}"
+        title = e.get("title") or ""
+        looks_photo = "/photo/" in post_url or title.lower().startswith("tiktok photo")
+
+        if looks_photo:
+            photo_candidates += 1
+            photo_url = post_url.replace("/video/", "/photo/") if "/photo/" not in post_url else post_url
+            expanded = expand_tiktok_photo(pid, photo_url, int(ts), title)
+            if expanded:
+                posts.extend(expanded)
+                expanded_photos += 1
+                continue
+
         thumbs = e.get("thumbnails") or []
         img = None
         if thumbs:
             img = sorted(thumbs, key=lambda t: (t.get("width") or 0))[-1].get("url")
         if not img:
             continue
-        posts.append(_media_record(
-            "tiktok", pid, ts, img, e.get("title") or "",
-            e.get("webpage_url") or f"https://www.tiktok.com/@{HANDLE}/photo/{pid}"
-        ))
+        posts.append(_media_record("tiktok", pid, ts, img, title, post_url))
+
+    log("yt-dlp TikTok photo candidates:", photo_candidates, "| expanded:", expanded_photos)
     return posts
 
 def from_tikwm():
@@ -165,6 +250,38 @@ def from_public_ytdlp(source, url, limit=30):
             e.get("webpage_url") or e.get("url") or url
         ))
     return posts
+
+def from_public_gallery_dl(source, url, limit=30):
+    """Best-effort gallery-dl fallback for public Instagram/Facebook media."""
+    rows = _gallery_dl(url, limit=limit, timeout=90)
+    posts = []
+    per_post_index = {}
+    for media_url, meta in rows:
+        ext = str(meta.get("extension") or "").lower().lstrip(".")
+        if ext and ext not in ("jpg", "jpeg", "png", "webp", "avif", "heic"):
+            continue
+        pid = str(
+            meta.get("post_id") or meta.get("shortcode") or meta.get("id")
+            or meta.get("media_id") or ""
+        )
+        ts = _parse_timestamp(
+            meta.get("timestamp") or meta.get("date") or meta.get("created_time")
+        )
+        if not pid or not ts or not media_url:
+            continue
+        idx = per_post_index.get(pid, 0)
+        per_post_index[pid] = idx + 1
+        title = (
+            meta.get("description") or meta.get("caption")
+            or meta.get("title") or ""
+        )
+        href = (
+            meta.get("post_url") or meta.get("permalink")
+            or meta.get("webpage_url") or url
+        )
+        posts.append(_media_record(source, pid, ts, media_url, title, href, idx))
+    return posts
+
 
 def _walk_attachment_images(node):
     """Yield image URLs from Facebook Graph API attachment trees."""
@@ -340,15 +457,21 @@ def main():
     ):
         if social in meta_sources:
             continue
+        got = []
         try:
             got = from_public_ytdlp(social, url)
-            if got:
-                fallback_posts.extend(got)
-                log(social, "public media:", len(got))
-            else:
-                log(social, "public reader returned no media")
         except Exception as ex:
-            log(social, "public reader unavailable:", str(ex)[:120])
+            log(social, "yt-dlp public reader unavailable:", str(ex)[:100])
+        if not got:
+            try:
+                got = from_public_gallery_dl(social, url)
+            except Exception as ex:
+                log(social, "gallery-dl public reader unavailable:", str(ex)[:100])
+        if got:
+            fallback_posts.extend(got)
+            log(social, "public media:", len(got))
+        else:
+            log(social, "public readers returned no media")
 
     posts = tiktok_posts + meta_posts + fallback_posts
     dedup = {}
