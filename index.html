@@ -10,7 +10,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Auto Servis Šunja | Servis za sve marke vozila, Goražde">
     <meta property="og:description" content="Servis i popravke za sve marke vozila: dijagnostika, mali i veliki servis, autoelektrika, ključevi i daljinski. Hajra Lakovića 38, Goražde, 061 297 847.">
-    <meta property="og:image" content="https://autosunja.sitey.my/assets/photos/tt-wide-01.webp">
+    <meta property="og:image" content="https://autosunja.sitey.my/assets/photos/tt-wide-20261110-5ab64c5a.webp">
     <meta property="og:url" content="https://autosunja.sitey.my/">
     <meta name="twitter:card" content="summary_large_image">
 
@@ -927,7 +927,7 @@
         var footerPhoto = d.latest && localPhotoPath(d.latest.wide || d.latest.src);
         if (footer && footerPhoto) footer.style.setProperty('--footer-photo', 'url("' + footerPhoto + '")');
         if (d.gallery && d.gallery.length) {
-            var pool = freshPool(d.gallery, 5);
+            var pool = freshPool(sharpGallery, 5);
             pool = pool.slice().sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
             var newestFirst = pool.shift();
             for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
@@ -1126,7 +1126,7 @@
 
                     var photoEl = document.createElement('div');
                     photoEl.className = 'shop-photo-marker';
-                    photoEl.style.backgroundImage = 'url(assets/photos/tt-01.webp)';
+                    photoEl.style.backgroundImage = 'url(assets/photos/tt-20261108-59603d89.webp)';
                     photoMarker = new maplibregl.Marker({ element: photoEl, offset: [0, -78] })
                         .setLngLat(SHOP)
                         .addTo(map);
