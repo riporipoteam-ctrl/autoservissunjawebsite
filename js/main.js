@@ -98,11 +98,13 @@
             topScrollFrame = 0;
         }
 
-        var scroller = document.scrollingElement || document.documentElement;
+        var root = document.documentElement;
+        var body = document.body;
+        var scroller = document.scrollingElement || root;
         var startY = Math.max(
             window.pageYOffset || 0,
             scroller.scrollTop || 0,
-            document.body.scrollTop || 0
+            body.scrollTop || 0
         );
 
         if (startY <= 1) {
@@ -110,10 +112,27 @@
             return;
         }
 
-        // One tap = one controlled trip. Longer pages get a little more time
-        // instead of trying to cover thousands of pixels in a few frames.
-        var duration = Math.min(1800, Math.max(700, startY / 5));
+        // Safari applies CSS scroll-behavior to JS scrollTo calls as well.
+        // Disable it during this one animation so rAF controls every frame.
+        var oldRootBehavior = root.style.scrollBehavior;
+        var oldBodyBehavior = body.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        body.style.scrollBehavior = "auto";
+
+        // One tap = one controlled trip. Longer pages get more time so the
+        // motion stays smooth rather than racing thousands of pixels at once.
+        var duration = Math.min(1900, Math.max(760, startY / 4.8));
         var startedAt = performance.now();
+
+        function finish() {
+            topScrollFrame = 0;
+            window.scrollTo(0, 0);
+            scroller.scrollTop = 0;
+            body.scrollTop = 0;
+            root.style.scrollBehavior = oldRootBehavior;
+            body.style.scrollBehavior = oldBodyBehavior;
+            syncScrollChrome();
+        }
 
         function step(now) {
             var progress = Math.min(1, (now - startedAt) / duration);
@@ -122,14 +141,10 @@
 
             window.scrollTo(0, y);
 
-            if (progress < 1) {
+            if (progress < 1 && y > 0) {
                 topScrollFrame = requestAnimationFrame(step);
             } else {
-                topScrollFrame = 0;
-                window.scrollTo(0, 0);
-                scroller.scrollTop = 0;
-                document.body.scrollTop = 0;
-                syncScrollChrome();
+                finish();
             }
         }
 
