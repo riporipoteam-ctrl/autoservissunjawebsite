@@ -440,6 +440,41 @@ def needs_quality_upgrade(pools, media_id):
                 matches.append(entry)
     return bool(matches) and any(int(entry.get("quality_v") or 0) < 2 for entry in matches)
 
+def rebuild_display_pools(pools):
+    """Rebuild hero pools only from sharp gallery originals.
+
+    This prevents old manually-seeded thumbnail files from surviving in the
+    slider after their gallery counterparts have already been upgraded.
+    """
+    gallery = [
+        dict(entry) for entry in pools.get("gallery", [])
+        if int(entry.get("quality_v") or 0) >= 2 and entry.get("src")
+    ]
+    gallery.sort(
+        key=lambda e: (e.get("date", ""), -(int(e.get("media_index") or 0))),
+        reverse=True,
+    )
+
+    hero_mobile = []
+    hero = []
+    for entry in gallery:
+        mobile = dict(entry)
+        hero_mobile.append(mobile)
+
+        desktop = dict(entry)
+        src = str(entry.get("src") or "")
+        base = os.path.basename(src)
+        if base.startswith("tt-") and not base.startswith("tt-wide-"):
+            wide_base = "tt-wide-" + base[len("tt-"):]
+            wide_path = os.path.join(PHOTO_DIR, wide_base)
+            if os.path.isfile(wide_path):
+                desktop["src"] = "assets/photos/" + wide_base
+        hero.append(desktop)
+
+    pools["heroMobile"] = hero_mobile
+    pools["hero"] = hero
+    return pools
+
 def main():
     # TikTok: TikWM first because it exposes every image in photo carousels.
     tiktok_posts, tiktok_reader = [], None
@@ -827,6 +862,10 @@ def main():
             if os.path.isfile(fp):
                 os.remove(fp)
                 log("retired (too old)", e["src"])
+
+    # Keep slider/mobile pools in lock-step with the upgraded gallery so old
+    # hand-seeded compressed images can never remain in rotation.
+    pools = rebuild_display_pools(pools)
 
     services = {}
     gal = pools.get("gallery", [])
