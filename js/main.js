@@ -106,4 +106,47 @@
         }
     });
 
+    // Keep the navbar state synced with the section the visitor is viewing.
+    // This is observer-based, so it costs essentially nothing while idle.
+    (function setupScrollSpy() {
+        if (!("IntersectionObserver" in window)) return;
+
+        var links = Array.prototype.slice.call(document.querySelectorAll(".navbar-nav .nav-link[href^='#']"));
+        var byId = {};
+        links.forEach(function (link) {
+            var id = link.getAttribute("href").slice(1);
+            if (id) byId[id] = link;
+        });
+
+        var sections = Object.keys(byId).map(function (id) {
+            return document.getElementById(id);
+        }).filter(Boolean);
+
+        if (!sections.length) return;
+
+        var observer = new IntersectionObserver(function (entries) {
+            var visible = entries
+                .filter(function (entry) { return entry.isIntersecting; })
+                .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; })[0];
+
+            if (!visible || !byId[visible.target.id]) return;
+            links.forEach(function (link) { link.classList.remove("active"); });
+            byId[visible.target.id].classList.add("active");
+        }, {
+            rootMargin: "-28% 0px -60% 0px",
+            threshold: [0.02, 0.12, 0.3]
+        });
+
+        sections.forEach(function (section) { observer.observe(section); });
+    })();
+
+    // On phones/tablets, collapse the menu after choosing a section.
+    document.querySelectorAll("#navbarCollapse .nav-link").forEach(function (link) {
+        link.addEventListener("click", function () {
+            var collapseEl = document.getElementById("navbarCollapse");
+            if (!collapseEl || !collapseEl.classList.contains("show") || typeof bootstrap === "undefined") return;
+            bootstrap.Collapse.getOrCreateInstance(collapseEl, { toggle: false }).hide();
+        });
+    });
+
 })(jQuery);
