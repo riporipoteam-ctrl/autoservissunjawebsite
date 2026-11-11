@@ -119,5 +119,42 @@ class SocialPhotoTests(unittest.TestCase):
         self.assertFalse(rp.needs_quality_upgrade(pools, "tiktok:123:0"))
 
 
+    def test_rebuild_display_pools_uses_gallery_quality_v2_sources(self):
+        pools = {
+            "gallery": [
+                {
+                    "src": "assets/photos/tt-20261110-abcd.webp",
+                    "media_id": "tiktok:1:0",
+                    "quality_v": 2,
+                    "date": "2026-11-10",
+                    "href": "https://www.tiktok.com/@autoservissunja/photo/1",
+                    "title": "A",
+                    "source": "tiktok",
+                    "post_id": "1",
+                    "media_index": 0,
+                },
+                {
+                    "src": "assets/photos/tt-old.webp",
+                    "media_id": "tiktok:2:0",
+                    "quality_v": 0,
+                    "date": "2026-11-08",
+                },
+            ]
+        }
+
+        rebuilt = rp.rebuild_display_pools(pools)
+
+        self.assertEqual(1, len(rebuilt["heroMobile"]))
+        self.assertEqual(
+            "assets/photos/tt-20261110-abcd.webp",
+            rebuilt["heroMobile"][0]["src"],
+        )
+        self.assertEqual(
+            "assets/photos/tt-wide-20261110-abcd.webp",
+            rebuilt["hero"][0]["src"],
+        )
+        self.assertEqual(2, rebuilt["hero"][0]["quality_v"])
+
+
 if __name__ == "__main__":
     unittest.main()
