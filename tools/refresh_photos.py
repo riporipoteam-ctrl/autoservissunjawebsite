@@ -431,10 +431,11 @@ def media_id_of(entry):
     pid = post_id_of(entry)
     return f"{source_of(entry)}:{pid}:0" if pid else None
 
-BANNED_TIKTOK_POST_IDS = {"7705912434296491284"}
+BANNED_TIKTOK_POST_IDS = {"7705912434296491284", "7706671380024216852"}
 BANNED_IMAGE_FILES = {
     "tt-01.webp", "tt-wide-01.webp",
     "tt-20261108-59603d89.webp", "tt-wide-20261108-59603d89.webp",
+    "tt-20261110-5ab64c5a.webp", "tt-wide-20261110-5ab64c5a.webp",
 }
 
 def is_banned_photo(entry):
@@ -444,7 +445,7 @@ def is_banned_photo(entry):
     path = str(entry.get("src") or "")
     return (
         (source_of(entry) == "tiktok" and pid in BANNED_TIKTOK_POST_IDS)
-        or mid.startswith("tiktok:7705912434296491284:")
+        or any(mid.startswith("tiktok:" + post + ":") for post in BANNED_TIKTOK_POST_IDS)
         or os.path.basename(path) in BANNED_IMAGE_FILES
     )
 
