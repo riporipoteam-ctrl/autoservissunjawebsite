@@ -41,14 +41,7 @@
         chromeVisible = show;
 
         $sticky.css("top", show ? "0px" : "-100px");
-        $backTop.stop(true, true);
-        if (reduceMotion) {
-            $backTop.toggle(show);
-        } else if (show) {
-            $backTop.fadeIn(180);
-        } else {
-            $backTop.fadeOut(180);
-        }
+        $backTop.toggleClass("is-visible", show);
     }
 
     // One passive scroll listener + rAF replaces two independent handlers.
@@ -97,32 +90,56 @@
     }, { passive: true });
     bindDropdownHover();
 
-    function jumpToTopInstantly() {
-        var root = document.documentElement;
-        var body = document.body;
-        var rootBehavior = root.style.scrollBehavior;
-        var bodyBehavior = body.style.scrollBehavior;
+    var topScrollFrame = 0;
 
-        // The site uses smooth scrolling for normal anchor links. Override it
-        // only for this control so one press always returns to the top now.
-        root.style.scrollBehavior = "auto";
-        body.style.scrollBehavior = "auto";
-        $("html, body").stop(true, true);
+    function scrollToTopSmoothly() {
+        if (topScrollFrame) {
+            cancelAnimationFrame(topScrollFrame);
+            topScrollFrame = 0;
+        }
 
-        window.scrollTo(0, 0);
-        root.scrollTop = 0;
-        body.scrollTop = 0;
+        var scroller = document.scrollingElement || document.documentElement;
+        var startY = Math.max(
+            window.pageYOffset || 0,
+            scroller.scrollTop || 0,
+            document.body.scrollTop || 0
+        );
 
-        requestAnimationFrame(function () {
-            root.style.scrollBehavior = rootBehavior;
-            body.style.scrollBehavior = bodyBehavior;
-            syncScrollChrome();
-        });
+        if (startY <= 1) {
+            window.scrollTo(0, 0);
+            return;
+        }
+
+        // One tap = one controlled trip. Longer pages get a little more time
+        // instead of trying to cover thousands of pixels in a few frames.
+        var duration = Math.min(1800, Math.max(700, startY / 5));
+        var startedAt = performance.now();
+
+        function step(now) {
+            var progress = Math.min(1, (now - startedAt) / duration);
+            var eased = 1 - Math.pow(1 - progress, 4);
+            var y = Math.round(startY * (1 - eased));
+
+            window.scrollTo(0, y);
+
+            if (progress < 1) {
+                topScrollFrame = requestAnimationFrame(step);
+            } else {
+                topScrollFrame = 0;
+                window.scrollTo(0, 0);
+                scroller.scrollTop = 0;
+                document.body.scrollTop = 0;
+                syncScrollChrome();
+            }
+        }
+
+        topScrollFrame = requestAnimationFrame(step);
     }
 
     $backTop.on("click", function (event) {
         event.preventDefault();
-        jumpToTopInstantly();
+        event.stopPropagation();
+        scrollToTopSmoothly();
     });
 
     // Keep the navbar state synced with the section the visitor is viewing.
