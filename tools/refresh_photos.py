@@ -118,7 +118,7 @@ def expand_tiktok_photo(post_id, post_url, ts, title=""):
         rows = _gallery_dl(post_url, timeout=75)
     except Exception as ex:
         log("gallery-dl TikTok photo unavailable:", post_id, str(ex)[:100])
-        return []
+        return None
 
     images = []
     for url, meta in rows:
@@ -512,11 +512,71 @@ def main():
         pools.setdefault(pool, [])
 
     known = set()
+    known_tiktok_posts = set()
     for pool in ("hero", "heroMobile", "gallery"):
         for e in pools[pool]:
             mid = media_id_of(e)
             if mid:
                 known.add(mid)
+            if source_of(e) == "tiktok":
+                pid = post_id_of(e)
+                if pid:
+                    known_tiktok_posts.add(pid)
+
+    # yt-dlp's TikTok profile extractor currently exposes slideshow posts as
+    # ordinary /video/ entries. Probe only new/recent IDs against /photo/,
+    # cache the outcome, and back off on transient failures so the 15-minute
+    # schedule never hammers TikTok.
+    carousel_probe = pools.get("_carousel_probe") or {}
+    probe_now = int(now.timestamp())
+    probe_cutoff = probe_now - 2 * 24 * 3600
+    unique_tiktok = {}
+    for p in fresh:
+        if p.get("source") == "tiktok":
+            unique_tiktok.setdefault(p["post_id"], p)
+
+    candidates = sorted(unique_tiktok.values(), key=lambda p: -p["ts"])
+    candidates = [
+        p for p in candidates
+        if p["post_id"] not in carousel_probe
+        and (p["post_id"] not in known_tiktok_posts or p["ts"] >= probe_cutoff)
+    ][:5]
+
+    expanded_by_media = {p["media_id"]: p for p in fresh}
+    for p in candidates:
+        pid = p["post_id"]
+        photo_url = f"https://www.tiktok.com/@{HANDLE}/photo/{pid}"
+        expanded = expand_tiktok_photo(pid, photo_url, p["ts"], p.get("title", ""))
+        if expanded is None:
+            previous = carousel_probe.get(pid) or {}
+            attempts = int(previous.get("attempts") or 0) + 1
+            carousel_probe[pid] = {
+                "status": "retry" if attempts < 3 else "backoff",
+                "attempts": attempts,
+                "last": probe_now,
+            }
+            continue
+
+        for item in expanded:
+            item["date"] = p["date"]
+            expanded_by_media[item["media_id"]] = item
+        carousel_probe[pid] = {
+            "status": "photo" if expanded else "not-photo",
+            "count": len(expanded),
+            "attempts": 1,
+            "last": probe_now,
+        }
+        if expanded:
+            log("TikTok carousel resolved:", pid, "| images:", len(expanded))
+
+    # Retry transiently blocked probes after a 24-hour cool-down.
+    for pid, state in list(carousel_probe.items()):
+        if state.get("status") == "backoff" and probe_now - int(state.get("last") or 0) >= 24 * 3600:
+            carousel_probe.pop(pid, None)
+    pools["_carousel_probe"] = carousel_probe
+
+    fresh = list(expanded_by_media.values())
+    fresh.sort(key=lambda p: (-p["ts"], p.get("media_index", 0)))
 
     def cat_for(p, allow_fetch, entry_title=""):
         c = classify(p.get("raw", ""))
