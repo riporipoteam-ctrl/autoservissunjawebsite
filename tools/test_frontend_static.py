@@ -34,5 +34,20 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("--footer-photo", CSS)
 
 
+    def test_back_to_top_is_one_click_instant(self):
+        self.assertIn("function jumpToTopInstantly()", JS)
+        self.assertIn("window.scrollTo(0, 0)", JS)
+        self.assertNotIn('animate({ scrollTop: 0 }', JS)
+
+    def test_map_does_not_collapse_when_camera_arrives(self):
+        self.assertNotIn("wrap.classList.add('globe-done')", INDEX)
+        self.assertIn("var FLIGHT_END = 0.72;", INDEX)
+        self.assertIn("wrap.classList.toggle('globe-arrived'", INDEX)
+
+    def test_map_has_a_hold_zone_after_flight(self):
+        self.assertIn(".globe-scroll { height: 300vh;", CSS)
+        self.assertIn("#globeScroll.globe-arrived .globe-stage", CSS)
+
+
 if __name__ == "__main__":
     unittest.main()
