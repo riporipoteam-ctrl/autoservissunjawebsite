@@ -88,5 +88,45 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("js/main.js?v=18.9", INDEX)
 
 
+    def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
+        self.assertIn("assets/photos/tt-wide-20260919-d3b7439d.webp", INDEX)
+        self.assertIn("assets/gallery/radionica-dijagnostika.webp", INDEX)
+        self.assertIn("assets/gallery/kljucevi-programiranje.webp", INDEX)
+        self.assertNotIn("var heroPool =", INDEX)
+        self.assertNotIn("heroImg.src = pick", INDEX)
+
+    def test_map_photo_overlay_removed_and_loading_has_state(self):
+        self.assertNotIn("shop-photo-marker", INDEX)
+        self.assertNotIn("photoMarker", INDEX)
+        self.assertIn('id="globeLoading"', INDEX)
+        self.assertIn("classList.add('is-loaded')", INDEX)
+        self.assertIn("map.resize()", INDEX)
+
+    def test_gallery_keeps_source_and_hides_photo_titles(self):
+        self.assertNotIn('data-gallery-title', INDEX)
+        self.assertIn('data-gallery-sub', INDEX)
+        self.assertIn('Objava s TikToka', INDEX)
+
+    def test_all_visible_hours_use_colon_style(self):
+        self.assertNotIn("10.00", INDEX)
+        self.assertNotIn("18.00", INDEX)
+        self.assertIn("10:00", INDEX)
+        self.assertIn("18:00", INDEX)
+
+    def test_contact_card_status_wraps_on_mobile(self):
+        self.assertIn('class="contact-spotlight', INDEX)
+        self.assertIn("contact-actions", INDEX)
+        self.assertIn(".contact-spotlight .status-pill", CSS)
+        self.assertIn("overflow-wrap: anywhere", CSS)
+
+    def test_rebuilt_ignition_logo_preloader_respects_motion(self):
+        self.assertIn("pl-orbit", INDEX)
+        self.assertIn("pl-scanner", INDEX)
+        self.assertIn("pl-system-status", INDEX)
+        self.assertIn("pl-ready", INDEX)
+        self.assertIn("prefers-reduced-motion: reduce", INDEX)
+        self.assertIn("v19.0", CSS)
+
+
 if __name__ == "__main__":
     unittest.main()
