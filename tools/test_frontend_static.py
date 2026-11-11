@@ -116,10 +116,11 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("var heroPool =", INDEX)
         self.assertNotIn("heroImg.src = pick", INDEX)
 
-    def test_map_photo_overlay_removed_and_loading_has_state(self):
+    def test_map_photo_overlay_removed_and_directions_available_immediately(self):
         self.assertNotIn("shop-photo-marker", INDEX)
         self.assertNotIn("photoMarker", INDEX)
-        self.assertIn('id="globeLoading"', INDEX)
+        self.assertNotIn('id="globeLoading"', INDEX)
+        self.assertIn('class="map-quick-link"', INDEX)
         self.assertIn("classList.add('is-loaded')", INDEX)
         self.assertIn("map.resize()", INDEX)
 
