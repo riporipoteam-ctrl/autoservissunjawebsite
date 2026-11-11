@@ -59,6 +59,39 @@ class SocialPhotoTests(unittest.TestCase):
             rp.post_id_of({"source": "instagram", "href": "https://www.instagram.com/p/ABC123xyz/"}),
         )
 
+    @patch.object(rp, "_gallery_dl")
+    def test_gallery_dl_fallback_expands_tiktok_photo_carousel(self, mock_gallery):
+        mock_gallery.return_value = [
+            ("https://example.invalid/slide-1.jpg", {"extension": "jpg", "post_type": "image"}),
+            ("https://example.invalid/audio.m4a", {"extension": "m4a", "post_type": "audio"}),
+            ("https://example.invalid/slide-2.webp", {"extension": "webp", "post_type": "image"}),
+        ]
+
+        posts = rp.expand_tiktok_photo(
+            "7700000000000000001",
+            "https://www.tiktok.com/@autoservissunja/photo/7700000000000000001",
+            1794326400,
+            "Rad u radionici",
+        )
+
+        self.assertEqual(2, len(posts))
+        self.assertEqual([0, 1], [p["media_index"] for p in posts])
+        self.assertEqual(
+            [
+                "tiktok:7700000000000000001:0",
+                "tiktok:7700000000000000001:1",
+            ],
+            [p["media_id"] for p in posts],
+        )
+
+    def test_gallery_dl_json_parser_accepts_nested_output(self):
+        raw = '[[2, "", {"category": "tiktok"}], [3, "https://cdn.invalid/a.jpg", {"extension": "jpg"}]]'
+        rows = rp._gallery_dl_url_rows(raw)
+        self.assertEqual(
+            [("https://cdn.invalid/a.jpg", {"extension": "jpg"})],
+            rows,
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
