@@ -1077,3 +1077,82 @@ h6.text-primary.text-uppercase::before {
         transition: none !important;
     }
 }
+
+
+/*** v18.5: instant top control + stable map hold zone ***/
+.globe-scroll {
+    height: 300vh;
+}
+
+.globe-sticky {
+    overflow: hidden;
+}
+
+.globe-stage {
+    min-width: max-content;
+    transition:
+        background .28s ease,
+        box-shadow .28s ease,
+        transform .28s cubic-bezier(.2,.75,.25,1),
+        opacity .28s ease;
+}
+
+#globeScroll.globe-arrived .globe-stage {
+    background: rgba(11, 33, 84, .94);
+    box-shadow: 0 12px 30px rgba(6, 20, 45, .28);
+    transform: translateX(-50%) translateY(-2px);
+}
+
+#globeScroll.globe-arrived .globe-hint {
+    opacity: 0 !important;
+}
+
+#globeScroll.globe-arrived .shop-photo-marker {
+    animation: shopMarkerSettle .42s cubic-bezier(.2,.75,.25,1) both;
+}
+
+@keyframes shopMarkerSettle {
+    from { opacity: 0; transform: translateY(8px) scale(.92); }
+    to { opacity: 1; transform: none; }
+}
+
+#backTop {
+    transition:
+        transform .18s cubic-bezier(.2,.75,.25,1),
+        box-shadow .18s ease,
+        background-color .18s ease !important;
+    touch-action: manipulation;
+}
+
+#backTop:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(6,20,45,.32);
+}
+
+#backTop:active {
+    transform: scale(.94) !important;
+}
+
+@media (max-width: 767.98px) {
+    .globe-scroll {
+        height: 280vh;
+    }
+
+    .globe-stage {
+        max-width: calc(100vw - 2rem);
+        min-width: 0;
+        width: max-content;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .globe-stage,
+    #backTop,
+    #globeScroll.globe-arrived .shop-photo-marker {
+        transition: none !important;
+        animation: none !important;
+    }
+}
