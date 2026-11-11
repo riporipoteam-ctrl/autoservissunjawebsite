@@ -43,6 +43,14 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn('requestAnimationFrame(step)', JS)
         self.assertIn('touch-action: manipulation', CSS)
 
+    def test_no_jquery_or_unused_icon_dependency(self):
+        self.assertNotIn('jquery-3.4.1.min.js', INDEX)
+        self.assertNotIn('bootstrap-icons@1.4.1', INDEX)
+        self.assertNotIn('})(jQuery)', JS)
+        self.assertIn('document.querySelector', JS)
+        self.assertIn("addEventListener", JS)
+        self.assertIn('fa fa-arrow-up', INDEX)
+
     def test_section_navigation_works_on_first_click(self):
         self.assertIn("document.addEventListener('click', function (event)", JS)
         self.assertIn("target.scrollIntoView(", JS)
