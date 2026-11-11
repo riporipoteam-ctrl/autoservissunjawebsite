@@ -37,6 +37,7 @@ class FrontendStaticTests(unittest.TestCase):
     def test_back_to_top_is_one_click_controlled_scroll(self):
         self.assertIn('<button type="button" id="backTop"', INDEX)
         self.assertIn("function scrollToTopSmoothly()", JS)
+        self.assertIn('root.style.scrollBehavior = "auto"', JS)
         self.assertIn("requestAnimationFrame(step)", JS)
         self.assertNotIn('href="#" id="backTop"', INDEX)
         self.assertNotIn('animate({ scrollTop: 0 }', JS)
