@@ -37,7 +37,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=18.7" rel="stylesheet">
+    <link href="css/style.css?v=18.8" rel="stylesheet">
 </head>
 
 <body>
@@ -139,8 +139,8 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <div class="hero-bg" style="background-image:url('assets/photos/tt-wide-20261108-59603d89.webp')"></div>
-                    <picture><source media="(max-width: 767.98px)" srcset="assets/photos/tt-20261108-59603d89.webp"><img class="w-100" src="assets/photos/tt-wide-20261108-59603d89.webp" loading="lazy" decoding="async" alt="Autodijagnostika u radionici Auto Servis Šunja"></picture>
+                    <div class="hero-bg" style="background-image:url('assets/photos/tt-wide-20261023-180d1783.webp')"></div>
+                    <picture><source media="(max-width: 767.98px)" srcset="assets/photos/tt-20261023-180d1783.webp"><img class="w-100" src="assets/photos/tt-wide-20261023-180d1783.webp" loading="lazy" decoding="async" alt="Autodijagnostika u radionici Auto Servis Šunja"></picture>
                     <div class="carousel-caption d-flex align-items-center">
                         <div class="container">
                             <div class="row align-items-center justify-content-center justify-content-lg-start">
@@ -233,7 +233,7 @@
             <div class="row g-5">
                 <div class="col-lg-6 pt-4" style="min-height: 400px;">
                     <div class="position-relative h-100 wow fadeIn" data-wow-delay="0.1s">
-                        <img class="img-fluid w-100 svc-photo" data-about-photo src="assets/photos/tt-20261108-59603d89.webp" loading="lazy" decoding="async" alt="Auto Servis Šunja radionica">
+                        <img class="img-fluid w-100 svc-photo" data-about-photo src="assets/photos/tt-20260919-d3b7439d.webp" loading="lazy" decoding="async" alt="Ulaz u radionicu Auto Servis Šunja s natpisom AUTOSERVIS">
                         <div class="position-absolute top-0 end-0 mt-n4 me-n4 py-4 px-4" style="background: rgba(11, 33, 84, .85);">
                             <h4 class="text-white mb-2">Google ocjena</h4>
                             <span class="stars" data-stars style="--fillw:92%">
@@ -771,7 +771,7 @@
     <script src="lib/waypoints/waypoints.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=18.7"></script>
+    <script src="js/main.js?v=18.8"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
@@ -915,13 +915,6 @@
                 img.decoding = 'async';
             }
         });
-
-        var aboutPhoto = document.querySelector('[data-about-photo]');
-        if (aboutPhoto && sharpGallery.length) {
-            var aboutPick = sharpGallery[Math.min(1, sharpGallery.length - 1)];
-            var aboutSrc = localPhotoPath(aboutPick && aboutPick.src);
-            if (aboutSrc) aboutPhoto.src = aboutSrc;
-        }
 
         var footer = document.getElementById('siteFooter');
         var footerPhoto = d.latest && localPhotoPath(d.latest.wide || d.latest.src);
@@ -1087,7 +1080,8 @@
                 render();
             });
 
-            var FLIGHT_END = 0.72;
+            var stickyEl = wrap.querySelector('.globe-sticky');
+            var FLIGHT_END = 0.90;
             var stops = [
                 { p: 0.00, c: [12, 32], z: 1.6, pitch: 0, bearing: -15, label: 'Svijet' },
                 { p: 0.18, c: [15, 46], z: 3.4, pitch: 0, bearing: -6, label: 'Evropa' },
@@ -1126,7 +1120,7 @@
 
                     var photoEl = document.createElement('div');
                     photoEl.className = 'shop-photo-marker';
-                    photoEl.style.backgroundImage = 'url(assets/photos/tt-20261108-59603d89.webp)';
+                    photoEl.style.backgroundImage = 'url(assets/photos/tt-20260919-d3b7439d.webp)';
                     photoMarker = new maplibregl.Marker({ element: photoEl, offset: [0, -78] })
                         .setLngLat(SHOP)
                         .addTo(map);
@@ -1145,7 +1139,7 @@
                 if (fellBack || !wrap) return;
 
                 var rect = wrap.getBoundingClientRect();
-                var total = Math.max(1, rect.height - window.innerHeight);
+                var total = Math.max(1, wrap.offsetHeight - (stickyEl ? stickyEl.offsetHeight : window.innerHeight));
                 var p = clamp01(-rect.top / total);
 
                 // Once the flight reaches the shop it stays finished until the
