@@ -53,6 +53,10 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("setShopMarker(true);", INDEX)
         self.assertIn("wrap.classList.toggle('globe-arrived'", INDEX)
 
+        self.assertIn("var mapReleased = false;", INDEX)
+        self.assertIn("rect.bottom <= 0", INDEX)
+        self.assertIn("globe-complete", INDEX)
+
     def test_map_has_a_hold_zone_after_flight(self):
         self.assertIn("height: 300vh;", CSS)
         self.assertIn("#globeScroll.globe-arrived .globe-stage", CSS)
@@ -64,6 +68,10 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("filter: none !important;", CSS)
         self.assertIn(".team-item .position-relative::before", CSS)
         self.assertIn("display: none !important;", CSS)
+
+        self.assertIn("data-about-photo", INDEX)
+        self.assertIn("css/style.css?v=18.7", INDEX)
+        self.assertIn("js/main.js?v=18.7", INDEX)
 
 
 if __name__ == "__main__":
