@@ -131,10 +131,13 @@ def expand_tiktok_photo(post_id, post_url, ts, title=""):
         if url and url not in images:
             images.append(url)
 
-    return [
+    records = [
         _media_record("tiktok", post_id, ts, img, title, post_url, idx)
         for idx, img in enumerate(images)
     ]
+    for record in records:
+        record["quality_source"] = "original"
+    return records
 
 def from_ytdlp():
     """TikTok profile fallback, with direct slideshow expansion when possible."""
@@ -428,6 +431,15 @@ def media_id_of(entry):
     pid = post_id_of(entry)
     return f"{source_of(entry)}:{pid}:0" if pid else None
 
+def needs_quality_upgrade(pools, media_id):
+    """True when a known media item still points at a pre-v2/thumbnail asset."""
+    matches = []
+    for pool in ("hero", "heroMobile", "gallery"):
+        for entry in pools.get(pool, []):
+            if media_id_of(entry) == media_id:
+                matches.append(entry)
+    return bool(matches) and any(int(entry.get("quality_v") or 0) < 2 for entry in matches)
+
 def main():
     # TikTok: TikWM first because it exposes every image in photo carousels.
     tiktok_posts, tiktok_reader = [], None
@@ -535,11 +547,27 @@ def main():
         if p.get("source") == "tiktok":
             unique_tiktok.setdefault(p["post_id"], p)
 
+    def post_needs_quality_upgrade(post_id):
+        for pool in ("hero", "heroMobile", "gallery"):
+            for entry in pools.get(pool, []):
+                if source_of(entry) == "tiktok" and post_id_of(entry) == post_id:
+                    if int(entry.get("quality_v") or 0) < 2:
+                        return True
+        return False
+
     candidates = sorted(unique_tiktok.values(), key=lambda p: -p["ts"])
     candidates = [
         p for p in candidates
-        if p["post_id"] not in carousel_probe
-        and (p["post_id"] not in known_tiktok_posts or p["ts"] >= probe_cutoff)
+        if (
+            (
+                p["post_id"] not in carousel_probe
+                and (p["post_id"] not in known_tiktok_posts or p["ts"] >= probe_cutoff)
+            )
+            or (
+                (carousel_probe.get(p["post_id"]) or {}).get("status") == "photo"
+                and post_needs_quality_upgrade(p["post_id"])
+            )
+        )
     ][:5]
 
     expanded_by_media = {p["media_id"]: p for p in fresh}
@@ -594,12 +622,19 @@ def main():
         return "opcenito", True
 
     import requests
-    from PIL import Image, ImageFilter
+    from PIL import Image
     os.makedirs(PHOTO_DIR, exist_ok=True)
     added = 0
+    upgraded = 0
 
     for p in fresh:
-        if p["media_id"] in known:
+        is_known = p["media_id"] in known
+        upgrade_existing = (
+            is_known
+            and p.get("quality_source") == "original"
+            and needs_quality_upgrade(pools, p["media_id"])
+        )
+        if is_known and not upgrade_existing:
             continue
         cat, cat_ok = cat_for(p, allow_fetch=True)
         try:
@@ -614,33 +649,48 @@ def main():
         tag = p["date"].replace("-", "") + "-" + short
         prefix = {"tiktok": "tt", "instagram": "ig", "facebook": "fb"}.get(p["source"], "social")
 
+        # Keep the source photo sharp. Never upscale, blur, or crop it just to
+        # fill a frame; CSS handles the surrounding branded background.
         portrait = im.copy()
-        if portrait.width > 1080:
+        max_edge = max(portrait.width, portrait.height)
+        if max_edge > 2200:
+            scale = 2200 / max_edge
             portrait = portrait.resize(
-                (1080, round(portrait.height * 1080 / portrait.width)), Image.LANCZOS
+                (round(portrait.width * scale), round(portrait.height * scale)),
+                Image.LANCZOS,
             )
         pfile = f"{prefix}-{tag}.webp"
-        portrait.save(os.path.join(PHOTO_DIR, pfile), "WEBP", quality=82, method=6)
+        portrait.save(os.path.join(PHOTO_DIR, pfile), "WEBP", quality=92, method=6)
 
-        tw, th = 1600, 1000
         wide = im.copy()
-        scale = max(tw / wide.width, th / wide.height)
-        wide = wide.resize(
-            (round(wide.width * scale), round(wide.height * scale)), Image.LANCZOS
-        )
-        x = (wide.width - tw) // 2
-        y = (wide.height - th) // 2
-        wide = wide.crop((x, y, x + tw, y + th)).filter(ImageFilter.GaussianBlur(30))
-
-        fg = im.copy()
-        scale_fg = min(tw / fg.width, th / fg.height)
-        fg = fg.resize(
-            (round(fg.width * scale_fg), round(fg.height * scale_fg)), Image.LANCZOS
-        )
-        wide.paste(fg, ((tw - fg.width) // 2, (th - fg.height) // 2))
-
+        wide_edge = max(wide.width, wide.height)
+        if wide_edge > 2400:
+            scale = 2400 / wide_edge
+            wide = wide.resize(
+                (round(wide.width * scale), round(wide.height * scale)),
+                Image.LANCZOS,
+            )
         wfile = f"{prefix}-wide-{tag}.webp"
-        wide.save(os.path.join(PHOTO_DIR, wfile), "WEBP", quality=80, method=6)
+        wide.save(os.path.join(PHOTO_DIR, wfile), "WEBP", quality=92, method=6)
+
+        if upgrade_existing:
+            portrait_src = f"assets/photos/{pfile}"
+            wide_src = f"assets/photos/{wfile}"
+            for entry in pools.get("gallery", []):
+                if media_id_of(entry) == p["media_id"]:
+                    entry["src"] = portrait_src
+                    entry["quality_v"] = 2
+            for entry in pools.get("heroMobile", []):
+                if media_id_of(entry) == p["media_id"]:
+                    entry["src"] = portrait_src
+                    entry["quality_v"] = 2
+            for entry in pools.get("hero", []):
+                if media_id_of(entry) == p["media_id"]:
+                    entry["src"] = wide_src
+                    entry["quality_v"] = 2
+            upgraded += 1
+            log("upgraded full-quality media", p["media_id"], "|", im.size)
+            continue
 
         title = clean_title(p["title"], p["date"])
         common = {
@@ -652,6 +702,7 @@ def main():
             "post_id": p["post_id"],
             "media_id": p["media_id"],
             "media_index": p["media_index"],
+            "quality_v": 2,
         }
 
         pools["gallery"].insert(0, {
@@ -814,6 +865,7 @@ def main():
 
     log(
         "done. added:", added,
+        "| upgraded:", upgraded,
         "| removed:", removed,
         "| retired:", retired,
         "| pool sizes:", {k: len(pools.get(k, [])) for k in minimums},
