@@ -81,8 +81,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=18.7", INDEX)
-        self.assertIn("js/main.js?v=18.7", INDEX)
+        self.assertIn("css/style.css?v=18.8", INDEX)
+        self.assertIn("js/main.js?v=18.8", INDEX)
 
 
 if __name__ == "__main__":
