@@ -587,3 +587,150 @@ h6.text-primary.text-uppercase { background: transparent; border: none; padding:
 /*** v17.3 sweep fixes ***/
 .status-pill { white-space: nowrap; }
 #header-carousel .carousel-caption p { text-wrap: pretty; }
+
+
+/*** v18: exact-logo loader, whole-photo gallery, responsive/performance polish ***/
+.footer {
+    --footer-photo: url(../assets/photos/tt-wide-20261110-216852.webp);
+    background-image: linear-gradient(rgba(4, 12, 26, .82), rgba(4, 12, 26, .88)), var(--footer-photo) !important;
+    background-position: center 42% !important;
+    background-repeat: no-repeat !important;
+    background-size: cover !important;
+}
+
+#preloader {
+    background: radial-gradient(circle at 50% 46%, #ffffff 0%, #f7f9fc 68%, #eef3f8 100%);
+    transition: opacity .42s ease, visibility .42s ease;
+}
+
+#preloader .pl-stage {
+    width: min(470px, 82vw);
+    text-align: center;
+}
+
+#preloader .pl-trace-wrap {
+    aspect-ratio: 785 / 462;
+    filter: drop-shadow(0 12px 28px rgba(11, 33, 84, .08));
+}
+
+#preloader #plTrace,
+#preloader .pl-final {
+    animation: none !important;
+}
+
+#preloader #plTrace {
+    opacity: 1;
+    transition: opacity .22s ease;
+}
+
+#preloader .trace-path {
+    fill-opacity: 0;
+    stroke-width: 1.25;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    vector-effect: non-scaling-stroke;
+}
+
+#preloader .pl-final {
+    opacity: 0;
+    transition: opacity .32s ease;
+}
+
+#preloader.pl-logo-complete #plTrace {
+    opacity: 0;
+}
+
+#preloader.pl-logo-complete .pl-final {
+    opacity: 1;
+}
+
+#preloader .pl-bar,
+#preloader .pl-text {
+    display: none !important;
+}
+
+.team-item .position-relative {
+    --gallery-bg: none;
+    aspect-ratio: 4 / 5;
+    background: #0a1831;
+    isolation: isolate;
+}
+
+.team-item .position-relative::before {
+    content: '';
+    position: absolute;
+    inset: -10%;
+    z-index: 0;
+    background-image: linear-gradient(rgba(6, 20, 45, .28), rgba(6, 20, 45, .42)), var(--gallery-bg);
+    background-position: center;
+    background-size: cover;
+    filter: blur(22px) saturate(1.08);
+    transform: scale(1.08);
+}
+
+.gallery-img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100% !important;
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    transform: none !important;
+}
+
+.team-item:hover .gallery-img {
+    transform: none !important;
+}
+
+.team-overlay {
+    z-index: 2;
+}
+
+[data-svc-cat] {
+    object-fit: contain !important;
+    object-position: center !important;
+    background: linear-gradient(145deg, #eef4fa, #dfe9f4);
+}
+
+#header-carousel .carousel-item,
+#header-carousel .carousel-caption,
+.team-item,
+.service .tab-pane {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+
+@media (max-width: 991.98px) {
+    .footer {
+        background-position: center center !important;
+    }
+}
+
+@media (max-width: 575.98px) {
+    #preloader .pl-stage {
+        width: min(390px, 86vw);
+    }
+
+    .team-item .position-relative::before {
+        filter: blur(16px) brightness(.88);
+    }
+
+    .team-item {
+        box-shadow: 0 10px 24px rgba(11, 33, 84, .10);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #preloader .trace-path,
+    #preloader #plTrace,
+    #preloader .pl-final {
+        transition-duration: .01ms !important;
+    }
+
+    .team-item,
+    .gallery-img,
+    .service .nav .nav-link {
+        transition: none !important;
+    }
+}
