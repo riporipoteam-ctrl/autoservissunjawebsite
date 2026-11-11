@@ -1081,6 +1081,7 @@
             var ticking = false;
             var lastBucket = -1;
             var flightLocked = false;
+            var lockedViewApplied = false;
 
             function lerp(a, b, t) { return a + (b - a) * t; }
             function clamp01(v) { return Math.min(1, Math.max(0, v)); }
@@ -1130,6 +1131,23 @@
                 // document is refreshed. Scrolling back up never replays it.
                 if (!flightLocked && p >= FLIGHT_END - 0.002) {
                     flightLocked = true;
+                }
+
+                // Finished means finished for this page load. Keep the
+                // camera parked and stop doing expensive MapLibre camera work
+                // while the user scrolls back upward through the page.
+                if (flightLocked) {
+                    if (!lockedViewApplied) {
+                        try {
+                            map.jumpTo({ center: SHOP, zoom: 15.5, pitch: 50, bearing: 0 });
+                        } catch (e) {}
+                        lockedViewApplied = true;
+                    }
+                    wrap.classList.add('globe-arrived');
+                    if (stageEl) stageEl.textContent = 'Auto Servis Šunja · nastavite skrolati';
+                    if (hintEl) hintEl.style.opacity = '0';
+                    setShopMarker(true);
+                    return;
                 }
 
                 // Use the full section for scrolling, but finish the camera
