@@ -1156,3 +1156,86 @@ h6.text-primary.text-uppercase::before {
         animation: none !important;
     }
 }
+
+
+/*** v18.6: sharp media presentation ***/
+/* Do not blur workshop photos. The contained foreground image stays sharp
+   and the surrounding space uses a clean branded backdrop instead. */
+#header-carousel .hero-bg {
+    background: linear-gradient(135deg, #06142d 0%, #0a2c55 55%, #071a35 100%) !important;
+    filter: none !important;
+    transform: none !important;
+}
+
+#header-carousel .carousel-item picture img {
+    filter: none !important;
+    image-rendering: auto;
+}
+
+.team-item .position-relative {
+    background: linear-gradient(145deg, #08182f, #0c2748) !important;
+}
+
+.team-item .position-relative::before {
+    display: none !important;
+    filter: none !important;
+}
+
+.gallery-img,
+.svc-photo,
+[data-svc-cat] {
+    filter: none !important;
+    image-rendering: auto;
+}
+
+/* One button, one scroll animation. Keep visibility changes on the compositor
+   instead of jQuery fade animations, which were fighting iOS momentum scroll. */
+#backTop {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition:
+        opacity .18s ease,
+        visibility .18s ease,
+        transform .18s cubic-bezier(.2,.75,.25,1),
+        box-shadow .18s ease,
+        background-color .18s ease !important;
+}
+
+#backTop.is-visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+#backTop.is-visible:hover {
+    transform: translateY(-2px);
+}
+
+#backTop.is-visible:active {
+    transform: scale(.94) !important;
+}
+
+/* Once the map flight is complete, the visual state remains settled while the
+   user moves back through the section. The JS lock persists until refresh. */
+#globeScroll.globe-arrived .globe-stage {
+    background: rgba(11, 33, 84, .96);
+    box-shadow: 0 12px 30px rgba(6, 20, 45, .28);
+}
+
+@media (max-width: 767.98px) {
+    #header-carousel .hero-bg {
+        background: linear-gradient(160deg, #06142d, #0b315e) !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #backTop {
+        transition: none !important;
+    }
+}
