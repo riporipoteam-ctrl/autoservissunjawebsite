@@ -431,6 +431,24 @@ def media_id_of(entry):
     pid = post_id_of(entry)
     return f"{source_of(entry)}:{pid}:0" if pid else None
 
+BANNED_TIKTOK_POST_IDS = {"7705912434296491284"}
+BANNED_IMAGE_FILES = {
+    "tt-01.webp", "tt-wide-01.webp",
+    "tt-20261108-59603d89.webp", "tt-wide-20261108-59603d89.webp",
+}
+
+def is_banned_photo(entry):
+    """Exclude an explicitly rejected photo across refreshes and all pools."""
+    pid = str(post_id_of(entry) or "")
+    mid = str(media_id_of(entry) or "")
+    path = str(entry.get("src") or "")
+    return (
+        (source_of(entry) == "tiktok" and pid in BANNED_TIKTOK_POST_IDS)
+        or mid.startswith("tiktok:7705912434296491284:")
+        or os.path.basename(path) in BANNED_IMAGE_FILES
+    )
+
+
 def needs_quality_upgrade(pools, media_id):
     """True when a known media item still points at a pre-v2/thumbnail asset."""
     matches = []
@@ -448,7 +466,9 @@ def rebuild_display_pools(pools):
     """
     gallery = [
         dict(entry) for entry in pools.get("gallery", [])
-        if int(entry.get("quality_v") or 0) >= 2 and entry.get("src")
+        if int(entry.get("quality_v") or 0) >= 2
+        and entry.get("src")
+        and not is_banned_photo(entry)
     ]
     gallery.sort(
         key=lambda e: (e.get("date", ""), -(int(e.get("media_index") or 0))),
@@ -522,7 +542,7 @@ def main():
     dedup = {}
     for p in posts:
         dedup[p["media_id"]] = p
-    posts = list(dedup.values())
+    posts = [p for p in dedup.values() if not is_banned_photo(p)]
 
     if not posts:
         log("all social sources failed; leaving the site unchanged")
@@ -555,6 +575,7 @@ def main():
         pools = json.load(f)
     for pool in ("hero", "heroMobile", "gallery"):
         pools.setdefault(pool, [])
+        pools[pool] = [e for e in pools[pool] if not is_banned_photo(e)]
 
     known = set()
     known_tiktok_posts = set()
