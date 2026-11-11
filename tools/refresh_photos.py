@@ -10,17 +10,6 @@ fallback when they are not.
 Every imported image is self-hosted in assets/photos/, tagged with its
 source/post/media identity, and added to the fresh hero/gallery pools.
 One blocked social network never prevents the other sources from updating.
-"""Auto fresh-photos for autosunja.sitey.my — v2.
-
-Runs from GitHub Actions (see .github/workflows/fresh-photos.yml, every
-15 min). Pulls the shop's newest TikTok posts (@autoservissunja),
-mirrors images into assets/photos/, and keeps photos.json pools (hero,
-heroMobile, gallery) limited to posts at most 60 days old.
-v2 adds: post categories (from caption/hashtags) feeding the matching
-service tab on the site, deletion sync (a post deleted on TikTok is
-removed from the site too), and a "latest" pointer so the site can
-feature the newest photo first.
-Fail-soft: if every source fails, nothing changes and the run passes.
 """
 import hashlib, json, os, re, subprocess, sys, unicodedata
 from datetime import datetime, timezone, timedelta
