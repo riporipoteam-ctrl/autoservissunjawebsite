@@ -37,7 +37,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=18.4" rel="stylesheet">
+    <link href="css/style.css?v=18.5" rel="stylesheet">
 </head>
 
 <body>
@@ -760,7 +760,7 @@
 
 
     <!-- Back to Top -->
-    <a href="#" id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+    <a href="#" id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top" aria-label="Nazad na vrh" title="Nazad na vrh"><i class="bi bi-arrow-up"></i></a>
 
 
     <!-- JavaScript Libraries -->
@@ -771,7 +771,7 @@
     <script src="lib/waypoints/waypoints.min.js"></script>
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=18.4"></script>
+    <script src="js/main.js?v=18.5"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
@@ -1067,59 +1067,104 @@
                 render();
             });
 
+            var FLIGHT_END = 0.72;
             var stops = [
                 { p: 0.00, c: [12, 32], z: 1.6, pitch: 0, bearing: -15, label: 'Svijet' },
-                { p: 0.30, c: [15, 46], z: 3.4, pitch: 0, bearing: -6, label: 'Evropa' },
-                { p: 0.55, c: [18.40, 43.95], z: 5.6, pitch: 12, bearing: 0, label: 'Bosna i Hercegovina' },
-                { p: 0.80, c: [18.95, 43.69], z: 9.5, pitch: 28, bearing: 0, label: 'Goražde' },
-                { p: 1.00, c: SHOP, z: 15.5, pitch: 50, bearing: 0, label: 'Auto Servis Šunja' }
+                { p: 0.18, c: [15, 46], z: 3.4, pitch: 0, bearing: -6, label: 'Evropa' },
+                { p: 0.36, c: [18.40, 43.95], z: 5.6, pitch: 12, bearing: 0, label: 'Bosna i Hercegovina' },
+                { p: 0.55, c: [18.95, 43.69], z: 9.5, pitch: 28, bearing: 0, label: 'Goražde' },
+                { p: FLIGHT_END, c: SHOP, z: 15.5, pitch: 50, bearing: 0, label: 'Auto Servis Šunja' }
             ];
-            var marker = null, photoMarker = null, ticking = false, lastBucket = -1, finished = false;
-            function finish() {
-                if (finished) return;
-                finished = true;
-                try { map.jumpTo({ center: SHOP, zoom: 15.5, pitch: 50, bearing: 0 }); } catch (e) {}
-                if (stageEl) stageEl.textContent = 'Auto Servis Šunja';
-                if (hintEl) hintEl.style.display = 'none';
-                if (wrap) wrap.classList.add('globe-done');
-                window.removeEventListener('scroll', onScroll);
-                window.removeEventListener('resize', onScroll);
-            }
+
+            var marker = null;
+            var photoMarker = null;
+            var ticking = false;
+            var lastBucket = -1;
+
             function lerp(a, b, t) { return a + (b - a) * t; }
-            function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
-            function render() {
-                ticking = false;
-                if (fellBack) return;
-                var r = wrap.getBoundingClientRect();
-                var total = r.height - window.innerHeight;
-                var p = total > 0 ? Math.min(1, Math.max(0, -r.top / total)) : 0;
-                var bucket = Math.round(p * (perfLite ? 140 : 400));
-                if (bucket === lastBucket && p < 0.999) return;
-                lastBucket = bucket;
-                var i = 0;
-                while (i < stops.length - 2 && p > stops[i + 1].p) i++;
-                var a = stops[i], b = stops[i + 1];
-                var t = ease((p - a.p) / Math.max(0.0001, b.p - a.p));
-                try {
-                    map.jumpTo({ center: [lerp(a.c[0], b.c[0], t), lerp(a.c[1], b.c[1], t)], zoom: lerp(a.z, b.z, t), pitch: lerp(a.pitch, b.pitch, t), bearing: lerp(a.bearing, b.bearing, t) });
-                } catch (e) { return; }
-                var label = p >= stops[stops.length - 1].p - 0.001 ? stops[stops.length - 1].label : (t < 0.5 ? a.label : b.label);
-                if (stageEl) stageEl.textContent = label;
-                if (hintEl) hintEl.style.opacity = p > 0.04 ? '0' : '1';
-                if (loaded && p > 0.96 && !marker) {
+            function clamp01(v) { return Math.min(1, Math.max(0, v)); }
+            function ease(t) {
+                t = clamp01(t);
+                return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+            }
+
+            function setShopMarker(show) {
+                if (!loaded) return;
+
+                if (show && !marker) {
                     var popup = new maplibregl.Popup({ offset: 28, closeOnClick: false })
                         .setHTML('<strong>Auto Servis Šunja</strong><br>Hajra Lakovi\u0107a 38, Goražde<br><a href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a> · <a href="tel:+38761297847">061 297 847</a>');
-                    marker = new maplibregl.Marker({ color: '#0B5FA5' }).setLngLat(SHOP).setPopup(popup).addTo(map);
+
+                    marker = new maplibregl.Marker({ color: '#0B5FA5' })
+                        .setLngLat(SHOP)
+                        .setPopup(popup)
+                        .addTo(map);
                     marker.togglePopup();
+
                     var photoEl = document.createElement('div');
                     photoEl.className = 'shop-photo-marker';
                     photoEl.style.backgroundImage = 'url(assets/photos/tt-01.webp)';
-                    photoMarker = new maplibregl.Marker({ element: photoEl, offset: [0, -78] }).setLngLat(SHOP).addTo(map);
-                } else if (p <= 0.96 && marker) {
-                    marker.remove(); marker = null;
-                    if (photoMarker) { photoMarker.remove(); photoMarker = null; }
+                    photoMarker = new maplibregl.Marker({ element: photoEl, offset: [0, -78] })
+                        .setLngLat(SHOP)
+                        .addTo(map);
+                } else if (!show && marker) {
+                    marker.remove();
+                    marker = null;
+                    if (photoMarker) {
+                        photoMarker.remove();
+                        photoMarker = null;
+                    }
                 }
-                if (p >= 0.999 && loaded) finish();
+            }
+
+            function render() {
+                ticking = false;
+                if (fellBack || !wrap) return;
+
+                var rect = wrap.getBoundingClientRect();
+                var total = Math.max(1, rect.height - window.innerHeight);
+                var p = clamp01(-rect.top / total);
+
+                // Use the full section for scrolling, but finish the camera
+                // flight earlier. The remaining 28% is a deliberate hold zone:
+                // the map stays pinned on the shop until the user keeps scrolling.
+                var flightP = Math.min(p, FLIGHT_END);
+                var bucket = Math.round(p * (perfLite ? 180 : 520));
+                if (bucket === lastBucket && p < 0.999) return;
+                lastBucket = bucket;
+
+                var i = 0;
+                while (i < stops.length - 2 && flightP > stops[i + 1].p) i++;
+
+                var a = stops[i];
+                var b = stops[i + 1];
+                var t = ease((flightP - a.p) / Math.max(0.0001, b.p - a.p));
+
+                try {
+                    map.jumpTo({
+                        center: [lerp(a.c[0], b.c[0], t), lerp(a.c[1], b.c[1], t)],
+                        zoom: lerp(a.z, b.z, t),
+                        pitch: lerp(a.pitch, b.pitch, t),
+                        bearing: lerp(a.bearing, b.bearing, t)
+                    });
+                } catch (e) {
+                    return;
+                }
+
+                var arrived = p >= FLIGHT_END - 0.002;
+                if (wrap) wrap.classList.toggle('globe-arrived', arrived);
+
+                if (stageEl) {
+                    stageEl.textContent = arrived
+                        ? 'Auto Servis Šunja · nastavite skrolati'
+                        : (t < 0.5 ? a.label : b.label);
+                }
+
+                if (hintEl) {
+                    hintEl.style.opacity = p > 0.04 ? '0' : '1';
+                }
+
+                setShopMarker(p >= FLIGHT_END - 0.018);
             }
             function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(render); } }
             window.addEventListener('scroll', onScroll, { passive: true });
