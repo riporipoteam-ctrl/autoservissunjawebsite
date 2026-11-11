@@ -450,7 +450,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-04.webp" loading="lazy" decoding="async" alt="Renault Clio na dizalici">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-20261031-a32411f2.webp" loading="lazy" decoding="async" alt="Renault Clio na dizalici">
                             <div class="team-overlay position-absolute start-0 top-0 w-100 h-100">
                                 <a class="btn btn-square mx-1" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7702943115132325141" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><i class="fab fa-tiktok"></i></a>
                             </div>
@@ -464,7 +464,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-10.webp" loading="lazy" decoding="async" alt="Peugeot na dizalici">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-20261013-235e6ce1.webp" loading="lazy" decoding="async" alt="Peugeot na dizalici">
                             <div class="team-overlay position-absolute start-0 top-0 w-100 h-100">
                                 <a class="btn btn-square mx-1" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7696249910995258645" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><i class="fab fa-tiktok"></i></a>
                             </div>
@@ -478,7 +478,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-06.webp" loading="lazy" decoding="async" alt="Motor pod haubom">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-20261023-72158e75.webp" loading="lazy" decoding="async" alt="Motor pod haubom">
                             <div class="team-overlay position-absolute start-0 top-0 w-100 h-100">
                                 <a class="btn btn-square mx-1" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7699972445880536341" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><i class="fab fa-tiktok"></i></a>
                             </div>
@@ -492,7 +492,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-09.webp" loading="lazy" decoding="async" alt="ECU jedinica">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-20261017-8d087753.webp" loading="lazy" decoding="async" alt="ECU jedinica">
                             <div class="team-overlay position-absolute start-0 top-0 w-100 h-100">
                                 <a class="btn btn-square mx-1" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7697738557175123220" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><i class="fab fa-tiktok"></i></a>
                             </div>
@@ -506,7 +506,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-12.webp" loading="lazy" decoding="async" alt="Glava motora">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-20261004-2d828014.webp" loading="lazy" decoding="async" alt="Glava motora">
                             <div class="team-overlay position-absolute start-0 top-0 w-100 h-100">
                                 <a class="btn btn-square mx-1" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7692814793178107188" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><i class="fab fa-tiktok"></i></a>
                             </div>
@@ -897,12 +897,32 @@
                 else if (heroImg && pick !== heroImg.getAttribute('src')) { heroImg.src = pick; if (item.alt) heroImg.alt = item.alt; }
             }
         }
-        if (d.services) {
-            document.querySelectorAll('[data-svc-cat]').forEach(function (img) {
-                var s = d.services[img.getAttribute('data-svc-cat')];
-                if (s && s.src && s.src !== img.getAttribute('src')) { img.src = s.src; }
-            });
+        var sharpGallery = (d.gallery || []).filter(function (entry) {
+            return Number(entry.quality_v || 0) >= 2 && localPhotoPath(entry.src);
+        }).sort(function (a, b) {
+            return (b.date || '') < (a.date || '') ? -1 : 1;
+        });
+
+        // Every service image gets a full-quality social original. Prefer the
+        // matching category, otherwise use another sharp workshop photo rather
+        // than falling back to an older compressed template asset.
+        document.querySelectorAll('[data-svc-cat]').forEach(function (img, idx) {
+            var service = d.services && d.services[img.getAttribute('data-svc-cat')];
+            var fallback = sharpGallery.length ? sharpGallery[idx % sharpGallery.length] : null;
+            var src = localPhotoPath((service && service.src) || (fallback && fallback.src));
+            if (src && src !== img.getAttribute('src')) {
+                img.src = src;
+                img.decoding = 'async';
+            }
+        });
+
+        var aboutPhoto = document.querySelector('[data-about-photo]');
+        if (aboutPhoto && sharpGallery.length) {
+            var aboutPick = sharpGallery[Math.min(1, sharpGallery.length - 1)];
+            var aboutSrc = localPhotoPath(aboutPick && aboutPick.src);
+            if (aboutSrc) aboutPhoto.src = aboutSrc;
         }
+
         var footer = document.getElementById('siteFooter');
         var footerPhoto = d.latest && localPhotoPath(d.latest.wide || d.latest.src);
         if (footer && footerPhoto) footer.style.setProperty('--footer-photo', 'url("' + footerPhoto + '")');
