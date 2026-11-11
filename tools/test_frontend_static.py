@@ -48,6 +48,9 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("var flightLocked = false;", INDEX)
         self.assertIn("if (!flightLocked && p >= FLIGHT_END", INDEX)
         self.assertIn("var flightP = flightLocked ? FLIGHT_END", INDEX)
+        self.assertIn("var lockedViewApplied = false;", INDEX)
+        self.assertIn("if (flightLocked) {", INDEX)
+        self.assertIn("setShopMarker(true);", INDEX)
         self.assertIn("wrap.classList.toggle('globe-arrived'", INDEX)
 
     def test_map_has_a_hold_zone_after_flight(self):
