@@ -1318,22 +1318,22 @@ h6.text-primary.text-uppercase::before {
 #o-nama [data-about-photo] {
     display: block;
     width: 100%;
-    height: min(56vw, 490px);
-    min-height: 320px;
-    max-height: 490px;
+    height: clamp(270px, 28vw, 355px);
+    min-height: 270px;
+    max-height: 355px;
     object-fit: cover;
     object-position: center top;
     border-radius: 18px;
 }
 @media (max-width: 991.98px) {
     #o-nama [data-about-photo] {
-        height: 370px;
+        height: 290px;
         min-height: 0;
     }
 }
 @media (max-width: 575.98px) {
     #o-nama [data-about-photo] {
-        height: 320px;
+        height: min(62vw, 235px);
     }
 }
 
