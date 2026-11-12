@@ -39,8 +39,10 @@ class SiteInteractionTests(unittest.TestCase):
         cls.server_thread.join(timeout=4)
 
     def setUp(self):
+        mobile_device = dict(self.playwright.devices["iPhone 13"])
+        mobile_device.pop("default_browser_type", None)
         self.context = self.browser.new_context(
-            **self.playwright.devices["iPhone 13"],
+            **mobile_device,
             reduced_motion="reduce",
         )
         self.page = self.context.new_page()
