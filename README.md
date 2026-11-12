@@ -14,7 +14,7 @@ The owner flagged specific remaining UI defects in three mobile screenshots: ove
 - **The three permanent carousel photos are unchanged.** Their foreground images remain whole and sharp; an independently toned version of that exact photo fills side regions rather than a plain navy rectangle. The mobile first slide reuses the same portrait source for its backdrop, so it does not force a second wide-image download.
 - **Smooth slideshow:** the first slide keeps its high-priority load. On fast-enough connections, the other two permanent slide images start loading only after the initial page load (not during first paint). All full-page loading screens remain removed.
 - `tools/test_frontend_static.py` and `tools/test_browser_interactions.py` now include regressions for image aspect, font sizes, glass hit targets and slide behaviour. Tests must be verified by GitHub Actions or a local browser; source-level checks alone do not prove rendered Safari behaviour.
-- Assets use `?v=21.0` so the improved CSS/JS cannot be mixed with older browser cached versions.
+- Assets use `?v=21.1` so the improved CSS/JS cannot be mixed with older browser cached versions.
 
 The visual inspiration was surveyed from public MIT-licensed liquid-glass web projects; no full external rendering engine was embedded, prioritizing smooth Safari browsing and original site structure.
 
