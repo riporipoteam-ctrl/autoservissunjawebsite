@@ -2108,3 +2108,19 @@ html.perf-lite #backTop.sunja-liquid-top {
         background-size: cover !important;
     }
 }
+
+/* Final spacing pass: offsets follow the new shorter floating header. */
+#pocetna, #o-nama, #usluge, #galerija, #lokacija, #kontakt,
+#termin, #recenzije { scroll-margin-top: 83px !important; }
+@media (max-width: 767.98px) {
+    #o-nama > .container > .row > .col-lg-6.pt-4 {
+        padding-top: 0 !important;
+    }
+    .container-xxl.py-5 {
+        padding-top: 2.25rem !important;
+        padding-bottom: 2.25rem !important;
+    }
+    #o-nama .row.g-5 { --bs-gutter-y: 1.15rem; }
+    #pocetna, #o-nama, #usluge, #galerija, #lokacija, #kontakt,
+    #termin, #recenzije { scroll-margin-top: 79px !important; }
+}
