@@ -42,8 +42,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=23.1", INDEX)
-        self.assertIn("js/main.js?v=23.1", INDEX)
+        self.assertIn("css/style.css?v=24.0", INDEX)
+        self.assertIn("js/main.js?v=24.0", INDEX)
 
     def test_fullscreen_loaders_are_removed(self):
         self.assertNotIn('id="preloader"', INDEX)
@@ -166,8 +166,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=23.1", INDEX)
-        self.assertIn("js/main.js?v=23.1", INDEX)
+        self.assertIn("css/style.css?v=24.0", INDEX)
+        self.assertIn("js/main.js?v=24.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -194,8 +194,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=23.1", INDEX)
-        self.assertIn("js/main.js?v=23.1", INDEX)
+        self.assertIn("css/style.css?v=24.0", INDEX)
+        self.assertIn("js/main.js?v=24.0", INDEX)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
         self.assertNotIn("Upalila se lampica na instrument tabli?", INDEX)
@@ -307,8 +307,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=23.1", INDEX)
-        self.assertIn("js/main.js?v=23.1", INDEX)
+        self.assertIn("css/style.css?v=24.0", INDEX)
+        self.assertIn("js/main.js?v=24.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
