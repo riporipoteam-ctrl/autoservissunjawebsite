@@ -117,6 +117,35 @@ class SiteInteractionTests(unittest.TestCase):
             self.page.locator("#header-carousel .carousel-item").nth(1)
         ).to_have_class(re.compile(r"\bactive\b"))
 
+    def test_v213_typography_across_narrow_phone_tablet_desktop(self):
+        sizes = (
+            (320, 700, 20.5, 13.6),
+            (820, 900, 25.5, 15.1),
+            (1280, 800, 32.5, 15.1),
+        )
+        for width, height, heading_limit, copy_limit in sizes:
+            with self.subTest(width=width):
+                context = self.browser.new_context(
+                    viewport={"width": width, "height": height},
+                    is_mobile=width <= 767,
+                    has_touch=width <= 991,
+                    reduced_motion="reduce",
+                )
+                try:
+                    page = context.new_page()
+                    page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+                    heading = page.locator("#o-nama h1").evaluate(
+                        "(node) => parseFloat(getComputedStyle(node).fontSize)"
+                    )
+                    copy = page.locator("#o-nama p.mb-4").first.evaluate(
+                        "(node) => parseFloat(getComputedStyle(node).fontSize)"
+                    )
+                    self.assertLessEqual(heading, heading_limit)
+                    self.assertLessEqual(copy, copy_limit)
+                    self.assertGreaterEqual(copy, 13)
+                finally:
+                    context.close()
+
     def test_v213_all_mobile_sections_have_compact_typography(self):
         for section in ("o-nama", "usluge", "galerija", "recenzije",
                         "lokacija", "kontakt"):
