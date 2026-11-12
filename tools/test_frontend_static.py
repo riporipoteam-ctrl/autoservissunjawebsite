@@ -42,19 +42,20 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=24.0", INDEX)
-        self.assertIn("js/main.js?v=24.0", INDEX)
+        self.assertIn("css/style.css?v=25.0", INDEX)
+        self.assertIn("js/main.js?v=25.0", INDEX)
 
     def test_fullscreen_loaders_are_removed(self):
-        self.assertNotIn('id="preloader"', INDEX)
-        self.assertNotIn('plTrace', INDEX)
-        self.assertNotIn('pl-ignition', INDEX + JS + CSS)
-        self.assertNotIn('#preloader', CSS)
-        self.assertNotIn('#spinner', CSS)
-        self.assertNotIn('Ignition-style signature intro', INDEX)
-        self.assertNotIn('globe-loading-spinner', INDEX + CSS)
-        self.assertNotIn('lib/wow/wow.min.js', INDEX)
-        self.assertNotIn('lib/animate/animate.min.css', INDEX)
+        self.assertIn('id="sunjaIntro"', INDEX)
+        self.assertIn('id="sunjaIntroVideo"', INDEX)
+        self.assertIn('assets/video/sunja-logo-intro.mp4', INDEX)
+        self.assertIn('autoplay muted playsinline', INDEX)
+        self.assertIn('function finishIntro()', INDEX)
+        self.assertIn('function warmSitePhotos()', INDEX)
+        self.assertIn('Promise.allSettled', INDEX)
+        self.assertIn('/* v25: original full-screen video intro */', CSS)
+        self.assertNotIn('class="progress"', INDEX)
+        self.assertNotIn('id="spinner"', INDEX)
 
     def test_navbar_polish_is_actually_attached(self):
         self.assertIn('class="navbar navbar-expand-lg nav-bar ', INDEX)
@@ -166,8 +167,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=24.0", INDEX)
-        self.assertIn("js/main.js?v=24.0", INDEX)
+        self.assertIn("css/style.css?v=25.0", INDEX)
+        self.assertIn("js/main.js?v=25.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -194,8 +195,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=24.0", INDEX)
-        self.assertIn("js/main.js?v=24.0", INDEX)
+        self.assertIn("css/style.css?v=25.0", INDEX)
+        self.assertIn("js/main.js?v=25.0", INDEX)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
         self.assertNotIn("Upalila se lampica na instrument tabli?", INDEX)
@@ -272,18 +273,22 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("pageshow", INDEX)
 
     def test_v24_map_plays_real_camera_flight_after_loading(self):
-        self.assertIn("function beginGlobeFlight()", INDEX)
-        self.assertIn("map.flyTo({", INDEX)
-        self.assertIn("map.once('moveend'", INDEX)
-        self.assertIn("new IntersectionObserver", INDEX)
-        self.assertIn("function finishGlobeFlight()", INDEX)
-        self.assertIn("SHOP_ZOOM", INDEX)
-        self.assertNotIn("var FLIGHT_END = 0.90;", INDEX)
-        self.assertNotIn("var mapReleased = false;", INDEX)
-        self.assertNotIn("rect.bottom <= 0", INDEX)
-        self.assertIn("/* v24: stable, self-playing globe fly-in */", CSS)
-        self.assertIn("#globeScroll:not(.globe-complete)", CSS)
-        self.assertIn("position: relative !important", CSS)
+        self.assertIn("function updateMapOnScroll()", INDEX)
+        self.assertIn("function queueMapProgress()", INDEX)
+        self.assertIn("map.jumpTo({", INDEX)
+        self.assertIn("mapFlightStops", INDEX)
+        self.assertIn("window.addEventListener('scroll', queueMapProgress", INDEX)
+        self.assertNotIn("map.flyTo({", INDEX)
+        self.assertNotIn("function beginGlobeFlight()", INDEX)
+        self.assertIn("/* v25: scrubbed globe scroll animation */", CSS)
+        self.assertIn("position: sticky !important", CSS)
+        self.assertIn("height: 220svh !important", CSS)
+
+    def test_v25_video_file_in_repository(self):
+        video = ROOT / "assets" / "video" / "sunja-logo-intro.mp4"
+        self.assertTrue(video.is_file())
+        self.assertGreater(video.stat().st_size, 2000)
+        self.assertEqual(video.read_bytes()[4:8], b'ftyp')
 
     def test_v24_map_keeps_fallback_and_directions(self):
         self.assertIn("wrap.classList.add('is-fallback')", INDEX)
@@ -307,8 +312,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=24.0", INDEX)
-        self.assertIn("js/main.js?v=24.0", INDEX)
+        self.assertIn("css/style.css?v=25.0", INDEX)
+        self.assertIn("js/main.js?v=25.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
