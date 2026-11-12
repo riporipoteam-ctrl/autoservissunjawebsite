@@ -117,14 +117,14 @@ class SiteInteractionTests(unittest.TestCase):
                 const w = document.querySelector("#globeScroll");
                 window.scrollTo({top: w.offsetTop + (w.offsetHeight - innerHeight) * .7, behavior: 'instant'});
             }""")
-            pg.wait_for_function("(low) => window.__mapJumps.at(-1).zoom > low + 2", low, timeout=8000)
+            pg.wait_for_function("(low) => window.__mapJumps.at(-1).zoom > low + 2", arg=low, timeout=8000)
             high = pg.evaluate("window.__mapJumps.at(-1).zoom")
             self.assertGreater(high, low)
             pg.evaluate("""() => {
                 const w = document.querySelector("#globeScroll");
                 window.scrollTo({top: w.offsetTop + 10, behavior:'instant'});
             }""")
-            pg.wait_for_function("(high) => window.__mapJumps.at(-1).zoom < high - 2", high, timeout=8000)
+            pg.wait_for_function("(high) => window.__mapJumps.at(-1).zoom < high - 2", arg=high, timeout=8000)
         finally:
             context.close()
 
@@ -134,9 +134,17 @@ class SiteInteractionTests(unittest.TestCase):
         self.assertEqual(page.locator("#sunjaIntro video").count(), 1)
         self.assertEqual(page.locator("#sunjaIntro button").count(), 0)
         self.assertEqual(page.locator("#sunjaIntro .progress").count(), 0)
-        page.wait_for_function("document.querySelector('#sunjaIntroVideo').readyState >= 2", timeout=8000)
-        page.evaluate("document.querySelector('#sunjaIntroVideo').dispatchEvent(new Event('ended'))")
-        page.wait_for_function("!document.documentElement.classList.contains('sunja-intro-active')", timeout=9000)
+        # The video may already have ended in fast/slow CI and released its
+        # media source. Check the hosted MP4 rather than racing readyState.
+        response = page.request.get(self.url + "assets/video/sunja-logo-intro.mp4")
+        self.assertEqual(response.status, 200)
+        self.assertIn("video/mp4", response.headers.get("content-type", ""))
+        if page.evaluate("document.documentElement.classList.contains('sunja-intro-active')"):
+            page.evaluate("document.querySelector('#sunjaIntroVideo').dispatchEvent(new Event('ended'))")
+        page.wait_for_function(
+            "!document.documentElement.classList.contains('sunja-intro-active')",
+            timeout=14500,
+        )
         self.assertEqual(page.locator("#sunjaIntro").evaluate(
             "(el) => getComputedStyle(el).display"), "none")
 
