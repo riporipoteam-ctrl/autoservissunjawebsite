@@ -4,6 +4,16 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v21.3 (2026-11-12) — final site-wide text scale
+
+The typography was not consistently reduced by previous passes. This corrects *all* major content zones: About, services, tabs, gallery, reviews, map, contact, booking and footer. The mobile screenshot's oversized About copy and numbered feature labels are specifically targeted.
+
+- Mobile section headings have a consistent **20px** scale; About feature headings are **14px**; body text is **13.5px** with less excessive line height. Hero headings remain slightly larger for hierarchy (**24–27px**).
+- Desktop and tablet retain readable independent sizes (desktop content **15px**, section headings **24–32px**; tablet headings **25px**).
+- Contact/address information, service descriptions, footer links and status labels also use explicit smaller rules, avoiding leftover Bootstrap font overrides.
+- Vertical margins between headings, body paragraphs and feature rows are tighter. 44px/48px interactive targets remain intact. Form inputs intentionally stay **16px** on iPhone to prevent Safari auto-zoom.
+- Asset URLs bumped to `?v=21.3`. Responsive computed-style browser tests now cover all six section headings, About paragraphs and tappable buttons. Source-level checks do not replace actual browser validation.
+
 ## v21.2 (2026-11-12) — unobstructed mobile dock and improved optical glass
 
 - Fixed the overlapping mobile call/directions dock shown in the iPhone screenshot. The dock now checks its rest position against booking buttons, About text and form fields; it retracts whenever it would obscure them. It also retracts for the mobile keyboard. Scroll checks use one requestAnimationFrame at most per frame.
