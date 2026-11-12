@@ -136,7 +136,7 @@ class SiteInteractionTests(unittest.TestCase):
         self.assertEqual(page.locator("#sunjaIntro .progress").count(), 0)
         # The video may already have ended in fast/slow CI and released its
         # media source. Check the hosted MP4 rather than racing readyState.
-        response = page.request.get(self.url + "assets/video/sunja-logo-intro-hq-v26.mp4")
+        response = page.request.get(self.url + "assets/video/sunja-logo-intro-clean-v27.mp4")
         self.assertEqual(response.status, 200)
         self.assertIn("video/mp4", response.headers.get("content-type", ""))
         if page.evaluate("document.documentElement.classList.contains('sunja-intro-active')"):
@@ -158,7 +158,7 @@ class SiteInteractionTests(unittest.TestCase):
         # The site removes the video src when the intro finishes, so reading
         # readyState/duration can race and falsely fail fast browsers.
         response = page.request.get(
-            self.url + "assets/video/sunja-logo-intro-hq-v26.mp4"
+            self.url + "assets/video/sunja-logo-intro-clean-v27.mp4"
         )
         self.assertEqual(response.status, 200)
         self.assertGreater(len(response.body()), 100000)
@@ -173,6 +173,34 @@ class SiteInteractionTests(unittest.TestCase):
         self.assertEqual(page.locator("#sunjaIntro").evaluate(
             "(el) => getComputedStyle(el).display"), "none")
 
+
+    def test_v27_intro_is_present_on_first_load_and_reload(self):
+        device = dict(self.playwright.devices["iPhone 13"])
+        device.pop("default_browser_type", None)
+        context = self.browser.new_context(
+            **device, reduced_motion="no-preference"
+        )
+        try:
+            page = context.new_page()
+            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            self.assertTrue(page.evaluate(
+                "document.documentElement.classList.contains('sunja-intro-active')"
+            ))
+            # Reload must not silently skip the logo because of session flags.
+            page.reload(wait_until="domcontentloaded", timeout=45000)
+            self.assertTrue(page.evaluate(
+                "document.documentElement.classList.contains('sunja-intro-active')"
+            ))
+            self.assertEqual(page.locator("#sunjaIntro .sunja-intro-fallback-logo").count(), 1)
+            page.evaluate(
+                "document.querySelector('#sunjaIntroVideo').dispatchEvent(new Event('ended'))"
+            )
+            page.wait_for_function(
+                "!document.documentElement.classList.contains('sunja-intro-active')",
+                timeout=1800,
+            )
+        finally:
+            context.close()
 
     def test_initial_page_has_no_blocking_loader(self):
         self.assertEqual(self.page.locator("#sunjaIntro").evaluate(
