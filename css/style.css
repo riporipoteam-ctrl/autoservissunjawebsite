@@ -2709,3 +2709,21 @@ html.perf-lite .sunja-glass-refract {
 @media (prefers-reduced-motion: reduce) {
     .sunja-glass-refract { transition: none !important; animation: none !important; }
 }
+
+
+/* Full live-scene refraction on Chromium. Safari's backdrop-filter does not
+   implement SVG displacement, so its inner scene uses filter:url(#...) instead.
+   Do not force the unsupported backdrop SVG filter on iOS/WebKit. */
+html.sunja-optics-chromium .navbar.nav-bar.sunja-liquid-header,
+html.sunja-optics-chromium .mobile-callbar.sunja-liquid-bottom,
+html.sunja-optics-chromium #backTop.sunja-liquid-top {
+    -webkit-backdrop-filter: url(#sunja-glass-distortion) blur(3px) saturate(175%) !important;
+    backdrop-filter: url(#sunja-glass-distortion) blur(3px) saturate(175%) !important;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .navbar.nav-bar.sunja-liquid-header,
+    .mobile-callbar.sunja-liquid-bottom,
+    #backTop.sunja-liquid-top {
+        background-color: rgba(242,249,255,.94) !important;
+    }
+}
