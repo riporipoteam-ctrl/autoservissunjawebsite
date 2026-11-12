@@ -376,7 +376,8 @@
                     if (paintedBackground.indexOf("gradient(") !== -1 &&
                         paintedRect.width > 90 && paintedRect.height > 70) {
                         gradientElement = candidate;
-                        break;
+                        // Keep looking for an image; it is a more precise
+                        // refraction source than a foreground gradient.
                     }
                 }
             }
