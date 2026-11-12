@@ -4,6 +4,14 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v26.0 (2026-11-12) — faster, sharper original-logo intro
+
+- Re-encoded the owner's original MP4, not a generated substitute: **1280×720 H.264**, approximately **2.63 seconds**, **173 KB**. The original low-bitrate website version was 512×288, 7.6 seconds and blurry when displayed on Retina screens. Optimized crop removes excess whitespace while keeping the entire original logo drawing intact.
+- High-quality video now lives at `assets/video/sunja-logo-intro-hq-v26.mp4`; intro stays full-screen white with **no text, progress bar, background image, or spinner**.
+- Intro has a **3.8-second absolute escape limit**, skips on reload and repeat visits in the same tab, and exits immediately if video cannot play. Video completion waits for only the first hero image with a bounded 550ms budget, never for the entire gallery. The next two slides are prewarmed afterward while the browser is idle, respecting data-saver mode.
+- CSS uses intrinsic 16:9 media at a bounded display width with no post-render blur or scaling effects. Keep existing fixed call bar, one-tap links, slide images, and manual map scroll animation unchanged.
+- Updated asset cache keys to `v26.0`. Static and Chromium/WebKit browser tests cover intro exit and noncritical image failures. The intro is not a guarantee that every map tile, font or lazy gallery image has finished downloading.
+
 ## v25.0 (2026-11-12) — scroll-controlled map and original logo intro
 
 - Adds the owner's supplied logo-drawing animation, optimized to a small H.264 MP4 at `assets/video/sunja-logo-intro.mp4`. It appears alone on a white, full-screen intro; no bar, wording or spinner.
