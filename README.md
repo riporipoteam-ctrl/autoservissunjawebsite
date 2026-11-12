@@ -4,6 +4,14 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v23.1 (2026-11-12) — concise service descriptions and closer location map
+
+- Removed filler introductions in the six service panels. The main sentences are now short, factual Bosnian descriptions; the useful checklists and booking actions remain unchanged.
+- At the shop, the MapLibre globe flight finishes at zoom **16.2** (previously 15.5), with a slightly reduced 45° pitch. The exact shop coordinates are unchanged.
+- Replaced the oversized default MapLibre popup text with a compact shop card featuring address and directly tappable **Upute** and **Pozovite** actions. Scoped CSS applies only to `.sunja-map-popup`; the original map directions button and fallback remain.
+- Existing non-glass white/blue UI, static bottom bar, permanent hero slides, and one-tap controls are preserved.
+- Updated CSS/JS asset versions to `v23.1`. Static and Chromium/WebKit mobile browser regressions now check all six service descriptions and map popup markup.
+
 ## v23.0 (2026-11-12) — permanently stable mobile action bar
 
 - Removed the entire scroll/resize/focus-based `syncActionDock` collision detector, eight event listeners and the `dock-avoiding-action` visibility class. That old logic repeatedly hid and showed the fixed bar during scrolling and caused blinking, especially in iOS Safari.
