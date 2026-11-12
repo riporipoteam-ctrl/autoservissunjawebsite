@@ -136,7 +136,7 @@ class SiteInteractionTests(unittest.TestCase):
         self.assertEqual(page.locator("#sunjaIntro .progress").count(), 0)
         # The video may already have ended in fast/slow CI and released its
         # media source. Check the hosted MP4 rather than racing readyState.
-        response = page.request.get(self.url + "assets/video/sunja-logo-intro.mp4")
+        response = page.request.get(self.url + "assets/video/sunja-logo-intro-hq-v26.mp4")
         self.assertEqual(response.status, 200)
         self.assertIn("video/mp4", response.headers.get("content-type", ""))
         if page.evaluate("document.documentElement.classList.contains('sunja-intro-active')"):
@@ -144,6 +144,28 @@ class SiteInteractionTests(unittest.TestCase):
         page.wait_for_function(
             "!document.documentElement.classList.contains('sunja-intro-active')",
             timeout=14500,
+        )
+        self.assertEqual(page.locator("#sunjaIntro").evaluate(
+            "(el) => getComputedStyle(el).display"), "none")
+
+    def test_v26_intro_is_short_and_cannot_wait_for_gallery(self):
+        page = self.context.new_page()
+        # Noncritical photos failing must never prolong the logo intro.
+        page.route("**/assets/photos/**", lambda route: route.abort())
+        page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+        video = page.locator("#sunjaIntroVideo")
+        self.assertEqual(video.count(), 1)
+        page.wait_for_function(
+            "() => document.querySelector('#sunjaIntroVideo').readyState >= 1",
+            timeout=8000,
+        )
+        duration = video.evaluate("(v) => v.duration")
+        self.assertGreater(duration, 2.0)
+        self.assertLess(duration, 3.2)
+        page.evaluate("document.querySelector('#sunjaIntroVideo').dispatchEvent(new Event('ended'))")
+        page.wait_for_function(
+            "() => !document.documentElement.classList.contains('sunja-intro-active')",
+            timeout=1600,
         )
         self.assertEqual(page.locator("#sunjaIntro").evaluate(
             "(el) => getComputedStyle(el).display"), "none")
