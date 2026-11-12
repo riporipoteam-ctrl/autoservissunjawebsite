@@ -105,6 +105,24 @@
         var done = false, criticalReady = false, videoEnded = false;
         var fallbackActive = false, videoHasPlayed = false;
         var fallbackTimer = null;
+        function warmDeferredPhotos() {
+            // Noncritical slides are warmed only after the intro exits.
+            var conn = navigator.connection || navigator.mozConnection;
+            if (conn && conn.saveData) return;
+            var targets = document.querySelectorAll("#header-carousel .carousel-item:not(.active) picture img");
+            var run = function () {
+                Array.prototype.slice.call(targets, 0, 2).forEach(function (img) {
+                    if (!img || !img.getAttribute("src")) return;
+                    var prefetch = new Image();
+                    prefetch.src = img.getAttribute("src");
+                });
+            };
+            if ("requestIdleCallback" in window) {
+                requestIdleCallback(run, { timeout: 1800 });
+            } else {
+                setTimeout(run, 850);
+            }
+        }
         function finishIntro() {
             if (done) return;
             done = true;
