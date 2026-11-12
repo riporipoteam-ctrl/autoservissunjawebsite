@@ -2114,3 +2114,128 @@ a[href] > *,button > * { pointer-events:none !important; }
 @media (min-width: 992px) {
     .mobile-callbar { display: none !important; }
 }
+
+
+/* v23.1 compact service descriptions — no oversized promotional paragraphs */
+#usluge .tab-pane p.mb-4 {
+    font-size: 14px !important;
+    line-height: 1.46 !important;
+    color: #526277 !important;
+    margin-bottom: 14px !important;
+    max-width: 50ch;
+}
+@media (max-width: 767.98px) {
+    #usluge .tab-pane p.mb-4 {
+        font-size: 13.5px !important;
+        line-height: 1.45 !important;
+        margin-bottom: 10px !important;
+    }
+}
+
+/* v23.1 map popup: clean compact shop card */
+/* Minimal brand card, not a floating browser-default white text rectangle. */
+#globeMap .maplibregl-popup.sunja-map-popup {
+    z-index: 8;
+    max-width: min(300px, calc(100vw - 34px)) !important;
+}
+#globeMap .sunja-map-popup .maplibregl-popup-content {
+    padding: 0 !important;
+    background: #fff !important;
+    border: 1px solid #e2eaf3;
+    border-radius: 17px !important;
+    box-shadow: 0 10px 28px rgba(10, 35, 76, .19) !important;
+    overflow: hidden;
+    color: #14294c;
+}
+#globeMap .sunja-map-popup .maplibregl-popup-tip {
+    display: none !important;
+}
+#globeMap .sunja-map-card {
+    width: min(278px, calc(100vw - 48px));
+    padding: 15px 16px 14px;
+    font-family: inherit;
+    line-height: 1.4;
+    text-align: left;
+}
+#globeMap .sunja-map-card__kicker {
+    display: block;
+    margin: 0 0 4px;
+    font-size: 10px;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: .13em;
+    color: #0b69a7;
+}
+#globeMap .sunja-map-card__title {
+    display: block;
+    margin: 0 0 5px;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    color: #0b2154;
+}
+#globeMap .sunja-map-card__address {
+    display: block;
+    margin-bottom: 11px;
+    font-size: 12.5px;
+    line-height: 1.38;
+    color: #64748b;
+}
+#globeMap .sunja-map-card__actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    border-top: 1px solid #edf2f8;
+    padding-top: 11px;
+}
+#globeMap .sunja-map-card__actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-width: 0;
+    min-height: 42px;
+    padding: 9px 9px;
+    border: 1px solid #d9e8f4;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 700;
+    white-space: nowrap;
+    touch-action: manipulation;
+    transition: background-color .15s ease, border-color .15s ease;
+}
+#globeMap .sunja-map-card__actions a.sunja-map-card__directions {
+    background: #0b5fa5;
+    border-color: #0b5fa5;
+    color: #fff !important;
+}
+#globeMap .sunja-map-card__actions a.sunja-map-card__phone {
+    background: #f2f8fd;
+    color: #0b4d83 !important;
+}
+#globeMap .sunja-map-card__actions a:focus-visible {
+    outline: 2px solid #348dd0;
+    outline-offset: 2px;
+}
+#globeMap .sunja-map-card__actions a:hover {
+    background: #e2f1fc;
+    color: #0b2154 !important;
+}
+#globeMap .sunja-map-card__actions a.sunja-map-card__directions:hover {
+    background: #094e88;
+    color: #fff !important;
+}
+@media (max-width: 767.98px) {
+    #globeMap .sunja-map-card {
+        width: min(260px, calc(100vw - 44px));
+        padding: 13px 14px 12px;
+    }
+    #globeMap .sunja-map-card__title { font-size: 15px; }
+    #globeMap .sunja-map-card__address { font-size: 12px; }
+    #globeMap .sunja-map-card__actions a { min-height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    #globeMap .sunja-map-card__actions a { transition: none; }
+}
