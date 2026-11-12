@@ -11,9 +11,9 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v22_footer_photo_completely_removed(self):
         self.assertNotIn("--footer-photo", CSS + INDEX)
         self.assertNotIn("footerPhoto", INDEX)
-        self.assertIn("/* v22: footer, optical glass, compact about, nav, and safe edges */", CSS)
-        self.assertIn("background-image: linear-gradient(", CSS)
-        self.assertIn("id=\"siteFooter\"", INDEX)
+        self.assertIn("/* v22.2: classic UI restored", CSS)
+        self.assertIn("background-image:linear-gradient(", CSS)
+        self.assertIn('id="siteFooter"', INDEX)
 
     def test_v22_about_short_address_first_without_suv(self):
         self.assertIn("Auto Servis Šunja se nalazi na adresi Hajra Lakovića 38", INDEX)
@@ -22,32 +22,28 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("od gradskih automobila", INDEX)
 
     def test_v22_desktop_nav_has_no_colliding_underline(self):
-        self.assertIn("/* v22: navbar link active pill replaces overlapping underline */", CSS)
         self.assertIn(".navbar-light .navbar-nav .nav-link::after", CSS)
-        self.assertIn("content: none !important;", CSS)
+        self.assertIn("content:none !important", CSS)
 
     def test_v22_gradient_backdrops_can_be_refracted_without_screenshot_capture(self):
-        self.assertIn('paintedBackground.indexOf("gradient(")', JS)
-        self.assertIn('data-glass-scene", "gradient"', JS)
-        self.assertIn('.sunja-glass-refract[data-glass-scene]', CSS)
-        self.assertNotIn("html2canvas", INDEX + JS)
+        self.assertNotIn("paintedBackground.indexOf", JS)
+        self.assertNotIn("syncLensScene", JS)
+        self.assertNotIn("html2canvas", JS + INDEX)
 
     def test_v22_real_svg_refractive_glass_and_accessible_overlays(self):
-        self.assertIn('id="sunja-glass-distortion"', INDEX)
-        self.assertIn("<feDisplacementMap", INDEX)
-        self.assertIn("<feTurbulence", INDEX)
-        self.assertIn('class="sunja-glass-refract"', INDEX)
-        self.assertIn("filter: url(#sunja-glass-distortion)", CSS)
-        self.assertIn("pointer-events: none !important;", CSS)
-        self.assertIn("prefers-reduced-motion: reduce", CSS)
+        self.assertNotIn("sunja-glass-distortion", INDEX + CSS + JS)
+        self.assertNotIn("sunja-glass-refract", INDEX + CSS + JS)
+        self.assertNotIn("sunja-liquid-header", INDEX + CSS + JS)
+        self.assertNotIn("backdrop-filter: url(", CSS)
+        self.assertIn("background:#fff !important", CSS)
 
     def test_v22_edge_safe_mobile_footer_and_theme(self):
         self.assertIn("viewport-fit=cover", INDEX)
         self.assertIn("theme-color", INDEX)
-        self.assertIn("footer-theme-observer", JS)
-        self.assertIn("background-color: #0b2154", CSS.lower())
-        self.assertIn("css/style.css?v=22.1", INDEX)
-        self.assertIn("js/main.js?v=22.1", INDEX)
+        self.assertNotIn("footer-theme-observer", JS)
+        self.assertIn("background-color:#0b2154", CSS)
+        self.assertIn("css/style.css?v=22.2", INDEX)
+        self.assertIn("js/main.js?v=22.2", INDEX)
 
     def test_fullscreen_loaders_are_removed(self):
         self.assertNotIn('id="preloader"', INDEX)
@@ -75,13 +71,12 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('if (!saveData && !perfLite)', JS)
 
     def test_v21_glass_is_only_on_three_requested_controls(self):
-        self.assertIn("sunja-liquid-header", INDEX)
-        self.assertIn("sunja-liquid-bottom", INDEX)
-        self.assertIn("sunja-liquid-top", INDEX)
-        self.assertIn("/* v21.0 — responsive optics, original-ratio media, and compact type */", CSS)
-        self.assertIn("-webkit-backdrop-filter:", CSS)
-        self.assertIn("pointer-events: none;", CSS)
-        self.assertNotIn("id=\"preloader\"", INDEX)
+        self.assertNotIn("sunja-liquid-", INDEX + CSS + JS)
+        self.assertNotIn("sunja-glass-", INDEX + CSS + JS)
+        self.assertIn('class="mobile-callbar"', INDEX)
+        self.assertIn('class="navbar navbar-expand-lg nav-bar bg-white', INDEX)
+        self.assertIn('back-to-top"', INDEX)
+        self.assertIn("/* v22.2: classic UI restored", CSS)
 
     def test_v21_compact_typography_and_about_rows(self):
         self.assertIn("#o-nama > .container", CSS)
@@ -101,11 +96,11 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("heroImg.src = pick", INDEX)
 
     def test_v21_anchors_remain_one_click_and_no_glass_overlay_blocks_taps(self):
-        self.assertIn("href=\"tel:+38761297847\"", INDEX)
+        self.assertIn('href="tel:+38761297847"', INDEX)
         self.assertIn('id="backTop"', INDEX)
-        self.assertIn('class="mobile-callbar sunja-liquid-bottom"', INDEX)
-        self.assertIn('class="navbar navbar-expand-lg nav-bar sunja-liquid-header', INDEX)
-        self.assertIn('id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top sunja-liquid-top', INDEX)
+        self.assertIn('class="mobile-callbar"', INDEX)
+        self.assertIn('class="navbar navbar-expand-lg nav-bar bg-white', INDEX)
+        self.assertIn("activateSectionLink(link)", JS)
 
     def test_v214_dynamic_css_photo_vars_use_site_root(self):
         self.assertNotIn("footerPhoto", INDEX)
@@ -131,26 +126,24 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("function collapseMobileMenu()", JS)
         self.assertIn("collapseMobileMenu();", JS)
         self.assertIn("document.addEventListener('click', function (event)", JS)
-        self.assertIn("#backTop.sunja-liquid-top.is-visible", CSS)
-        self.assertIn("html { scroll-behavior: auto !important; }", CSS)
+        self.assertIn("#backTop", CSS)
+        self.assertIn("scroll-behavior:auto !important", CSS)
 
     def test_v214_real_mobile_touch_targets_are_not_hover_gated(self):
-        self.assertIn("/* v21.4: stable first-touch surfaces and dock flush */", CSS)
         self.assertIn(".team-item .team-overlay.gallery-tile-link", CSS)
-        self.assertIn("transform: none !important;", CSS)
-        self.assertIn("opacity: 1 !important;", CSS)
-        self.assertIn("pointer-events: auto !important;", CSS)
-        self.assertIn("touch-action: manipulation;", CSS)
-        self.assertIn("@media (hover: none), (pointer: coarse)", CSS)
+        self.assertIn("transform:none !important", CSS)
+        self.assertIn("opacity:1 !important", CSS)
+        self.assertIn("pointer-events:auto !important", CSS)
+        self.assertIn("touch-action:manipulation", CSS)
+        self.assertIn("@media (hover:none),(pointer:coarse)", CSS)
 
     def test_v214_flush_mobile_dock_has_no_empty_footer_spacer(self):
-        self.assertIn(".mobile-callbar.sunja-liquid-bottom", CSS)
-        self.assertIn("bottom: 0 !important;", CSS)
-        self.assertIn("border-radius: 23px 23px 0 0 !important;", CSS)
+        self.assertIn(".mobile-callbar", CSS)
+        self.assertIn("bottom:0 !important", CSS)
+        self.assertIn("border-radius:14px 14px 0 0 !important", CSS)
         self.assertIn("#siteFooter", CSS)
-        self.assertIn("padding-bottom: 28px !important;", CSS)
+        self.assertIn("padding-bottom:28px !important", CSS)
         self.assertIn("viewport-fit=cover", INDEX)
-        self.assertIn('name="theme-color" content="#e8f4fc"', INDEX)
 
     def test_v214_browser_ci_has_known_supported_runner(self):
         for path in (".github/workflows/site-quality.yml",
@@ -173,35 +166,33 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=22.1", INDEX)
-        self.assertIn("js/main.js?v=22.1", INDEX)
+        self.assertIn("css/style.css?v=22.2", INDEX)
+        self.assertIn("js/main.js?v=22.2", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
-        self.assertIn("/* v21.2: optical glass and obstruction-free mobile actions */", CSS)
-        self.assertIn(".sunja-liquid-header::after", CSS)
-        self.assertIn(".sunja-liquid-bottom::after", CSS)
-        self.assertIn("#backTop.sunja-liquid-top::after", CSS)
-        self.assertIn("-webkit-mask-composite: xor", CSS)
-        self.assertIn("mask-composite: exclude", CSS)
-        self.assertIn("pointer-events: none", CSS)
+        self.assertNotIn("sunja-liquid-", CSS + INDEX)
+        self.assertNotIn("--glass-rim", CSS)
+        self.assertIn("background:#0b5fa5 !important", CSS)
+        self.assertIn("backdrop-filter:none !important", CSS)
+        self.assertIn("/* v22.2: classic UI restored", CSS)
 
     def test_v212_no_blank_body_padding_and_safe_footer(self):
-        self.assertIn("body { padding-bottom: 0 !important; }", CSS)
+        self.assertIn("padding-bottom:0 !important", CSS)
         self.assertIn("#siteFooter", CSS)
-        self.assertIn("--dock-clearance", CSS)
         self.assertIn("safe-area-inset-bottom", CSS)
+        self.assertNotIn("--dock-clearance", CSS)
 
     def test_v212_dock_does_not_cover_page_actions(self):
         self.assertIn("function syncActionDock()", JS)
         self.assertIn("dock-avoiding-action", JS)
         self.assertIn("getBoundingClientRect()", JS)
         self.assertIn("document.activeElement", JS)
-        self.assertIn("pointer-events: none !important;", CSS)
+        self.assertIn("pointer-events:none !important", CSS)
         self.assertIn("requestAnimationFrame(syncActionDock)", JS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=22.1", INDEX)
-        self.assertIn("js/main.js?v=22.1", INDEX)
+        self.assertIn("css/style.css?v=22.2", INDEX)
+        self.assertIn("js/main.js?v=22.2", INDEX)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -291,8 +282,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=22.1", INDEX)
-        self.assertIn("js/main.js?v=22.1", INDEX)
+        self.assertIn("css/style.css?v=22.2", INDEX)
+        self.assertIn("js/main.js?v=22.2", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
