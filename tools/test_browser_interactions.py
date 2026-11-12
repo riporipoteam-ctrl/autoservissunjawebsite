@@ -202,7 +202,7 @@ class SiteInteractionTests(unittest.TestCase):
         context.add_init_script("""
             window.__mapJumps = [];
             class FakeMap {
-                constructor(o) { this.options=o; this.callbacks={}; }
+                constructor(o) { this.options=o; this.callbacks={}; window.__mapStarted=true; }
                 on(name, cb) {
                     this.callbacks[name]=cb;
                     if (name === 'load') setTimeout(cb, 750);
@@ -223,6 +223,11 @@ class SiteInteractionTests(unittest.TestCase):
         try:
             pg=context.new_page()
             pg.goto(self.url, wait_until="domcontentloaded")
+            pg.evaluate("""() => {
+                const w=document.getElementById("globeScroll");
+                window.scrollTo(0, w.offsetTop + 20);
+            }""")
+            pg.wait_for_function("window.__mapStarted === true", timeout=5000)
             pg.evaluate("""() => {
                 const w=document.getElementById("globeScroll");
                 window.scrollTo(0, w.offsetTop + w.offsetHeight + 250);
