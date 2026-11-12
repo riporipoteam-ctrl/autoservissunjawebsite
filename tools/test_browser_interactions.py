@@ -55,6 +55,98 @@ class SiteInteractionTests(unittest.TestCase):
     def tearDown(self):
         self.context.close()
 
+    def test_v24_reload_resets_anchor_and_scroll_to_hero(self):
+        self.page.locator(".navbar-toggler").tap()
+        self.page.locator("#navbarCollapse a[href='#usluge']").tap()
+        expect(self.page).to_have_url(re.compile(r"#usluge$"))
+        self.assertGreater(self.page.evaluate("window.scrollY"), 200)
+        self.page.reload(wait_until="load", timeout=45000)
+        self.page.wait_for_function(
+            "() => location.hash === '' && scrollY < 6", timeout=7000
+        )
+        self.assertEqual(self.page.evaluate("location.hash"), "")
+        self.assertEqual(
+            self.page.locator("#header-carousel .carousel-item.active").count(), 1
+        )
+        self.page.evaluate("window.scrollTo(0, 1700)")
+        self.assertGreater(self.page.evaluate("window.scrollY"), 200)
+        self.page.reload(wait_until="load", timeout=45000)
+        self.page.wait_for_function(
+            "() => location.hash === '' && scrollY < 6", timeout=7000
+        )
+
+    def test_v24_map_runs_staged_fly_to_on_first_visible_load(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        context.add_init_script("""() => {}""" if False else """
+            window.__mapFlights = [];
+            window.__mapJumps = [];
+            window.__mapStartOptions = null;
+            class FakeMap {
+                constructor(opts) {
+                    window.__mapStartOptions = opts;
+                    this._callbacks = {};
+                }
+                on(name, cb) {
+                    this._callbacks[name] = cb;
+                    if (name === 'load') setTimeout(() => cb(), 20);
+                    return this;
+                }
+                once(name, cb) { this._callbacks[name] = cb; return this; }
+                resize() {}
+                setProjection() {}
+                flyTo(opts) {
+                    window.__mapFlights.push(opts);
+                    setTimeout(() => {
+                        const cb = this._callbacks.moveend;
+                        delete this._callbacks.moveend;
+                        if (cb) cb();
+                    }, 36);
+                    return this;
+                }
+                jumpTo(opts) { window.__mapJumps.push(opts); return this; }
+            }
+            class FakePopup {
+                constructor() {}
+                setHTML() { return this; }
+            }
+            class FakeMarker {
+                constructor() {}
+                setLngLat() { return this; }
+                setPopup() { return this; }
+                addTo() { return this; }
+                togglePopup() { return this; }
+                remove() {}
+            }
+            window.maplibregl = {Map: FakeMap, Popup: FakePopup, Marker: FakeMarker};
+        """)
+        try:
+            pg = context.new_page()
+            pg.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            self.assertEqual(pg.evaluate("window.__mapFlights.length"), 0)
+            pg.locator("#globeScroll").scroll_into_view_if_needed()
+            pg.wait_for_function("window.__mapFlights.length >= 4", timeout=10000)
+            flights = pg.evaluate("window.__mapFlights")
+            self.assertEqual(len(flights), 4)
+            self.assertEqual([round(v["zoom"], 1) for v in flights],
+                             [3.4, 5.6, 9.5, 16.2])
+            self.assertTrue(all(v["duration"] > 0 for v in flights))
+            pg.wait_for_function(
+                "document.getElementById('globeScroll').classList.contains('globe-arrived')",
+                timeout=4000,
+            )
+            # The scroll window must stay stable instead of collapsing.
+            before = pg.locator("#globeScroll").evaluate(
+                "(el) => el.getBoundingClientRect().height")
+            pg.evaluate("window.scrollBy(0, 220)")
+            after = pg.locator("#globeScroll").evaluate(
+                "(el) => el.getBoundingClientRect().height")
+            self.assertAlmostEqual(before, after, delta=2)
+        finally:
+            context.close()
+
     def test_initial_page_has_no_blocking_loader(self):
         self.assertEqual(self.page.locator("#preloader").count(), 0)
         self.assertEqual(self.page.locator("#spinner").count(), 0)
