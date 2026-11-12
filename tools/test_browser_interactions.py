@@ -140,6 +140,52 @@ class SiteInteractionTests(unittest.TestCase):
             self.page.locator("#header-carousel .carousel-item").nth(1)
         ).to_have_class(re.compile(r"\bactive\b"))
 
+    def test_v22_footer_is_plain_dark_without_a_photo(self):
+        footer = self.page.locator("#siteFooter")
+        bg = footer.evaluate("(el) => getComputedStyle(el).backgroundImage")
+        self.assertNotIn("url(", bg)
+        self.assertIn("gradient", bg)
+
+    def test_v22_about_is_short_and_has_address(self):
+        text = self.page.locator("#o-nama p.mb-4").first.inner_text()
+        self.assertIn("Hajra Lakovića 38", text)
+        self.assertIn("Goražde", text)
+        self.assertNotIn("SUV", text)
+        self.assertLess(len(text), 280)
+
+    def test_v22_optical_lenses_are_real_svg_and_do_not_block_taps(self):
+        self.assertEqual(
+            self.page.locator("#sunja-glass-distortion feDisplacementMap").count(), 1
+        )
+        self.assertEqual(self.page.locator(".sunja-glass-refract").count(), 3)
+        for selector in (
+            ".sunja-liquid-header .sunja-glass-refract",
+            ".sunja-liquid-bottom .sunja-glass-refract",
+            "#backTop .sunja-glass-refract",
+        ):
+            pointer = self.page.locator(selector).evaluate(
+                "(el) => getComputedStyle(el).pointerEvents"
+            )
+            self.assertEqual(pointer, "none")
+
+    def test_v22_desktop_nav_has_no_overlap_underline(self):
+        desktop = self.browser.new_context(
+            viewport={"width": 1280, "height": 800},
+            reduced_motion="reduce",
+        )
+        try:
+            pg = desktop.new_page()
+            pg.goto(self.url, wait_until="load")
+            node = pg.locator(".navbar-nav a[href='#galerija']")
+            after = node.evaluate(
+                "(el) => getComputedStyle(el, '::after').content"
+            )
+            self.assertEqual(after, "none")
+            node.click()
+            expect(pg).to_have_url(re.compile(r"#galerija$"))
+        finally:
+            desktop.close()
+
     def test_v213_typography_across_narrow_phone_tablet_desktop(self):
         sizes = (
             (320, 700, 20.5, 13.6),
