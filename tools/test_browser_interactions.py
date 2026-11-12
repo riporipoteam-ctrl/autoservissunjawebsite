@@ -50,7 +50,7 @@ class SiteInteractionTests(unittest.TestCase):
             reduced_motion="reduce",
         )
         self.page = self.context.new_page()
-        self.page.goto(self.url, wait_until="load", timeout=45000)
+        self.page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
 
     def tearDown(self):
         self.context.close()
@@ -80,75 +80,69 @@ class SiteInteractionTests(unittest.TestCase):
             viewport={"width": 390, "height": 844},
             is_mobile=True, has_touch=True, reduced_motion="no-preference",
         )
-        context.add_init_script("""() => {}""" if False else """
-            window.__mapFlights = [];
+        context.add_init_script("""
             window.__mapJumps = [];
-            window.__mapStartOptions = null;
             class FakeMap {
-                constructor(opts) {
-                    window.__mapStartOptions = opts;
-                    this._callbacks = {};
-                }
+                constructor(opts) { this.options = opts; this.callbacks = {}; }
                 on(name, cb) {
-                    this._callbacks[name] = cb;
-                    if (name === 'load') setTimeout(() => cb(), 20);
+                    this.callbacks[name] = cb;
+                    if (name === 'load') setTimeout(cb, 25);
                     return this;
                 }
-                once(name, cb) { this._callbacks[name] = cb; return this; }
                 resize() {}
                 setProjection() {}
-                flyTo(opts) {
-                    window.__mapFlights.push(opts);
-                    setTimeout(() => {
-                        const cb = this._callbacks.moveend;
-                        delete this._callbacks.moveend;
-                        if (cb) cb();
-                    }, 36);
-                    return this;
-                }
                 jumpTo(opts) { window.__mapJumps.push(opts); return this; }
             }
-            class FakePopup {
-                constructor() {}
-                setHTML() { return this; }
-            }
+            class FakePopup { constructor(){} setHTML(){ return this; } }
             class FakeMarker {
-                constructor() {}
-                setLngLat() { return this; }
-                setPopup() { return this; }
-                addTo() { return this; }
-                togglePopup() { return this; }
-                remove() {}
+                constructor(){}
+                setLngLat(){ return this; }
+                setPopup(){ return this; }
+                addTo(){ return this; }
+                togglePopup(){ return this; }
+                remove(){}
             }
             window.maplibregl = {Map: FakeMap, Popup: FakePopup, Marker: FakeMarker};
         """)
         try:
             pg = context.new_page()
-            pg.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-            self.assertEqual(pg.evaluate("window.__mapFlights.length"), 0)
-            pg.locator("#globeScroll").scroll_into_view_if_needed()
-            pg.wait_for_function("window.__mapFlights.length >= 4", timeout=10000)
-            flights = pg.evaluate("window.__mapFlights")
-            self.assertEqual(len(flights), 4)
-            self.assertEqual([round(v["zoom"], 1) for v in flights],
-                             [3.4, 5.6, 9.5, 16.2])
-            self.assertTrue(all(v["duration"] > 0 for v in flights))
-            pg.wait_for_function(
-                "document.getElementById('globeScroll').classList.contains('globe-arrived')",
-                timeout=4000,
-            )
-            # The scroll window must stay stable instead of collapsing.
-            before = pg.locator("#globeScroll").evaluate(
-                "(el) => el.getBoundingClientRect().height")
-            pg.evaluate("window.scrollBy(0, 220)")
-            after = pg.locator("#globeScroll").evaluate(
-                "(el) => el.getBoundingClientRect().height")
-            self.assertAlmostEqual(before, after, delta=2)
+            pg.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
+            pg.evaluate("""() => {
+                const w = document.querySelector("#globeScroll");
+                window.scrollTo({top: w.offsetTop + 10, behavior: 'instant'});
+            }""")
+            pg.wait_for_function("window.__mapJumps.length > 0", timeout=12000)
+            low = pg.evaluate("window.__mapJumps.at(-1).zoom")
+            pg.evaluate("""() => {
+                const w = document.querySelector("#globeScroll");
+                window.scrollTo({top: w.offsetTop + (w.offsetHeight - innerHeight) * .7, behavior: 'instant'});
+            }""")
+            pg.wait_for_function("(low) => window.__mapJumps.at(-1).zoom > low + 2", low, timeout=8000)
+            high = pg.evaluate("window.__mapJumps.at(-1).zoom")
+            self.assertGreater(high, low)
+            pg.evaluate("""() => {
+                const w = document.querySelector("#globeScroll");
+                window.scrollTo({top: w.offsetTop + 10, behavior:'instant'});
+            }""")
+            pg.wait_for_function("(high) => window.__mapJumps.at(-1).zoom < high - 2", high, timeout=8000)
         finally:
             context.close()
 
+    def test_v25_intro_has_only_video_and_can_finish(self):
+        page = self.context.new_page()
+        page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+        self.assertEqual(page.locator("#sunjaIntro video").count(), 1)
+        self.assertEqual(page.locator("#sunjaIntro button").count(), 0)
+        self.assertEqual(page.locator("#sunjaIntro .progress").count(), 0)
+        page.wait_for_function("document.querySelector('#sunjaIntroVideo').readyState >= 2", timeout=8000)
+        page.evaluate("document.querySelector('#sunjaIntroVideo').dispatchEvent(new Event('ended'))")
+        page.wait_for_function("!document.documentElement.classList.contains('sunja-intro-active')", timeout=9000)
+        self.assertEqual(page.locator("#sunjaIntro").evaluate(
+            "(el) => getComputedStyle(el).display"), "none")
+
     def test_initial_page_has_no_blocking_loader(self):
-        self.assertEqual(self.page.locator("#preloader").count(), 0)
+        self.assertEqual(self.page.locator("#sunjaIntro").evaluate(
+            "(el) => getComputedStyle(el).display"), "none")
         self.assertEqual(self.page.locator("#spinner").count(), 0)
         expect(self.page.locator(".navbar-toggler")).to_be_visible()
         expect(self.page.locator("#header-carousel")).to_be_visible()
@@ -287,7 +281,7 @@ class SiteInteractionTests(unittest.TestCase):
         )
         try:
             pg = desktop.new_page()
-            pg.goto(self.url, wait_until="load")
+            pg.goto(self.url + "?skipIntro=1", wait_until="load")
             node = pg.locator(".navbar-nav a[href='#galerija']")
             after = node.evaluate(
                 "(el) => getComputedStyle(el, '::after').content"
@@ -502,7 +496,7 @@ class SiteInteractionTests(unittest.TestCase):
         )
         try:
             page = desktop.new_page()
-            page.goto(self.url, wait_until="load", timeout=45000)
+            page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
             page.locator(".navbar-nav a[href='#usluge']").click()
             expect(page).to_have_url(re.compile(r"#usluge$"))
         finally:
