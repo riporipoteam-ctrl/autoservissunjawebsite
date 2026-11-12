@@ -141,17 +141,30 @@ class SiteInteractionTests(unittest.TestCase):
         ).to_have_class(re.compile(r"\bactive\b"))
 
     def test_v22_dock_retracts_over_footer_links(self):
+        dock = self.page.locator(".mobile-callbar")
         self.page.evaluate(
             "window.scrollTo(0, document.documentElement.scrollHeight)"
         )
-        self.page.wait_for_function(
-            "document.documentElement.classList.contains('dock-avoiding-action')",
-            timeout=5000
-        )
-        dock = self.page.locator(".mobile-callbar")
+        self.page.wait_for_timeout(180)
+        self.assertFalse(self.page.evaluate(
+            "document.documentElement.classList.contains('dock-avoiding-action')"
+        ))
         self.assertEqual(
-            dock.evaluate("(el) => getComputedStyle(el).pointerEvents"), "none"
+            dock.evaluate("(el) => getComputedStyle(el).visibility"), "visible"
         )
+        self.assertEqual(
+            dock.evaluate("(el) => getComputedStyle(el).opacity"), "1"
+        )
+        self.assertEqual(
+            dock.evaluate("(el) => getComputedStyle(el).pointerEvents"), "auto"
+        )
+        footer = self.page.locator("#siteFooter")
+        clearance = footer.evaluate(
+            "(el) => parseFloat(getComputedStyle(el).paddingBottom)"
+        )
+        self.assertGreaterEqual(clearance, dock.evaluate(
+            "(el) => el.getBoundingClientRect().height"
+        ))
 
     def test_v22_footer_is_plain_dark_without_a_photo(self):
         footer = self.page.locator("#siteFooter")
@@ -309,16 +322,30 @@ class SiteInteractionTests(unittest.TestCase):
         self.assertEqual(rect["fit"], "contain")
 
     def test_v212_dock_hides_when_booking_button_would_be_covered(self):
-        self.page.locator("#o-nama a[href='#termin']").scroll_into_view_if_needed()
-        self.page.evaluate("""() => {
-            const target = document.querySelector("#o-nama a[href='#termin']");
-            const dock = document.querySelector(".mobile-callbar");
-            target.scrollIntoView({block: "end", behavior: "instant"});
-            window.dispatchEvent(new Event("scroll"));
-        }""")
-        self.page.wait_for_timeout(280)
-        # Dock may remain visible when it doesn't intersect the button.
-        # Either way the CTA must be directly tappable with no overlay.
+        dock = self.page.locator(".mobile-callbar")
+        positions = [
+            0, 550, 1000, 1550, 2100, 2800,
+            600, 2400, 100, 3200, 0
+        ]
+        for pos in positions:
+            self.page.evaluate("(y) => window.scrollTo(0, y)", pos)
+            self.page.wait_for_timeout(55)
+            visible = dock.evaluate("""(el) => {
+                const style = getComputedStyle(el);
+                const box = el.getBoundingClientRect();
+                return {
+                    visibility: style.visibility,
+                    opacity: style.opacity,
+                    display: style.display,
+                    bottomOffset: innerHeight - box.bottom,
+                    pointer: style.pointerEvents
+                };
+            }""")
+            self.assertEqual(visible["visibility"], "visible", pos)
+            self.assertEqual(visible["opacity"], "1", pos)
+            self.assertEqual(visible["display"], "flex", pos)
+            self.assertEqual(visible["pointer"], "auto", pos)
+            self.assertLessEqual(abs(visible["bottomOffset"]), 2, pos)
         self.page.locator("#o-nama a[href='#termin']").tap()
         expect(self.page).to_have_url(re.compile(r"#termin$"))
 
@@ -328,10 +355,12 @@ class SiteInteractionTests(unittest.TestCase):
                 "(el) => getComputedStyle(el).paddingBottom"
             ), "0px"
         )
-        self.assertLessEqual(
+        self.assertGreaterEqual(
             self.page.locator("#siteFooter").evaluate(
                 "(el) => parseFloat(getComputedStyle(el).paddingBottom)"
-            ), 40
+            ), self.page.locator(".mobile-callbar").evaluate(
+                "(el) => el.getBoundingClientRect().height"
+            )
         )
 
     def test_v21_three_glass_surfaces_stay_accessible(self):
