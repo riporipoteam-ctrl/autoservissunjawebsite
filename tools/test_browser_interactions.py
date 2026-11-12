@@ -89,6 +89,11 @@ class SiteInteractionTests(unittest.TestCase):
         expect(self.page.locator("#navbarCollapse")).not_to_have_class(
             re.compile(r"\bshow\b")
         )
+        # Closing via a section link must not break the next menu opening.
+        self.page.locator(".navbar-toggler").tap()
+        expect(self.page.locator("#navbarCollapse")).to_have_class(
+            re.compile(r"\bshow\b")
+        )
 
     def test_hero_booking_link_works_on_first_tap(self):
         self.page.locator(
