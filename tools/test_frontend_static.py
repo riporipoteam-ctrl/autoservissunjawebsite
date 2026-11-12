@@ -264,31 +264,32 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('#o-nama h1', CSS)
         self.assertIn('touch-action: manipulation', CSS)
 
-    def test_map_does_not_collapse_or_replay_after_arrival(self):
-        self.assertNotIn("wrap.classList.add('globe-done')", INDEX)
-        self.assertIn("var FLIGHT_END = 0.90;", INDEX)
-        self.assertIn("var flightLocked = false;", INDEX)
-        self.assertIn("if (!flightLocked && p >= FLIGHT_END", INDEX)
-        self.assertIn("var flightP = flightLocked ? FLIGHT_END", INDEX)
-        self.assertIn("var lockedViewApplied = false;", INDEX)
-        self.assertIn("if (flightLocked) {", INDEX)
-        self.assertIn("setShopMarker(true);", INDEX)
-        self.assertIn("wrap.classList.toggle('globe-arrived'", INDEX)
+    def test_v24_refresh_goes_back_to_hero_before_page_layout(self):
+        self.assertIn("history.scrollRestoration = 'manual'", INDEX)
+        self.assertIn("navigationType === 'reload'", INDEX)
+        self.assertIn("location.pathname + location.search", INDEX)
+        self.assertIn("window.scrollTo(0, 0)", INDEX)
+        self.assertIn("pageshow", INDEX)
 
-        self.assertIn("var mapReleased = false;", INDEX)
-        self.assertIn("rect.bottom <= 0", INDEX)
-        self.assertIn("globe-complete", INDEX)
+    def test_v24_map_plays_real_camera_flight_after_loading(self):
+        self.assertIn("function beginGlobeFlight()", INDEX)
+        self.assertIn("map.flyTo({", INDEX)
+        self.assertIn("map.once('moveend'", INDEX)
+        self.assertIn("new IntersectionObserver", INDEX)
+        self.assertIn("function finishGlobeFlight()", INDEX)
+        self.assertIn("SHOP_ZOOM", INDEX)
+        self.assertNotIn("var FLIGHT_END = 0.90;", INDEX)
+        self.assertNotIn("var mapReleased = false;", INDEX)
+        self.assertNotIn("rect.bottom <= 0", INDEX)
+        self.assertIn("/* v24: stable, self-playing globe fly-in */", CSS)
+        self.assertIn("#globeScroll:not(.globe-complete)", CSS)
+        self.assertIn("position: relative !important", CSS)
 
-    def test_map_exits_quickly_after_flight(self):
-        self.assertIn("height: 170svh;", CSS)
-        self.assertIn("height: 145svh;", CSS)
-        self.assertIn("height: 118svh !important;", CSS)
-        self.assertIn("height: 82svh !important;", CSS)
-        self.assertNotIn("height: 300vh;", CSS)
-        self.assertNotIn("height: 280vh;", CSS)
-        self.assertIn("#globeScroll.globe-arrived .globe-stage", CSS)
-        self.assertIn("stickyEl.offsetHeight", INDEX)
-
+    def test_v24_map_keeps_fallback_and_directions(self):
+        self.assertIn("wrap.classList.add('is-fallback')", INDEX)
+        self.assertIn('class="map-quick-link"', INDEX)
+        self.assertIn("map.resize()", INDEX)
+        self.assertIn("setShopMarker(true)", INDEX)
 
     def test_rejected_outside_image_does_not_appear(self):
         self.assertNotIn("tt-20261108-59603d89", INDEX)
