@@ -4,6 +4,18 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v22.0 (2026-11-12) — image-free footer, compact About, refractive glass, desktop nav and mobile edge handling
+
+- **Removed the unwanted footer background photo entirely.** The old CSS photo variable and the script that replaced it using `photos.json` are both gone. Footer uses a clean dark blue brand gradient only.
+- **Shortened O nama** to the address, city and main services; removed the SUV wording. Also shortened the three feature descriptions.
+- **Desktop navigation fix:** removed the legacy `::after` underline which crossed menu labels and replaced it with a subtle active-link pill. The navigation keeps its original anchors and first-tap behaviour.
+- **Refractive Liquid Glass study:** uses an inline SVG `feTurbulence` + `feDisplacementMap` (optical distortion, not just blur), chromatic lens rims, and a scene-image-aligned copy where a photo is visible behind one of the three requested glass surfaces. A supported Chromium browser may use live backdrop displacement; Safari uses the filter on the scene-copy layer, because SVG filters through `backdrop-filter` are not interoperable. A subtle CSS fallback retains clickable controls even if advanced optics fail. The site remains static with no React runtime or WebGL page-capture loop. Visuals are an independent web approximation, not Apple's private renderer.
+- **Smoothness and safety:** glass scene updates are capped to at most one update per 140ms while scrolling; reduced-motion and low-resource modes avoid the extra scene effect. Decorative layers ignore pointer events.
+- **Mobile lower edge:** the call/directions dock stays flush with the webpage edge and retracts as soon as the footer would be covered. The full footer has a solid background. The iOS Safari address/search bar is *native browser chrome* and cannot be rendered into by a website; a changing theme-colour hint is offered to compatible browsers.
+- `?v=22.0` asset URLs prevent stale iPhone CSS/JS. Site quality workflows run static and real Chromium/WebKit touch tests; only passing runtime results count as browser validation.
+
+Optics research and attribution: [dpawlikowski/liquid-glass](https://github.com/dpawlikowski/liquid-glass), MIT 2026 liquid-glass contributors. Adapted concepts: SVG displacement-map optics and layered chromatic highlights. License reproduced in `docs/liquid-glass-MIT.txt`. The CSS/JS here is site-specific and has no added third-party runtime dependency.
+
 ## v21.5 (2026-11-12) — verified one-tap interactions and Safari dock edge
 
 - Corrected the actual first-touch navigation defect found by browser instrumentation: the menu-collapse transition could interrupt navigation after touchend prevented the synthetic click. Internal section links now activate on the completed touch gesture, ignoring swipes, with one-time synthetic-click suppression; the address hash updates before the Bootstrap collapse can fail.
