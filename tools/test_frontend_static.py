@@ -42,8 +42,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=22.2", INDEX)
-        self.assertIn("js/main.js?v=22.2", INDEX)
+        self.assertIn("css/style.css?v=23.0", INDEX)
+        self.assertIn("js/main.js?v=23.0", INDEX)
 
     def test_fullscreen_loaders_are_removed(self):
         self.assertNotIn('id="preloader"', INDEX)
@@ -166,8 +166,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=22.2", INDEX)
-        self.assertIn("js/main.js?v=22.2", INDEX)
+        self.assertIn("css/style.css?v=23.0", INDEX)
+        self.assertIn("js/main.js?v=23.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -182,17 +182,20 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("safe-area-inset-bottom", CSS)
         self.assertNotIn("--dock-clearance", CSS)
 
-    def test_v212_dock_does_not_cover_page_actions(self):
-        self.assertIn("function syncActionDock()", JS)
-        self.assertIn("dock-avoiding-action", JS)
-        self.assertIn("getBoundingClientRect()", JS)
-        self.assertIn("document.activeElement", JS)
-        self.assertIn("pointer-events:none !important", CSS)
-        self.assertIn("requestAnimationFrame(syncActionDock)", JS)
+    def test_v23_fixed_mobile_dock_has_no_scroll_toggle(self):
+        self.assertNotIn("function syncActionDock()", JS)
+        self.assertNotIn("scheduleActionDock", JS)
+        self.assertNotIn("dock-avoiding-action", CSS + JS)
+        self.assertNotIn("document.querySelector(\".mobile-callbar\")", JS)
+        self.assertIn("/* v23: fixed no-flicker mobile dock */", CSS)
+        self.assertIn("visibility: visible !important", CSS)
+        self.assertIn("opacity: 1 !important", CSS)
+        self.assertIn("transition: none !important", CSS)
+        self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=22.2", INDEX)
-        self.assertIn("js/main.js?v=22.2", INDEX)
+        self.assertIn("css/style.css?v=23.0", INDEX)
+        self.assertIn("js/main.js?v=23.0", INDEX)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -282,8 +285,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=22.2", INDEX)
-        self.assertIn("js/main.js?v=22.2", INDEX)
+        self.assertIn("css/style.css?v=23.0", INDEX)
+        self.assertIn("js/main.js?v=23.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
