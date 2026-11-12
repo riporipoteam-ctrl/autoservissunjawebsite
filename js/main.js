@@ -198,26 +198,91 @@
         }
     }
 
-    // Same-page buttons need exactly one click, regardless of iOS hover
-    // emulation. Native href fallback remains if this script is unavailable.
-    document.addEventListener('click', function (event) {
-        var element = event.target;
-        var link = element && element.closest ? element.closest('a[href^="#"]') : null;
-        if (!link || event.defaultPrevented || event.button > 0 ||
-            event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    // One tap activates internal links before iOS hover synthesis can swallow
+    // the first click. Actual swipes are ignored. All non-hash links keep their
+    // trusted browser behaviour (tel:, external posts, directions, WhatsApp).
+    function activateSectionLink(link) {
+        if (!link) return false;
+        var id = (link.getAttribute("href") || "").slice(1);
+        var target = id && document.getElementById(id);
+        if (!target) return false;
 
-        var id = link.getAttribute("href").slice(1);
-        if (!id) return;
-        var target = document.getElementById(id);
-        if (!target) return;
+        // The same gesture also preselects services, even if touchend has
+        // suppressed the follow-up compatibility click event.
+        var service = link.getAttribute("data-service");
+        if (service && typeof window.pickServiceVal === "function") {
+            window.pickServiceVal(service);
+        }
+        var serviceTab = link.getAttribute("data-svc-link");
+        if (serviceTab) {
+            var tab = document.querySelector(
+                '[data-bs-target="#tab-pane-' + serviceTab + '"]'
+            );
+            if (tab) tab.click();
+        }
 
-        event.preventDefault();
         if (link.closest("#navbarCollapse")) collapseMobileMenu();
-        try { history.replaceState(null, '', '#' + encodeURIComponent(id)); } catch (e) {}
+        try {
+            history.replaceState(null, "", "#" + encodeURIComponent(id));
+        } catch (e) {
+            window.location.hash = id;
+        }
         target.scrollIntoView({
             behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth",
             block: "start"
         });
+        return true;
+    }
+
+    var startTouch = null;
+    var lastHandledTouch = null;
+    document.addEventListener("touchstart", function (event) {
+        if (event.touches.length !== 1) { startTouch = null; return; }
+        var origin = event.target;
+        var link = origin && origin.closest ? origin.closest('a[href^="#"]') : null;
+        if (!link) { startTouch = null; return; }
+        var touch = event.touches[0];
+        startTouch = {
+            link: link, identifier: touch.identifier,
+            x: touch.clientX, y: touch.clientY, at: Date.now()
+        };
+    }, { capture: true, passive: true });
+
+    document.addEventListener("touchend", function (event) {
+        var started = startTouch;
+        startTouch = null;
+        if (!started || event.changedTouches.length !== 1) return;
+        var touch = event.changedTouches[0];
+        if (touch.identifier !== started.identifier ||
+            Math.abs(touch.clientY - started.y) > 12 ||
+            Math.abs(touch.clientX - started.x) > 12 ||
+            Date.now() - started.at > 900 || !started.link.isConnected) return;
+
+        // Prevent the browser from emitting a second synthetic click, then
+        // perform exactly one section activation from this trusted gesture.
+        if (event.cancelable) event.preventDefault();
+        lastHandledTouch = { link: started.link, at: Date.now() };
+        activateSectionLink(started.link);
+    }, { capture: true, passive: false });
+
+    document.addEventListener("touchcancel", function () {
+        startTouch = null;
+    }, { capture: true, passive: true });
+
+    // Desktop mouse, trackpad and keyboard continue through native click.
+    document.addEventListener('click', function (event) {
+        var origin = event.target;
+        var link = origin && origin.closest ? origin.closest('a[href^="#"]') : null;
+        if (!link || event.defaultPrevented || event.button > 0 ||
+            event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+        if (lastHandledTouch && lastHandledTouch.link === link &&
+            Date.now() - lastHandledTouch.at < 900) {
+            event.preventDefault();
+            return;
+        }
+        if (!link.getAttribute("href").slice(1)) return;
+        event.preventDefault();
+        activateSectionLink(link);
     }, true);
 
 })();
