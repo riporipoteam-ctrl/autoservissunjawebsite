@@ -189,12 +189,22 @@
         if (window.innerWidth >= 992) return;
         var el = document.getElementById("navbarCollapse");
         if (!el || !el.classList.contains("show")) return;
-        if (typeof bootstrap !== "undefined" && bootstrap.Collapse) {
-            bootstrap.Collapse.getOrCreateInstance(el, { toggle: false }).hide();
-        } else {
-            el.classList.remove("show");
-            var toggle = document.querySelector(".navbar-toggler");
-            if (toggle) toggle.setAttribute("aria-expanded", "false");
+        try {
+            if (typeof bootstrap !== "undefined" && bootstrap.Collapse) {
+                bootstrap.Collapse.getOrCreateInstance(el, { toggle: false }).hide();
+            }
+        } catch (e) {
+            // A failed Bootstrap transition must never cancel the tap.
+        }
+        if (el.classList.contains("show")) {
+            el.classList.remove("show", "collapsing");
+            el.classList.add("collapse");
+            el.style.height = "";
+        }
+        var toggle = document.querySelector(".navbar-toggler");
+        if (toggle) {
+            toggle.setAttribute("aria-expanded", "false");
+            toggle.classList.add("collapsed");
         }
     }
 
@@ -221,12 +231,14 @@
             if (tab) tab.click();
         }
 
-        if (link.closest("#navbarCollapse")) collapseMobileMenu();
+        // Update the address first; a broken menu animation cannot swallow
+        // the user's navigation. Scrolling is independent from Bootstrap.
         try {
             history.replaceState(null, "", "#" + encodeURIComponent(id));
         } catch (e) {
             window.location.hash = id;
         }
+        if (link.closest("#navbarCollapse")) collapseMobileMenu();
         target.scrollIntoView({
             behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth",
             block: "start"
