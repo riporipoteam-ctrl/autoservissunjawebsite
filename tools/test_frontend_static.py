@@ -22,6 +22,11 @@ class FrontendStaticTests(unittest.TestCase):
     def test_navbar_polish_is_actually_attached(self):
         self.assertIn('class="navbar navbar-expand-lg nav-bar ', INDEX)
 
+    def test_v21_mobile_hero_uses_same_photo_for_backdrop_and_foreground(self):
+        self.assertIn("--hero-photo-mobile:", INDEX)
+        self.assertIn("var(--hero-photo-mobile)", CSS)
+        self.assertIn('id="heroMainSrc"', INDEX)
+
     def test_v21_preloads_fixed_following_slides_after_first_load(self):
         self.assertIn('window.addEventListener("load", function ()', JS)
         self.assertIn('querySelectorAll(".carousel-item:not(.active) picture img")', JS)
