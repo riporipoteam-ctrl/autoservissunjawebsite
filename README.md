@@ -4,6 +4,14 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v21.2 (2026-11-12) — unobstructed mobile dock and improved optical glass
+
+- Fixed the overlapping mobile call/directions dock shown in the iPhone screenshot. The dock now checks its rest position against booking buttons, About text and form fields; it retracts whenever it would obscure them. It also retracts for the mobile keyboard. Scroll checks use one requestAnimationFrame at most per frame.
+- Removed the blank white body bottom padding. Safe clearance now belongs to the actual #siteFooter background, preserving footer links while avoiding an empty tail.
+- Added brighter chromatic rim, inset lens shadows and less opaque optically layered backgrounds only to the three selected controls (header, mobile dock and back-to-top). Safari does not support SVG displacement in backdrop-filter, so the fast native backdrop-filter remains the compatible solution rather than claiming genuine refraction.
+- Retains one-tap navigation, the original uncropped photos, three permanent hero slides, and reduced-motion fallback. No full-screen loading screen.
+- Regression tests now cover optical rims, visible CTA tap access, bottom-of-page spacing and the updated assets (v21.2). Browser and real-device validation are tracked separately.
+
 ## v21.0 (2026-11-12) — screenshot-driven mobile typography, scoped Liquid Glass and uncropped photos
 
 The owner flagged specific remaining UI defects in three mobile screenshots: oversized About paragraphs/headings and numbered rows, dark letterboxing beside social photos, and opaque header/bottom controls.
