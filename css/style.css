@@ -2347,3 +2347,16 @@ a[href] > *,button > * { pointer-events:none !important; }
         height: 100svh !important;
     }
 }
+
+/* A failed CDN/style request must never leave a 190svh empty sticky section. */
+#globeScroll.is-fallback,
+#globeScroll.is-fallback:not(.globe-complete) {
+    height: auto !important;
+    min-height: 280px !important;
+    overflow: visible !important;
+}
+#globeScroll.is-fallback .globe-sticky {
+    position: relative !important;
+    height: auto !important;
+    min-height: 280px !important;
+}
