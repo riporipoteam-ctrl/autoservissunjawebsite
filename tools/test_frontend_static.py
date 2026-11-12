@@ -191,7 +191,7 @@ class FrontendStaticTests(unittest.TestCase):
     def test_section_navigation_works_on_first_click(self):
         self.assertIn("document.addEventListener('click', function (event)", JS)
         self.assertIn("target.scrollIntoView(", JS)
-        self.assertIn("history.replaceState(null, '',", JS)
+        self.assertIn('history.replaceState(null, "",', JS)
         self.assertIn('top: 0 !important;', CSS)
 
     def test_book_service_is_a_direct_link(self):
