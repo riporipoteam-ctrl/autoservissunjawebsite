@@ -66,6 +66,23 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('class="navbar navbar-expand-lg nav-bar sunja-liquid-header', INDEX)
         self.assertIn('id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top sunja-liquid-top', INDEX)
 
+    def test_v213_typography_is_site_wide_and_mobile_compact(self):
+        self.assertIn("/* v21.3 — consistent site-wide typography */", CSS)
+        self.assertIn("--sunja-mobile-copy: 13.5px;", CSS)
+        self.assertIn("--sunja-mobile-title: 20px;", CSS)
+        self.assertIn("--sunja-desktop-copy: 15px;", CSS)
+        self.assertIn("#siteFooter", CSS)
+        self.assertIn("#termin", CSS)
+        self.assertIn(".service .nav .nav-link h4", CSS)
+        self.assertIn("text-size-adjust: 100%", CSS)
+
+    def test_v213_content_margins_and_tap_areas_preserved(self):
+        self.assertIn("#o-nama p.mb-4", CSS)
+        self.assertIn(".container-xxl.py-5", CSS)
+        self.assertIn("min-height: 44px", CSS)
+        self.assertIn("css/style.css?v=21.3", INDEX)
+        self.assertIn("js/main.js?v=21.3", INDEX)
+
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertIn("/* v21.2: optical glass and obstruction-free mobile actions */", CSS)
         self.assertIn(".sunja-liquid-header::after", CSS)
@@ -90,8 +107,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("requestAnimationFrame(syncActionDock)", JS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=21.2", INDEX)
-        self.assertIn("js/main.js?v=21.2", INDEX)
+        self.assertIn("css/style.css?v=21.3", INDEX)
+        self.assertIn("js/main.js?v=21.3", INDEX)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -180,8 +197,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=21.2", INDEX)
-        self.assertIn("js/main.js?v=21.2", INDEX)
+        self.assertIn("css/style.css?v=21.3", INDEX)
+        self.assertIn("js/main.js?v=21.3", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
