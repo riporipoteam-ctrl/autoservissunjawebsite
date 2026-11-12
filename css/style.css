@@ -2278,3 +2278,33 @@ a[href] > *,button > * { pointer-events:none !important; }
         letter-spacing: .035em;
     }
 }
+
+/* v25: scrubbed globe scroll animation */
+/* A fixed-height sticky map panel. No release/collapse during scrolling. */
+#globeScroll, #globeScroll:not(.globe-complete), #globeScroll.globe-complete {
+    position: relative !important;
+    height: 220svh !important;
+    min-height: 1400px !important;
+    max-height: none !important;
+    overflow: clip !important;
+}
+#globeScroll .globe-sticky,
+#globeScroll.globe-complete .globe-sticky {
+    position: sticky !important;
+    top: 0 !important;
+    height: 100svh !important;
+    min-height: 480px !important;
+    overflow: hidden !important;
+}
+@media (max-width: 767.98px) {
+    #globeScroll, #globeScroll:not(.globe-complete), #globeScroll.globe-complete {
+        height: 220svh !important;
+        min-height: 1150px !important;
+        max-height: none !important;
+    }
+    #globeScroll .globe-sticky,
+    #globeScroll.globe-complete .globe-sticky {
+        height: 100svh !important;
+        min-height: 420px !important;
+    }
+}
