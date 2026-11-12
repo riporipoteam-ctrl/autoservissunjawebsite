@@ -2515,3 +2515,23 @@ a[href] > *, button > * { pointer-events: none !important; }
     .mobile-callbar.sunja-liquid-bottom { display: none !important; }
     #siteFooter { margin-bottom: 0 !important; }
 }
+
+/* First-tap regression guard: keep top action tappable even while the
+   collision-aware call dock is hidden. It must not vanish on a scroll. */
+html.dock-avoiding-action #backTop.sunja-liquid-top.is-visible,
+#backTop.sunja-liquid-top.is-visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+}
+@media (pointer: coarse) {
+    html { scroll-behavior: auto !important; }
+}
+/* Prevent pseudo-hover from changing hitboxes during a touch gesture. */
+@media (hover: none), (pointer: coarse) {
+    #header-carousel .carousel-caption a,
+    .service .nav .nav-link,
+    .mobile-callbar.sunja-liquid-bottom a {
+        transition-property: background-color, color, box-shadow !important;
+    }
+}
