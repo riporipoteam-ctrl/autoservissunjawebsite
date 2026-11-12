@@ -124,6 +124,15 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("var heroPool =", INDEX)
         self.assertNotIn("heroImg.src = pick", INDEX)
 
+    def test_map_failure_releases_sticky_scroll_and_keeps_directions(self):
+        self.assertIn("wrap.classList.add('is-fallback')", INDEX)
+        self.assertIn("#globeScroll.is-fallback", CSS)
+        self.assertIn("#globeScroll.is-fallback .globe-sticky", CSS)
+        self.assertIn("height: auto !important;", CSS)
+        self.assertNotIn("wrap.style.height = '70vh'", INDEX)
+        self.assertIn("Kartu nije moguće učitati", INDEX)
+        self.assertIn('class="map-quick-link"', INDEX)
+
     def test_map_photo_overlay_removed_and_directions_available_immediately(self):
         self.assertNotIn("shop-photo-marker", INDEX)
         self.assertNotIn("photoMarker", INDEX)
