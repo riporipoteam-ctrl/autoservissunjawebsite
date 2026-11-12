@@ -4,6 +4,16 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v21.5 (2026-11-12) — verified one-tap interactions and Safari dock edge
+
+- Corrected the actual first-touch navigation defect found by browser instrumentation: the menu-collapse transition could interrupt navigation after touchend prevented the synthetic click. Internal section links now activate on the completed touch gesture, ignoring swipes, with one-time synthetic-click suppression; the address hash updates before the Bootstrap collapse can fail.
+- Gallery touch overlays no longer require hover activation. Service tab controls, slide controls, gallery links, booking CTAs and the back-to-top button retain direct touch activation.
+- The mobile call/directions dock is flush with the webpage's lower edge; removed the large footer blank spacer. On iOS, the area containing Safari's address bar is browser-owned chrome and cannot be deleted by webpage CSS.
+- Fixed CSS-variable image asset references so hero, gallery and footer background photos resolve from `/assets/...` instead of failing from `/css/assets/...`.
+- GitHub Actions Playwright runs were failing before browser launch because `ubuntu-latest` changed to Ubuntu 26.04 while Playwright 1.56 supports Ubuntu 24.04. Both quality workflows are now pinned to Ubuntu 24.04.
+- Chromium and WebKit each passed 18 navigation and touch interaction tests on the previous cache key. Static and additional smoke tests are retained. Browser tests emulate phones; a physical iPhone Safari check remains separate.
+- HTML now serves `css/style.css?v=21.5` and `js/main.js?v=21.5` to invalidate cached iPhone versions after the final touch fixes.
+
 ## v21.3 (2026-11-12) — final site-wide text scale
 
 The typography was not consistently reduced by previous passes. This corrects *all* major content zones: About, services, tabs, gallery, reviews, map, contact, booking and footer. The mobile screenshot's oversized About copy and numbered feature labels are specifically targeted.
