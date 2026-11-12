@@ -242,7 +242,11 @@ class SiteInteractionTests(unittest.TestCase):
         footer_pad = self.page.locator("#siteFooter").evaluate(
             "(el) => parseFloat(getComputedStyle(el).paddingBottom)"
         )
-        self.assertLessEqual(footer_pad, 40)
+        self.assertGreaterEqual(
+            footer_pad, dock.evaluate(
+                "(el) => el.getBoundingClientRect().height"
+            )
+        )
 
     def test_v214_first_tap_on_service_tab_and_gallery_link(self):
         tab = self.page.locator('button[data-bs-target="#tab-pane-2"]')
