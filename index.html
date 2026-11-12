@@ -1028,19 +1028,22 @@
                 if (!perfLite) {
                     try { map.setProjection({ type: 'globe' }); } catch (e) {}
                 }
-                watchMapVisibility();
+                queueMapProgress();
             });
 
-            // A genuine one-shot MapLibre camera flight, independent of scroll
-            // distance or tile loading speed. No sticky scroll trap or page jump.
-            var mapFlightStages = [
-                { center: [15, 46], zoom: 3.4, pitch: 0, bearing: -6, duration: 1050, label: 'Evropa' },
-                { center: [18.40, 43.95], zoom: 5.6, pitch: 12, bearing: 0, duration: 1000, label: 'Bosna i Hercegovina' },
-                { center: [18.95, 43.69], zoom: 9.5, pitch: 25, bearing: 0, duration: 1000, label: 'Goražde' },
-                { center: SHOP, zoom: SHOP_ZOOM, pitch: 45, bearing: 0, duration: 1200, label: 'Auto Servis Šunja' }
+            // Scroll scrubbing: the camera follows the visitor's finger, forward
+            // and backward. A stable sticky section replaces autoplay and prevents
+            // the previous viewport jump on completion.
+            var mapFlightStops = [
+                { p: 0, center: [12, 32], zoom: 1.6, pitch: 0, bearing: -15, label: 'Svijet' },
+                { p: .24, center: [15, 46], zoom: 3.4, pitch: 0, bearing: -6, label: 'Evropa' },
+                { p: .48, center: [18.40, 43.95], zoom: 5.6, pitch: 12, bearing: 0, label: 'Bosna i Hercegovina' },
+                { p: .72, center: [18.95, 43.69], zoom: 9.5, pitch: 25, bearing: 0, label: 'Goražde' },
+                { p: 1, center: SHOP, zoom: SHOP_ZOOM, pitch: 45, bearing: 0, label: 'Auto Servis Šunja' }
             ];
-            var marker = null, flightStarted = false, flightFinished = false;
-            var flightObserver = null;
+            var marker = null;
+            var lastMapProgress = -1;
+            var mapFrame = 0;
             var reduceMapMotion = !!(window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
@@ -1069,69 +1072,60 @@
                 }
             }
 
-            function finishGlobeFlight() {
-                if (flightFinished || fellBack) return;
-                flightFinished = true;
-                wrap.classList.add('globe-arrived', 'globe-complete');
-                if (stageEl) stageEl.textContent = 'Auto Servis Šunja';
-                if (hintEl) hintEl.style.opacity = '0';
-                setShopMarker(true);
+            function updateMapOnScroll() {
+                mapFrame = 0;
+                if (fellBack || !loaded || !wrap) return;
+                var rect = wrap.getBoundingClientRect();
+                if (rect.top > innerHeight + 300 || rect.bottom < -300) return;
+                var distance = Math.max(1, rect.height - innerHeight);
+                var progress = Math.max(0, Math.min(1, -rect.top / distance));
+                if (Math.abs(progress - lastMapProgress) < .004) return;
+                lastMapProgress = progress;
+
+                // Respect reduced motion while retaining positional scroll control.
+                var scrub = reduceMapMotion ? (progress > .5 ? 1 : 0) : progress;
+                var left = mapFlightStops[0], right = mapFlightStops[mapFlightStops.length - 1];
+                for (var m = 1; m < mapFlightStops.length; m++) {
+                    if (scrub <= mapFlightStops[m].p) {
+                        left = mapFlightStops[m - 1];
+                        right = mapFlightStops[m];
+                        break;
+                    }
+                }
+                var t = Math.max(0, Math.min(1,
+                    (scrub - left.p) / Math.max(.001, right.p - left.p)));
+                function mix(a, b) { return a + (b - a) * t; }
+                map.jumpTo({
+                    center: [mix(left.center[0], right.center[0]),
+                        mix(left.center[1], right.center[1])],
+                    zoom: mix(left.zoom, right.zoom),
+                    pitch: mix(left.pitch, right.pitch),
+                    bearing: mix(left.bearing, right.bearing)
+                });
+                if (stageEl) stageEl.textContent = progress >= .99 ?
+                    'Auto Servis Šunja' : (t > .52 ? right.label : left.label);
+                wrap.classList.toggle('globe-arrived', progress >= .97);
+                wrap.classList.toggle('globe-complete', progress >= .99);
+                if (hintEl) hintEl.style.opacity = progress >= .97 ? '0' : '1';
+                if (progress >= .96) {
+                    setShopMarker(true);
+                } else if (marker) {
+                    marker.remove();
+                    marker = null;
+                }
+            }
+            function queueMapProgress() {
+                if (!mapFrame) mapFrame = requestAnimationFrame(updateMapOnScroll);
+            }
+            window.addEventListener('scroll', queueMapProgress, { passive: true });
+            window.addEventListener('resize', function () {
+                lastMapProgress = -1;
                 map.resize();
-            }
-
-            function beginGlobeFlight() {
-                if (flightStarted || fellBack || !loaded) return;
-                flightStarted = true;
-                if (flightObserver) {
-                    flightObserver.disconnect();
-                    flightObserver = null;
-                }
-                if (reduceMapMotion || perfLite) {
-                    map.jumpTo({ center: SHOP, zoom: SHOP_ZOOM, pitch: 45, bearing: 0 });
-                    finishGlobeFlight();
-                    return;
-                }
-                var stepIndex = 0;
-                function flyNext() {
-                    if (fellBack || flightFinished) return;
-                    if (stepIndex >= mapFlightStages.length) {
-                        finishGlobeFlight();
-                        return;
-                    }
-                    var step = mapFlightStages[stepIndex++];
-                    if (stageEl) stageEl.textContent = step.label;
-                    try {
-                        map.once('moveend', flyNext);
-                        map.flyTo({
-                            center: step.center, zoom: step.zoom,
-                            pitch: step.pitch, bearing: step.bearing,
-                            duration: step.duration, essential: false
-                        });
-                    } catch (e) {
-                        // Never leave a half-loaded map blocking the page.
-                        try {
-                            map.stop();
-                            map.jumpTo({ center: SHOP, zoom: SHOP_ZOOM, pitch: 45, bearing: 0 });
-                        } catch (ignored) {}
-                        finishGlobeFlight();
-                    }
-                }
-                flyNext();
-            }
-
-            function watchMapVisibility() {
-                if (flightStarted || !wrap) return;
-                if (!('IntersectionObserver' in window)) {
-                    beginGlobeFlight();
-                    return;
-                }
-                flightObserver = new IntersectionObserver(function (entries) {
-                    if (entries.some(function (entry) { return entry.isIntersecting; })) {
-                        beginGlobeFlight();
-                    }
-                }, { threshold: 0.12 });
-                flightObserver.observe(wrap);
-            }
+                queueMapProgress();
+            }, { passive: true });
+            // A map loaded while the visitor is already midway should align
+            // with that position, but must never start an autonomous flyTo.
+            if (loaded) queueMapProgress();
         } catch (e) {
             fallback('iznimka: ' + String(e).slice(0, 80));
         }
