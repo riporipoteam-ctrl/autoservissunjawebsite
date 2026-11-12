@@ -2254,3 +2254,178 @@ html.perf-lite #backTop.sunja-liquid-top {
     .mobile-callbar.sunja-liquid-bottom { background: rgba(231,244,254,.97) !important; }
     #backTop.sunja-liquid-top { background: rgba(222,239,252,.98) !important; }
 }
+
+
+/* v21.3 — consistent site-wide typography */
+/* One final source of truth: old Bootstrap .display-* and per-section overrides
+   cannot unexpectedly enlarge text on mobile Safari. No zoom disabling. */
+:root {
+    --sunja-desktop-copy: 15px;
+    --sunja-mobile-copy: 13.5px;
+    --sunja-mobile-title: 20px;
+    --sunja-mobile-label: 12px;
+}
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+body {
+    font-size: var(--sunja-desktop-copy);
+    line-height: 1.58;
+}
+#o-nama, #usluge, #galerija, #recenzije,
+#lokacija, #kontakt, #siteFooter {
+    font-size: var(--sunja-desktop-copy);
+    line-height: 1.57;
+}
+#o-nama h1, #usluge h1, #galerija h1,
+#recenzije h1, #lokacija h1, #kontakt h1 {
+    font-size: clamp(24px, 2.1vw, 32px) !important;
+    line-height: 1.19 !important;
+    letter-spacing: -.024em !important;
+    margin-bottom: 17px !important;
+}
+#header-carousel .carousel-caption h1 {
+    font-size: clamp(29px, 3.5vw, 43px) !important;
+    line-height: 1.1 !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 15px !important;
+}
+#o-nama p, #o-nama .ps-3 > span, #o-nama h6:not(.text-primary),
+.service .tab-content p, .service .tab-content li,
+#galerija p, #recenzije p, #lokacija p, #kontakt p,
+#siteFooter p, #siteFooter a.btn-link, #siteFooter .hours-list,
+#siteFooter .copyright, #termin .form-floating > label,
+#termin .form-control, #termin .form-select {
+    font-size: var(--sunja-desktop-copy) !important;
+    line-height: 1.56 !important;
+}
+#o-nama h6:not(.text-primary),
+.service .nav .nav-link h4 {
+    font-size: 16px !important;
+    line-height: 1.25 !important;
+}
+.service .tab-content h3 { font-size: 19px !important; }
+#kontakt h3, .contact-spotlight-heading h3 { font-size: 20px !important; }
+#kontakt h4, #siteFooter h4, #galerija h4, #recenzije h4 {
+    font-size: 18px !important;
+    line-height: 1.28 !important;
+}
+#kontakt h5, #siteFooter h5 { font-size: 15px !important; }
+#o-nama p.mb-4 { margin-bottom: 15px !important; }
+#o-nama .row.g-4 .col-12 { margin-top: 12px; }
+#galerija h1.mb-5, #usluge h1.mb-5,
+#recenzije h1.mb-5, #kontakt h1.mb-5 {
+    margin-bottom: 23px !important;
+}
+#header-carousel .carousel-caption p { font-size: 15px !important; line-height: 1.53 !important; }
+h6.text-primary.text-uppercase {
+    font-size: 12px !important;
+    letter-spacing: .09em !important;
+}
+.btn, #termin button.btn {
+    font-size: 14px !important;
+    line-height: 1.35 !important;
+    min-height: 44px;
+}
+#termin input, #termin textarea, #termin select {
+    font-size: 16px !important; /* no iOS focus auto-zoom */
+}
+#siteFooter .footer-menu a { font-size: 13px !important; }
+#siteFooter .status-pill, #kontakt .status-pill { font-size: 13px !important; }
+
+@media (max-width: 991.98px) {
+    #header-carousel .carousel-caption h1 {
+        font-size: clamp(26px, 3.9vw, 32px) !important;
+    }
+    #o-nama h1, #usluge h1, #galerija h1,
+    #recenzije h1, #lokacija h1, #kontakt h1 {
+        font-size: clamp(21px, 3vw, 26px) !important;
+    }
+}
+@media (max-width: 767.98px) {
+    body, #o-nama, #usluge, #galerija, #recenzije,
+    #lokacija, #kontakt, #siteFooter {
+        font-size: var(--sunja-mobile-copy) !important;
+        line-height: 1.52 !important;
+    }
+    #o-nama h1, #usluge h1, #galerija h1,
+    #recenzije h1, #lokacija h1, #kontakt h1 {
+        font-size: var(--sunja-mobile-title) !important;
+        line-height: 1.18 !important;
+        letter-spacing: -.018em !important;
+        margin-bottom: 13px !important;
+        max-width: 100% !important;
+    }
+    #header-carousel .carousel-caption h1 {
+        font-size: clamp(24px, 6vw, 27px) !important;
+        line-height: 1.13 !important;
+        margin-bottom: 11px !important;
+        padding-bottom: 0 !important;
+    }
+    #header-carousel .carousel-caption p {
+        font-size: var(--sunja-mobile-copy) !important;
+        line-height: 1.49 !important;
+        margin-bottom: 14px !important;
+    }
+    #o-nama p, #o-nama .ps-3 > span,
+    .service .tab-content p, .service .tab-content li,
+    #galerija p, #recenzije p, #lokacija p, #kontakt p,
+    #siteFooter p, #siteFooter a.btn-link, #siteFooter .hours-list,
+    #siteFooter .copyright, .contact-fact p,
+    .contact-spotlight-copy, #termin > div > p {
+        font-size: var(--sunja-mobile-copy) !important;
+        line-height: 1.51 !important;
+    }
+    #o-nama p.mb-4 { margin-bottom: 13px !important; }
+    #o-nama h6:not(.text-primary),
+    .service .nav .nav-link h4 {
+        font-size: 14px !important;
+        line-height: 1.22 !important;
+        margin-bottom: 4px !important;
+    }
+    #o-nama .ps-3 > span { display: block; }
+    #o-nama .row.g-4 .col-12 { margin-top: 9px !important; }
+    #o-nama .row.g-4 { --bs-gutter-y: .52rem; }
+    #o-nama .row.g-5 { --bs-gutter-y: 1rem; }
+    #o-nama .row.g-4 .col-12 .bg-light {
+        width: 34px !important;
+        height: 34px !important;
+    }
+    #o-nama .row.g-4 .col-12 .bg-light .fw-bold {
+        font-size: 12px !important;
+    }
+    .service .tab-content h3, #kontakt h3,
+    .contact-spotlight-heading h3 { font-size: 17px !important; }
+    #kontakt h4, #siteFooter h4, #galerija h4, #recenzije h4 {
+        font-size: 16px !important;
+        margin-bottom: 12px !important;
+    }
+    #kontakt h5, #siteFooter h5 { font-size: 14px !important; }
+    #contact .contact-fact-label, .contact-fact-label,
+    #kontakt .contact-eyebrow, .contact-eyebrow,
+    h6.text-primary.text-uppercase { font-size: var(--sunja-mobile-label) !important; }
+    .gallery-source-line small { font-size: 13px !important; }
+    #galerija h1.mb-5, #usluge h1.mb-5,
+    #recenzije h1.mb-5, #kontakt h1.mb-5 {
+        margin-bottom: 17px !important;
+    }
+    #kontakt .row > .col-md-4 .bg-light.p-4 { padding: 14px !important; }
+    #termin p, #termin .form-floating > label {
+        font-size: 13.5px !important;
+        line-height: 1.5 !important;
+    }
+    #termin input, #termin textarea, #termin select { font-size: 16px !important; }
+    .btn, #termin button.btn {
+        font-size: 13.5px !important;
+        min-height: 44px !important;
+    }
+    .mobile-callbar.sunja-liquid-bottom a { font-size: 13.5px !important; min-height: 48px; }
+    #siteFooter .footer-menu a { font-size: 13px !important; }
+}
+@media (min-width: 768px) and (max-width: 991.98px) {
+    #o-nama h1, #usluge h1, #galerija h1,
+    #recenzije h1, #lokacija h1, #kontakt h1 {
+        font-size: 25px !important;
+    }
+}
