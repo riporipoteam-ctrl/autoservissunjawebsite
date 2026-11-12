@@ -5,25 +5,6 @@
     <meta charset="utf-8">
     <title>Auto Servis Šunja | Servis za sve marke vozila, Goražde</title>
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
-    <!-- Initialize intro before the first paint; no flash of unstyled page. -->
-    <script>
-    (function () {
-        // Run the logo on every normal page entry, including reloads.
-        // Only explicit opt-out and the user's reduced-motion choice skip it.
-        if (/[?&]skipIntro=1(?:&|$)/.test(location.search)) return;
-        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        document.documentElement.classList.add('sunja-intro-active');
-        window.__sunjaIntroSafety = window.setTimeout(function () {
-            if (typeof window.__sunjaIntroForceFinish === 'function') {
-                window.__sunjaIntroForceFinish();
-                return;
-            }
-            document.documentElement.classList.remove('sunja-intro-active');
-            var intro = document.getElementById('sunjaIntro');
-            if (intro) intro.hidden = true;
-        }, 3800);
-    })();
-    </script>
     <!-- Early refresh reset: Safari must not restore a previous hash/scroll. -->
     <script>
     (function () {
@@ -79,143 +60,10 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=27.0" rel="stylesheet">
+    <link href="css/style.css?v=28.0" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Only the supplied logo animation. No text, bars or spinner. -->
-    <div id="sunjaIntro" class="sunja-intro" aria-label="Auto Servis Šunja">
-        <video id="sunjaIntroVideo" class="sunja-intro-video" src="assets/video/sunja-logo-intro-clean-v27.mp4"
-            autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
-            aria-label="Animacija logotipa Auto Servis Šunja"></video>
-        <img class="sunja-intro-fallback-logo" src="assets/sunja-logo-transparent.webp" alt=""
-            aria-hidden="true" decoding="async">
-    </div>
-    <script>
-    (function () {
-        var root = document.documentElement;
-        var video = document.getElementById("sunjaIntroVideo");
-        var intro = document.getElementById("sunjaIntro");
-        if (!root.classList.contains("sunja-intro-active")) {
-            intro.hidden = true;
-            video.pause();
-            video.removeAttribute("src");
-            return;
-        }
-        var done = false, criticalReady = false, videoEnded = false;
-        var fallbackActive = false, videoHasPlayed = false;
-        var fallbackTimer = null;
-        function warmDeferredPhotos() {
-            // Noncritical slides are warmed only after the intro exits.
-            var conn = navigator.connection || navigator.mozConnection;
-            if (conn && conn.saveData) return;
-            var targets = document.querySelectorAll("#header-carousel .carousel-item:not(.active) picture img");
-            var run = function () {
-                Array.prototype.slice.call(targets, 0, 2).forEach(function (img) {
-                    if (!img || !img.getAttribute("src")) return;
-                    var prefetch = new Image();
-                    prefetch.src = img.getAttribute("src");
-                });
-            };
-            if ("requestIdleCallback" in window) {
-                requestIdleCallback(run, { timeout: 1800 });
-            } else {
-                setTimeout(run, 850);
-            }
-        }
-        function finishIntro() {
-            if (done) return;
-            done = true;
-            clearTimeout(window.__sunjaIntroSafety);
-            clearTimeout(fallbackTimer);
-            root.classList.remove("sunja-intro-active");
-            intro.hidden = true;
-            try { video.pause(); } catch (ignored) {}
-            video.removeAttribute("src");
-            video.load();
-            warmDeferredPhotos();
-        }
-        window.__sunjaIntroForceFinish = finishIntro;
-        function startIntroFallback() {
-            if (done || fallbackActive || videoHasPlayed) return;
-            fallbackActive = true;
-            intro.classList.add("sunja-intro-is-fallback");
-            try { video.pause(); } catch (ignored) {}
-            // If Safari disallows muted autoplay (e.g. Low Power Mode),
-            // draw the same logo with CSS rather than showing an empty screen.
-            fallbackTimer = setTimeout(finishIntro, 1650);
-        }
-        function warmCriticalPhotos() {
-            // Warm only the opening hero image. Loading 20+ gallery photos
-            // before revealing the site previously caused the long wait.
-            var img = document.querySelector("#header-carousel .carousel-item.active picture img");
-            if (!img) return Promise.resolve();
-            img.loading = "eager";
-            img.fetchPriority = "high";
-            var source = document.querySelector("#header-carousel .carousel-item.active picture source");
-            var mobile = window.matchMedia && window.matchMedia("(max-width: 767.98px)").matches;
-            var src = mobile && source ? source.getAttribute("srcset").split(",")[0].trim().split(/\s+/)[0] :
-                img.getAttribute("src");
-            if (!src) return Promise.resolve();
-            var warming = new Promise(function (resolve) {
-                var critical = new Image();
-                critical.onload = resolve;
-                critical.onerror = resolve;
-                critical.src = src;
-                if (critical.complete) resolve();
-            });
-            // Bounded budget; one slow image never blocks the logo completion.
-            return Promise.race([
-                Promise.allSettled([warming]),
-                new Promise(function (resolve) { setTimeout(resolve, 550); })
-            ]);
-        }
-        function maybeFinish() {
-            if (videoEnded && criticalReady) finishIntro();
-        }
-        function readyPage() {
-            warmCriticalPhotos().then(function () {
-                criticalReady = true;
-                maybeFinish();
-            }, function () {
-                criticalReady = true;
-                maybeFinish();
-            });
-        }
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", readyPage, { once: true });
-        } else readyPage();
-        video.addEventListener("ended", function () {
-            videoEnded = true;
-            maybeFinish();
-        });
-        video.addEventListener("playing", function () { videoHasPlayed = true; });
-        video.addEventListener("timeupdate", function () {
-            if (video.currentTime > 0.05) videoHasPlayed = true;
-        });
-        video.addEventListener("error", startIntroFallback);
-        function tryStart() {
-            if (done || fallbackActive || !video.paused) return;
-            video.muted = true;
-            video.defaultMuted = true;
-            video.playsInline = true;
-            try {
-                var playing = video.play();
-                if (playing && playing.catch) playing.catch(startIntroFallback);
-            } catch (err) {
-                startIntroFallback();
-            }
-        }
-        // Start immediately on iPhone; retry when bytes arrive if needed.
-        tryStart();
-        video.addEventListener("loadeddata", tryStart, { once: true });
-        video.addEventListener("canplay", tryStart, { once: true });
-        // Autoplay can be blocked in Low Power Mode. Don't leave a blank intro.
-        setTimeout(function () {
-            if (!done && !videoHasPlayed && !videoEnded) startIntroFallback();
-        }, 1200);
-    })();
-    </script>
 <!-- Topbar Start -->
     <div class="container-fluid bg-light p-0">
         <div class="row gx-0 d-none d-lg-flex">
@@ -933,7 +781,7 @@
     
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=27.0"></script>
+    <script src="js/main.js?v=28.0"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
