@@ -22,9 +22,42 @@ class FrontendStaticTests(unittest.TestCase):
     def test_navbar_polish_is_actually_attached(self):
         self.assertIn('class="navbar navbar-expand-lg nav-bar ', INDEX)
 
+    def test_v21_glass_is_only_on_three_requested_controls(self):
+        self.assertIn("sunja-liquid-header", INDEX)
+        self.assertIn("sunja-liquid-bottom", INDEX)
+        self.assertIn("sunja-liquid-top", INDEX)
+        self.assertIn("/* v21.0 — responsive optics, original-ratio media, and compact type */", CSS)
+        self.assertIn("-webkit-backdrop-filter:", CSS)
+        self.assertIn("pointer-events: none;", CSS)
+        self.assertNotIn("id=\"preloader\"", INDEX)
+
+    def test_v21_compact_typography_and_about_rows(self):
+        self.assertIn("#o-nama > .container", CSS)
+        self.assertIn("#o-nama h1", CSS)
+        self.assertIn("#o-nama .ps-3 > span", CSS)
+        self.assertIn("font-size: .875rem !important;", CSS)
+        self.assertIn("width: 37px !important;", CSS)
+
+    def test_v21_uncropped_media_and_curated_hero_backdrops(self):
+        self.assertIn("aspect-ratio: auto !important;", CSS)
+        self.assertIn(".team-item .position-relative", CSS)
+        self.assertIn("height: auto !important;", CSS)
+        self.assertIn("--hero-photo:", INDEX)
+        self.assertIn("var(--hero-photo)", CSS)
+        for source in ("radionica-dijagnostika.webp", "kljucevi-programiranje.webp"):
+            self.assertIn(source, INDEX)
+        self.assertNotIn("heroImg.src = pick", INDEX)
+
+    def test_v21_anchors_remain_one_click_and_no_glass_overlay_blocks_taps(self):
+        self.assertIn("href=\"tel:+38761297847\"", INDEX)
+        self.assertIn('id="backTop"', INDEX)
+        self.assertIn('class="mobile-callbar sunja-liquid-bottom"', INDEX)
+        self.assertIn('class="navbar navbar-expand-lg nav-bar sunja-liquid-header', INDEX)
+        self.assertIn('id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top sunja-liquid-top', INDEX)
+
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=20.2", INDEX)
-        self.assertIn("js/main.js?v=20.2", INDEX)
+        self.assertIn("css/style.css?v=21.0", INDEX)
+        self.assertIn("js/main.js?v=21.0", INDEX)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -113,8 +146,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=20.2", INDEX)
-        self.assertIn("js/main.js?v=20.2", INDEX)
+        self.assertIn("css/style.css?v=21.0", INDEX)
+        self.assertIn("js/main.js?v=21.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
