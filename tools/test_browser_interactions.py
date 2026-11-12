@@ -140,6 +140,19 @@ class SiteInteractionTests(unittest.TestCase):
             self.page.locator("#header-carousel .carousel-item").nth(1)
         ).to_have_class(re.compile(r"\bactive\b"))
 
+    def test_v22_dock_retracts_over_footer_links(self):
+        self.page.evaluate(
+            "window.scrollTo(0, document.documentElement.scrollHeight)"
+        )
+        self.page.wait_for_function(
+            "document.documentElement.classList.contains('dock-avoiding-action')",
+            timeout=5000
+        )
+        dock = self.page.locator(".mobile-callbar.sunja-liquid-bottom")
+        self.assertEqual(
+            dock.evaluate("(el) => getComputedStyle(el).pointerEvents"), "none"
+        )
+
     def test_v22_footer_is_plain_dark_without_a_photo(self):
         footer = self.page.locator("#siteFooter")
         bg = footer.evaluate("(el) => getComputedStyle(el).backgroundImage")
