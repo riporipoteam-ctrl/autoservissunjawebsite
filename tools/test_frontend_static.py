@@ -102,9 +102,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top sunja-liquid-top', INDEX)
 
     def test_v214_dynamic_css_photo_vars_use_site_root(self):
-        self.assertIn("'url(\"/' + footerPhoto + '\")'", INDEX)
+        self.assertNotIn("footerPhoto", INDEX)
         self.assertIn("'url(\"/' + safeSrc + '\")'", INDEX)
-        self.assertNotIn("'url(\"' + footerPhoto + '\")'", INDEX)
         self.assertNotIn("'url(\"' + safeSrc + '\")'", INDEX)
 
     def test_v214_hero_backdrops_resolve_from_site_root(self):
