@@ -30,6 +30,19 @@
         });
     }
 
+    // The first hero photo retains fetchpriority=high. Once the page is loaded,
+    // fetch the other two permanent slides on capable connections so Bootstrap
+    // does not reveal an empty lazy image during the automatic transition.
+    if (!saveData && !perfLite) {
+        window.addEventListener("load", function () {
+            var slides = document.querySelectorAll(".carousel-item:not(.active) picture img");
+            slides.forEach(function (slideImg) {
+                slideImg.decoding = "async";
+                slideImg.loading = "eager";
+            });
+        }, { once: true });
+    }
+
     var backTop = document.querySelector(".back-to-top");
     var chromeVisible = null;
     var scrollRaf = 0;
