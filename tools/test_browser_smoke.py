@@ -91,7 +91,7 @@ class BrowserSmokeTests(unittest.TestCase):
             page.goto(self.origin, wait_until="domcontentloaded")
             page.locator('button[data-bs-target="#tab-pane-6"]').tap()
             expect(page.locator("#tab-pane-6")).to_have_class(re.compile(r"\bactive\b"))
-            page.locator('a[data-service="Ključevi i daljinski"]').tap()
+            page.locator('#tab-pane-6 a[data-service="Ključevi i daljinski"]').tap()
             self.assertEqual(page.evaluate("location.hash"), "#termin")
             self.assertEqual(page.locator("#fService").input_value(), "Ključevi i daljinski")
 
