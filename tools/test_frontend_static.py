@@ -66,6 +66,19 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('class="navbar navbar-expand-lg nav-bar sunja-liquid-header', INDEX)
         self.assertIn('id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top sunja-liquid-top', INDEX)
 
+    def test_v214_hero_backdrops_resolve_from_site_root(self):
+        self.assertIn("--hero-photo:url('/assets/photos/", INDEX)
+        self.assertIn("--hero-photo-mobile:url('/assets/photos/", INDEX)
+        self.assertIn("--hero-photo:url('/assets/gallery/", INDEX)
+        self.assertNotIn("--hero-photo:url('assets/", INDEX)
+
+    def test_v214_menu_closes_on_first_navigation_and_top_stays_visible(self):
+        self.assertIn("function collapseMobileMenu()", JS)
+        self.assertIn("collapseMobileMenu();", JS)
+        self.assertIn("document.addEventListener('click', function (event)", JS)
+        self.assertIn("#backTop.sunja-liquid-top.is-visible", CSS)
+        self.assertIn("html { scroll-behavior: auto !important; }", CSS)
+
     def test_v214_real_mobile_touch_targets_are_not_hover_gated(self):
         self.assertIn("/* v21.4: stable first-touch surfaces and dock flush */", CSS)
         self.assertIn(".team-item .team-overlay.gallery-tile-link", CSS)
