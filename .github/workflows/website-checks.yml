@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   regression:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -53,7 +53,7 @@ jobs:
     # GitHub Pages deploys the main branch; verify its public result after tests.
     if: always() && github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: regression
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
