@@ -354,7 +354,7 @@
             if (r.bottom < 0 || r.top >= window.innerHeight) return;
             var x = Math.max(1, Math.min(window.innerWidth - 2, r.left + r.width / 2));
             var y = Math.max(1, Math.min(window.innerHeight - 2, r.top + r.height / 2));
-            var found = null;
+            var found = null, gradientElement = null, paintedBackground = "";
             var stack = document.elementsFromPoint(x, y);
             for (var k = 0; k < stack.length; k++) {
                 var candidate = stack[k];
@@ -367,9 +367,34 @@
                         break;
                     }
                 }
+                // Social panels and the image-free footer often paint CSS
+                // gradients rather than <img>. Mirror those pixels too so
+                // the SVG lens actually bends the scene on mobile Safari.
+                if (!gradientElement && k < 14) {
+                    var paintedBackground = getComputedStyle(candidate).backgroundImage;
+                    var paintedRect = candidate.getBoundingClientRect();
+                    if (paintedBackground.indexOf("gradient(") !== -1 &&
+                        paintedRect.width > 90 && paintedRect.height > 70) {
+                        gradientElement = candidate;
+                        break;
+                    }
+                }
             }
             if (!found) {
-                layer.removeAttribute("data-glass-scene");
+                if (gradientElement) {
+                    var gradientRect = gradientElement.getBoundingClientRect();
+                    var gradientCSS = getComputedStyle(gradientElement).backgroundImage;
+                    layer.style.setProperty("--sunja-scene-image", gradientCSS);
+                    layer.style.setProperty("--sunja-scene-size",
+                        gradientRect.width.toFixed(1) + "px " +
+                        gradientRect.height.toFixed(1) + "px");
+                    layer.style.setProperty("--sunja-scene-position",
+                        (gradientRect.left - r.left).toFixed(1) + "px " +
+                        (gradientRect.top - r.top).toFixed(1) + "px");
+                    layer.setAttribute("data-glass-scene", "gradient");
+                } else {
+                    layer.removeAttribute("data-glass-scene");
+                }
                 return;
             }
             var src = found.currentSrc || found.src || "";
