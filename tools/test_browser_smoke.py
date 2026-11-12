@@ -64,7 +64,7 @@ class BrowserSmokeTests(unittest.TestCase):
 
     def test_no_preloader_and_compact_typography(self):
         def check(page):
-            page.goto(self.origin, wait_until="domcontentloaded")
+            page.goto(self.origin + '?skipIntro=1', wait_until="domcontentloaded")
             self.assertEqual(page.locator("#preloader").count(), 0)
             self.assertEqual(page.locator("#spinner").count(), 0)
             size = page.locator("#o-nama h1").evaluate(
@@ -77,7 +77,7 @@ class BrowserSmokeTests(unittest.TestCase):
 
     def test_mobile_menu_navigates_in_one_tap(self):
         def check(page):
-            page.goto(self.origin, wait_until="domcontentloaded")
+            page.goto(self.origin + '?skipIntro=1', wait_until="domcontentloaded")
             page.locator(".navbar-toggler").tap()
             expect(page.locator("#navbarCollapse")).to_have_class(re.compile(r"\bshow\b"))
             page.locator('.navbar-nav a[href="#o-nama"]').tap()
@@ -88,7 +88,7 @@ class BrowserSmokeTests(unittest.TestCase):
 
     def test_service_selection_books_on_first_tap(self):
         def check(page):
-            page.goto(self.origin, wait_until="domcontentloaded")
+            page.goto(self.origin + '?skipIntro=1', wait_until="domcontentloaded")
             page.locator('button[data-bs-target="#tab-pane-6"]').tap()
             expect(page.locator("#tab-pane-6")).to_have_class(re.compile(r"\bactive\b"))
             page.locator('#tab-pane-6 a[data-service="Ključevi i daljinski"]').tap()
@@ -99,7 +99,7 @@ class BrowserSmokeTests(unittest.TestCase):
 
     def test_gallery_tile_opens_on_first_tap(self):
         def check(page):
-            page.goto(self.origin, wait_until="domcontentloaded")
+            page.goto(self.origin + '?skipIntro=1', wait_until="domcontentloaded")
             tile = page.locator("a.gallery-tile-link").first
             self.assertTrue((tile.get_attribute("href") or "").startswith("https://"))
             with page.expect_popup(timeout=12000):
@@ -113,7 +113,7 @@ class BrowserSmokeTests(unittest.TestCase):
                 re.compile(r".*/maplibre-gl@5\.6\.0/dist/maplibre-gl\.js.*"),
                 lambda route: route.abort(),
             )
-            page.goto(self.origin, wait_until="domcontentloaded")
+            page.goto(self.origin + '?skipIntro=1', wait_until="domcontentloaded")
             page.locator("#globeScroll").scroll_into_view_if_needed()
             expect(page.locator("#globeScroll")).to_have_class(re.compile("is-fallback"), timeout=12000)
             height = page.locator("#globeScroll").evaluate(
