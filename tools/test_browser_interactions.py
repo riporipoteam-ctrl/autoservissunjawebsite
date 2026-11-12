@@ -104,6 +104,19 @@ class SiteInteractionTests(unittest.TestCase):
         self.page.locator("[data-gallery-link]").first.tap()
         self.assertEqual(self.page.evaluate("window.__galleryTapCount"), 1)
 
+    def test_hero_indicators_have_usable_touch_targets(self):
+        dots = self.page.locator(".hero-indicators button")
+        self.assertEqual(dots.count(), 3)
+        for i in range(3):
+            height = dots.nth(i).evaluate(
+                "(el) => el.getBoundingClientRect().height"
+            )
+            self.assertGreaterEqual(height, 40)
+        dots.nth(1).tap()
+        expect(
+            self.page.locator("#header-carousel .carousel-item").nth(1)
+        ).to_have_class(re.compile(r"\bactive\b"))
+
     def test_back_to_top_works_on_one_tap(self):
         self.page.evaluate("window.scrollTo(0, 1400)")
         expect(self.page.locator("#backTop")).to_have_class(
