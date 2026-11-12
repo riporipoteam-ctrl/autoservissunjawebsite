@@ -128,6 +128,119 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             context.close()
 
+    def test_v29_completed_globe_never_rewinds_or_rerenders_on_scroll_up(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        context.add_init_script("""
+            window.__mapJumps = [];
+            window.__markerRemoves = 0;
+            class FakeMap {
+                constructor(opts) { this.options = opts; this.callbacks = {}; }
+                on(name, cb) {
+                    this.callbacks[name] = cb;
+                    if (name === 'load') setTimeout(cb, 20);
+                    return this;
+                }
+                resize() {}
+                setProjection() {}
+                jumpTo(opts) { window.__mapJumps.push(opts); return this; }
+            }
+            class FakePopup { constructor(){} setHTML(){ return this; } }
+            class FakeMarker {
+                constructor(){}
+                setLngLat(){ return this; }
+                setPopup(){ return this; }
+                addTo(){ return this; }
+                togglePopup(){ return this; }
+                remove(){ window.__markerRemoves++; }
+            }
+            window.maplibregl = {Map: FakeMap, Popup: FakePopup, Marker: FakeMarker};
+        """)
+        try:
+            page = context.new_page()
+            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            page.evaluate("""() => {
+                const w = document.getElementById("globeScroll");
+                window.scrollTo(0, w.offsetTop + w.offsetHeight - innerHeight + 8);
+            }""")
+            page.wait_for_function(
+                "() => document.querySelector('#globeScroll').classList.contains('globe-complete')",
+                timeout=8000,
+            )
+            initial_count = page.evaluate("window.__mapJumps.length")
+            self.assertGreaterEqual(initial_count, 1)
+            final = page.evaluate("window.__mapJumps.at(-1)")
+            self.assertAlmostEqual(final["zoom"], 16.2, delta=.1)
+            page.evaluate("""() => {
+                const w = document.getElementById("globeScroll");
+                window.scrollTo(0, w.offsetTop + 5);
+            }""")
+            page.wait_for_timeout(240)
+            self.assertEqual(page.evaluate("window.__mapJumps.length"), initial_count)
+            self.assertEqual(page.evaluate("window.__markerRemoves"), 0)
+            self.assertTrue(page.locator("#globeScroll").evaluate(
+                "(w) => w.classList.contains('globe-complete')"
+            ))
+            page.evaluate("""() => {
+                const w = document.getElementById("globeScroll");
+                window.scrollTo(0, w.offsetTop + w.offsetHeight - innerHeight + 8);
+                window.dispatchEvent(new Event("resize"));
+                window.scrollTo(0, 0);
+            }""")
+            page.wait_for_timeout(220)
+            self.assertEqual(page.evaluate("window.__mapJumps.length"), initial_count)
+        finally:
+            context.close()
+
+    def test_v29_scrolling_past_map_before_load_finishes_once(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        context.add_init_script("""
+            window.__mapJumps = [];
+            class FakeMap {
+                constructor(o) { this.options=o; this.callbacks={}; }
+                on(name, cb) {
+                    this.callbacks[name]=cb;
+                    if (name === 'load') setTimeout(cb, 750);
+                    return this;
+                }
+                resize() {}
+                setProjection() {}
+                jumpTo(o) { window.__mapJumps.push(o); return this; }
+            }
+            class FakePopup { constructor(){} setHTML(){return this;} }
+            class FakeMarker {
+                setLngLat(){return this;} setPopup(){return this;}
+                addTo(){return this;} togglePopup(){return this;}
+                remove(){}
+            }
+            window.maplibregl={Map:FakeMap,Popup:FakePopup,Marker:FakeMarker};
+        """)
+        try:
+            pg=context.new_page()
+            pg.goto(self.url, wait_until="domcontentloaded")
+            pg.evaluate("""() => {
+                const w=document.getElementById("globeScroll");
+                window.scrollTo(0, w.offsetTop + w.offsetHeight + 250);
+            }""")
+            pg.wait_for_function(
+                "document.getElementById('globeScroll').classList.contains('globe-complete')",
+                timeout=8000,
+            )
+            self.assertAlmostEqual(
+                pg.evaluate("window.__mapJumps.at(-1).zoom"), 16.2, delta=.1
+            )
+            before=pg.evaluate("window.__mapJumps.length")
+            pg.evaluate("window.scrollTo(0, 0)")
+            pg.wait_for_timeout(200)
+            self.assertEqual(pg.evaluate("window.__mapJumps.length"), before)
+        finally:
+            context.close()
+
     def test_v25_intro_has_only_video_and_can_finish(self):
         page = self.context.new_page()
         page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
