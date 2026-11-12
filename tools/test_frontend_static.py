@@ -67,8 +67,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top sunja-liquid-top', INDEX)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=21.0", INDEX)
-        self.assertIn("js/main.js?v=21.0", INDEX)
+        self.assertIn("css/style.css?v=21.1", INDEX)
+        self.assertIn("js/main.js?v=21.1", INDEX)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -157,8 +157,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=21.0", INDEX)
-        self.assertIn("js/main.js?v=21.0", INDEX)
+        self.assertIn("css/style.css?v=21.1", INDEX)
+        self.assertIn("js/main.js?v=21.1", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
