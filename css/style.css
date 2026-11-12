@@ -2429,3 +2429,89 @@ h6.text-primary.text-uppercase {
         font-size: 25px !important;
     }
 }
+
+/* v21.4: stable first-touch surfaces and dock flush */
+/* iOS Safari may require an initial tap when hover reveals/moves a link.
+   On a touchscreen, keep the actual interactive target in the same position
+   for hover, focus, and touch. Gallery links are actionable at first touch. */
+a[href], button, [role="button"], .nav-link, .gallery-tile-link {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(39,130,192,.12);
+}
+a[href] > *, button > * { pointer-events: none !important; }
+.navbar.nav-bar.sunja-liquid-header::before,
+.navbar.nav-bar.sunja-liquid-header::after,
+.mobile-callbar.sunja-liquid-bottom::before,
+.mobile-callbar.sunja-liquid-bottom::after,
+#backTop.sunja-liquid-top::before,
+#backTop.sunja-liquid-top::after { pointer-events: none !important; }
+@media (hover: none), (pointer: coarse) {
+    .team-item .team-overlay.gallery-tile-link,
+    .team-item:hover .team-overlay.gallery-tile-link {
+        transform: none !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        transition: none !important;
+    }
+    .team-item:hover,
+    .social-tile:hover,
+    .service .nav .nav-link:hover,
+    .navbar-brand:hover img,
+    .btn:hover,
+    #backTop:hover {
+        transform: none !important;
+    }
+    .btn-primary::after { display: none !important; }
+    .team-item:hover .gallery-img,
+    .team-item:hover .position-relative > img { transform: none !important; }
+    .navbar-light .navbar-nav .nav-link::after { pointer-events: none !important; }
+}
+/* Mobile dock touches the bottom of the actual webpage viewport; never leave
+   an empty translucent strip between it and the web content edge. Safari's
+   separate native address bar is outside the website's DOM and is not editable. */
+@media (max-width: 991.98px) {
+    html, body { background: #e8f4fc; }
+    html { scroll-padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
+    body { padding-bottom: 0 !important; }
+    #siteFooter {
+        padding-bottom: 28px !important;
+        margin-bottom: 0 !important;
+    }
+    .mobile-callbar.sunja-liquid-bottom {
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 7px max(12px, env(safe-area-inset-right, 0px))
+            calc(7px + env(safe-area-inset-bottom, 0px))
+            max(12px, env(safe-area-inset-left, 0px)) !important;
+        border-left: 0 !important;
+        border-right: 0 !important;
+        border-bottom: 0 !important;
+        border-radius: 23px 23px 0 0 !important;
+        overflow: visible !important;
+        box-shadow: 0 -5px 26px rgba(10,40,75,.13),
+            inset 0 2px 1px rgba(255,255,255,.86) !important;
+        pointer-events: none;
+    }
+    .mobile-callbar.sunja-liquid-bottom a {
+        pointer-events: auto !important;
+        touch-action: manipulation;
+        min-height: 48px;
+    }
+    .mobile-callbar.sunja-liquid-bottom::after,
+    .mobile-callbar.sunja-liquid-bottom::before {
+        border-radius: inherit;
+        pointer-events: none !important;
+    }
+    #backTop.sunja-liquid-top {
+        bottom: calc(86px + env(safe-area-inset-bottom, 0px)) !important;
+        touch-action: manipulation;
+    }
+}
+@media (min-width: 992px) {
+    .mobile-callbar.sunja-liquid-bottom { display: none !important; }
+    #siteFooter { margin-bottom: 0 !important; }
+}
