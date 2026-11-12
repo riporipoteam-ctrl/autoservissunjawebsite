@@ -149,7 +149,7 @@ class SiteInteractionTests(unittest.TestCase):
         self.assertEqual(self.page.locator("#backTop.sunja-liquid-top").count(), 1)
         self.page.locator(".navbar-toggler").tap()
         expect(self.page.locator("#navbarCollapse")).to_have_class(
-            re.compile(r"\\bshow\\b")
+            re.compile(r"\bshow\b")
         )
         self.page.locator("#navbarCollapse a[href='#o-nama']").tap()
         expect(self.page).to_have_url(re.compile(r"#o-nama$"))
