@@ -4,6 +4,14 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v23.0 (2026-11-12) — permanently stable mobile action bar
+
+- Removed the entire scroll/resize/focus-based `syncActionDock` collision detector, eight event listeners and the `dock-avoiding-action` visibility class. That old logic repeatedly hid and showed the fixed bar during scrolling and caused blinking, especially in iOS Safari.
+- Mobile Pozovite and Upute now stay visible at the bottom of the page with a fixed solid-blue style and **no opacity, transform or visibility animations**. Desktop continues without the mobile dock.
+- The image-free dark-blue footer reserves enough internal space for its last links to scroll above the bar, without appending a white strip beneath the page. Preserved Safari safe-area handling.
+- The About copy, permanent hero images, gallery, one-tap links, no-loader behavior and clean non-glass interface are unchanged.
+- `?v=23.0` forces iPhone to request updated CSS/JS. Browser regression tests now exercise repeated rapid scrolling and footer visibility without hiding the dock.
+
 ## v22.2 (2026-11-12) — restore the original stable non-glass UI
 
 Liquid Glass was removed at the owner's request due to glitchy rendering.
