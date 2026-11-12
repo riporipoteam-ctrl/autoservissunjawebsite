@@ -78,6 +78,15 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("--hero-photo:url('/assets/gallery/", INDEX)
         self.assertNotIn("--hero-photo:url('assets/", INDEX)
 
+    def test_v214_section_links_activate_on_first_completed_touch(self):
+        self.assertIn("document.addEventListener(\"touchstart\"", JS)
+        self.assertIn("document.addEventListener(\"touchend\"", JS)
+        self.assertIn("document.addEventListener(\"touchcancel\"", JS)
+        self.assertIn("function activateSectionLink(link)", JS)
+        self.assertIn("passive: false", JS)
+        self.assertIn("Math.abs(touch.clientY", JS)
+        self.assertIn("lastHandledTouch", JS)
+
     def test_v214_menu_closes_on_first_navigation_and_top_stays_visible(self):
         self.assertIn("function collapseMobileMenu()", JS)
         self.assertIn("collapseMobileMenu();", JS)
