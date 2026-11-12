@@ -320,7 +320,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <h3 class="mb-3">Autodijagnostika</h3>
-                                    <p class="mb-4">Upalila se lampica na instrument tabli? Kompjuterska dijagnostika brzo i tačno pronalazi uzrok kvara, bez nagađanja i nepotrebnih troškova.</p>
+                                    <p class="mb-4">Dijagnostika i otkrivanje kvarova na vozilu.</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Čitanje i brisanje grešaka</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Provjera svih sistema vozila</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Jasan nalaz prije popravke</p>
@@ -337,7 +337,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <h3 class="mb-3">Peugeot servis</h3>
-                                    <p class="mb-4">Posebno iskustvo s Peugeot vozilima. Održavanje i popravke za cijelu Peugeot gamu: benzince, dizelaše i hibride, starije i najnovije modele.</p>
+                                    <p class="mb-4">Održavanje i popravke Peugeot vozila.</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Poznavanje Peugeot sistema</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Originalni postupci i momenti stezanja</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Savjet za daljnje održavanje</p>
@@ -354,7 +354,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <h3 class="mb-3">Mali servis</h3>
-                                    <p class="mb-4">Redovno održavanje koje čuva motor i vaš novčanik: zamjena ulja i filtera uz pregled ključnih tačaka vozila.</p>
+                                    <p class="mb-4">Zamjena motornog ulja i filtera.</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Ulje i filteri po specifikaciji</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Pregled kočnica i ovjesa</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Provjera tekućina i guma</p>
@@ -371,7 +371,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <h3 class="mb-3">Veliki servis</h3>
-                                    <p class="mb-4">Kompletan servis po fabričkom intervalu, uključujući zupčasti remen i prateće dijelove, da motor radi mirno i sigurno godinama.</p>
+                                    <p class="mb-4">Zamjena zupčastog remena i dijelova prema servisnom intervalu.</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Zupčasti remen i roleri</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Vodena pumpa po potrebi</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Svjećice, filteri i tekućine</p>
@@ -388,7 +388,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <h3 class="mb-3">Autoelektrika</h3>
-                                    <p class="mb-4">Od akumulatora i alternatora do složenih elektronskih sistema. Pronalazimo i rješavamo električne kvarove svih vrsta.</p>
+                                    <p class="mb-4">Dijagnostika i popravka električnih sistema vozila.</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Akumulator, alternator, elektropokretač</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Instalacije i osigurači</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Senzori i elektronika vozila</p>
@@ -405,7 +405,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <h3 class="mb-3">Ključevi i daljinski</h3>
-                                    <p class="mb-4">Izgubili ste ključ ili vam treba rezervni? Izrađujemo, kodiramo i programiramo ključeve i daljinske za većinu vozila.</p>
+                                    <p class="mb-4">Izrada i programiranje auto ključeva i daljinskih upravljača.</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Rezervni i izgubljeni ključevi</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Kodiranje i programiranje</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Popravka daljinskih upravljača</p>
@@ -984,6 +984,7 @@
             if (!wrap || !el) { clearTimeout(safetyTimer); return; }
             if (typeof maplibregl === 'undefined') { fallback('knjižnica karte nedostupna'); clearTimeout(safetyTimer); return; }
             var SHOP = [18.982064, 43.6651456];
+            var SHOP_ZOOM = 16.2;
             var perfLite = document.documentElement.classList.contains('perf-lite');
             var map = new maplibregl.Map({
                 container: el,
@@ -1014,7 +1015,7 @@
                 { p: 0.18, c: [15, 46], z: 3.4, pitch: 0, bearing: -6, label: 'Evropa' },
                 { p: 0.36, c: [18.40, 43.95], z: 5.6, pitch: 12, bearing: 0, label: 'Bosna i Hercegovina' },
                 { p: 0.55, c: [18.95, 43.69], z: 9.5, pitch: 28, bearing: 0, label: 'Goražde' },
-                { p: FLIGHT_END, c: SHOP, z: 15.5, pitch: 50, bearing: 0, label: 'Auto Servis Šunja' }
+                { p: FLIGHT_END, c: SHOP, z: SHOP_ZOOM, pitch: 45, bearing: 0, label: 'Auto Servis Šunja' }
             ];
 
             var marker = null;
@@ -1035,8 +1036,22 @@
                 if (!loaded) return;
 
                 if (show && !marker) {
-                    var popup = new maplibregl.Popup({ offset: 28, closeOnClick: false })
-                        .setHTML('<strong>Auto Servis Šunja</strong><br>Hajra Lakovi\u0107a 38, Goražde<br><a href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a> · <a href="tel:+38761297847">061 297 847</a>');
+                    // A small, accessible shop card. Keep external actions native
+                    // and avoid a close icon crowding the map on narrow phones.
+                    var popupHTML = '<div class="sunja-map-card">' +
+                        '<span class="sunja-map-card__kicker">GORAŽDE</span>' +
+                        '<strong class="sunja-map-card__title">Auto Servis Šunja</strong>' +
+                        '<span class="sunja-map-card__address">Hajra Lakovića 38, Goražde</span>' +
+                        '<div class="sunja-map-card__actions">' +
+                            '<a class="sunja-map-card__directions" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener" aria-label="Upute za vožnju do Auto Servisa Šunja">Upute <i class="fa fa-arrow-right" aria-hidden="true"></i></a>' +
+                            '<a class="sunja-map-card__phone" href="tel:+38761297847" aria-label="Pozovite Auto Servis Šunja"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a>' +
+                        '</div>' +
+                    '</div>';
+                    var popup = new maplibregl.Popup({
+                        offset: 22, closeOnClick: false, closeButton: false,
+                        focusAfterOpen: false, className: 'sunja-map-popup',
+                        maxWidth: '300px'
+                    }).setHTML(popupHTML);
 
                     marker = new maplibregl.Marker({ color: '#0B5FA5' })
                         .setLngLat(SHOP)
@@ -1071,7 +1086,7 @@
                 if (flightLocked) {
                     if (!lockedViewApplied) {
                         try {
-                            map.jumpTo({ center: SHOP, zoom: 15.5, pitch: 50, bearing: 0 });
+                            map.jumpTo({ center: SHOP, zoom: SHOP_ZOOM, pitch: 45, bearing: 0 });
                         } catch (e) {}
                         lockedViewApplied = true;
                     }
