@@ -117,6 +117,32 @@ class SiteInteractionTests(unittest.TestCase):
             self.page.locator("#header-carousel .carousel-item").nth(1)
         ).to_have_class(re.compile(r"\bactive\b"))
 
+    def test_v213_all_mobile_sections_have_compact_typography(self):
+        for section in ("o-nama", "usluge", "galerija", "recenzije",
+                        "lokacija", "kontakt"):
+            title = self.page.locator("#" + section + " h1").first
+            size = title.evaluate("(el) => parseFloat(getComputedStyle(el).fontSize)")
+            self.assertLessEqual(size, 21, section)
+
+        about_copy = self.page.locator("#o-nama p.mb-4").first
+        size = about_copy.evaluate(
+            "(el) => parseFloat(getComputedStyle(el).fontSize)"
+        )
+        self.assertLessEqual(size, 13.6)
+        feature_copy = self.page.locator("#o-nama .ps-3 > span").first
+        feature_size = feature_copy.evaluate(
+            "(el) => parseFloat(getComputedStyle(el).fontSize)"
+        )
+        self.assertLessEqual(feature_size, 13.6)
+
+    def test_v213_text_keeps_booking_and_dock_tap_areas(self):
+        for selector in ("#o-nama a[href='#termin']",
+                         ".mobile-callbar .call",
+                         ".mobile-callbar .dir"):
+            el = self.page.locator(selector).first
+            height = el.evaluate("(node) => node.getBoundingClientRect().height")
+            self.assertGreaterEqual(height, 44, selector)
+
     def test_v21_mobile_type_is_genuinely_smaller(self):
         title = self.page.locator("#o-nama h1")
         para = self.page.locator("#o-nama > .container p").first
