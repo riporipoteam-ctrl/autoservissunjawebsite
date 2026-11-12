@@ -4,6 +4,16 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v29.0 (2026-11-12) — map finishes once, no replay, faster scrolling
+
+- Root cause: map camera progress was recalculated both forward and backward on every scroll frame, repeatedly removing the location marker and clearing `globe-complete` when visitors scrolled up. Added a permanent `mapCompleted` one-way lock for each page visit, removes the scroll listener on completion, keeps the shop marker and final camera permanently in place, and handles delayed map loads after a fast swipe past the section.
+- Reduced `jumpTo` rate to one map camera update per 80 ms (rather than every scroll frame), with a trailing update to avoid getting stuck. Completion bypasses the throttle for immediate settling.
+- Switched MapLibre assets to the pinned jsDelivr CDN, added DNS/TLS preconnect, and starts fetching the map earlier, around 850px before the section. Kept the official OpenFreeMap Liberty style, current coordinates, real globe mode, and zoom 16.2.
+- Lowered map canvas pixel ratio slightly on high-density mobile screens, cancelled unnecessary old-zoom tile requests, and disabled duplicate world copies. Resizing now uses the element's actual ResizeObserver rather than repeatedly responding to Safari's browser toolbar changes.
+- Shortened the stable sticky map run to 185svh on phones / 190svh on larger screens (without collapsing it on completion). Failed network maps still collapse into the working directions fallback.
+- Added automated Chromium and WebKit tests that complete the map, scroll backward/forward again, assert no additional camera jumps or marker removal, and cover the case where the map loads after the visitor has already passed it.
+- Asset cache versions updated to `v29.0`, no loading-screen animations or glass effects reintroduced.
+
 ## v28.0 (2026-11-12) — removed all loading screens
 
 - Removed the full-screen logo video overlay, fallback reveal animation, playback timers, preload gate, and all intro-related CSS/JavaScript. The page now opens straight on the homepage slides, on normal entry and refresh.
