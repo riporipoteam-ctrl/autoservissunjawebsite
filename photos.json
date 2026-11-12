@@ -279,20 +279,6 @@
    "media_id": "tiktok:7686981816414113044:0",
    "media_index": 0,
    "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-wide-20260913-d50eaf9f.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7685022963149704468",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-13",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7685022963149704468",
-   "media_id": "tiktok:7685022963149704468:0",
-   "media_index": 0,
-   "quality_v": 2
   }
  ],
  "gallery": [
@@ -588,20 +574,6 @@
    "post_id": "7686581783609052437",
    "media_id": "tiktok:7686581783609052437:0",
    "media_index": 0
-  },
-  {
-   "src": "assets/photos/tt-20260913-d50eaf9f.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7685022963149704468",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-13",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7685022963149704468",
-   "media_id": "tiktok:7685022963149704468:0",
-   "media_index": 0,
-   "quality_v": 2
   }
  ],
  "heroMobile": [
@@ -884,20 +856,6 @@
    "media_id": "tiktok:7686981816414113044:0",
    "media_index": 0,
    "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20260913-d50eaf9f.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7685022963149704468",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-13",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7685022963149704468",
-   "media_id": "tiktok:7685022963149704468:0",
-   "media_index": 0,
-   "quality_v": 2
   }
  ],
  "services": {
@@ -1057,7 +1015,7 @@
    "status": "not-photo",
    "count": 0,
    "attempts": 1,
-   "last": 1794433660
+   "last": 1794443265
   },
   "7685022963149704468": {
    "status": "photo",
