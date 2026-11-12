@@ -2333,13 +2333,17 @@ html.sunja-intro-active #sunjaIntro:not([hidden]) {
 }
 .sunja-intro-video {
     display: block;
-    width: min(100vw, 880px);
+    width: min(100vw, 720px);
+    aspect-ratio: 16 / 9;
     height: auto;
     max-height: 100dvh;
     object-fit: contain;
     object-position: center;
     background: #ffffff;
     border: 0;
+    filter: none !important;
+    transform: none !important;
+    image-rendering: auto;
     pointer-events: none !important;
 }
 #sunjaIntro[hidden], html:not(.sunja-intro-active) #sunjaIntro {
@@ -2351,3 +2355,5 @@ html.sunja-intro-active #sunjaIntro:not([hidden]) {
         max-height: 100dvh;
     }
 }
+
+/* v26.0: hi-res, short intro; never upscale low-quality media or animate the viewport. */
