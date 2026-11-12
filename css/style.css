@@ -1608,3 +1608,61 @@ a[href], button, .btn {
     text-align: center;
 }
 .map-fallback-content p { font-size: .95rem; line-height: 1.6; }
+
+/* v20.1: visible 5px slide bars, full 44px one-tap hit targets. */
+#header-carousel .hero-indicators {
+    align-items: center;
+    gap: 8px;
+}
+#header-carousel .hero-indicators button {
+    box-sizing: border-box;
+    display: block;
+    flex: 0 0 48px;
+    width: 48px !important;
+    height: 44px !important;
+    min-height: 44px !important;
+    border: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 0 !important;
+    position: relative;
+    overflow: visible;
+    background: transparent !important;
+    opacity: 1 !important;
+    cursor: pointer;
+    pointer-events: auto !important;
+    touch-action: manipulation;
+}
+#header-carousel .hero-indicators button::before {
+    content: "";
+    position: absolute;
+    top: calc(50% - 2.5px);
+    left: 0;
+    width: 100%;
+    height: 5px;
+    border-radius: 100px;
+    background: rgba(255,255,255,.38);
+    pointer-events: none;
+}
+#header-carousel .hero-indicators button > span {
+    position: absolute;
+    top: calc(50% - 2.5px);
+    left: 0;
+    right: auto;
+    bottom: auto;
+    width: 0;
+    height: 5px;
+    border-radius: 100px;
+    pointer-events: none;
+    background: #fff;
+}
+#header-carousel .hero-indicators button:focus-visible {
+    outline: 3px solid #82cbff;
+    outline-offset: 2px;
+}
+@media (max-width: 767.98px) {
+    #header-carousel .hero-indicators button {
+        width: 44px !important;
+        flex-basis: 44px;
+    }
+}
