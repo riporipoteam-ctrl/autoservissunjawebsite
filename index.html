@@ -947,8 +947,10 @@
             if (fellBack || !el) return;
             fellBack = true;
             if (wrap) wrap.classList.add('is-fallback');
-            el.innerHTML = '<div style="padding:3rem 1.5rem;text-align:center;"><p class="mb-3">Kartu nije moguće učitati na ovom uređaju. (' + reason + ')</p><a class="btn btn-primary py-3 px-4" href="https://www.google.com/maps/search/?api=1&query=Auto+Servis+%C5%A0unja+Gora%C5%BEde" target="_blank" rel="noopener">Otvorite lokaciju na Google kartama</a></div>';
-            if (wrap) wrap.style.height = '70vh';
+            // Never interpolate network errors into HTML; the directions
+            // link remains usable even when tiles or MapLibre cannot load.
+            if (window.console && console.warn) console.warn('Mapa nije dostupna:', reason);
+            el.innerHTML = '<div class="map-fallback-content"><p class="mb-3">Kartu nije moguće učitati. Lokacija servisa je Hajra Lakovića 38, Goražde.</p><a class="btn btn-primary py-3 px-4" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a></div>';
         }
         var globeStarted = false;
         function startGlobe() {
@@ -961,8 +963,19 @@
             document.head.appendChild(css);
             var sc = document.createElement('script');
             sc.src = 'https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js';
-            sc.onload = function () { initGlobe(); };
-            sc.onerror = function () { fallback('knjižnica karte nedostupna'); };
+            // A blocked CDN may never fire error; fail open to the address,
+            // rather than trapping the visitor on an empty map.
+            var scriptWatchdog = window.setTimeout(function () {
+                fallback('biblioteka karte nije odgovorila');
+            }, 9000);
+            sc.onload = function () {
+                window.clearTimeout(scriptWatchdog);
+                if (!fellBack) initGlobe();
+            };
+            sc.onerror = function () {
+                window.clearTimeout(scriptWatchdog);
+                fallback('knjižnica karte nedostupna');
+            };
             document.head.appendChild(sc);
         }
         function initGlobe() {
