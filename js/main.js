@@ -67,7 +67,7 @@
 
     // One tap initiates one native scroll. No custom 1.9s animation loop.
     function scrollToTopSmoothly() {
-        window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+        window.scrollTo({ top: 0, behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth" });
     }
     if (backTop) {
         backTop.addEventListener("click", function (event) {
@@ -83,6 +83,7 @@
     var dockFrame = 0;
     var dockActions = document.querySelectorAll(
         "#o-nama .ps-3 > span, #o-nama a.btn, " +
+        ".team-item a.gallery-tile-link, .social-tile, " +
         "#usluge .nav button, #usluge a.btn, #kontakt a.btn, " +
         "#recenzije a.btn, #galerija a.btn, " +
         "#termin input, #termin select, #termin textarea, " +
@@ -175,6 +176,12 @@
         }
     }
 
+    // Touchscreen hash links should arrive immediately on the first tap.
+    // Desktop users still get smooth scrolling; no secondary tap or delayed
+    // timer is needed on touch/mobile screens.
+    var fastTouchNavigation = !!(window.matchMedia &&
+        window.matchMedia("(pointer: coarse)").matches);
+
     // Same-page buttons need exactly one click, regardless of iOS hover
     // emulation. Native href fallback remains if this script is unavailable.
     document.addEventListener('click', function (event) {
@@ -191,10 +198,10 @@
         event.preventDefault();
         try { history.replaceState(null, '', '#' + encodeURIComponent(id)); } catch (e) {}
         target.scrollIntoView({
-            behavior: reduceMotion ? "auto" : "smooth",
+            behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth",
             block: "start"
         });
-    });
+    }, true);
 
     // Collapse mobile navigation on its first selection.
     document.querySelectorAll("#navbarCollapse .nav-link").forEach(function (link) {
