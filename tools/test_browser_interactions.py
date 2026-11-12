@@ -148,7 +148,7 @@ class SiteInteractionTests(unittest.TestCase):
             "document.documentElement.classList.contains('dock-avoiding-action')",
             timeout=5000
         )
-        dock = self.page.locator(".mobile-callbar.sunja-liquid-bottom")
+        dock = self.page.locator(".mobile-callbar")
         self.assertEqual(
             dock.evaluate("(el) => getComputedStyle(el).pointerEvents"), "none"
         )
@@ -167,19 +167,13 @@ class SiteInteractionTests(unittest.TestCase):
         self.assertLess(len(text), 280)
 
     def test_v22_optical_lenses_are_real_svg_and_do_not_block_taps(self):
-        self.assertEqual(
-            self.page.locator("#sunja-glass-distortion feDisplacementMap").count(), 1
-        )
-        self.assertEqual(self.page.locator(".sunja-glass-refract").count(), 3)
-        for selector in (
-            ".sunja-liquid-header .sunja-glass-refract",
-            ".sunja-liquid-bottom .sunja-glass-refract",
-            "#backTop .sunja-glass-refract",
-        ):
-            pointer = self.page.locator(selector).evaluate(
-                "(el) => getComputedStyle(el).pointerEvents"
-            )
-            self.assertEqual(pointer, "none")
+        self.assertEqual(self.page.locator(".sunja-glass-refract").count(), 0)
+        self.assertEqual(self.page.locator("#sunja-glass-distortion").count(), 0)
+        header = self.page.locator(".navbar.nav-bar")
+        self.assertEqual(header.evaluate(
+            "(el) => getComputedStyle(el).backdropFilter"), "none")
+        self.assertEqual(header.evaluate(
+            "(el) => getComputedStyle(el).backgroundColor"), "rgb(255, 255, 255)")
 
     def test_v22_desktop_nav_has_no_overlap_underline(self):
         desktop = self.browser.new_context(
@@ -229,7 +223,7 @@ class SiteInteractionTests(unittest.TestCase):
                     context.close()
 
     def test_v214_mobile_dock_is_flush_to_page_edge(self):
-        dock = self.page.locator(".mobile-callbar.sunja-liquid-bottom")
+        dock = self.page.locator(".mobile-callbar")
         bottom = dock.evaluate("(el) => parseFloat(getComputedStyle(el).bottom)")
         self.assertAlmostEqual(bottom, 0, delta=1)
         footer_pad = self.page.locator("#siteFooter").evaluate(
@@ -341,9 +335,10 @@ class SiteInteractionTests(unittest.TestCase):
         )
 
     def test_v21_three_glass_surfaces_stay_accessible(self):
-        self.assertEqual(self.page.locator(".sunja-liquid-header").count(), 1)
-        self.assertEqual(self.page.locator(".sunja-liquid-bottom").count(), 1)
-        self.assertEqual(self.page.locator("#backTop.sunja-liquid-top").count(), 1)
+        self.assertEqual(self.page.locator(".sunja-liquid-header").count(), 0)
+        self.assertEqual(self.page.locator(".sunja-liquid-bottom").count(), 0)
+        self.assertEqual(self.page.locator("#backTop.sunja-liquid-top").count(), 0)
+        self.assertEqual(self.page.locator(".mobile-callbar a").count(), 2)
         self.page.locator(".navbar-toggler").tap()
         expect(self.page.locator("#navbarCollapse")).to_have_class(
             re.compile(r"\bshow\b")
