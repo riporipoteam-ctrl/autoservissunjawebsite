@@ -8,20 +8,19 @@
     <!-- Initialize intro before the first paint; no flash of unstyled page. -->
     <script>
     (function () {
-        // One short intro per tab. Refreshes must show the hero immediately.
+        // Run the logo on every normal page entry, including reloads.
+        // Only explicit opt-out and the user's reduced-motion choice skip it.
         if (/[?&]skipIntro=1(?:&|$)/.test(location.search)) return;
-        var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
-        if ((nav && nav.type === 'reload') ||
-            (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
-        try {
-            if (sessionStorage.getItem("sunja-intro-v26-seen") === '1') return;
-        } catch (ignored) {}
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         document.documentElement.classList.add('sunja-intro-active');
         window.__sunjaIntroSafety = window.setTimeout(function () {
+            if (typeof window.__sunjaIntroForceFinish === 'function') {
+                window.__sunjaIntroForceFinish();
+                return;
+            }
             document.documentElement.classList.remove('sunja-intro-active');
             var intro = document.getElementById('sunjaIntro');
             if (intro) intro.hidden = true;
-            try { sessionStorage.setItem("sunja-intro-v26-seen", "1"); } catch (ignored) {}
         }, 3800);
     })();
     </script>
@@ -80,15 +79,17 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=26.0" rel="stylesheet">
+    <link href="css/style.css?v=27.0" rel="stylesheet">
 </head>
 
 <body>
     <!-- Only the supplied logo animation. No text, bars or spinner. -->
     <div id="sunjaIntro" class="sunja-intro" aria-label="Auto Servis Šunja">
-        <video id="sunjaIntroVideo" class="sunja-intro-video" src="assets/video/sunja-logo-intro-hq-v26.mp4"
-            autoplay muted playsinline preload="auto" disablepictureinpicture
+        <video id="sunjaIntroVideo" class="sunja-intro-video" src="assets/video/sunja-logo-intro-clean-v27.mp4"
+            autoplay muted playsinline webkit-playsinline preload="auto" disablepictureinpicture
             aria-label="Animacija logotipa Auto Servis Šunja"></video>
+        <img class="sunja-intro-fallback-logo" src="assets/sunja-logo-transparent.webp" alt=""
+            aria-hidden="true" decoding="async">
     </div>
     <script>
     (function () {
@@ -102,36 +103,29 @@
             return;
         }
         var done = false, criticalReady = false, videoEnded = false;
-        function warmDeferredPhotos() {
-            // Never compete with the intro video or the first visible slide.
-            var conn = navigator.connection || navigator.mozConnection;
-            if (conn && conn.saveData) return;
-            var targets = document.querySelectorAll("#header-carousel .carousel-item:not(.active) picture img");
-            var run = function () {
-                Array.prototype.slice.call(targets, 0, 2).forEach(function (img) {
-                    if (img && img.getAttribute("src")) {
-                        var prefetch = new Image();
-                        prefetch.src = img.getAttribute("src");
-                    }
-                });
-            };
-            if ("requestIdleCallback" in window) {
-                requestIdleCallback(run, { timeout: 1800 });
-            } else {
-                setTimeout(run, 850);
-            }
-        }
+        var fallbackActive = false, videoHasPlayed = false;
+        var fallbackTimer = null;
         function finishIntro() {
             if (done) return;
             done = true;
             clearTimeout(window.__sunjaIntroSafety);
+            clearTimeout(fallbackTimer);
             root.classList.remove("sunja-intro-active");
             intro.hidden = true;
-            try { sessionStorage.setItem("sunja-intro-v26-seen", "1"); } catch (ignored) {}
-            video.pause();
+            try { video.pause(); } catch (ignored) {}
             video.removeAttribute("src");
             video.load();
             warmDeferredPhotos();
+        }
+        window.__sunjaIntroForceFinish = finishIntro;
+        function startIntroFallback() {
+            if (done || fallbackActive || videoHasPlayed) return;
+            fallbackActive = true;
+            intro.classList.add("sunja-intro-is-fallback");
+            try { video.pause(); } catch (ignored) {}
+            // If Safari disallows muted autoplay (e.g. Low Power Mode),
+            // draw the same logo with CSS rather than showing an empty screen.
+            fallbackTimer = setTimeout(finishIntro, 1650);
         }
         function warmCriticalPhotos() {
             // Warm only the opening hero image. Loading 20+ gallery photos
@@ -177,13 +171,31 @@
             videoEnded = true;
             maybeFinish();
         });
-        video.addEventListener("error", function () { finishIntro(); });
+        video.addEventListener("playing", function () { videoHasPlayed = true; });
+        video.addEventListener("timeupdate", function () {
+            if (video.currentTime > 0.05) videoHasPlayed = true;
+        });
+        video.addEventListener("error", startIntroFallback);
         function tryStart() {
-            var playing = video.play();
-            if (playing && playing.catch) playing.catch(finishIntro);
+            if (done || fallbackActive || !video.paused) return;
+            video.muted = true;
+            video.defaultMuted = true;
+            video.playsInline = true;
+            try {
+                var playing = video.play();
+                if (playing && playing.catch) playing.catch(startIntroFallback);
+            } catch (err) {
+                startIntroFallback();
+            }
         }
-        if (video.readyState >= 2) tryStart();
-        else video.addEventListener("loadeddata", tryStart, { once: true });
+        // Start immediately on iPhone; retry when bytes arrive if needed.
+        tryStart();
+        video.addEventListener("loadeddata", tryStart, { once: true });
+        video.addEventListener("canplay", tryStart, { once: true });
+        // Autoplay can be blocked in Low Power Mode. Don't leave a blank intro.
+        setTimeout(function () {
+            if (!done && !videoHasPlayed && !videoEnded) startIntroFallback();
+        }, 1200);
     })();
     </script>
 <!-- Topbar Start -->
@@ -903,7 +915,7 @@
     
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=26.0"></script>
+    <script src="js/main.js?v=27.0"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
