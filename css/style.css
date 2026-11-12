@@ -538,11 +538,9 @@ h6.text-primary.text-uppercase { background: transparent; border: none; padding:
 
 
 .footer {
-    --footer-photo: url(../assets/photos/tt-wide-20261110-216852.webp);
-    background-image: linear-gradient(rgba(4, 12, 26, .82), rgba(4, 12, 26, .88)), var(--footer-photo) !important;
-    background-position: center 42% !important;
+    background-color: #0b2154;
+    background-image: linear-gradient(165deg, #0b2154 0%, #102e5d 48%, #061631 100%) !important;
     background-repeat: no-repeat !important;
-    background-size: cover !important;
 }
 
 .team-item .position-relative {
@@ -2534,4 +2532,180 @@ html.dock-avoiding-action #backTop.sunja-liquid-top.is-visible,
     .mobile-callbar.sunja-liquid-bottom a {
         transition-property: background-color, color, box-shadow !important;
     }
+}
+
+
+/* v22: footer, optical glass, compact about, nav, and safe edges */
+/* Footer is intentionally image-free. No random social-media background. */
+.footer, #siteFooter {
+    background-color: #0b2154 !important;
+    background-image: linear-gradient(165deg,
+        #0b2154 0%, #102e5d 48%, #061631 100%) !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-size: auto !important;
+}
+.footer-wave svg path { fill: #0b2154 !important; }
+#siteFooter { isolation: isolate; }
+#o-nama p.mb-4 {
+    max-width: 58ch;
+    line-height: 1.55 !important;
+    margin-bottom: 14px !important;
+}
+/* v22: navbar link active pill replaces overlapping underline */
+.navbar-light .navbar-nav .nav-link::after,
+.navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link::after {
+    content: none !important;
+    display: none !important;
+    background: none !important;
+    transform: none !important;
+}
+@media (min-width: 992px) {
+    .navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center;
+        min-height: 42px !important;
+        padding: 9px 12px !important;
+        margin: 0 3px !important;
+        border-radius: 13px;
+        text-decoration: none;
+        transition: background-color .16s ease, color .16s ease !important;
+    }
+    .navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link.active {
+        color: #0b5fa5 !important;
+        background-color: rgba(64,151,212,.12) !important;
+    }
+    .navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link:hover {
+        color: #084d87 !important;
+        background-color: rgba(75,156,207,.075) !important;
+    }
+}
+/* Unlike flat glassmorphism, the inner material uses a real SVG
+   feDisplacementMap to distort scene pixels behind a chromatic lens rim.
+   Adapted from MIT-licensed glass techniques (dpawlikowski/liquid-glass).
+   The live backdrop-filter version works on Chromium; Safari has the
+   displaced scene-copy sprite with native backdrop sampling beneath it. */
+.sunja-glass-filters {
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+}
+.navbar.nav-bar.sunja-liquid-header,
+.mobile-callbar.sunja-liquid-bottom,
+#backTop.sunja-liquid-top {
+    --sunja-lens-white: rgba(255,255,255,.52);
+    --sunja-lens-blue: rgba(68,180,245,.28);
+    background: linear-gradient(155deg,
+        rgba(255,255,255,.45) 0%, rgba(218,239,253,.18) 54%,
+        rgba(244,252,255,.29) 100%) !important;
+    -webkit-backdrop-filter: blur(3px) saturate(175%) brightness(1.06) !important;
+    backdrop-filter: blur(3px) saturate(175%) brightness(1.06) !important;
+    border: 1px solid rgba(255,255,255,.79) !important;
+    box-shadow:
+        inset 0 2px 1px rgba(255,255,255,.98),
+        inset 0 -3px 7px rgba(51,143,202,.18),
+        inset 2px 0 2px rgba(255,255,255,.60),
+        inset -2px 0 2px rgba(113,199,248,.52),
+        0 9px 30px rgba(8,35,78,.15) !important;
+}
+.navbar.nav-bar.sunja-liquid-header > .sunja-glass-refract,
+.mobile-callbar.sunja-liquid-bottom > .sunja-glass-refract,
+#backTop.sunja-liquid-top > .sunja-glass-refract {
+    position: absolute !important;
+    z-index: 0 !important;
+    inset: 0 !important;
+    display: block !important;
+    border-radius: inherit !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    background-image:
+        radial-gradient(ellipse 58% 80% at 13% -15%, rgba(255,255,255,.9), transparent 94%),
+        linear-gradient(122deg,
+            rgba(74,181,247,.10), rgba(255,255,255,.60) 43%,
+            rgba(88,178,243,.10) 66%,rgba(255,255,255,.38)) !important;
+    filter: url(#sunja-glass-distortion);
+    -webkit-filter: url(#sunja-glass-distortion);
+    opacity: .62;
+    clip-path: inset(1px round 20px);
+    transform: translateZ(0);
+    -webkit-mask-image: linear-gradient(#000,#000);
+}
+.navbar.nav-bar.sunja-liquid-header > .sunja-glass-refract[data-glass-scene="photo"],
+.mobile-callbar.sunja-liquid-bottom > .sunja-glass-refract[data-glass-scene="photo"],
+#backTop.sunja-liquid-top > .sunja-glass-refract[data-glass-scene="photo"] {
+    background-image: var(--sunja-scene-image) !important;
+    background-size: var(--sunja-scene-size) !important;
+    background-position: var(--sunja-scene-position) !important;
+    background-repeat: no-repeat !important;
+    opacity: .41;
+}
+.navbar.nav-bar.sunja-liquid-header::before,
+.mobile-callbar.sunja-liquid-bottom::before,
+#backTop.sunja-liquid-top::before {
+    background: radial-gradient(ellipse 80% 55% at 22% 0%,
+        rgba(255,255,255,.75),rgba(255,255,255,.11) 58%,transparent 96%) !important;
+    pointer-events: none !important;
+}
+.navbar.nav-bar.sunja-liquid-header::after,
+.mobile-callbar.sunja-liquid-bottom::after,
+#backTop.sunja-liquid-top::after {
+    background: conic-gradient(from 180deg at 50% 50%,
+        rgba(80,183,250,.7),rgba(255,255,255,.95),
+        rgba(84,180,242,.13),rgba(255,255,255,.94),
+        rgba(80,183,250,.7)) !important;
+    pointer-events: none !important;
+}
+.navbar.nav-bar.sunja-liquid-header > :not(.sunja-glass-refract),
+.mobile-callbar.sunja-liquid-bottom > :not(.sunja-glass-refract),
+#backTop.sunja-liquid-top > :not(.sunja-glass-refract) {
+    position: relative;
+    z-index: 2;
+}
+.navbar.nav-bar.sunja-liquid-header .navbar-brand img {
+    filter: drop-shadow(0 1px 0 rgba(255,255,255,.72)) !important;
+}
+.navbar.nav-bar.sunja-liquid-header .navbar-toggler {
+    background: rgba(242,250,255,.5) !important;
+    border-color: rgba(255,255,255,.86) !important;
+}
+@media (max-width: 991.98px) {
+    /* The page has no fake empty strip: its own safe area remains filled with
+       the same colour, and the opaque native Safari toolbar is browser-owned. */
+    html { background-color: #0b2154 !important; }
+    body { min-height: 100dvh; padding-bottom: 0 !important; }
+    #siteFooter {
+        padding-bottom: max(20px, env(safe-area-inset-bottom, 0px)) !important;
+        margin-bottom: 0 !important;
+    }
+    .mobile-callbar.sunja-liquid-bottom {
+        background: linear-gradient(180deg,
+            rgba(247,252,255,.45),rgba(214,237,252,.26)) !important;
+        bottom: 0 !important;
+        border-radius: 23px 23px 0 0 !important;
+        padding-bottom: calc(7px + env(safe-area-inset-bottom, 0px)) !important;
+        -webkit-backdrop-filter: blur(3px) saturate(165%) !important;
+        backdrop-filter: blur(3px) saturate(165%) !important;
+    }
+    .mobile-callbar.sunja-liquid-bottom a.call,
+    .mobile-callbar.sunja-liquid-bottom a.dir {
+        background: linear-gradient(160deg,
+            rgba(255,255,255,.35),rgba(213,242,255,.18)) !important;
+        color: #103f65 !important;
+        border: 1px solid rgba(255,255,255,.69);
+        box-shadow: inset 0 1px 2px rgba(255,255,255,.94),
+            inset 0 -2px 4px rgba(38,130,205,.10);
+    }
+    #backTop.sunja-liquid-top { bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important; }
+}
+@media (min-width: 992px) {
+    #siteFooter { margin-bottom: 0 !important; }
+}
+html.perf-lite .sunja-glass-refract {
+    display: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+    .sunja-glass-refract { transition: none !important; animation: none !important; }
 }
