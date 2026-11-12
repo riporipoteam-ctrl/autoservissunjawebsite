@@ -4,6 +4,14 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v20.1 (2026-11-12) — resilient map fallback and browser regression checks
+
+- MapLibre library requests have a timeout; failed tiles or scripts display a compact address/directions fallback instead of a giant sticky scroll trap. Network error strings are no longer injected into `innerHTML`.
+- The map fallback uses `#globeScroll.is-fallback` CSS so it overrides former 118–140svh scroll-flight rules and releases normal page scrolling.
+- `index.html` serves `css/style.css?v=20.1` and `js/main.js?v=20.1` to refresh stale cached assets after the v20 change.
+- Added `.github/workflows/site-quality.yml`, running the static suite and `tools/test_browser_smoke.py` against mobile-sized Chromium and WebKit with real touchscreen taps and animations enabled. The browser tests are designed to run on GitHub Actions for each site change; they are not equivalent to manual iPhone Safari verification.
+- Existing photography, permanent three main slide photos, gallery source captions and booking form are preserved.
+
 ## v20 (2026-11-11) — loader-free, one-tap interactions and compact UI
 
 Current site **does not use a full-screen logo preloader** or map loading spinner. The entire intro markup, animation code and CSS were removed rather than merely hidden. The MapLibre globe is still lazy-loaded near the map, and a direct directions link is available immediately.
