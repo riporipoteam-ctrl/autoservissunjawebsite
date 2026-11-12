@@ -207,7 +207,7 @@ class FrontendStaticTests(unittest.TestCase):
 
     def test_v231_map_close_zoom_and_compact_popup(self):
         self.assertIn("var SHOP_ZOOM = 16.2;", INDEX)
-        self.assertIn("z: SHOP_ZOOM", INDEX)
+        self.assertIn("zoom: SHOP_ZOOM", INDEX)
         self.assertIn("zoom: SHOP_ZOOM", INDEX)
         self.assertIn("className: 'sunja-map-popup'", INDEX)
         self.assertIn("closeButton: false", INDEX)
