@@ -5,6 +5,18 @@
     <meta charset="utf-8">
     <title>Auto Servis Šunja | Servis za sve marke vozila, Goražde</title>
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+    <!-- Initialize intro before the first paint; no flash of unstyled page. -->
+    <script>
+    (function () {
+        if (/[?&]skipIntro=1(?:&|$)/.test(location.search)) return;
+        document.documentElement.classList.add('sunja-intro-active');
+        window.__sunjaIntroSafety = window.setTimeout(function () {
+            document.documentElement.classList.remove('sunja-intro-active');
+            var intro = document.getElementById('sunjaIntro');
+            if (intro) intro.hidden = true;
+        }, 12500);
+    })();
+    </script>
     <!-- Early refresh reset: Safari must not restore a previous hash/scroll. -->
     <script>
     (function () {
@@ -64,6 +76,109 @@
 </head>
 
 <body>
+    <!-- Only the supplied logo animation. No text, bars or spinner. -->
+    <div id="sunjaIntro" class="sunja-intro" aria-label="Auto Servis Šunja">
+        <video id="sunjaIntroVideo" class="sunja-intro-video" src="assets/video/sunja-logo-intro.mp4"
+            autoplay muted playsinline preload="auto" disablepictureinpicture
+            aria-label="Animacija logotipa Auto Servis Šunja"></video>
+    </div>
+    <script>
+    (function () {
+        var root = document.documentElement;
+        var video = document.getElementById("sunjaIntroVideo");
+        var intro = document.getElementById("sunjaIntro");
+        if (!root.classList.contains("sunja-intro-active")) {
+            intro.hidden = true;
+            return;
+        }
+        var done = false, photoReady = false, videoEnded = false;
+        function finishIntro() {
+            if (done) return;
+            done = true;
+            clearTimeout(window.__sunjaIntroSafety);
+            root.classList.remove("sunja-intro-active");
+            intro.hidden = true;
+            video.pause();
+            video.removeAttribute("src");
+            video.load();
+        }
+        function warmSitePhotos() {
+            // Warm all native site images, including lazily loaded gallery tabs,
+            // in bounded batches to avoid saturating slow mobile connections.
+            var photoURLs = [];
+            var seen = new Set();
+            function add(url) {
+                if (!url || !/^(?:assets\/|\/assets\/)/.test(url)) return;
+                url = url.replace(/^\//, "");
+                if (seen.has(url)) return;
+                seen.add(url);
+                photoURLs.push(url);
+            }
+            document.querySelectorAll("img[src]").forEach(function (img) {
+                add(img.getAttribute("src"));
+            });
+            document.querySelectorAll("picture source[srcset]").forEach(function (source) {
+                source.getAttribute("srcset").split(",").forEach(function (src) {
+                    add(src.trim().split(/\s+/)[0]);
+                });
+            });
+            // Essential visible slides should not wait for first carousel advance.
+            document.querySelectorAll("#header-carousel img").forEach(function (img) {
+                img.loading = "eager";
+                img.fetchPriority = "high";
+            });
+            var cursor = 0;
+            function next() {
+                if (cursor >= photoURLs.length) return Promise.resolve();
+                var src = photoURLs[cursor++];
+                return new Promise(function (resolve) {
+                    var img = new Image();
+                    img.onload = img.onerror = resolve;
+                    img.src = src;
+                    if (img.complete) resolve();
+                }).then(next);
+            }
+            var workers = [];
+            for (var i = 0; i < Math.min(5, photoURLs.length); i++) workers.push(next());
+            return Promise.allSettled(workers);
+        }
+        function maybeFinish() {
+            if (videoEnded && photoReady) finishIntro();
+        }
+        function readyPage() {
+            warmSitePhotos().then(function () {
+                photoReady = true;
+                maybeFinish();
+            }, function () {
+                photoReady = true;
+                maybeFinish();
+            });
+        }
+        if (document.readyState === "loading") {
+            document.addEventListener("DOMContentLoaded", readyPage, { once: true });
+        } else readyPage();
+
+        video.addEventListener("ended", function () {
+            videoEnded = true;
+            maybeFinish();
+            // No stalled photo is ever allowed to trap the visitor.
+            setTimeout(finishIntro, 1500);
+        });
+        video.addEventListener("error", function () {
+            videoEnded = true;
+            setTimeout(finishIntro, 350);
+        });
+        function tryStart() {
+            var playing = video.play();
+            if (playing && playing.catch) playing.catch(function () {
+                videoEnded = true;
+                setTimeout(finishIntro, 750);
+            });
+        }
+        if (video.readyState >= 2) tryStart();
+        else video.addEventListener("loadeddata", tryStart, { once: true });
+    })();
+    </script>
 <!-- Topbar Start -->
     <div class="container-fluid bg-light p-0">
         <div class="row gx-0 d-none d-lg-flex">
