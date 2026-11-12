@@ -272,6 +272,26 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("window.scrollTo(0, 0)", INDEX)
         self.assertIn("pageshow", INDEX)
 
+    def test_v29_map_locks_permanently_after_arrival(self):
+        self.assertIn("var mapCompleted = false;", INDEX)
+        self.assertIn("function finishMapOnce()", INDEX)
+        self.assertIn("if (mapCompleted || fellBack || !loaded)", INDEX)
+        self.assertIn("removeEventListener('scroll', queueMapProgress)", INDEX)
+        self.assertIn("mapCompleted = true;", INDEX)
+        self.assertIn("setShopMarker(true)", INDEX)
+        self.assertIn("globe-complete", INDEX)
+
+    def test_v29_map_avoids_scroll_frame_render_flood_and_starts_early(self):
+        self.assertIn("var CAMERA_MIN_FRAME_MS = 80;", INDEX)
+        self.assertIn("lastCameraAt", INDEX)
+        self.assertIn("progress - lastMapProgress", INDEX)
+        self.assertIn("rootMargin: '850px 0px'", INDEX)
+        self.assertIn("cdn.jsdelivr.net/npm/maplibre-gl@5.6.0", INDEX)
+        self.assertIn('href="https://cdn.jsdelivr.net"', INDEX)
+        self.assertIn("pixelRatio: Math.min", INDEX)
+        self.assertIn("cancelPendingTileRequestsWhileZooming: true", INDEX)
+        self.assertIn("/* v29: stable finished map", CSS)
+
     def test_v24_map_plays_real_camera_flight_after_loading(self):
         self.assertIn("function updateMapOnScroll()", INDEX)
         self.assertIn("function queueMapProgress()", INDEX)
