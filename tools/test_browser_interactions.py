@@ -299,6 +299,22 @@ class SiteInteractionTests(unittest.TestCase):
             height = el.evaluate("(node) => node.getBoundingClientRect().height")
             self.assertGreaterEqual(height, 44, selector)
 
+    def test_v231_all_service_descriptions_are_compact(self):
+        expected = {
+            "tab-pane-1": "Dijagnostika i otkrivanje kvarova na vozilu.",
+            "tab-pane-2": "Održavanje i popravke Peugeot vozila.",
+            "tab-pane-3": "Zamjena motornog ulja i filtera.",
+            "tab-pane-4": "Zamjena zupčastog remena",
+            "tab-pane-5": "Dijagnostika i popravka električnih sistema",
+            "tab-pane-6": "Izrada i programiranje auto ključeva",
+        }
+        for tab_id, text in expected.items():
+            with self.subTest(tab=tab_id):
+                para = self.page.locator("#" + tab_id + " p.mb-4").first
+                description = para.inner_text()
+                self.assertIn(text, description)
+                self.assertLess(len(description), 105)
+
     def test_v21_mobile_type_is_genuinely_smaller(self):
         title = self.page.locator("#o-nama h1")
         para = self.page.locator("#o-nama > .container p").first
