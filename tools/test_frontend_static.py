@@ -133,8 +133,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=21.4", INDEX)
-        self.assertIn("js/main.js?v=21.4", INDEX)
+        self.assertIn("css/style.css?v=21.5", INDEX)
+        self.assertIn("js/main.js?v=21.5", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertIn("/* v21.2: optical glass and obstruction-free mobile actions */", CSS)
@@ -160,8 +160,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("requestAnimationFrame(syncActionDock)", JS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=21.4", INDEX)
-        self.assertIn("js/main.js?v=21.4", INDEX)
+        self.assertIn("css/style.css?v=21.5", INDEX)
+        self.assertIn("js/main.js?v=21.5", INDEX)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -250,8 +250,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=21.4", INDEX)
-        self.assertIn("js/main.js?v=21.4", INDEX)
+        self.assertIn("css/style.css?v=21.5", INDEX)
+        self.assertIn("js/main.js?v=21.5", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
