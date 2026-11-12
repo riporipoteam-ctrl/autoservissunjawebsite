@@ -4,6 +4,20 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v21.0 (2026-11-12) — screenshot-driven mobile typography, scoped Liquid Glass and uncropped photos
+
+The owner flagged specific remaining UI defects in three mobile screenshots: oversized About paragraphs/headings and numbered rows, dark letterboxing beside social photos, and opaque header/bottom controls.
+
+- **Real changes to mobile type:** About / service / gallery / map / contact / review headings now use 1.42rem on phones. The About paragraphs, service descriptions and numbered feature rows are roughly .875rem with tighter gaps and 37px numbered badges. This is separate from the earlier broad selector which had not reduced every row enough.
+- **Targeted Apple-inspired glass effect:** Only the existing header (`sunja-liquid-header`), mobile call/directions dock (`sunja-liquid-bottom`), and back-to-top button (`sunja-liquid-top`) receive translucent reflective layers, specular highlights and backdrop blur. All decorative pseudo-elements are pointer-events:none; links remain first-tap controls. On weak devices or browsers without backdrop-filter, lightweight tinted surfaces substitute. No third-party shaders, WebGL, Canvas, or animation loops were added.
+- **Zero-crop photos:** gallery wrappers no longer enforce a 4:5 height; every original portrait or landscape image determines its frame height and fills the card width. Service and About photos likewise use their native aspect ratio, with no cropping, blur, photo zoom or upscaling filters added. Gallery source labels (Objava s...) and links remain intact.
+- **The three permanent carousel photos are unchanged.** Their foreground images remain whole and sharp; an independently toned version of that exact photo fills side regions rather than a plain navy rectangle. The mobile first slide reuses the same portrait source for its backdrop, so it does not force a second wide-image download.
+- **Smooth slideshow:** the first slide keeps its high-priority load. On fast-enough connections, the other two permanent slide images start loading only after the initial page load (not during first paint). All full-page loading screens remain removed.
+- `tools/test_frontend_static.py` and `tools/test_browser_interactions.py` now include regressions for image aspect, font sizes, glass hit targets and slide behaviour. Tests must be verified by GitHub Actions or a local browser; source-level checks alone do not prove rendered Safari behaviour.
+- Assets use `?v=21.0` so the improved CSS/JS cannot be mixed with older browser cached versions.
+
+The visual inspiration was surveyed from public MIT-licensed liquid-glass web projects; no full external rendering engine was embedded, prioritizing smooth Safari browsing and original site structure.
+
 ## v20.1 (2026-11-12) — resilient map fallback and browser regression checks
 
 - MapLibre library requests have a timeout; failed tiles or scripts display a compact address/directions fallback instead of a giant sticky scroll trap. Network error strings are no longer injected into `innerHTML`.
