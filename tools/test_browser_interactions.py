@@ -66,8 +66,26 @@ class SiteInteractionTests(unittest.TestCase):
         expect(self.page.locator("#navbarCollapse")).to_have_class(
             re.compile(r"\bshow\b")
         )
+        self.page.evaluate("""() => {
+            window.__navTouchDebug = [];
+            for (const type of ["pointerdown","touchstart","touchend","pointerup","click"]) {
+                document.addEventListener(type, (e) => {
+                    const link = e.target && e.target.closest && e.target.closest("a");
+                    window.__navTouchDebug.push({
+                        type, tag: e.target && e.target.tagName,
+                        href: link && link.getAttribute("href"),
+                        prevented: e.defaultPrevented,
+                        hash: location.hash,
+                        expanded: document.querySelector("#navbarCollapse").className
+                    });
+                }, true);
+            }
+        }""")
         self.page.locator("#navbarCollapse a[href='#o-nama']").tap()
-        expect(self.page).to_have_url(re.compile(r"#o-nama$"))
+        self.assertEqual(
+            self.page.evaluate("location.hash"), "#o-nama",
+            str(self.page.evaluate("window.__navTouchDebug"))
+        )
         expect(self.page.locator("#navbarCollapse")).not_to_have_class(
             re.compile(r"\bshow\b")
         )
