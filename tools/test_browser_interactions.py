@@ -146,6 +146,40 @@ class SiteInteractionTests(unittest.TestCase):
                 finally:
                     context.close()
 
+    def test_v214_mobile_dock_is_flush_to_page_edge(self):
+        dock = self.page.locator(".mobile-callbar.sunja-liquid-bottom")
+        bottom = dock.evaluate("(el) => parseFloat(getComputedStyle(el).bottom)")
+        self.assertAlmostEqual(bottom, 0, delta=1)
+        footer_pad = self.page.locator("#siteFooter").evaluate(
+            "(el) => parseFloat(getComputedStyle(el).paddingBottom)"
+        )
+        self.assertLessEqual(footer_pad, 40)
+
+    def test_v214_first_tap_on_service_tab_and_gallery_link(self):
+        tab = self.page.locator('button[data-bs-target="#tab-pane-2"]')
+        tab.tap()
+        expect(self.page.locator("#tab-pane-2")).to_have_class(
+            re.compile(r"\\bactive\\b")
+        )
+        tile = self.page.locator("a.gallery-tile-link").first
+        tile.scroll_into_view_if_needed()
+        self.assertEqual(
+            tile.evaluate("(el) => getComputedStyle(el).transform"), "none"
+        )
+        self.assertGreaterEqual(float(tile.evaluate(
+            "(el) => getComputedStyle(el).opacity"
+        )), 0.99)
+        self.page.evaluate("""() => {
+            const tile = document.querySelector('a.gallery-tile-link');
+            window.__oneTapHits = 0;
+            tile.addEventListener('click', e => {
+                e.preventDefault();
+                window.__oneTapHits++;
+            });
+        }""")
+        tile.tap()
+        self.assertEqual(self.page.evaluate("window.__oneTapHits"), 1)
+
     def test_v213_all_mobile_sections_have_compact_typography(self):
         for section in ("o-nama", "usluge", "galerija", "recenzije",
                         "lokacija", "kontakt"):
@@ -218,10 +252,10 @@ class SiteInteractionTests(unittest.TestCase):
                 "(el) => getComputedStyle(el).paddingBottom"
             ), "0px"
         )
-        self.assertGreater(
+        self.assertLessEqual(
             self.page.locator("#siteFooter").evaluate(
                 "(el) => parseFloat(getComputedStyle(el).paddingBottom)"
-            ), 75
+            ), 40
         )
 
     def test_v21_three_glass_surfaces_stay_accessible(self):
