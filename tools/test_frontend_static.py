@@ -22,6 +22,12 @@ class FrontendStaticTests(unittest.TestCase):
     def test_navbar_polish_is_actually_attached(self):
         self.assertIn('class="navbar navbar-expand-lg nav-bar ', INDEX)
 
+    def test_v21_preloads_fixed_following_slides_after_first_load(self):
+        self.assertIn('window.addEventListener("load", function ()', JS)
+        self.assertIn('querySelectorAll(".carousel-item:not(.active) picture img")', JS)
+        self.assertIn('slideImg.loading = "eager"', JS)
+        self.assertIn('if (!saveData && !perfLite)', JS)
+
     def test_v21_glass_is_only_on_three_requested_controls(self):
         self.assertIn("sunja-liquid-header", INDEX)
         self.assertIn("sunja-liquid-bottom", INDEX)
