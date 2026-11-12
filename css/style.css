@@ -2055,7 +2055,7 @@ a[href] > *,button > * { pointer-events:none !important; }
   background:#0b5fa5 !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;
  }
  .mobile-callbar a.dir {background:#0b2154 !important;}
- html.dock-avoiding-action .mobile-callbar {opacity:0 !important;visibility:hidden !important;pointer-events:none !important;}
+ 
  #backTop {bottom:calc(83px + env(safe-area-inset-bottom,0px)) !important;}
 }
 #backTop {width:48px !important;height:48px !important;border-radius:12px !important;
@@ -2065,4 +2065,52 @@ a[href] > *,button > * { pointer-events:none !important; }
 #backTop::before,#backTop::after {content:none !important;display:none !important;}
 @media (prefers-reduced-motion:reduce) {
  .navbar.nav-bar,.mobile-callbar,#backTop {transition:none !important;}
+}
+
+
+/* v23: fixed no-flicker mobile dock */
+/* Always visible on phones: scrolling never changes opacity, positioning,
+   pointer events or visibility. Avoid animated transforms and compositing churn
+   on iOS Safari when its address bar expands/collapses. */
+@media (max-width: 991.98px) {
+    .mobile-callbar {
+        display: flex !important;
+        position: fixed !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: none !important;
+        -webkit-transform: none !important;
+        transition: none !important;
+        animation: none !important;
+        will-change: auto !important;
+        -webkit-backdrop-filter: none !important;
+        backdrop-filter: none !important;
+        z-index: 1030;
+    }
+    .mobile-callbar a {
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transform: none !important;
+        transition: none !important;
+        animation: none !important;
+    }
+    html {
+        scroll-padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+    /* A dark footer, not a white page tail, provides the room needed to
+       scroll its last links above the persistent call bar. */
+    #siteFooter {
+        min-height: calc(96px + env(safe-area-inset-bottom, 0px));
+        padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)) !important;
+        background-color: #0b2154 !important;
+    }
+}
+@media (min-width: 992px) {
+    .mobile-callbar { display: none !important; }
 }
