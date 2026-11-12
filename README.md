@@ -12,6 +12,13 @@ Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeo
 - Added `.github/workflows/site-quality.yml`, running the static suite and `tools/test_browser_smoke.py` against mobile-sized Chromium and WebKit with real touchscreen taps and animations enabled. The browser tests are designed to run on GitHub Actions for each site change; they are not equivalent to manual iPhone Safari verification.
 - Existing photography, permanent three main slide photos, gallery source captions and booking form are preserved.
 
+## v20.2 (2026-11-12) — tap-target and delivery verification
+
+- Hero slideshow indicators now have a **44px tappable area**, keeping their slim 5px blue/white progress-line appearance; previously the buttons themselves were only 5px tall.
+- Updated the style and JavaScript query versions to `v20.2` to invalidate stale browser/CDN assets.
+- Automated quality checks: `.github/workflows/site-quality.yml` and `.github/workflows/website-checks.yml` cover static regressions and Chromium/WebKit mobile tap flows, with a map fallback test in the former. `tools/verify_live_site.py` independently compares public CSS/JS SHA-256 hashes against the current repository checkout and flags stale Pages deployments.
+- Browser automation does not prove behaviour on a physical iPhone; the public deployment check must pass before declaring the live site current.
+
 ## v20 (2026-11-11) — loader-free, one-tap interactions and compact UI
 
 Current site **does not use a full-screen logo preloader** or map loading spinner. The entire intro markup, animation code and CSS were removed rather than merely hidden. The MapLibre globe is still lazy-loaded near the map, and a direct directions link is available immediately.
