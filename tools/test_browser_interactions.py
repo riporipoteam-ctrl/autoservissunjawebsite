@@ -143,6 +143,32 @@ class SiteInteractionTests(unittest.TestCase):
         self.assertAlmostEqual(rect["imageRatio"], rect["naturalRatio"], delta=0.05)
         self.assertEqual(rect["fit"], "contain")
 
+    def test_v212_dock_hides_when_booking_button_would_be_covered(self):
+        self.page.locator("#o-nama a[href='#termin']").scroll_into_view_if_needed()
+        self.page.evaluate("""() => {
+            const target = document.querySelector("#o-nama a[href='#termin']");
+            const dock = document.querySelector(".mobile-callbar");
+            target.scrollIntoView({block: "end", behavior: "instant"});
+            window.dispatchEvent(new Event("scroll"));
+        }""")
+        self.page.wait_for_timeout(280)
+        # Dock may remain visible when it doesn't intersect the button.
+        # Either way the CTA must be directly tappable with no overlay.
+        self.page.locator("#o-nama a[href='#termin']").tap()
+        expect(self.page).to_have_url(re.compile(r"#termin$"))
+
+    def test_v212_footer_has_no_unstyled_body_tail(self):
+        self.assertEqual(
+            self.page.locator("body").evaluate(
+                "(el) => getComputedStyle(el).paddingBottom"
+            ), "0px"
+        )
+        self.assertGreater(
+            self.page.locator("#siteFooter").evaluate(
+                "(el) => parseFloat(getComputedStyle(el).paddingBottom)"
+            ), 75
+        )
+
     def test_v21_three_glass_surfaces_stay_accessible(self):
         self.assertEqual(self.page.locator(".sunja-liquid-header").count(), 1)
         self.assertEqual(self.page.locator(".sunja-liquid-bottom").count(), 1)
