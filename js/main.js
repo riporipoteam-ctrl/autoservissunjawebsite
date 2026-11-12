@@ -88,7 +88,7 @@
         "#recenzije a.btn, #galerija a.btn, " +
         "#termin input, #termin select, #termin textarea, " +
         "#termin button, #header-carousel .carousel-caption a.btn, " +
-        ".map-quick-link"
+        ".map-quick-link, #siteFooter"
     );
     function syncActionDock() {
         dockFrame = 0;
