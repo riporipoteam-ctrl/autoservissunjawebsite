@@ -182,6 +182,22 @@
     var fastTouchNavigation = !!(window.matchMedia &&
         window.matchMedia("(pointer: coarse)").matches);
 
+    // Collapse the mobile menu synchronously on the same gesture, before
+    // jumping to the target. A scroll before the collapse used to leave the
+    // menu expanded and caused an apparent second-tap requirement.
+    function collapseMobileMenu() {
+        if (window.innerWidth >= 992) return;
+        var el = document.getElementById("navbarCollapse");
+        if (!el || !el.classList.contains("show")) return;
+        if (typeof bootstrap !== "undefined" && bootstrap.Collapse) {
+            bootstrap.Collapse.getOrCreateInstance(el, { toggle: false }).hide();
+        } else {
+            el.classList.remove("show");
+            var toggle = document.querySelector(".navbar-toggler");
+            if (toggle) toggle.setAttribute("aria-expanded", "false");
+        }
+    }
+
     // Same-page buttons need exactly one click, regardless of iOS hover
     // emulation. Native href fallback remains if this script is unavailable.
     document.addEventListener('click', function (event) {
@@ -196,6 +212,7 @@
         if (!target) return;
 
         event.preventDefault();
+        if (link.closest("#navbarCollapse")) collapseMobileMenu();
         try { history.replaceState(null, '', '#' + encodeURIComponent(id)); } catch (e) {}
         target.scrollIntoView({
             behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth",
@@ -203,12 +220,4 @@
         });
     }, true);
 
-    // Collapse mobile navigation on its first selection.
-    document.querySelectorAll("#navbarCollapse .nav-link").forEach(function (link) {
-        link.addEventListener("click", function () {
-            var el = document.getElementById("navbarCollapse");
-            if (!el || !el.classList.contains("show") || typeof bootstrap === "undefined") return;
-            bootstrap.Collapse.getOrCreateInstance(el, { toggle: false }).hide();
-        });
-    });
 })();
