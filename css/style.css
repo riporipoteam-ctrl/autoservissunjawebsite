@@ -2124,3 +2124,133 @@ html.perf-lite #backTop.sunja-liquid-top {
     #pocetna, #o-nama, #usluge, #galerija, #lokacija, #kontakt,
     #termin, #recenzije { scroll-margin-top: 79px !important; }
 }
+
+/* v21.2: optical glass and obstruction-free mobile actions */
+/* Optical rims: spectral edge, crisp Fresnel highlights and translucent
+   background sampling. WebKit does not support SVG-in-backdrop distortion,
+   so we preserve smooth native backdrop filtering instead of fake GPU claims. */
+.navbar.nav-bar.sunja-liquid-header,
+.mobile-callbar.sunja-liquid-bottom,
+#backTop.sunja-liquid-top {
+    --glass-rim: conic-gradient(from 205deg at 50% 50%,
+        rgba(115,202,255,.48) 0deg, rgba(255,255,255,.96) 58deg,
+        rgba(255,255,255,.18) 130deg, rgba(125,202,250,.56) 205deg,
+        rgba(255,255,255,.94) 282deg, rgba(86,181,239,.45) 360deg);
+}
+.navbar.nav-bar.sunja-liquid-header {
+    background: linear-gradient(153deg,rgba(255,255,255,.29),
+        rgba(199,231,249,.13) 55%,rgba(255,255,255,.25)) !important;
+    -webkit-backdrop-filter: blur(9px) saturate(185%) brightness(1.075);
+    backdrop-filter: blur(9px) saturate(185%) brightness(1.075);
+    border-color: rgba(255,255,255,.66) !important;
+    box-shadow: inset 0 2px 1px rgba(255,255,255,.92),
+        inset 1px 0 1px rgba(195,233,255,.7),
+        inset 0 -3px 4px rgba(34,109,164,.15),
+        0 8px 25px rgba(14,52,94,.13) !important;
+}
+.navbar.nav-bar.sunja-liquid-header::before {
+    background:
+        radial-gradient(ellipse 65% 48% at 23% 0%,rgba(255,255,255,.65),transparent 91%),
+        linear-gradient(173deg,rgba(255,255,255,.22),transparent 33%);
+    pointer-events: none;
+}
+.navbar.nav-bar.sunja-liquid-header::after,
+.mobile-callbar.sunja-liquid-bottom::after,
+#backTop.sunja-liquid-top::after {
+    content: "";
+    position: absolute;
+    z-index: 3;
+    inset: -1px;
+    padding: 2px;
+    border-radius: inherit;
+    background: var(--glass-rim);
+    pointer-events: none;
+    -webkit-mask: linear-gradient(#000 0 0) content-box,
+                  linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box,
+          linear-gradient(#000 0 0);
+    mask-composite: exclude;
+}
+@media (max-width: 991.98px) {
+    :root { --dock-clearance: calc(96px + env(safe-area-inset-bottom, 0px)); }
+    /* Blank page-tail removed. Reserve room INSIDE the footer, not after it. */
+    body { padding-bottom: 0 !important; }
+    #siteFooter {
+        padding-bottom: var(--dock-clearance) !important;
+    }
+    .navbar.nav-bar.sunja-liquid-header {
+        background: linear-gradient(150deg,rgba(255,255,255,.34),
+            rgba(218,238,252,.15) 56%,rgba(255,255,255,.27)) !important;
+        -webkit-backdrop-filter: blur(10px) saturate(178%) brightness(1.06);
+        backdrop-filter: blur(10px) saturate(178%) brightness(1.06);
+    }
+    .mobile-callbar.sunja-liquid-bottom {
+        bottom: calc(9px + env(safe-area-inset-bottom, 0px));
+        padding: 5px !important;
+        gap: 5px !important;
+        background: linear-gradient(130deg,rgba(255,255,255,.20),
+            rgba(194,225,247,.12) 54%,rgba(255,255,255,.22)) !important;
+        border-color: rgba(255,255,255,.68) !important;
+        -webkit-backdrop-filter: blur(11px) saturate(185%) brightness(1.07);
+        backdrop-filter: blur(11px) saturate(185%) brightness(1.07);
+        box-shadow: inset 0 2px 2px rgba(255,255,255,.92),
+            inset 0 -2px 3px rgba(38,109,166,.13),
+            0 9px 25px rgba(11,40,79,.19) !important;
+        transition: opacity .18s ease, transform .22s cubic-bezier(.2,.8,.2,1),
+            visibility .22s ease !important;
+    }
+    .mobile-callbar.sunja-liquid-bottom::before {
+        background:
+            radial-gradient(ellipse 60% 37% at 24% 0%,rgba(255,255,255,.61),transparent),
+            linear-gradient(176deg,rgba(255,255,255,.24),transparent 40%);
+    }
+    .mobile-callbar.sunja-liquid-bottom a.call,
+    .mobile-callbar.sunja-liquid-bottom a.dir {
+        min-height: 48px;
+        color: #113a60 !important;
+        background: linear-gradient(172deg,rgba(255,255,255,.25),
+            rgba(197,233,253,.11)) !important;
+        border-color: rgba(255,255,255,.54);
+        box-shadow: inset 0 1px 0 rgba(255,255,255,.82),
+            inset 0 -1px 2px rgba(21,106,169,.09);
+    }
+    .mobile-callbar.sunja-liquid-bottom a:active {
+        background: rgba(185,222,246,.45) !important;
+        transform: scale(.98);
+    }
+    /* Hide the dock only while it would physically obstruct an action or
+       important About text. The actual action remains clickable immediately. */
+    html.dock-avoiding-action .mobile-callbar.sunja-liquid-bottom {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transform: translateY(calc(100% + 38px)) !important;
+    }
+    html.dock-avoiding-action #backTop.sunja-liquid-top {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+    }
+    #backTop.sunja-liquid-top {
+        bottom: calc(93px + env(safe-area-inset-bottom, 0px)) !important;
+        right: 20px !important;
+    }
+}
+#backTop.sunja-liquid-top {
+    background: linear-gradient(145deg,rgba(255,255,255,.29),
+        rgba(170,222,249,.23)) !important;
+    -webkit-backdrop-filter: blur(9px) saturate(180%) brightness(1.06);
+    backdrop-filter: blur(9px) saturate(180%) brightness(1.06);
+    box-shadow: inset 0 2px 1px rgba(255,255,255,.9),
+        inset 0 -2px 3px rgba(33,112,166,.14),
+        0 9px 21px rgba(18,62,105,.18) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+    .mobile-callbar.sunja-liquid-bottom { transition: none !important; }
+}
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .navbar.nav-bar.sunja-liquid-header { background: rgba(236,247,255,.96) !important; }
+    .mobile-callbar.sunja-liquid-bottom { background: rgba(231,244,254,.97) !important; }
+    #backTop.sunja-liquid-top { background: rgba(222,239,252,.98) !important; }
+}
