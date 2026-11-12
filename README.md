@@ -4,6 +4,17 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v22.2 (2026-11-12) — restore the original stable non-glass UI
+
+Liquid Glass was removed at the owner's request due to glitchy rendering.
+
+- Restored the **white traditional navigation**, **solid blue Pozovite/Upute mobile action bar**, and **blue back-to-top button**. No translucent/optical glass or refraction animation remains on those controls.
+- Removed the entire embedded SVG displacement-filter markup, all glass-specific DOM layers and approximately 25 KB of glass CSS plus 7.5 KB of unused JS renderer/theme handlers. Did **not** simply hide the broken renderer.
+- Preserved the shorter Bosnian About text, static dark-blue image-free footer, permanent hero photos, uncropped gallery photos, responsive mobile typography, working services/booking anchors and one-tap touch navigation.
+- Kept the tap-safe solid mobile bar and collision-aware retract behaviour to avoid covering CTA links or footer information. Fixed desktop nav underline remains absent.
+- Updated CSS/JS query strings to `v22.2`; regression tests now specifically assert that no Liquid Glass markup/filters are present.
+- The site's GitHub Pages, Chromium, and WebKit checks validate the restored code; a physical iPhone is not directly available in this chat.
+
 ## v22.0 (2026-11-12) — image-free footer, compact About, refractive glass, desktop nav and mobile edge handling
 
 - **Removed the unwanted footer background photo entirely.** The old CSS photo variable and the script that replaced it using `photos.json` are both gone. Footer uses a clean dark blue brand gradient only.
