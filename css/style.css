@@ -2239,3 +2239,42 @@ a[href] > *,button > * { pointer-events:none !important; }
 @media (prefers-reduced-motion: reduce) {
     #globeMap .sunja-map-card__actions a { transition: none; }
 }
+
+/* v24: stable, self-playing globe fly-in */
+/* A real four-stage MapLibre flyTo runs when the loaded map is visible.
+   Never resize/collapse a sticky 118svh scroll trap while the person scrolls. */
+#globeScroll,
+#globeScroll:not(.globe-complete),
+#globeScroll.globe-complete {
+    position: relative !important;
+    height: clamp(470px, 82svh, 780px) !important;
+    min-height: 470px !important;
+    max-height: 780px;
+    overflow: hidden !important;
+}
+#globeScroll .globe-sticky,
+#globeScroll.globe-complete .globe-sticky {
+    position: relative !important;
+    top: auto !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+#globeScroll .globe-stage {
+    bottom: 106px;
+    max-width: calc(100vw - 28px);
+    pointer-events: none !important;
+}
+@media (max-width: 767.98px) {
+    #globeScroll,
+    #globeScroll:not(.globe-complete),
+    #globeScroll.globe-complete {
+        height: clamp(440px, 76svh, 680px) !important;
+        min-height: 440px !important;
+    }
+    #globeScroll .globe-stage {
+        bottom: calc(92px + env(safe-area-inset-bottom, 0px));
+        font-size: 12px;
+        letter-spacing: .035em;
+    }
+}
