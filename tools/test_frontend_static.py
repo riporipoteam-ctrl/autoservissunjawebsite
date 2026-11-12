@@ -26,6 +26,12 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn(".navbar-light .navbar-nav .nav-link::after", CSS)
         self.assertIn("content: none !important;", CSS)
 
+    def test_v22_gradient_backdrops_can_be_refracted_without_screenshot_capture(self):
+        self.assertIn('paintedBackground.indexOf("gradient(")', JS)
+        self.assertIn('data-glass-scene", "gradient"', JS)
+        self.assertIn('.sunja-glass-refract[data-glass-scene]', CSS)
+        self.assertNotIn("html2canvas", INDEX + JS)
+
     def test_v22_real_svg_refractive_glass_and_accessible_overlays(self):
         self.assertIn('id="sunja-glass-distortion"', INDEX)
         self.assertIn("<feDisplacementMap", INDEX)
