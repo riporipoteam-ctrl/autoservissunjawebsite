@@ -4,6 +4,14 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v24.0 (2026-11-12) — correct refresh position and make the globe animation reliable
+
+- **Refresh opens at the hero slides.** An early, synchronous head script detects a genuine page reload and disables Safari/Chromium scroll restoration only for that reload. It clears stale section fragments, then resets to the top on DOM ready, page show and load. Normal in-page anchor taps and shareable links on an initial navigation are unchanged.
+- **Actual animated map camera:** Replaced the brittle scroll-progress window with a visible-once MapLibre flight using `flyTo` and `moveend` sequencing: globe → Europe → Bosnia and Herzegovina → Goražde → the shop at zoom **16.2**. The animation starts after MapLibre loads and the map enters view, independently of fast swipes or CDN delays. For reduced-motion settings and low-resource devices, the camera goes directly to the location, respecting accessibility and battery life.
+- The map section has a stable, non-sticky height during and after the animation. It never collapses while scrolling or unexpectedly shifts page position. The compact shop popup, native directions/phone links, exact coordinates, and graceful map-failure fallback are preserved.
+- Added **real Chromium and WebKit regression tests** for reload after section navigation and manual scrolling, and for the four camera stages using a deterministic MapLibre event mock. These tests run with animation enabled, rather than the reduced-motion setting used by older interaction tests.
+- CSS/JS assets now use `?v=24.0` to prevent returning iPhone visitors loading older navigation/map code. The existing non-glass interface and fixed action bar are unchanged.
+
 ## v23.1 (2026-11-12) — concise service descriptions and closer location map
 
 - Removed filler introductions in the six service panels. The main sentences are now short, factual Bosnian descriptions; the useful checklists and booking actions remain unchanged.
