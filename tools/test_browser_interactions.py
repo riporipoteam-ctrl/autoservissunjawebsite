@@ -4,6 +4,7 @@ Run: python -m unittest tools.test_browser_interactions
 Requires: pip install playwright; python -m playwright install chromium
 """
 import functools
+import os
 import http.server
 import re
 import threading
@@ -28,7 +29,10 @@ class SiteInteractionTests(unittest.TestCase):
         cls.server_thread.start()
         cls.url = "http://127.0.0.1:" + str(cls.server.server_port) + "/"
         cls.playwright = sync_playwright().start()
-        cls.browser = cls.playwright.chromium.launch(headless=True)
+        engine = os.environ.get("BROWSER_ENGINE", "chromium")
+        if engine not in ("chromium", "webkit"):
+            raise ValueError("Expected chromium or webkit BROWSER_ENGINE")
+        cls.browser = getattr(cls.playwright, engine).launch(headless=True)
 
     @classmethod
     def tearDownClass(cls):
