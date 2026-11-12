@@ -1666,269 +1666,6 @@ a[href], button, .btn {
 }
 
 
-/* v21.0 — responsive optics, original-ratio media, and compact type */
-/* Inspired by liquid-glass studies (MIT projects), authored specifically for
-   this static page. No Canvas/WebGL, SVG backdrop filters or scroll-time work.
-   Only the header, mobile action dock and back-to-top use glass surfaces. */
-:root {
-    --liquid-edge: rgba(255,255,255,.92);
-    --liquid-shadow: 0 12px 34px rgba(16,45,86,.13);
-}
-.navbar.nav-bar.sunja-liquid-header {
-    position: sticky;
-    top: 0 !important;
-    z-index: 1029;
-    width: min(1380px, calc(100% - 28px));
-    max-width: none;
-    min-height: 66px;
-    margin: 12px auto 0 !important;
-    padding: 0 !important;
-    isolation: isolate;
-    overflow: visible;
-    border: 1px solid rgba(255,255,255,.94) !important;
-    border-radius: 22px !important;
-    background: linear-gradient(146deg, rgba(255,255,255,.88) 0%,
-        rgba(235,247,255,.73) 50%, rgba(252,254,255,.86) 100%) !important;
-    -webkit-backdrop-filter: blur(18px) saturate(175%);
-    backdrop-filter: blur(18px) saturate(175%);
-    box-shadow: 0 1px 1px rgba(255,255,255,.95) inset,
-        0 -1px 2px rgba(53,113,171,.10) inset,
-        0 11px 26px rgba(15,46,89,.12), 0 2px 8px rgba(10,54,99,.06) !important;
-    transition: box-shadow .23s ease, background-color .23s ease !important;
-}
-/* The curved specular highlight is decorative and cannot intercept clicks. */
-.navbar.nav-bar.sunja-liquid-header::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    border-radius: inherit;
-    background: radial-gradient(ellipse 53% 45% at 17% 0%,
-        rgba(255,255,255,.94), transparent 85%),
-        linear-gradient(180deg,rgba(255,255,255,.38),transparent 36%);
-    pointer-events: none;
-}
-.navbar.nav-bar.sunja-liquid-header > * {
-    position: relative;
-    z-index: 1;
-}
-html.is-scrolled .navbar.nav-bar.sunja-liquid-header {
-    box-shadow: 0 1px 1px rgba(255,255,255,.98) inset,
-        0 9px 29px rgba(9,38,83,.16) !important;
-}
-.navbar.nav-bar.sunja-liquid-header .navbar-brand {
-    margin: 0 auto 0 0;
-    min-height: 66px;
-    height: auto !important;
-    padding: 8px 18px !important;
-}
-.navbar.nav-bar.sunja-liquid-header .navbar-brand img {
-    height: 44px !important;
-    max-width: min(165px, 38vw);
-    width: auto;
-    object-fit: contain;
-    filter: none !important;
-    transform: none !important;
-}
-.navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link {
-    color: #183859;
-    font-size: .825rem;
-    font-weight: 600;
-    letter-spacing: .005em;
-    min-height: 44px;
-    padding: 12px 0;
-}
-.navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link.active,
-.navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link:hover {
-    color: #085ca0;
-}
-.navbar.nav-bar.sunja-liquid-header .navbar-toggler {
-    width: 46px;
-    height: 43px;
-    min-width: 46px;
-    margin: 0 12px 0 0 !important;
-    padding: 9px 10px;
-    border: 1px solid rgba(255,255,255,.88) !important;
-    border-radius: 14px;
-    background: linear-gradient(145deg,rgba(255,255,255,.81),rgba(210,234,253,.55));
-    box-shadow: 0 1px 0 rgba(255,255,255,.98) inset,
-        0 4px 12px rgba(15,62,100,.09);
-    touch-action: manipulation;
-}
-.navbar.nav-bar.sunja-liquid-header .navbar-toggler:focus {
-    box-shadow: 0 0 0 3px rgba(67,156,222,.2);
-}
-.navbar.nav-bar.sunja-liquid-header .navbar-toggler-icon {
-    width: 1.3em;
-    height: 1.3em;
-}
-@media (min-width: 992px) {
-    .navbar.nav-bar.sunja-liquid-header .navbar-collapse { padding-right: 10px; }
-    .navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link { margin-right: 18px; }
-}
-@media (max-width: 991.98px) {
-    .navbar.nav-bar.sunja-liquid-header {
-        width: calc(100% - 24px);
-        min-height: 62px;
-        margin: 9px auto 0 !important;
-        border-radius: 21px !important;
-        background: linear-gradient(136deg,rgba(255,255,255,.91),
-            rgba(230,245,255,.76)) !important;
-        -webkit-backdrop-filter: blur(14px) saturate(155%);
-        backdrop-filter: blur(14px) saturate(155%);
-    }
-    .navbar.nav-bar.sunja-liquid-header .navbar-brand { min-height: 62px; padding: 7px 14px !important; }
-    .navbar.nav-bar.sunja-liquid-header .navbar-brand img { height: 41px !important; }
-    .navbar.nav-bar.sunja-liquid-header #navbarCollapse {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: calc(100% + 7px);
-        margin: 0;
-        border: 1px solid rgba(255,255,255,.9) !important;
-        border-radius: 18px;
-        overflow: hidden;
-        background: rgba(245,251,255,.96) !important;
-        -webkit-backdrop-filter: blur(14px) saturate(140%);
-        backdrop-filter: blur(14px) saturate(140%);
-        box-shadow: 0 15px 30px rgba(8,35,73,.15);
-    }
-    .navbar.nav-bar.sunja-liquid-header #navbarCollapse .navbar-nav {
-        padding: 11px 20px !important;
-        border: none;
-    }
-    .navbar.nav-bar.sunja-liquid-header #navbarCollapse .nav-link {
-        margin: 0;
-        min-height: 44px;
-        padding: 12px 0;
-        border-bottom: 1px solid rgba(52,117,166,.085);
-    }
-}
-
-/* Frosted, floating action dock — no full-width opaque blue slab. */
-@media (max-width: 991.98px) {
-    .mobile-callbar.sunja-liquid-bottom {
-        position: fixed;
-        display: flex !important;
-        z-index: 1030;
-        left: 12px;
-        right: 12px;
-        bottom: calc(10px + env(safe-area-inset-bottom, 0px));
-        width: auto;
-        gap: 6px;
-        padding: 6px;
-        border: 1px solid var(--liquid-edge);
-        border-radius: 24px !important;
-        overflow: visible !important;
-        background: linear-gradient(145deg,rgba(255,255,255,.70),
-            rgba(219,239,254,.53) 58%,rgba(250,253,255,.67)) !important;
-        -webkit-backdrop-filter: blur(22px) saturate(175%);
-        backdrop-filter: blur(22px) saturate(175%);
-        box-shadow: 0 1px 1px rgba(255,255,255,.98) inset,
-            0 -1px 1px rgba(42,107,167,.13) inset,
-            0 12px 36px rgba(10,36,75,.19), 0 2px 7px rgba(5,29,67,.09);
-        isolation: isolate;
-    }
-    .mobile-callbar.sunja-liquid-bottom::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: radial-gradient(ellipse 68% 50% at 20% 0%,
-            rgba(255,255,255,.65),transparent 94%);
-        pointer-events: none;
-    }
-    .mobile-callbar.sunja-liquid-bottom a {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        flex: 1 1 0;
-        gap: 8px;
-        min-width: 0;
-        min-height: 51px;
-        padding: 10px 8px !important;
-        border-radius: 18px;
-        font-size: .84rem !important;
-        font-weight: 700;
-        letter-spacing: .035em;
-        text-transform: uppercase;
-        text-decoration: none;
-        transition: background-color .18s ease, box-shadow .18s ease !important;
-        touch-action: manipulation;
-    }
-    .mobile-callbar.sunja-liquid-bottom a.call {
-        color: #093f75 !important;
-        background: linear-gradient(155deg,rgba(198,232,255,.77),
-            rgba(234,248,255,.58)) !important;
-        border: 1px solid rgba(255,255,255,.7);
-        box-shadow: inset 0 1px rgba(255,255,255,.85);
-    }
-    .mobile-callbar.sunja-liquid-bottom a.dir {
-        color: #163753 !important;
-        background: linear-gradient(145deg,rgba(255,255,255,.76),
-            rgba(212,233,251,.49)) !important;
-        border: 1px solid rgba(255,255,255,.76);
-        box-shadow: inset 0 1px rgba(255,255,255,.88);
-    }
-    .mobile-callbar.sunja-liquid-bottom a:active {
-        background: rgba(186,226,252,.81) !important;
-        box-shadow: inset 0 2px 5px rgba(9,68,121,.09) !important;
-    }
-    .mobile-callbar.sunja-liquid-bottom a i {
-        font-size: 1.02rem;
-        margin: 0 !important;
-        pointer-events: none;
-    }
-    body { padding-bottom: calc(97px + env(safe-area-inset-bottom, 0px)) !important; }
-}
-@media (min-width: 992px) {
-    .mobile-callbar.sunja-liquid-bottom { display: none !important; }
-}
-
-/* Floating single-tap glass back-to-top control. */
-#backTop.sunja-liquid-top {
-    z-index: 1028 !important;
-    width: 51px !important;
-    height: 51px !important;
-    min-width: 51px;
-    min-height: 51px;
-    padding: 0 !important;
-    right: 22px !important;
-    bottom: 24px !important;
-    border-radius: 19px !important;
-    color: #07598e !important;
-    background: linear-gradient(147deg,rgba(255,255,255,.91),
-        rgba(192,228,252,.71) 58%,rgba(248,252,255,.81)) !important;
-    border: 1px solid rgba(255,255,255,.91) !important;
-    -webkit-backdrop-filter: blur(16px) saturate(165%);
-    backdrop-filter: blur(16px) saturate(165%);
-    box-shadow: 0 1px 1px rgba(255,255,255,.98) inset,
-        0 -2px 3px rgba(48,102,159,.11) inset,
-        0 10px 28px rgba(13,52,96,.17) !important;
-    transition: opacity .18s ease, visibility .18s ease,
-        transform .18s ease, box-shadow .18s ease !important;
-    touch-action: manipulation;
-}
-#backTop.sunja-liquid-top::before {
-    content: "";
-    position: absolute;
-    inset: 1px;
-    border-radius: 17px;
-    background: radial-gradient(ellipse 72% 42% at 28% 0%,
-        rgba(255,255,255,.9),transparent);
-    pointer-events: none;
-}
-#backTop.sunja-liquid-top i { position: relative; z-index: 1; font-size: 1.1rem; }
-#backTop.sunja-liquid-top.is-visible { transform: translateY(0) !important; }
-#backTop.sunja-liquid-top.is-visible:active { transform: scale(.96) !important; }
-@media (max-width: 991.98px) {
-    #backTop.sunja-liquid-top {
-        right: 20px !important;
-        bottom: calc(105px + env(safe-area-inset-bottom, 0px)) !important;
-    }
-}
-
 /* Truly compact text: headings, description, list rows and mobile captions.
    Reduces the screenshot's 30px body-copy impression while preserving legibility. */
 #o-nama > .container { max-width: 1140px; }
@@ -2077,24 +1814,6 @@ h6.text-primary.text-uppercase { font-size: .69rem !important; letter-spacing: .
     .team-item { border-radius: 18px; }
     .contact-spotlight { padding: 21px 17px; }
 }
-@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-    .navbar.nav-bar.sunja-liquid-header { background: #f1f8fd !important; }
-    .mobile-callbar.sunja-liquid-bottom { background: #e2f1fc !important; }
-    #backTop.sunja-liquid-top { background: #d7edfb !important; }
-}
-html.perf-lite .navbar.nav-bar.sunja-liquid-header,
-html.perf-lite .mobile-callbar.sunja-liquid-bottom,
-html.perf-lite #backTop.sunja-liquid-top {
-    -webkit-backdrop-filter: none !important;
-    backdrop-filter: none !important;
-}
-@media (prefers-reduced-motion: reduce) {
-    .navbar.nav-bar.sunja-liquid-header,
-    .mobile-callbar.sunja-liquid-bottom,
-    .mobile-callbar.sunja-liquid-bottom a,
-    #backTop.sunja-liquid-top { transition: none !important; animation: none !important; }
-}
-
 /* Reuse the mobile source image as the mobile hero backdrop.
    No second image fetch, no letterboxing, no loss of original pixels. */
 @media (max-width: 767.98px) {
@@ -2122,137 +1841,6 @@ html.perf-lite #backTop.sunja-liquid-top {
     #pocetna, #o-nama, #usluge, #galerija, #lokacija, #kontakt,
     #termin, #recenzije { scroll-margin-top: 79px !important; }
 }
-
-/* v21.2: optical glass and obstruction-free mobile actions */
-/* Optical rims: spectral edge, crisp Fresnel highlights and translucent
-   background sampling. WebKit does not support SVG-in-backdrop distortion,
-   so we preserve smooth native backdrop filtering instead of fake GPU claims. */
-.navbar.nav-bar.sunja-liquid-header,
-.mobile-callbar.sunja-liquid-bottom,
-#backTop.sunja-liquid-top {
-    --glass-rim: conic-gradient(from 205deg at 50% 50%,
-        rgba(115,202,255,.48) 0deg, rgba(255,255,255,.96) 58deg,
-        rgba(255,255,255,.18) 130deg, rgba(125,202,250,.56) 205deg,
-        rgba(255,255,255,.94) 282deg, rgba(86,181,239,.45) 360deg);
-}
-.navbar.nav-bar.sunja-liquid-header {
-    background: linear-gradient(153deg,rgba(255,255,255,.29),
-        rgba(199,231,249,.13) 55%,rgba(255,255,255,.25)) !important;
-    -webkit-backdrop-filter: blur(9px) saturate(185%) brightness(1.075);
-    backdrop-filter: blur(9px) saturate(185%) brightness(1.075);
-    border-color: rgba(255,255,255,.66) !important;
-    box-shadow: inset 0 2px 1px rgba(255,255,255,.92),
-        inset 1px 0 1px rgba(195,233,255,.7),
-        inset 0 -3px 4px rgba(34,109,164,.15),
-        0 8px 25px rgba(14,52,94,.13) !important;
-}
-.navbar.nav-bar.sunja-liquid-header::before {
-    background:
-        radial-gradient(ellipse 65% 48% at 23% 0%,rgba(255,255,255,.65),transparent 91%),
-        linear-gradient(173deg,rgba(255,255,255,.22),transparent 33%);
-    pointer-events: none;
-}
-.navbar.nav-bar.sunja-liquid-header::after,
-.mobile-callbar.sunja-liquid-bottom::after,
-#backTop.sunja-liquid-top::after {
-    content: "";
-    position: absolute;
-    z-index: 3;
-    inset: -1px;
-    padding: 2px;
-    border-radius: inherit;
-    background: var(--glass-rim);
-    pointer-events: none;
-    -webkit-mask: linear-gradient(#000 0 0) content-box,
-                  linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask: linear-gradient(#000 0 0) content-box,
-          linear-gradient(#000 0 0);
-    mask-composite: exclude;
-}
-@media (max-width: 991.98px) {
-    :root { --dock-clearance: calc(96px + env(safe-area-inset-bottom, 0px)); }
-    /* Blank page-tail removed. Reserve room INSIDE the footer, not after it. */
-    body { padding-bottom: 0 !important; }
-    #siteFooter {
-        padding-bottom: var(--dock-clearance) !important;
-    }
-    .navbar.nav-bar.sunja-liquid-header {
-        background: linear-gradient(150deg,rgba(255,255,255,.34),
-            rgba(218,238,252,.15) 56%,rgba(255,255,255,.27)) !important;
-        -webkit-backdrop-filter: blur(10px) saturate(178%) brightness(1.06);
-        backdrop-filter: blur(10px) saturate(178%) brightness(1.06);
-    }
-    .mobile-callbar.sunja-liquid-bottom {
-        bottom: calc(9px + env(safe-area-inset-bottom, 0px));
-        padding: 5px !important;
-        gap: 5px !important;
-        background: linear-gradient(130deg,rgba(255,255,255,.20),
-            rgba(194,225,247,.12) 54%,rgba(255,255,255,.22)) !important;
-        border-color: rgba(255,255,255,.68) !important;
-        -webkit-backdrop-filter: blur(11px) saturate(185%) brightness(1.07);
-        backdrop-filter: blur(11px) saturate(185%) brightness(1.07);
-        box-shadow: inset 0 2px 2px rgba(255,255,255,.92),
-            inset 0 -2px 3px rgba(38,109,166,.13),
-            0 9px 25px rgba(11,40,79,.19) !important;
-        transition: opacity .18s ease, transform .22s cubic-bezier(.2,.8,.2,1),
-            visibility .22s ease !important;
-    }
-    .mobile-callbar.sunja-liquid-bottom::before {
-        background:
-            radial-gradient(ellipse 60% 37% at 24% 0%,rgba(255,255,255,.61),transparent),
-            linear-gradient(176deg,rgba(255,255,255,.24),transparent 40%);
-    }
-    .mobile-callbar.sunja-liquid-bottom a.call,
-    .mobile-callbar.sunja-liquid-bottom a.dir {
-        min-height: 48px;
-        color: #113a60 !important;
-        background: linear-gradient(172deg,rgba(255,255,255,.25),
-            rgba(197,233,253,.11)) !important;
-        border-color: rgba(255,255,255,.54);
-        box-shadow: inset 0 1px 0 rgba(255,255,255,.82),
-            inset 0 -1px 2px rgba(21,106,169,.09);
-    }
-    .mobile-callbar.sunja-liquid-bottom a:active {
-        background: rgba(185,222,246,.45) !important;
-        transform: scale(.98);
-    }
-    /* Hide the dock only while it would physically obstruct an action or
-       important About text. The actual action remains clickable immediately. */
-    html.dock-avoiding-action .mobile-callbar.sunja-liquid-bottom {
-        opacity: 0 !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-        transform: translateY(calc(100% + 38px)) !important;
-    }
-    html.dock-avoiding-action #backTop.sunja-liquid-top {
-        opacity: 0 !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
-    }
-    #backTop.sunja-liquid-top {
-        bottom: calc(93px + env(safe-area-inset-bottom, 0px)) !important;
-        right: 20px !important;
-    }
-}
-#backTop.sunja-liquid-top {
-    background: linear-gradient(145deg,rgba(255,255,255,.29),
-        rgba(170,222,249,.23)) !important;
-    -webkit-backdrop-filter: blur(9px) saturate(180%) brightness(1.06);
-    backdrop-filter: blur(9px) saturate(180%) brightness(1.06);
-    box-shadow: inset 0 2px 1px rgba(255,255,255,.9),
-        inset 0 -2px 3px rgba(33,112,166,.14),
-        0 9px 21px rgba(18,62,105,.18) !important;
-}
-@media (prefers-reduced-motion: reduce) {
-    .mobile-callbar.sunja-liquid-bottom { transition: none !important; }
-}
-@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-    .navbar.nav-bar.sunja-liquid-header { background: rgba(236,247,255,.96) !important; }
-    .mobile-callbar.sunja-liquid-bottom { background: rgba(231,244,254,.97) !important; }
-    #backTop.sunja-liquid-top { background: rgba(222,239,252,.98) !important; }
-}
-
 
 /* v21.3 — consistent site-wide typography */
 /* One final source of truth: old Bootstrap .display-* and per-section overrides
@@ -2418,7 +2006,7 @@ h6.text-primary.text-uppercase {
         font-size: 13.5px !important;
         min-height: 44px !important;
     }
-    .mobile-callbar.sunja-liquid-bottom a { font-size: 13.5px !important; min-height: 48px; }
+    .mobile-callbar a { font-size: 13.5px !important; min-height: 48px; }
     #siteFooter .footer-menu a { font-size: 13px !important; }
 }
 @media (min-width: 768px) and (max-width: 991.98px) {
@@ -2428,302 +2016,53 @@ h6.text-primary.text-uppercase {
     }
 }
 
-/* v21.4: stable first-touch surfaces and dock flush */
-/* iOS Safari may require an initial tap when hover reveals/moves a link.
-   On a touchscreen, keep the actual interactive target in the same position
-   for hover, focus, and touch. Gallery links are actionable at first touch. */
-a[href], button, [role="button"], .nav-link, .gallery-tile-link {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: rgba(39,130,192,.12);
+/* v22.2: classic UI restored — no optical filter, refracted layers or blur. */
+.navbar.nav-bar { background:#fff !important; border:0 !important; border-radius:0 !important;
+  backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  box-shadow:0 3px 15px rgba(11,33,84,.10) !important; }
+.navbar.nav-bar::before,.navbar.nav-bar::after { content:none !important;display:none !important; }
+.navbar.nav-bar .navbar-brand img { filter:none !important; transform:none !important; }
+.navbar.nav-bar .navbar-toggler { background:#fff !important; border-radius:10px !important; box-shadow:none !important; }
+.navbar-light .navbar-nav .nav-link::after { content:none !important;display:none !important; }
+.navbar-light .navbar-nav .nav-link.active { color:#0b5fa5 !important; }
+.footer,#siteFooter { background-color:#0b2154 !important;
+ background-image:linear-gradient(165deg,#0b2154,#102e5d 48%,#061631) !important; }
+a[href],button,[role="button"],.nav-link,.gallery-tile-link { touch-action:manipulation; }
+a[href] > *,button > * { pointer-events:none !important; }
+@media (hover:none),(pointer:coarse) {
+ .team-item .team-overlay.gallery-tile-link,.team-item:hover .team-overlay.gallery-tile-link {
+  opacity:1 !important; transform:none !important; pointer-events:auto !important;transition:none !important;
+ }
+ .team-item:hover,.social-tile:hover,.service .nav .nav-link:hover,.btn:hover {transform:none !important;}
+ .team-item:hover .gallery-img {transform:none !important;}
+ html {scroll-behavior:auto !important;}
 }
-a[href] > *, button > * { pointer-events: none !important; }
-.navbar.nav-bar.sunja-liquid-header::before,
-.navbar.nav-bar.sunja-liquid-header::after,
-.mobile-callbar.sunja-liquid-bottom::before,
-.mobile-callbar.sunja-liquid-bottom::after,
-#backTop.sunja-liquid-top::before,
-#backTop.sunja-liquid-top::after { pointer-events: none !important; }
-@media (hover: none), (pointer: coarse) {
-    .team-item .team-overlay.gallery-tile-link,
-    .team-item:hover .team-overlay.gallery-tile-link {
-        transform: none !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        transition: none !important;
-    }
-    .team-item:hover,
-    .social-tile:hover,
-    .service .nav .nav-link:hover,
-    .navbar-brand:hover img,
-    .btn:hover,
-    #backTop:hover {
-        transform: none !important;
-    }
-    .btn-primary::after { display: none !important; }
-    .team-item:hover .gallery-img,
-    .team-item:hover .position-relative > img { transform: none !important; }
-    .navbar-light .navbar-nav .nav-link::after { pointer-events: none !important; }
+@media (max-width:991.98px) {
+ html,body {background:#fff !important;}
+ body {padding-bottom:0 !important;}
+ #siteFooter {padding-bottom:28px !important;margin-bottom:0 !important;}
+ .mobile-callbar {display:flex !important;position:fixed;left:0 !important;right:0 !important;
+  bottom:0 !important;width:100% !important;margin:0 !important;padding:0 !important;
+  background:#0b5fa5 !important;border-radius:14px 14px 0 0 !important;
+  overflow:hidden !important;border:0 !important;
+  -webkit-backdrop-filter:none !important;backdrop-filter:none !important;
+  box-shadow:0 -3px 14px rgba(11,33,84,.13) !important;
+ }
+ .mobile-callbar a {flex:1 1 0;display:inline-flex;align-items:center;justify-content:center;
+  min-height:54px;gap:9px;padding:12px 7px calc(12px + env(safe-area-inset-bottom,0px)) !important;
+  font-size:13.5px !important;font-weight:700;color:#fff !important;
+  border:none !important;border-radius:0 !important;box-shadow:none !important;
+  background:#0b5fa5 !important;-webkit-backdrop-filter:none !important;backdrop-filter:none !important;
+ }
+ .mobile-callbar a.dir {background:#0b2154 !important;}
+ html.dock-avoiding-action .mobile-callbar {opacity:0 !important;visibility:hidden !important;pointer-events:none !important;}
+ #backTop {bottom:calc(83px + env(safe-area-inset-bottom,0px)) !important;}
 }
-/* Mobile dock touches the bottom of the actual webpage viewport; never leave
-   an empty translucent strip between it and the web content edge. Safari's
-   separate native address bar is outside the website's DOM and is not editable. */
-@media (max-width: 991.98px) {
-    html, body { background: #e8f4fc; }
-    html { scroll-padding-bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }
-    body { padding-bottom: 0 !important; }
-    #siteFooter {
-        padding-bottom: 28px !important;
-        margin-bottom: 0 !important;
-    }
-    .mobile-callbar.sunja-liquid-bottom {
-        left: 0 !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        width: 100% !important;
-        max-width: none !important;
-        margin: 0 !important;
-        padding: 7px max(12px, env(safe-area-inset-right, 0px))
-            calc(7px + env(safe-area-inset-bottom, 0px))
-            max(12px, env(safe-area-inset-left, 0px)) !important;
-        border-left: 0 !important;
-        border-right: 0 !important;
-        border-bottom: 0 !important;
-        border-radius: 23px 23px 0 0 !important;
-        overflow: visible !important;
-        box-shadow: 0 -5px 26px rgba(10,40,75,.13),
-            inset 0 2px 1px rgba(255,255,255,.86) !important;
-        pointer-events: none;
-    }
-    .mobile-callbar.sunja-liquid-bottom a {
-        pointer-events: auto !important;
-        touch-action: manipulation;
-        min-height: 48px;
-    }
-    .mobile-callbar.sunja-liquid-bottom::after,
-    .mobile-callbar.sunja-liquid-bottom::before {
-        border-radius: inherit;
-        pointer-events: none !important;
-    }
-    #backTop.sunja-liquid-top {
-        bottom: calc(86px + env(safe-area-inset-bottom, 0px)) !important;
-        touch-action: manipulation;
-    }
-}
-@media (min-width: 992px) {
-    .mobile-callbar.sunja-liquid-bottom { display: none !important; }
-    #siteFooter { margin-bottom: 0 !important; }
-}
-
-/* First-tap regression guard: keep top action tappable even while the
-   collision-aware call dock is hidden. It must not vanish on a scroll. */
-html.dock-avoiding-action #backTop.sunja-liquid-top.is-visible,
-#backTop.sunja-liquid-top.is-visible {
-    opacity: 1 !important;
-    visibility: visible !important;
-    pointer-events: auto !important;
-}
-@media (pointer: coarse) {
-    html { scroll-behavior: auto !important; }
-}
-/* Prevent pseudo-hover from changing hitboxes during a touch gesture. */
-@media (hover: none), (pointer: coarse) {
-    #header-carousel .carousel-caption a,
-    .service .nav .nav-link,
-    .mobile-callbar.sunja-liquid-bottom a {
-        transition-property: background-color, color, box-shadow !important;
-    }
-}
-
-
-/* v22: footer, optical glass, compact about, nav, and safe edges */
-/* Footer is intentionally image-free. No random social-media background. */
-.footer, #siteFooter {
-    background-color: #0b2154 !important;
-    background-image: linear-gradient(165deg,
-        #0b2154 0%, #102e5d 48%, #061631 100%) !important;
-    background-position: center !important;
-    background-repeat: no-repeat !important;
-    background-size: auto !important;
-}
-.footer-wave svg path { fill: #0b2154 !important; }
-#siteFooter { isolation: isolate; }
-#o-nama p.mb-4 {
-    max-width: 58ch;
-    line-height: 1.55 !important;
-    margin-bottom: 14px !important;
-}
-/* v22: navbar link active pill replaces overlapping underline */
-.navbar-light .navbar-nav .nav-link::after,
-.navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link::after {
-    content: none !important;
-    display: none !important;
-    background: none !important;
-    transform: none !important;
-}
-@media (min-width: 992px) {
-    .navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link {
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center;
-        min-height: 42px !important;
-        padding: 9px 12px !important;
-        margin: 0 3px !important;
-        border-radius: 13px;
-        text-decoration: none;
-        transition: background-color .16s ease, color .16s ease !important;
-    }
-    .navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link.active {
-        color: #0b5fa5 !important;
-        background-color: rgba(64,151,212,.12) !important;
-    }
-    .navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link:hover {
-        color: #084d87 !important;
-        background-color: rgba(75,156,207,.075) !important;
-    }
-}
-/* Unlike flat glassmorphism, the inner material uses a real SVG
-   feDisplacementMap to distort scene pixels behind a chromatic lens rim.
-   Adapted from MIT-licensed glass techniques (dpawlikowski/liquid-glass).
-   The live backdrop-filter version works on Chromium; Safari has the
-   displaced scene-copy sprite with native backdrop sampling beneath it. */
-.sunja-glass-filters {
-    position: absolute !important;
-    width: 0 !important;
-    height: 0 !important;
-    overflow: hidden !important;
-    pointer-events: none !important;
-}
-.navbar.nav-bar.sunja-liquid-header,
-.mobile-callbar.sunja-liquid-bottom,
-#backTop.sunja-liquid-top {
-    --sunja-lens-white: rgba(255,255,255,.52);
-    --sunja-lens-blue: rgba(68,180,245,.28);
-    background: linear-gradient(155deg,
-        rgba(255,255,255,.45) 0%, rgba(218,239,253,.18) 54%,
-        rgba(244,252,255,.29) 100%) !important;
-    -webkit-backdrop-filter: blur(3px) saturate(175%) brightness(1.06) !important;
-    backdrop-filter: blur(3px) saturate(175%) brightness(1.06) !important;
-    border: 1px solid rgba(255,255,255,.79) !important;
-    box-shadow:
-        inset 0 2px 1px rgba(255,255,255,.98),
-        inset 0 -3px 7px rgba(51,143,202,.18),
-        inset 2px 0 2px rgba(255,255,255,.60),
-        inset -2px 0 2px rgba(113,199,248,.52),
-        0 9px 30px rgba(8,35,78,.15) !important;
-}
-.navbar.nav-bar.sunja-liquid-header > .sunja-glass-refract,
-.mobile-callbar.sunja-liquid-bottom > .sunja-glass-refract,
-#backTop.sunja-liquid-top > .sunja-glass-refract {
-    position: absolute !important;
-    z-index: 0 !important;
-    inset: 0 !important;
-    display: block !important;
-    border-radius: inherit !important;
-    pointer-events: none !important;
-    overflow: hidden !important;
-    background-image:
-        radial-gradient(ellipse 58% 80% at 13% -15%, rgba(255,255,255,.9), transparent 94%),
-        linear-gradient(122deg,
-            rgba(74,181,247,.10), rgba(255,255,255,.60) 43%,
-            rgba(88,178,243,.10) 66%,rgba(255,255,255,.38)) !important;
-    filter: url(#sunja-glass-distortion);
-    -webkit-filter: url(#sunja-glass-distortion);
-    opacity: .62;
-    clip-path: inset(1px round 20px);
-    transform: translateZ(0);
-    -webkit-mask-image: linear-gradient(#000,#000);
-}
-.navbar.nav-bar.sunja-liquid-header > .sunja-glass-refract[data-glass-scene],
-.mobile-callbar.sunja-liquid-bottom > .sunja-glass-refract[data-glass-scene],
-#backTop.sunja-liquid-top > .sunja-glass-refract[data-glass-scene] {
-    background-image: var(--sunja-scene-image) !important;
-    background-size: var(--sunja-scene-size) !important;
-    background-position: var(--sunja-scene-position) !important;
-    background-repeat: no-repeat !important;
-    opacity: .41;
-}
-.navbar.nav-bar.sunja-liquid-header::before,
-.mobile-callbar.sunja-liquid-bottom::before,
-#backTop.sunja-liquid-top::before {
-    background: radial-gradient(ellipse 80% 55% at 22% 0%,
-        rgba(255,255,255,.75),rgba(255,255,255,.11) 58%,transparent 96%) !important;
-    pointer-events: none !important;
-}
-.navbar.nav-bar.sunja-liquid-header::after,
-.mobile-callbar.sunja-liquid-bottom::after,
-#backTop.sunja-liquid-top::after {
-    background: conic-gradient(from 180deg at 50% 50%,
-        rgba(80,183,250,.7),rgba(255,255,255,.95),
-        rgba(84,180,242,.13),rgba(255,255,255,.94),
-        rgba(80,183,250,.7)) !important;
-    pointer-events: none !important;
-}
-.navbar.nav-bar.sunja-liquid-header > :not(.sunja-glass-refract),
-.mobile-callbar.sunja-liquid-bottom > :not(.sunja-glass-refract),
-#backTop.sunja-liquid-top > :not(.sunja-glass-refract) {
-    position: relative;
-    z-index: 2;
-}
-.navbar.nav-bar.sunja-liquid-header .navbar-brand img {
-    filter: drop-shadow(0 1px 0 rgba(255,255,255,.72)) !important;
-}
-.navbar.nav-bar.sunja-liquid-header .navbar-toggler {
-    background: rgba(242,250,255,.5) !important;
-    border-color: rgba(255,255,255,.86) !important;
-}
-@media (max-width: 991.98px) {
-    /* The page has no fake empty strip: its own safe area remains filled with
-       the same colour, and the opaque native Safari toolbar is browser-owned. */
-    html { background-color: #0b2154 !important; }
-    body { min-height: 100dvh; padding-bottom: 0 !important; }
-    #siteFooter {
-        padding-bottom: max(20px, env(safe-area-inset-bottom, 0px)) !important;
-        margin-bottom: 0 !important;
-    }
-    .mobile-callbar.sunja-liquid-bottom {
-        background: linear-gradient(180deg,
-            rgba(247,252,255,.45),rgba(214,237,252,.26)) !important;
-        bottom: 0 !important;
-        border-radius: 23px 23px 0 0 !important;
-        padding-bottom: calc(7px + env(safe-area-inset-bottom, 0px)) !important;
-        -webkit-backdrop-filter: blur(3px) saturate(165%) !important;
-        backdrop-filter: blur(3px) saturate(165%) !important;
-    }
-    .mobile-callbar.sunja-liquid-bottom a.call,
-    .mobile-callbar.sunja-liquid-bottom a.dir {
-        background: linear-gradient(160deg,
-            rgba(255,255,255,.35),rgba(213,242,255,.18)) !important;
-        color: #103f65 !important;
-        border: 1px solid rgba(255,255,255,.69);
-        box-shadow: inset 0 1px 2px rgba(255,255,255,.94),
-            inset 0 -2px 4px rgba(38,130,205,.10);
-    }
-    #backTop.sunja-liquid-top { bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important; }
-}
-@media (min-width: 992px) {
-    #siteFooter { margin-bottom: 0 !important; }
-}
-html.perf-lite .sunja-glass-refract {
-    display: none !important;
-}
-@media (prefers-reduced-motion: reduce) {
-    .sunja-glass-refract { transition: none !important; animation: none !important; }
-}
-
-
-/* Full live-scene refraction on Chromium. Safari's backdrop-filter does not
-   implement SVG displacement, so its inner scene uses filter:url(#...) instead.
-   Do not force the unsupported backdrop SVG filter on iOS/WebKit. */
-html.sunja-optics-chromium .navbar.nav-bar.sunja-liquid-header,
-html.sunja-optics-chromium .mobile-callbar.sunja-liquid-bottom,
-html.sunja-optics-chromium #backTop.sunja-liquid-top {
-    -webkit-backdrop-filter: url(#sunja-glass-distortion) blur(3px) saturate(175%) !important;
-    backdrop-filter: url(#sunja-glass-distortion) blur(3px) saturate(175%) !important;
-}
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .navbar.nav-bar.sunja-liquid-header,
-    .mobile-callbar.sunja-liquid-bottom,
-    #backTop.sunja-liquid-top {
-        background-color: rgba(242,249,255,.94) !important;
-    }
+#backTop {width:48px !important;height:48px !important;border-radius:12px !important;
+ background:#0b5fa5 !important;color:#fff !important;border:1px solid #0b5fa5 !important;
+ filter:none !important;backdrop-filter:none !important;-webkit-backdrop-filter:none !important;
+ box-shadow:0 7px 18px rgba(9,42,86,.18) !important;}
+#backTop::before,#backTop::after {content:none !important;display:none !important;}
+@media (prefers-reduced-motion:reduce) {
+ .navbar.nav-bar,.mobile-callbar,#backTop {transition:none !important;}
 }
