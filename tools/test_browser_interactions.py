@@ -159,7 +159,7 @@ class SiteInteractionTests(unittest.TestCase):
         tab = self.page.locator('button[data-bs-target="#tab-pane-2"]')
         tab.tap()
         expect(self.page.locator("#tab-pane-2")).to_have_class(
-            re.compile(r"\\bactive\\b")
+            re.compile(r"\bactive\b")
         )
         tile = self.page.locator("a.gallery-tile-link").first
         tile.scroll_into_view_if_needed()
