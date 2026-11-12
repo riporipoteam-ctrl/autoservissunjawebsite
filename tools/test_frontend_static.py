@@ -42,8 +42,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=23.0", INDEX)
-        self.assertIn("js/main.js?v=23.0", INDEX)
+        self.assertIn("css/style.css?v=23.1", INDEX)
+        self.assertIn("js/main.js?v=23.1", INDEX)
 
     def test_fullscreen_loaders_are_removed(self):
         self.assertNotIn('id="preloader"', INDEX)
@@ -166,8 +166,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=23.0", INDEX)
-        self.assertIn("js/main.js?v=23.0", INDEX)
+        self.assertIn("css/style.css?v=23.1", INDEX)
+        self.assertIn("js/main.js?v=23.1", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -194,8 +194,29 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=23.0", INDEX)
-        self.assertIn("js/main.js?v=23.0", INDEX)
+        self.assertIn("css/style.css?v=23.1", INDEX)
+        self.assertIn("js/main.js?v=23.1", INDEX)
+
+    def test_v231_service_descriptions_are_short_without_filler(self):
+        self.assertNotIn("Upalila se lampica na instrument tabli?", INDEX)
+        self.assertNotIn("Redovno održavanje koje čuva motor", INDEX)
+        self.assertNotIn("Izgubili ste ključ ili vam treba rezervni?", INDEX)
+        self.assertIn("Dijagnostika i otkrivanje kvarova na vozilu.", INDEX)
+        self.assertIn("Zamjena motornog ulja i filtera.", INDEX)
+        self.assertIn("/* v23.1 compact service descriptions", CSS)
+
+    def test_v231_map_close_zoom_and_compact_popup(self):
+        self.assertIn("var SHOP_ZOOM = 16.2;", INDEX)
+        self.assertIn("z: SHOP_ZOOM", INDEX)
+        self.assertIn("zoom: SHOP_ZOOM", INDEX)
+        self.assertIn("className: 'sunja-map-popup'", INDEX)
+        self.assertIn("closeButton: false", INDEX)
+        self.assertIn("focusAfterOpen: false", INDEX)
+        self.assertIn("sunja-map-card__title", INDEX)
+        self.assertIn("sunja-map-card__actions", INDEX)
+        self.assertIn("sunja-map-card__address", INDEX)
+        self.assertIn("/* v23.1 map popup: clean compact shop card */", CSS)
+        self.assertIn(".sunja-map-popup .maplibregl-popup-content", CSS)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -285,8 +306,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=23.0", INDEX)
-        self.assertIn("js/main.js?v=23.0", INDEX)
+        self.assertIn("css/style.css?v=23.1", INDEX)
+        self.assertIn("js/main.js?v=23.1", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
