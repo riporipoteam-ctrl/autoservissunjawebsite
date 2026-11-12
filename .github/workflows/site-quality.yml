@@ -9,6 +9,7 @@ on:
       - 'js/**'
       - 'tools/test_frontend_static.py'
       - 'tools/test_browser_smoke.py'
+      - 'tools/test_browser_interactions.py'
       - '.github/workflows/site-quality.yml'
   pull_request:
     branches: [main]
@@ -44,3 +45,8 @@ jobs:
 
       - name: Mobile first-tap and map fallback tests
         run: python -m unittest tools/test_browser_smoke.py -v
+
+      - name: Existing navigation + carousel interaction suite in Chromium and WebKit
+        run: |
+          BROWSER_ENGINE=chromium python -m unittest tools/test_browser_interactions.py -v
+          BROWSER_ENGINE=webkit python -m unittest tools/test_browser_interactions.py -v
