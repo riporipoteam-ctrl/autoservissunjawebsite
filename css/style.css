@@ -2633,9 +2633,9 @@ html.dock-avoiding-action #backTop.sunja-liquid-top.is-visible,
     transform: translateZ(0);
     -webkit-mask-image: linear-gradient(#000,#000);
 }
-.navbar.nav-bar.sunja-liquid-header > .sunja-glass-refract[data-glass-scene="photo"],
-.mobile-callbar.sunja-liquid-bottom > .sunja-glass-refract[data-glass-scene="photo"],
-#backTop.sunja-liquid-top > .sunja-glass-refract[data-glass-scene="photo"] {
+.navbar.nav-bar.sunja-liquid-header > .sunja-glass-refract[data-glass-scene],
+.mobile-callbar.sunja-liquid-bottom > .sunja-glass-refract[data-glass-scene],
+#backTop.sunja-liquid-top > .sunja-glass-refract[data-glass-scene] {
     background-image: var(--sunja-scene-image) !important;
     background-size: var(--sunja-scene-size) !important;
     background-position: var(--sunja-scene-position) !important;
