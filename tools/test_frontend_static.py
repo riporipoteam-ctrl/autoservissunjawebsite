@@ -8,6 +8,41 @@ JS = (ROOT / "js" / "main.js").read_text(encoding="utf-8")
 
 
 class FrontendStaticTests(unittest.TestCase):
+    def test_v22_footer_photo_completely_removed(self):
+        self.assertNotIn("--footer-photo", CSS + INDEX)
+        self.assertNotIn("footerPhoto", INDEX)
+        self.assertIn("/* v22: footer, optical glass, compact about, nav, and safe edges */", CSS)
+        self.assertIn("background-image: linear-gradient(", CSS)
+        self.assertIn("id=\"siteFooter\"", INDEX)
+
+    def test_v22_about_short_address_first_without_suv(self):
+        self.assertIn("Auto Servis Šunja se nalazi na adresi Hajra Lakovića 38", INDEX)
+        self.assertIn("73000 Goražde", INDEX)
+        self.assertNotIn("SUV-ova", INDEX)
+        self.assertNotIn("od gradskih automobila", INDEX)
+
+    def test_v22_desktop_nav_has_no_colliding_underline(self):
+        self.assertIn("/* v22: navbar link active pill replaces overlapping underline */", CSS)
+        self.assertIn(".navbar-light .navbar-nav .nav-link::after", CSS)
+        self.assertIn("content: none !important;", CSS)
+
+    def test_v22_real_svg_refractive_glass_and_accessible_overlays(self):
+        self.assertIn('id="sunja-glass-distortion"', INDEX)
+        self.assertIn("<feDisplacementMap", INDEX)
+        self.assertIn("<feTurbulence", INDEX)
+        self.assertIn('class="sunja-glass-refract"', INDEX)
+        self.assertIn("filter: url(#sunja-glass-distortion)", CSS)
+        self.assertIn("pointer-events: none !important;", CSS)
+        self.assertIn("prefers-reduced-motion: reduce", CSS)
+
+    def test_v22_edge_safe_mobile_footer_and_theme(self):
+        self.assertIn("viewport-fit=cover", INDEX)
+        self.assertIn("theme-color", INDEX)
+        self.assertIn("footer-theme-observer", JS)
+        self.assertIn("background-color: #0b2154", CSS.lower())
+        self.assertIn("css/style.css?v=22.0", INDEX)
+        self.assertIn("js/main.js?v=22.0", INDEX)
+
     def test_fullscreen_loaders_are_removed(self):
         self.assertNotIn('id="preloader"', INDEX)
         self.assertNotIn('plTrace', INDEX)
@@ -133,8 +168,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=21.5", INDEX)
-        self.assertIn("js/main.js?v=21.5", INDEX)
+        self.assertIn("css/style.css?v=22.0", INDEX)
+        self.assertIn("js/main.js?v=22.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertIn("/* v21.2: optical glass and obstruction-free mobile actions */", CSS)
@@ -160,8 +195,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("requestAnimationFrame(syncActionDock)", JS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=21.5", INDEX)
-        self.assertIn("js/main.js?v=21.5", INDEX)
+        self.assertIn("css/style.css?v=22.0", INDEX)
+        self.assertIn("js/main.js?v=22.0", INDEX)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -170,7 +205,8 @@ class FrontendStaticTests(unittest.TestCase):
     def test_social_photo_and_whole_image_system_remains(self):
         self.assertIn("photos.json", INDEX)
         self.assertIn("object-fit: contain !important", CSS)
-        self.assertIn("--footer-photo", CSS)
+        self.assertNotIn("--footer-photo", CSS + INDEX)
+        self.assertNotIn("footerPhoto", INDEX)
 
 
     def test_back_to_top_uses_one_native_scroll(self):
@@ -250,8 +286,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=21.5", INDEX)
-        self.assertIn("js/main.js?v=21.5", INDEX)
+        self.assertIn("css/style.css?v=22.0", INDEX)
+        self.assertIn("js/main.js?v=22.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
