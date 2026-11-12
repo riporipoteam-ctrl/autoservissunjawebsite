@@ -37,19 +37,10 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=22.1" rel="stylesheet">
+    <link href="css/style.css?v=22.2" rel="stylesheet">
 </head>
 
 <body>
-    <!-- SVG optical lens: static displacement map, no animation loop. -->
-    <svg class="sunja-glass-filters" aria-hidden="true" focusable="false" width="0" height="0" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <filter id="sunja-glass-distortion" x="-18%" y="-18%" width="136%" height="136%" color-interpolation-filters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.009" numOctaves="2" seed="7" result="sunjaNoise"/>
-          <feDisplacementMap in="SourceGraphic" in2="sunjaNoise" scale="13" xChannelSelector="R" yChannelSelector="G"/>
-        </filter>
-      </defs>
-    </svg>
 <!-- Topbar Start -->
     <div class="container-fluid bg-light p-0">
         <div class="row gx-0 d-none d-lg-flex">
@@ -83,8 +74,8 @@
 
 
     <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg nav-bar sunja-liquid-header bg-white navbar-light shadow sticky-top p-0">
-        <span class="sunja-glass-refract" aria-hidden="true"></span>
+    <nav class="navbar navbar-expand-lg nav-bar bg-white navbar-light shadow sticky-top p-0">
+        
         <a href="#pocetna" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
             <img src="assets/sunja-logo-transparent.webp" alt="Auto Servis Šunja">
         </a>
@@ -748,15 +739,15 @@
 
 
     <!-- Mobile call bar -->
-    <div class="mobile-callbar sunja-liquid-bottom">
-        <span class="sunja-glass-refract" aria-hidden="true"></span>
+    <div class="mobile-callbar">
+        
         <a class="call" href="tel:+38761297847"><i class="fa fa-phone-alt me-2"></i>Pozovite</a>
         <a class="dir" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener"><i class="fa fa-map-marker-alt me-2"></i>Upute</a>
     </div>
 
 
     <!-- Back to Top -->
-    <button type="button" id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top sunja-liquid-top" aria-label="Nazad na vrh" title="Nazad na vrh"><span class="sunja-glass-refract" aria-hidden="true"></span><i class="fa fa-arrow-up"></i></button>
+    <button type="button" id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top" aria-label="Nazad na vrh" title="Nazad na vrh"><i class="fa fa-arrow-up"></i></button>
 
 
     <!-- JavaScript Libraries -->
@@ -767,7 +758,7 @@
     
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=22.1"></script>
+    <script src="js/main.js?v=22.2"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
