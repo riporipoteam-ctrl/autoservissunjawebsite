@@ -76,6 +76,69 @@
         });
     }
 
+    // The floating mobile dock must never cover a booking action or form.
+    // Compare against its REST position, not its animated rectangle, so hiding
+    // it cannot cause a show/hide oscillation. One animation frame per scroll.
+    var actionDock = document.querySelector(".mobile-callbar.sunja-liquid-bottom");
+    var dockFrame = 0;
+    var dockActions = document.querySelectorAll(
+        "#o-nama .ps-3 > span, #o-nama a.btn, " +
+        "#usluge .nav button, #usluge a.btn, #kontakt a.btn, " +
+        "#recenzije a.btn, #galerija a.btn, " +
+        "#termin input, #termin select, #termin textarea, " +
+        "#termin button, #header-carousel .carousel-caption a.btn, " +
+        ".map-quick-link"
+    );
+    function syncActionDock() {
+        dockFrame = 0;
+        if (!actionDock || window.innerWidth >= 992) {
+            document.documentElement.classList.remove("dock-avoiding-action");
+            return;
+        }
+        var focus = document.activeElement;
+        var isEditing = !!(focus && /^(INPUT|SELECT|TEXTAREA)$/.test(focus.tagName));
+        var viewport = window.visualViewport;
+        var keyboardOpen = !!(viewport &&
+            viewport.height + viewport.offsetTop < window.innerHeight - 120);
+        var dockStyle = window.getComputedStyle(actionDock);
+        var bottomInset = parseFloat(dockStyle.bottom) || 0;
+        var leftInset = parseFloat(dockStyle.left) || 0;
+        var dockTop = window.innerHeight - bottomInset - actionDock.offsetHeight;
+        var dockBottom = window.innerHeight - bottomInset;
+        var dockRight = leftInset + actionDock.offsetWidth;
+        var collides = false;
+        if (!isEditing && !keyboardOpen) {
+            for (var i = 0; i < dockActions.length; i++) {
+                var rect = dockActions[i].getBoundingClientRect();
+                if (rect.width < 2 || rect.height < 2) continue;
+                if (rect.bottom > dockTop + 3 && rect.top < dockBottom - 3 &&
+                    rect.right > leftInset && rect.left < dockRight) {
+                    collides = true;
+                    break;
+                }
+            }
+        }
+        document.documentElement.classList.toggle(
+            "dock-avoiding-action", isEditing || keyboardOpen || collides
+        );
+    }
+    function scheduleActionDock() {
+        if (!dockFrame) dockFrame = requestAnimationFrame(syncActionDock);
+    }
+    if (actionDock) {
+        window.addEventListener("scroll", scheduleActionDock, { passive: true });
+        window.addEventListener("resize", scheduleActionDock, { passive: true });
+        window.addEventListener("pageshow", scheduleActionDock);
+        window.addEventListener("load", scheduleActionDock, { once: true });
+        document.addEventListener("focusin", scheduleActionDock);
+        document.addEventListener("focusout", scheduleActionDock);
+        if (window.visualViewport) {
+            window.visualViewport.addEventListener("resize", scheduleActionDock, { passive: true });
+            window.visualViewport.addEventListener("scroll", scheduleActionDock, { passive: true });
+        }
+        requestAnimationFrame(syncActionDock);
+    }
+
     // Mark the section the visitor is viewing without scroll-time DOM work.
     if ("IntersectionObserver" in window) {
         var links = Array.prototype.slice.call(
