@@ -53,7 +53,7 @@ class BrowserSmokeTests(unittest.TestCase):
                     is_mobile=True,
                     has_touch=True,
                     device_scale_factor=2,
-                    reduced_motion="reduce",
+                    reduced_motion="no-preference",
                 )
                 context.set_default_timeout(12000)
                 page = context.new_page()
