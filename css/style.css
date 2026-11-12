@@ -2096,3 +2096,15 @@ html.perf-lite #backTop.sunja-liquid-top {
     .mobile-callbar.sunja-liquid-bottom a,
     #backTop.sunja-liquid-top { transition: none !important; animation: none !important; }
 }
+
+/* Reuse the mobile source image as the mobile hero backdrop.
+   No second image fetch, no letterboxing, no loss of original pixels. */
+@media (max-width: 767.98px) {
+    #header-carousel #heroMainBg {
+        background-image: linear-gradient(0deg,
+            rgba(3,16,37,.69),rgba(3,16,37,.23)),
+            var(--hero-photo-mobile) !important;
+        background-position: center !important;
+        background-size: cover !important;
+    }
+}
