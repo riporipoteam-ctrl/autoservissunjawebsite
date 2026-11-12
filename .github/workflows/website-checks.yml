@@ -9,6 +9,7 @@ on:
       - 'js/**'
       - 'tools/test_frontend_static.py'
       - 'tools/test_browser_interactions.py'
+      - 'tools/verify_live_site.py'
       - '.github/workflows/website-checks.yml'
   pull_request:
     paths:
@@ -17,6 +18,7 @@ on:
       - 'js/**'
       - 'tools/test_frontend_static.py'
       - 'tools/test_browser_interactions.py'
+      - 'tools/verify_live_site.py'
       - '.github/workflows/website-checks.yml'
   workflow_dispatch:
 
@@ -46,3 +48,17 @@ jobs:
         env:
           BROWSER_ENGINE: ${{ matrix.browser }}
         run: python -m unittest -v tools.test_browser_interactions
+
+  live-deployment:
+    # GitHub Pages deploys the main branch; verify its public result after tests.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: regression
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Confirm real public Pages deployment and asset versions
+        run: python tools/verify_live_site.py
