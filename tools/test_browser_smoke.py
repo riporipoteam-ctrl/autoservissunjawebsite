@@ -79,10 +79,10 @@ class BrowserSmokeTests(unittest.TestCase):
         def check(page):
             page.goto(self.origin, wait_until="domcontentloaded")
             page.locator(".navbar-toggler").tap()
-            expect(page.locator("#navbarCollapse")).to_have_class(re.compile(r"\\bshow\\b"))
+            expect(page.locator("#navbarCollapse")).to_have_class(re.compile(r"\bshow\b"))
             page.locator('.navbar-nav a[href="#o-nama"]').tap()
             self.assertEqual(page.evaluate("location.hash"), "#o-nama")
-            expect(page.locator("#navbarCollapse")).not_to_have_class(re.compile(r"\\bshow\\b"))
+            expect(page.locator("#navbarCollapse")).not_to_have_class(re.compile(r"\bshow\b"))
 
         self.exercise_browsers(check)
 
@@ -90,7 +90,7 @@ class BrowserSmokeTests(unittest.TestCase):
         def check(page):
             page.goto(self.origin, wait_until="domcontentloaded")
             page.locator('button[data-bs-target="#tab-pane-6"]').tap()
-            expect(page.locator("#tab-pane-6")).to_have_class(re.compile(r"\\bactive\\b"))
+            expect(page.locator("#tab-pane-6")).to_have_class(re.compile(r"\bactive\b"))
             page.locator('a[data-service="Ključevi i daljinski"]').tap()
             self.assertEqual(page.evaluate("location.hash"), "#termin")
             self.assertEqual(page.locator("#fService").input_value(), "Ključevi i daljinski")
@@ -110,7 +110,7 @@ class BrowserSmokeTests(unittest.TestCase):
     def test_failed_map_releases_scroll_trap(self):
         def check(page):
             page.route(
-                re.compile(r".*/maplibre-gl@5\\.6\\.0/dist/maplibre-gl\\.js.*"),
+                re.compile(r".*/maplibre-gl@5\.6\.0/dist/maplibre-gl\.js.*"),
                 lambda route: route.abort(),
             )
             page.goto(self.origin, wait_until="domcontentloaded")
