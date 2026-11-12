@@ -4,6 +4,14 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v25.0 (2026-11-12) — scroll-controlled map and original logo intro
+
+- Adds the owner's supplied logo-drawing animation, optimized to a small H.264 MP4 at `assets/video/sunja-logo-intro.mp4`. It appears alone on a white, full-screen intro; no bar, wording or spinner.
+- Intro begins before the page first paints, warms local site photos in bounded batches, then reveals the site after the video finishes and critical assets have loaded. A safety timeout and media-error fallback prevent visitors being trapped.
+- Camera progression is **controlled by how far the visitor scrolls**, forwards and backwards. The MapLibre map follows world → Europe → Bosnia and Herzegovina → Goražde → the shop, with a stable sticky section, no autonomous flyTo and no abrupt height collapse.
+- Preserves the clean non-glass interface, stable fixed call/directions bar, shortened service text and accurate map popup. Set `?v=25.0` cache keys to refresh iPhone assets.
+- Browser regression tests cover video-only intro, map scroll progress, direct taps and reload-to-top. Reduced-motion remains respected.
+
 ## v24.0 (2026-11-12) — correct refresh position and make the globe animation reliable
 
 - **Refresh opens at the hero slides.** An early, synchronous head script detects a genuine page reload and disables Safari/Chromium scroll restoration only for that reload. It clears stale section fragments, then resets to the top on DOM ready, page show and load. Normal in-page anchor taps and shareable links on an initial navigation are unchanged.
