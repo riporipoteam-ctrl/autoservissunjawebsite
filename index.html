@@ -890,7 +890,7 @@
 
         var footer = document.getElementById('siteFooter');
         var footerPhoto = d.latest && localPhotoPath(d.latest.wide || d.latest.src);
-        if (footer && footerPhoto) footer.style.setProperty('--footer-photo', 'url("' + footerPhoto + '")');
+        if (footer && footerPhoto) footer.style.setProperty('--footer-photo', 'url("/' + footerPhoto + '")');
         if (sharpGallery.length) {
             var pool = freshPool(sharpGallery, 5);
             pool = pool.slice().sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
@@ -910,7 +910,7 @@
                 var card = img.closest('.team-item');
                 if (!card) return;
                 var mediaWrap = img.parentElement;
-                if (mediaWrap) mediaWrap.style.setProperty('--gallery-bg', 'url("' + safeSrc + '")');
+                if (mediaWrap) mediaWrap.style.setProperty('--gallery-bg', 'url("/' + safeSrc + '")');
                 var meta = platformMeta(item);
                 var link = card.querySelector('[data-gallery-link]');
                 if (link) {
