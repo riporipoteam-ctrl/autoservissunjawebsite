@@ -2308,3 +2308,46 @@ a[href] > *,button > * { pointer-events:none !important; }
         min-height: 420px !important;
     }
 }
+
+
+/* v25: original full-screen video intro */
+html.sunja-intro-active, html.sunja-intro-active body {
+    overflow: hidden !important;
+}
+#sunjaIntro, .sunja-intro {
+    display: none;
+}
+html.sunja-intro-active #sunjaIntro:not([hidden]) {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483647 !important;
+    display: grid !important;
+    place-items: center !important;
+    width: 100% !important;
+    height: 100dvh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    pointer-events: auto;
+    overflow: hidden;
+}
+.sunja-intro-video {
+    display: block;
+    width: min(100vw, 880px);
+    height: auto;
+    max-height: 100dvh;
+    object-fit: contain;
+    object-position: center;
+    background: #ffffff;
+    border: 0;
+    pointer-events: none !important;
+}
+#sunjaIntro[hidden], html:not(.sunja-intro-active) #sunjaIntro {
+    display: none !important;
+}
+@media (max-width: 767.98px) {
+    .sunja-intro-video {
+        width: 100vw;
+        max-height: 100dvh;
+    }
+}
