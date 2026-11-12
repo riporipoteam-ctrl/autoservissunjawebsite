@@ -117,6 +117,43 @@ class SiteInteractionTests(unittest.TestCase):
             self.page.locator("#header-carousel .carousel-item").nth(1)
         ).to_have_class(re.compile(r"\bactive\b"))
 
+    def test_v21_mobile_type_is_genuinely_smaller(self):
+        title = self.page.locator("#o-nama h1")
+        para = self.page.locator("#o-nama > .container p").first
+        title_size = title.evaluate("(node) => parseFloat(getComputedStyle(node).fontSize)")
+        para_size = para.evaluate("(node) => parseFloat(getComputedStyle(node).fontSize)")
+        self.assertLessEqual(title_size, 26)
+        self.assertLessEqual(para_size, 15)
+
+    def test_v21_gallery_photo_fills_natural_width_without_crop(self):
+        img = self.page.locator("[data-gallery-img]").first
+        img.scroll_into_view_if_needed()
+        img.evaluate("(node) => node.decode()")
+        rect = img.evaluate("""(node) => {
+            const p = node.parentElement.getBoundingClientRect();
+            const b = node.getBoundingClientRect();
+            return {
+                imageWidth: b.width, parentWidth: p.width,
+                imageRatio: b.width / b.height,
+                naturalRatio: node.naturalWidth / node.naturalHeight,
+                fit: getComputedStyle(node).objectFit
+            };
+        }""")
+        self.assertGreater(rect["imageWidth"] / rect["parentWidth"], 0.98)
+        self.assertAlmostEqual(rect["imageRatio"], rect["naturalRatio"], delta=0.05)
+        self.assertEqual(rect["fit"], "contain")
+
+    def test_v21_three_glass_surfaces_stay_accessible(self):
+        self.assertEqual(self.page.locator(".sunja-liquid-header").count(), 1)
+        self.assertEqual(self.page.locator(".sunja-liquid-bottom").count(), 1)
+        self.assertEqual(self.page.locator("#backTop.sunja-liquid-top").count(), 1)
+        self.page.locator(".navbar-toggler").tap()
+        expect(self.page.locator("#navbarCollapse")).to_have_class(
+            re.compile(r"\\bshow\\b")
+        )
+        self.page.locator("#navbarCollapse a[href='#o-nama']").tap()
+        expect(self.page).to_have_url(re.compile(r"#o-nama$"))
+
     def test_back_to_top_works_on_one_tap(self):
         self.page.evaluate("window.scrollTo(0, 1400)")
         expect(self.page.locator("#backTop")).to_have_class(
