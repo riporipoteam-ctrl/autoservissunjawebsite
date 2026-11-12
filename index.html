@@ -58,6 +58,7 @@
     <!-- Leaflet (custom globe map) -->
     <link rel="preconnect" href="https://tiles.openfreemap.org">
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Template Stylesheet -->
     <link href="css/style.css?v=28.0" rel="stylesheet">
@@ -982,10 +983,11 @@
             if (typeof maplibregl !== 'undefined') { initGlobe(); return; }
             var css = document.createElement('link');
             css.rel = 'stylesheet';
-            css.href = 'https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.css';
+            css.href = 'https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css';
             document.head.appendChild(css);
             var sc = document.createElement('script');
-            sc.src = 'https://unpkg.com/maplibre-gl@5.6.0/dist/maplibre-gl.js';
+            sc.src = 'https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js';
+            sc.async = true;
             // A blocked CDN may never fire error; fail open to the address,
             // rather than trapping the visitor on an empty map.
             var scriptWatchdog = window.setTimeout(function () {
@@ -1015,8 +1017,10 @@
                 center: [12, 32], zoom: 1.6, pitch: 0, bearing: -15,
                 interactive: false,
                 attributionControl: { compact: true },
-                pixelRatio: Math.min(window.devicePixelRatio || 1, perfLite ? 1 : 1.25),
-                fadeDuration: 0
+                pixelRatio: Math.min(window.devicePixelRatio || 1, perfLite ? 1 : 1.1),
+                fadeDuration: 0,
+                renderWorldCopies: false,
+                cancelPendingTileRequestsWhileZooming: true
             });
             var loaded = false;
             map.on('error', function (e) { if (!loaded) fallback('greška karte: ' + (e && e.error ? String(e.error).slice(0, 80) : 'nepoznata')); });
@@ -1031,19 +1035,21 @@
                 queueMapProgress();
             });
 
-            // Scroll scrubbing: the camera follows the visitor's finger, forward
-            // and backward. A stable sticky section replaces autoplay and prevents
-            // the previous viewport jump on completion.
+            // Scroll controls the first visit only. Reaching the shop is a
+            // permanent state: no reverse flight on scrolling back up.
             var mapFlightStops = [
                 { p: 0, center: [12, 32], zoom: 1.6, pitch: 0, bearing: -15, label: 'Svijet' },
                 { p: .24, center: [15, 46], zoom: 3.4, pitch: 0, bearing: -6, label: 'Evropa' },
                 { p: .48, center: [18.40, 43.95], zoom: 5.6, pitch: 12, bearing: 0, label: 'Bosna i Hercegovina' },
                 { p: .72, center: [18.95, 43.69], zoom: 9.5, pitch: 25, bearing: 0, label: 'Goražde' },
-                { p: 1, center: SHOP, zoom: SHOP_ZOOM, pitch: 45, bearing: 0, label: 'Auto Servis Šunja' }
+                { p: 1, center: SHOP, zoom: SHOP_ZOOM, pitch: 40, bearing: 0, label: 'Auto Servis Šunja' }
             ];
             var marker = null;
+            var mapCompleted = false;
             var lastMapProgress = -1;
-            var mapFrame = 0;
+            var lastCameraAt = 0;
+            var CAMERA_MIN_FRAME_MS = 80;
+            var mapFrame = 0, cameraTimer = 0;
             var reduceMapMotion = !!(window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
@@ -1072,17 +1078,52 @@
                 }
             }
 
+            function finishMapOnce() {
+                if (mapCompleted || fellBack || !loaded) return;
+                mapCompleted = true;
+                // This is intentionally one-way. Stop all scroll-driven
+                // camera work and remove the scroll listener permanently.
+                window.removeEventListener('scroll', queueMapProgress);
+                if (mapFrame) cancelAnimationFrame(mapFrame);
+                mapFrame = 0;
+                if (cameraTimer) clearTimeout(cameraTimer);
+                cameraTimer = 0;
+                lastMapProgress = 1;
+                wrap.classList.add('globe-arrived', 'globe-complete');
+                if (stageEl) stageEl.textContent = 'Auto Servis Šunja';
+                if (hintEl) hintEl.style.opacity = '0';
+                map.jumpTo({
+                    center: SHOP, zoom: SHOP_ZOOM, pitch: 40, bearing: 0
+                });
+                setShopMarker(true);
+            }
+
             function updateMapOnScroll() {
                 mapFrame = 0;
-                if (fellBack || !loaded || !wrap) return;
+                if (mapCompleted || fellBack || !loaded || !wrap) return;
                 var rect = wrap.getBoundingClientRect();
-                if (rect.top > innerHeight + 300 || rect.bottom < -300) return;
+                // Fast scrollers might reach the next section before the
+                // style loads. In that case finish immediately, don't replay.
+                if (rect.bottom <= 0) { finishMapOnce(); return; }
+                if (rect.top > innerHeight + 300) return;
                 var distance = Math.max(1, rect.height - innerHeight);
                 var progress = Math.max(0, Math.min(1, -rect.top / distance));
-                if (Math.abs(progress - lastMapProgress) < .004) return;
+                if (progress >= .985) { finishMapOnce(); return; }
+                if (Math.abs(progress - lastMapProgress) < .018) return;
+                var now = performance.now();
+                // MapLibre repaints and fetches new tiles with each jumpTo.
+                // Cap camera updates at 12.5fps instead of every scroll event.
+                if (lastCameraAt && now - lastCameraAt < CAMERA_MIN_FRAME_MS) {
+                    if (!cameraTimer) {
+                        cameraTimer = setTimeout(function () {
+                            cameraTimer = 0;
+                            queueMapProgress();
+                        }, CAMERA_MIN_FRAME_MS - (now - lastCameraAt));
+                    }
+                    return;
+                }
+                lastCameraAt = now;
                 lastMapProgress = progress;
-
-                // Respect reduced motion while retaining positional scroll control.
                 var scrub = reduceMapMotion ? (progress > .5 ? 1 : 0) : progress;
                 var left = mapFlightStops[0], right = mapFlightStops[mapFlightStops.length - 1];
                 for (var m = 1; m < mapFlightStops.length; m++) {
@@ -1102,36 +1143,37 @@
                     pitch: mix(left.pitch, right.pitch),
                     bearing: mix(left.bearing, right.bearing)
                 });
-                if (stageEl) stageEl.textContent = progress >= .99 ?
-                    'Auto Servis Šunja' : (t > .52 ? right.label : left.label);
-                wrap.classList.toggle('globe-arrived', progress >= .97);
-                wrap.classList.toggle('globe-complete', progress >= .99);
-                if (hintEl) hintEl.style.opacity = progress >= .97 ? '0' : '1';
-                if (progress >= .96) {
-                    setShopMarker(true);
-                } else if (marker) {
-                    marker.remove();
-                    marker = null;
-                }
+                if (stageEl) stageEl.textContent = t > .52 ? right.label : left.label;
             }
             function queueMapProgress() {
-                if (!mapFrame) mapFrame = requestAnimationFrame(updateMapOnScroll);
+                if (mapCompleted || fellBack || mapFrame) return;
+                mapFrame = requestAnimationFrame(updateMapOnScroll);
             }
             window.addEventListener('scroll', queueMapProgress, { passive: true });
-            window.addEventListener('resize', function () {
-                lastMapProgress = -1;
-                map.resize();
-                queueMapProgress();
-            }, { passive: true });
-            // A map loaded while the visitor is already midway should align
-            // with that position, but must never start an autonomous flyTo.
+            // Resize when the actual map container changes size, not whenever
+            // Safari's browser toolbar changes the visual viewport.
+            if (typeof ResizeObserver !== 'undefined') {
+                var resizeObserver = new ResizeObserver(function () {
+                    if (loaded && !fellBack) map.resize();
+                });
+                resizeObserver.observe(el);
+            } else {
+                var lastWidth = window.innerWidth;
+                window.addEventListener('resize', function () {
+                    if (window.innerWidth === lastWidth) return;
+                    lastWidth = window.innerWidth;
+                    if (loaded && !fellBack) map.resize();
+                }, { passive: true });
+            }
+            // The load event may arrive after the visitor already passed
+            // the map. Process its current scroll location exactly once.
             if (loaded) queueMapProgress();
         } catch (e) {
             fallback('iznimka: ' + String(e).slice(0, 80));
         }
         }
         if ('IntersectionObserver' in window && wrap) {
-            var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); startGlobe(); } }, { rootMargin: '160px' });
+            var io = new IntersectionObserver(function (es) { if (es[0].isIntersecting) { io.disconnect(); startGlobe(); } }, { rootMargin: '850px 0px' });
             io.observe(wrap);
         } else { startGlobe(); }
     })();
