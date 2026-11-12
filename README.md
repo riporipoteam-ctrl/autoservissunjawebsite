@@ -4,6 +4,13 @@ Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.
 Instagram: [@sunja_servis_peugeot](https://www.instagram.com/sunja_servis_peugeot/)
 
+## v28.0 (2026-11-12) — removed all loading screens
+
+- Removed the full-screen logo video overlay, fallback reveal animation, playback timers, preload gate, and all intro-related CSS/JavaScript. The page now opens straight on the homepage slides, on normal entry and refresh.
+- Preserved the non-glass design, navigation, mobile call/directions dock, scroll-driven map, services and gallery.
+- CSS/JS links use `v28.0` to invalidate old iPhone caches. Automated browser tests assert there is no intro/video overlay.
+- Legacy intro media files are not referenced by the site.
+
 ## v26.0 (2026-11-12) — faster, sharper original-logo intro
 
 - Re-encoded the owner's original MP4, not a generated substitute: **1280×720 H.264**, approximately **2.63 seconds**, **173 KB**. The original low-bitrate website version was 512×288, 7.6 seconds and blurry when displayed on Retina screens. Optimized crop removes excess whitespace while keeping the entire original logo drawing intact.
