@@ -5,6 +5,29 @@
     <meta charset="utf-8">
     <title>Auto Servis Šunja | Servis za sve marke vozila, Goražde</title>
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+    <!-- Early refresh reset: Safari must not restore a previous hash/scroll. -->
+    <script>
+    (function () {
+        try {
+            var nav = performance.getEntriesByType &&
+                performance.getEntriesByType('navigation')[0];
+            var navigationType = nav && nav.type;
+            if (!navigationType && performance.navigation) {
+                navigationType = performance.navigation.type === 1 ? 'reload' : 'navigate';
+            }
+            if (navigationType === 'reload') {
+                history.scrollRestoration = 'manual';
+                if (location.hash) {
+                    history.replaceState(history.state, '', location.pathname + location.search);
+                }
+                function resetReloadPosition() { window.scrollTo(0, 0); }
+                document.addEventListener('DOMContentLoaded', resetReloadPosition, { once: true });
+                window.addEventListener('pageshow', resetReloadPosition, { once: true });
+                window.addEventListener('load', resetReloadPosition, { once: true });
+            }
+        } catch (err) { /* Native history behaviour remains the fallback. */ }
+    })();
+    </script>
     <meta name="theme-color" content="#e8f4fc">
     <meta name="description" content="Auto Servis Šunja, Hajra Lakovića 38, Goražde. Servis i popravke za sve marke vozila: autodijagnostika, mali i veliki servis, autoelektrika, ključevi i daljinski. Pozovite 061 297 847.">
     <meta property="og:type" content="website">
@@ -1005,39 +1028,25 @@
                 if (!perfLite) {
                     try { map.setProjection({ type: 'globe' }); } catch (e) {}
                 }
-                render();
+                watchMapVisibility();
             });
 
-            var stickyEl = wrap.querySelector('.globe-sticky');
-            var FLIGHT_END = 0.90;
-            var stops = [
-                { p: 0.00, c: [12, 32], z: 1.6, pitch: 0, bearing: -15, label: 'Svijet' },
-                { p: 0.18, c: [15, 46], z: 3.4, pitch: 0, bearing: -6, label: 'Evropa' },
-                { p: 0.36, c: [18.40, 43.95], z: 5.6, pitch: 12, bearing: 0, label: 'Bosna i Hercegovina' },
-                { p: 0.55, c: [18.95, 43.69], z: 9.5, pitch: 28, bearing: 0, label: 'Goražde' },
-                { p: FLIGHT_END, c: SHOP, z: SHOP_ZOOM, pitch: 45, bearing: 0, label: 'Auto Servis Šunja' }
+            // A genuine one-shot MapLibre camera flight, independent of scroll
+            // distance or tile loading speed. No sticky scroll trap or page jump.
+            var mapFlightStages = [
+                { center: [15, 46], zoom: 3.4, pitch: 0, bearing: -6, duration: 1050, label: 'Evropa' },
+                { center: [18.40, 43.95], zoom: 5.6, pitch: 12, bearing: 0, duration: 1000, label: 'Bosna i Hercegovina' },
+                { center: [18.95, 43.69], zoom: 9.5, pitch: 25, bearing: 0, duration: 1000, label: 'Goražde' },
+                { center: SHOP, zoom: SHOP_ZOOM, pitch: 45, bearing: 0, duration: 1200, label: 'Auto Servis Šunja' }
             ];
-
-            var marker = null;
-            var ticking = false;
-            var lastBucket = -1;
-            var flightLocked = false;
-            var lockedViewApplied = false;
-            var mapReleased = false;
-
-            function lerp(a, b, t) { return a + (b - a) * t; }
-            function clamp01(v) { return Math.min(1, Math.max(0, v)); }
-            function ease(t) {
-                t = clamp01(t);
-                return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
-            }
+            var marker = null, flightStarted = false, flightFinished = false;
+            var flightObserver = null;
+            var reduceMapMotion = !!(window.matchMedia &&
+                window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
             function setShopMarker(show) {
                 if (!loaded) return;
-
                 if (show && !marker) {
-                    // A small, accessible shop card. Keep external actions native
-                    // and avoid a close icon crowding the map on narrow phones.
                     var popupHTML = '<div class="sunja-map-card">' +
                         '<span class="sunja-map-card__kicker">GORAŽDE</span>' +
                         '<strong class="sunja-map-card__title">Auto Servis Šunja</strong>' +
@@ -1052,123 +1061,77 @@
                         focusAfterOpen: false, className: 'sunja-map-popup',
                         maxWidth: '300px'
                     }).setHTML(popupHTML);
-
                     marker = new maplibregl.Marker({ color: '#0B5FA5' })
                         .setLngLat(SHOP)
                         .setPopup(popup)
                         .addTo(map);
                     marker.togglePopup();
-
-
-                } else if (!show && marker) {
-                    marker.remove();
-                    marker = null;
                 }
             }
 
-            function render() {
-                ticking = false;
-                if (fellBack || !wrap) return;
+            function finishGlobeFlight() {
+                if (flightFinished || fellBack) return;
+                flightFinished = true;
+                wrap.classList.add('globe-arrived', 'globe-complete');
+                if (stageEl) stageEl.textContent = 'Auto Servis Šunja';
+                if (hintEl) hintEl.style.opacity = '0';
+                setShopMarker(true);
+                map.resize();
+            }
 
-                var rect = wrap.getBoundingClientRect();
-                var total = Math.max(1, wrap.offsetHeight - (stickyEl ? stickyEl.offsetHeight : window.innerHeight));
-                var p = clamp01(-rect.top / total);
-
-                // Once the flight reaches the shop it stays finished until the
-                // document is refreshed. Scrolling back up never replays it.
-                if (!flightLocked && p >= FLIGHT_END - 0.002) {
-                    flightLocked = true;
+            function beginGlobeFlight() {
+                if (flightStarted || fellBack || !loaded) return;
+                flightStarted = true;
+                if (flightObserver) {
+                    flightObserver.disconnect();
+                    flightObserver = null;
                 }
-
-                // Finished means finished for this page load. Keep the
-                // camera parked and stop doing expensive MapLibre camera work
-                // while the user scrolls back upward through the page.
-                if (flightLocked) {
-                    if (!lockedViewApplied) {
-                        try {
-                            map.jumpTo({ center: SHOP, zoom: SHOP_ZOOM, pitch: 45, bearing: 0 });
-                        } catch (e) {}
-                        lockedViewApplied = true;
+                if (reduceMapMotion || perfLite) {
+                    map.jumpTo({ center: SHOP, zoom: SHOP_ZOOM, pitch: 45, bearing: 0 });
+                    finishGlobeFlight();
+                    return;
+                }
+                var stepIndex = 0;
+                function flyNext() {
+                    if (fellBack || flightFinished) return;
+                    if (stepIndex >= mapFlightStages.length) {
+                        finishGlobeFlight();
+                        return;
                     }
-
-                    wrap.classList.add('globe-arrived');
-                    if (stageEl) stageEl.textContent = 'Auto Servis Šunja';
-                    if (hintEl) hintEl.style.opacity = '0';
-                    setShopMarker(true);
-
-                    // Do not leave a 300vh sticky trap behind. Only after the
-                    // visitor has fully scrolled past the map do we collapse it
-                    // into a normal static section. Because the removed height
-                    // is entirely above the viewport, compensate scrollY by the
-                    // exact height delta so the page does not jump.
-                    if (!mapReleased && rect.bottom <= 0) {
-                        var beforeHeight = wrap.offsetHeight;
-                        var beforeY = window.pageYOffset || document.documentElement.scrollTop || 0;
-                        var root = document.documentElement;
-                        var oldBehavior = root.style.scrollBehavior;
-
-                        wrap.classList.add('globe-complete');
-                        var afterHeight = wrap.offsetHeight;
-                        var removedHeight = Math.max(0, beforeHeight - afterHeight);
-
-                        root.style.scrollBehavior = 'auto';
-                        if (removedHeight > 0) {
-                            window.scrollTo(0, Math.max(0, beforeY - removedHeight));
-                        }
-                        root.style.scrollBehavior = oldBehavior;
-                        mapReleased = true;
-                        requestAnimationFrame(function () {
-                            if (!fellBack && loaded) map.resize();
+                    var step = mapFlightStages[stepIndex++];
+                    if (stageEl) stageEl.textContent = step.label;
+                    try {
+                        map.once('moveend', flyNext);
+                        map.flyTo({
+                            center: step.center, zoom: step.zoom,
+                            pitch: step.pitch, bearing: step.bearing,
+                            duration: step.duration, essential: false
                         });
+                    } catch (e) {
+                        // Never leave a half-loaded map blocking the page.
+                        try {
+                            map.stop();
+                            map.jumpTo({ center: SHOP, zoom: SHOP_ZOOM, pitch: 45, bearing: 0 });
+                        } catch (ignored) {}
+                        finishGlobeFlight();
                     }
-                    return;
                 }
-
-                // Use the full section for scrolling, but finish the camera
-                // flight earlier. After it locks, every later render remains
-                // parked on the shop regardless of scroll direction.
-                var flightP = flightLocked ? FLIGHT_END : Math.min(p, FLIGHT_END);
-                var bucket = Math.round(p * ((perfLite || window.innerWidth < 768) ? 64 : 150));
-                if (bucket === lastBucket && p < 0.999) return;
-                lastBucket = bucket;
-
-                var i = 0;
-                while (i < stops.length - 2 && flightP > stops[i + 1].p) i++;
-
-                var a = stops[i];
-                var b = stops[i + 1];
-                var t = ease((flightP - a.p) / Math.max(0.0001, b.p - a.p));
-
-                try {
-                    map.jumpTo({
-                        center: [lerp(a.c[0], b.c[0], t), lerp(a.c[1], b.c[1], t)],
-                        zoom: lerp(a.z, b.z, t),
-                        pitch: lerp(a.pitch, b.pitch, t),
-                        bearing: lerp(a.bearing, b.bearing, t)
-                    });
-                } catch (e) {
-                    return;
-                }
-
-                var arrived = flightLocked;
-                if (wrap) wrap.classList.toggle('globe-arrived', arrived);
-
-                if (stageEl) {
-                    stageEl.textContent = arrived
-                        ? 'Auto Servis Šunja · nastavite skrolati'
-                        : (t < 0.5 ? a.label : b.label);
-                }
-
-                if (hintEl) {
-                    hintEl.style.opacity = p > 0.04 ? '0' : '1';
-                }
-
-                setShopMarker(flightLocked || p >= FLIGHT_END - 0.018);
+                flyNext();
             }
-            function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(render); } }
-            window.addEventListener('scroll', onScroll, { passive: true });
-            window.addEventListener('resize', onScroll);
-            render();
+
+            function watchMapVisibility() {
+                if (flightStarted || !wrap) return;
+                if (!('IntersectionObserver' in window)) {
+                    beginGlobeFlight();
+                    return;
+                }
+                flightObserver = new IntersectionObserver(function (entries) {
+                    if (entries.some(function (entry) { return entry.isIntersecting; })) {
+                        beginGlobeFlight();
+                    }
+                }, { threshold: 0.12 });
+                flightObserver.observe(wrap);
+            }
         } catch (e) {
             fallback('iznimka: ' + String(e).slice(0, 80));
         }
