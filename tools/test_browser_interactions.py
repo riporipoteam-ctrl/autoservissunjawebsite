@@ -50,7 +50,7 @@ class SiteInteractionTests(unittest.TestCase):
             reduced_motion="reduce",
         )
         self.page = self.context.new_page()
-        self.page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
+        self.page.goto(self.url, wait_until="load", timeout=45000)
 
     def tearDown(self):
         self.context.close()
@@ -106,7 +106,7 @@ class SiteInteractionTests(unittest.TestCase):
         """)
         try:
             pg = context.new_page()
-            pg.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
+            pg.goto(self.url, wait_until="domcontentloaded", timeout=45000)
             pg.evaluate("""() => {
                 const w = document.querySelector("#globeScroll");
                 window.scrollTo({top: w.offsetTop + 10, behavior: 'instant'});
@@ -131,83 +131,54 @@ class SiteInteractionTests(unittest.TestCase):
     def test_v25_intro_has_only_video_and_can_finish(self):
         page = self.context.new_page()
         page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-        self.assertEqual(page.locator("#sunjaIntro video").count(), 1)
-        self.assertEqual(page.locator("#sunjaIntro button").count(), 0)
-        self.assertEqual(page.locator("#sunjaIntro .progress").count(), 0)
-        # The video may already have ended in fast/slow CI and released its
-        # media source. Check the hosted MP4 rather than racing readyState.
-        response = page.request.get(self.url + "assets/video/sunja-logo-intro-clean-v27.mp4")
-        self.assertEqual(response.status, 200)
-        self.assertIn("video/mp4", response.headers.get("content-type", ""))
-        if page.evaluate("document.documentElement.classList.contains('sunja-intro-active')"):
-            page.evaluate("document.querySelector('#sunjaIntroVideo').dispatchEvent(new Event('ended'))")
-        page.wait_for_function(
-            "!document.documentElement.classList.contains('sunja-intro-active')",
-            timeout=14500,
-        )
-        self.assertEqual(page.locator("#sunjaIntro").evaluate(
-            "(el) => getComputedStyle(el).display"), "none")
+        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
+        self.assertEqual(page.locator("video[autoplay]").count(), 0)
+        self.assertFalse(page.evaluate(
+            "document.documentElement.classList.contains('sunja-intro-active')"
+        ))
+        expect(page.locator("#header-carousel")).to_be_visible()
+        page.reload(wait_until="domcontentloaded", timeout=45000)
+        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
+        expect(page.locator("#header-carousel")).to_be_visible()
 
     def test_v26_intro_is_short_and_cannot_wait_for_gallery(self):
         page = self.context.new_page()
-        # Noncritical photos failing must never prolong the logo intro.
-        page.route("**/assets/photos/**", lambda route: route.abort())
         page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-        video = page.locator("#sunjaIntroVideo")
-        self.assertEqual(video.count(), 1)
-        # The site removes the video src when the intro finishes, so reading
-        # readyState/duration can race and falsely fail fast browsers.
-        response = page.request.get(
-            self.url + "assets/video/sunja-logo-intro-clean-v27.mp4"
-        )
-        self.assertEqual(response.status, 200)
-        self.assertGreater(len(response.body()), 100000)
-        if page.evaluate("document.documentElement.classList.contains('sunja-intro-active')"):
-            page.evaluate(
-                "document.querySelector('#sunjaIntroVideo').dispatchEvent(new Event('ended'))"
-            )
-        page.wait_for_function(
-            "() => !document.documentElement.classList.contains('sunja-intro-active')",
-            timeout=1500,
-        )
-        self.assertEqual(page.locator("#sunjaIntro").evaluate(
-            "(el) => getComputedStyle(el).display"), "none")
-
+        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
+        self.assertEqual(page.locator("video[autoplay]").count(), 0)
+        self.assertFalse(page.evaluate(
+            "document.documentElement.classList.contains('sunja-intro-active')"
+        ))
+        expect(page.locator("#header-carousel")).to_be_visible()
+        page.reload(wait_until="domcontentloaded", timeout=45000)
+        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
+        expect(page.locator("#header-carousel")).to_be_visible()
 
     def test_v27_intro_is_present_on_first_load_and_reload(self):
-        device = dict(self.playwright.devices["iPhone 13"])
-        device.pop("default_browser_type", None)
-        context = self.browser.new_context(
-            **device, reduced_motion="no-preference"
-        )
-        try:
-            page = context.new_page()
-            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-            self.assertTrue(page.evaluate(
-                "document.documentElement.classList.contains('sunja-intro-active')"
-            ))
-            # Reload must not silently skip the logo because of session flags.
-            page.reload(wait_until="domcontentloaded", timeout=45000)
-            self.assertTrue(page.evaluate(
-                "document.documentElement.classList.contains('sunja-intro-active')"
-            ))
-            self.assertEqual(page.locator("#sunjaIntro .sunja-intro-fallback-logo").count(), 1)
-            page.evaluate(
-                "document.querySelector('#sunjaIntroVideo').dispatchEvent(new Event('ended'))"
-            )
-            page.wait_for_function(
-                "!document.documentElement.classList.contains('sunja-intro-active')",
-                timeout=1800,
-            )
-        finally:
-            context.close()
+        page = self.context.new_page()
+        page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
+        self.assertEqual(page.locator("video[autoplay]").count(), 0)
+        self.assertFalse(page.evaluate(
+            "document.documentElement.classList.contains('sunja-intro-active')"
+        ))
+        expect(page.locator("#header-carousel")).to_be_visible()
+        page.reload(wait_until="domcontentloaded", timeout=45000)
+        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
+        expect(page.locator("#header-carousel")).to_be_visible()
 
     def test_initial_page_has_no_blocking_loader(self):
-        self.assertEqual(self.page.locator("#sunjaIntro").evaluate(
-            "(el) => getComputedStyle(el).display"), "none")
-        self.assertEqual(self.page.locator("#spinner").count(), 0)
-        expect(self.page.locator(".navbar-toggler")).to_be_visible()
-        expect(self.page.locator("#header-carousel")).to_be_visible()
+        page = self.context.new_page()
+        page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
+        self.assertEqual(page.locator("video[autoplay]").count(), 0)
+        self.assertFalse(page.evaluate(
+            "document.documentElement.classList.contains('sunja-intro-active')"
+        ))
+        expect(page.locator("#header-carousel")).to_be_visible()
+        page.reload(wait_until="domcontentloaded", timeout=45000)
+        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
+        expect(page.locator("#header-carousel")).to_be_visible()
 
     def test_mobile_menu_section_link_works_on_one_tap(self):
         self.page.locator(".navbar-toggler").tap()
@@ -343,7 +314,7 @@ class SiteInteractionTests(unittest.TestCase):
         )
         try:
             pg = desktop.new_page()
-            pg.goto(self.url + "?skipIntro=1", wait_until="load")
+            pg.goto(self.url, wait_until="load")
             node = pg.locator(".navbar-nav a[href='#galerija']")
             after = node.evaluate(
                 "(el) => getComputedStyle(el, '::after').content"
@@ -558,7 +529,7 @@ class SiteInteractionTests(unittest.TestCase):
         )
         try:
             page = desktop.new_page()
-            page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
+            page.goto(self.url, wait_until="load", timeout=45000)
             page.locator(".navbar-nav a[href='#usluge']").click()
             expect(page).to_have_url(re.compile(r"#usluge$"))
         finally:
