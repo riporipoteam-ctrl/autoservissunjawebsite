@@ -66,6 +66,31 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('class="navbar navbar-expand-lg nav-bar sunja-liquid-header', INDEX)
         self.assertIn('id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top sunja-liquid-top', INDEX)
 
+    def test_v214_real_mobile_touch_targets_are_not_hover_gated(self):
+        self.assertIn("/* v21.4: stable first-touch surfaces and dock flush */", CSS)
+        self.assertIn(".team-item .team-overlay.gallery-tile-link", CSS)
+        self.assertIn("transform: none !important;", CSS)
+        self.assertIn("opacity: 1 !important;", CSS)
+        self.assertIn("pointer-events: auto !important;", CSS)
+        self.assertIn("touch-action: manipulation;", CSS)
+        self.assertIn("@media (hover: none), (pointer: coarse)", CSS)
+
+    def test_v214_flush_mobile_dock_has_no_empty_footer_spacer(self):
+        self.assertIn(".mobile-callbar.sunja-liquid-bottom", CSS)
+        self.assertIn("bottom: 0 !important;", CSS)
+        self.assertIn("border-radius: 23px 23px 0 0 !important;", CSS)
+        self.assertIn("#siteFooter", CSS)
+        self.assertIn("padding-bottom: 28px !important;", CSS)
+        self.assertIn("viewport-fit=cover", INDEX)
+        self.assertIn('name="theme-color" content="#e8f4fc"', INDEX)
+
+    def test_v214_browser_ci_has_known_supported_runner(self):
+        for path in (".github/workflows/site-quality.yml",
+                     ".github/workflows/website-checks.yml"):
+            workflow = (ROOT / path).read_text(encoding="utf-8")
+            self.assertIn("runs-on: ubuntu-24.04", workflow)
+            self.assertNotIn("runs-on: ubuntu-latest", workflow)
+
     def test_v213_typography_is_site_wide_and_mobile_compact(self):
         self.assertIn("/* v21.3 — consistent site-wide typography */", CSS)
         self.assertIn("--sunja-mobile-copy: 13.5px;", CSS)
@@ -80,8 +105,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=21.3", INDEX)
-        self.assertIn("js/main.js?v=21.3", INDEX)
+        self.assertIn("css/style.css?v=21.4", INDEX)
+        self.assertIn("js/main.js?v=21.4", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertIn("/* v21.2: optical glass and obstruction-free mobile actions */", CSS)
@@ -107,8 +132,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("requestAnimationFrame(syncActionDock)", JS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=21.3", INDEX)
-        self.assertIn("js/main.js?v=21.3", INDEX)
+        self.assertIn("css/style.css?v=21.4", INDEX)
+        self.assertIn("js/main.js?v=21.4", INDEX)
 
     def test_core_sections_remain_present(self):
         for section_id in ("pocetna", "o-nama", "usluge", "galerija", "lokacija", "kontakt", "siteFooter"):
@@ -197,8 +222,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=21.3", INDEX)
-        self.assertIn("js/main.js?v=21.3", INDEX)
+        self.assertIn("css/style.css?v=21.4", INDEX)
+        self.assertIn("js/main.js?v=21.4", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
