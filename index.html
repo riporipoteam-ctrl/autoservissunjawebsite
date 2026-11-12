@@ -37,7 +37,7 @@
     <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=20.2" rel="stylesheet">
+    <link href="css/style.css?v=21.0" rel="stylesheet">
 </head>
 
 <body>
@@ -74,7 +74,7 @@
 
 
     <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg nav-bar bg-white navbar-light shadow sticky-top p-0">
+    <nav class="navbar navbar-expand-lg nav-bar sunja-liquid-header bg-white navbar-light shadow sticky-top p-0">
         <a href="#pocetna" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
             <img src="assets/sunja-logo-transparent.webp" alt="Auto Servis Šunja">
         </a>
@@ -101,7 +101,7 @@
         <div id="header-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="8000" data-bs-pause="hover">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <div class="hero-bg" id="heroMainBg" style="background-image:url('assets/photos/tt-wide-20260919-d3b7439d.webp')"></div>
+                    <div class="hero-bg" id="heroMainBg" style="--hero-photo:url('assets/photos/tt-wide-20260919-d3b7439d.webp')"></div>
                     <picture><source id="heroMainSrc" media="(max-width: 767.98px)" srcset="assets/photos/tt-20260919-d3b7439d.webp"><img class="w-100" id="heroMainImg" src="assets/photos/tt-wide-20260919-d3b7439d.webp" alt="Ulaz i natpis AUTOSERVIS, Auto Servis Šunja" fetchpriority="high"></picture>
                     <div class="carousel-caption d-flex align-items-center">
                         <div class="container">
@@ -121,7 +121,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <div class="hero-bg" style="background-image:url('assets/photos/tt-wide-20261023-180d1783.webp')"></div>
+                    <div class="hero-bg" style="--hero-photo:url('assets/gallery/radionica-dijagnostika.webp')"></div>
                     <picture><img class="w-100" src="assets/gallery/radionica-dijagnostika.webp" loading="lazy" decoding="async" alt="Dijagnostički uređaj unutar vozila Auto Servisa Šunja"></picture>
                     <div class="carousel-caption d-flex align-items-center">
                         <div class="container">
@@ -138,7 +138,7 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <div class="hero-bg" style="background-image:url('assets/photos/tt-wide-20261108-574b96bf.webp')"></div>
+                    <div class="hero-bg" style="--hero-photo:url('assets/gallery/kljucevi-programiranje.webp')"></div>
                     <picture><img class="w-100" src="assets/gallery/kljucevi-programiranje.webp" loading="lazy" decoding="async" alt="Originalni automobilski ključevi tokom programiranja u servisu Šunja"></picture>
                     <div class="carousel-caption d-flex align-items-center">
                         <div class="container">
@@ -738,14 +738,14 @@
 
 
     <!-- Mobile call bar -->
-    <div class="mobile-callbar">
+    <div class="mobile-callbar sunja-liquid-bottom">
         <a class="call" href="tel:+38761297847"><i class="fa fa-phone-alt me-2"></i>Pozovite</a>
         <a class="dir" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener"><i class="fa fa-map-marker-alt me-2"></i>Upute</a>
     </div>
 
 
     <!-- Back to Top -->
-    <button type="button" id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top" aria-label="Nazad na vrh" title="Nazad na vrh"><i class="fa fa-arrow-up"></i></button>
+    <button type="button" id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top sunja-liquid-top" aria-label="Nazad na vrh" title="Nazad na vrh"><i class="fa fa-arrow-up"></i></button>
 
 
     <!-- JavaScript Libraries -->
@@ -756,7 +756,7 @@
     
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=20.2"></script>
+    <script src="js/main.js?v=21.0"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
