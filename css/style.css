@@ -2308,3 +2308,42 @@ a[href] > *,button > * { pointer-events:none !important; }
         min-height: 420px !important;
     }
 }
+
+
+/* v29: stable finished map, lower GPU/tile cost and shorter fixed scroll run */
+/* Keep the map's layout identical before and after reaching the shop.
+   Reaching the end must never collapse the section or change scrollY. */
+#globeScroll,
+#globeScroll:not(.globe-complete),
+#globeScroll.globe-complete {
+    height: 190svh !important;
+    min-height: 1100px !important;
+    max-height: none !important;
+    overflow: clip !important;
+    position: relative !important;
+}
+#globeScroll .globe-sticky,
+#globeScroll.globe-complete .globe-sticky {
+    height: 100svh !important;
+    min-height: 480px !important;
+    top: 0 !important;
+    position: sticky !important;
+    overflow: hidden !important;
+}
+#globeScroll.globe-complete .globe-stage,
+#globeScroll.globe-complete .globe-hint {
+    display: none !important;
+}
+@media (max-width: 767.98px) {
+    #globeScroll,
+    #globeScroll:not(.globe-complete),
+    #globeScroll.globe-complete {
+        height: 185svh !important;
+        min-height: 1050px !important;
+    }
+    #globeScroll .globe-sticky,
+    #globeScroll.globe-complete .globe-sticky {
+        min-height: 420px !important;
+        height: 100svh !important;
+    }
+}
