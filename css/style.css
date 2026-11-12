@@ -1666,3 +1666,433 @@ a[href], button, .btn {
         flex-basis: 44px;
     }
 }
+
+
+/* v21.0 — responsive optics, original-ratio media, and compact type */
+/* Inspired by liquid-glass studies (MIT projects), authored specifically for
+   this static page. No Canvas/WebGL, SVG backdrop filters or scroll-time work.
+   Only the header, mobile action dock and back-to-top use glass surfaces. */
+:root {
+    --liquid-edge: rgba(255,255,255,.92);
+    --liquid-shadow: 0 12px 34px rgba(16,45,86,.13);
+}
+.navbar.nav-bar.sunja-liquid-header {
+    position: sticky;
+    top: 0 !important;
+    z-index: 1029;
+    width: min(1380px, calc(100% - 28px));
+    max-width: none;
+    min-height: 66px;
+    margin: 12px auto 0 !important;
+    padding: 0 !important;
+    isolation: isolate;
+    overflow: visible;
+    border: 1px solid rgba(255,255,255,.94) !important;
+    border-radius: 22px !important;
+    background: linear-gradient(146deg, rgba(255,255,255,.88) 0%,
+        rgba(235,247,255,.73) 50%, rgba(252,254,255,.86) 100%) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(175%);
+    backdrop-filter: blur(18px) saturate(175%);
+    box-shadow: 0 1px 1px rgba(255,255,255,.95) inset,
+        0 -1px 2px rgba(53,113,171,.10) inset,
+        0 11px 26px rgba(15,46,89,.12), 0 2px 8px rgba(10,54,99,.06) !important;
+    transition: box-shadow .23s ease, background-color .23s ease !important;
+}
+/* The curved specular highlight is decorative and cannot intercept clicks. */
+.navbar.nav-bar.sunja-liquid-header::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background: radial-gradient(ellipse 53% 45% at 17% 0%,
+        rgba(255,255,255,.94), transparent 85%),
+        linear-gradient(180deg,rgba(255,255,255,.38),transparent 36%);
+    pointer-events: none;
+}
+.navbar.nav-bar.sunja-liquid-header > * {
+    position: relative;
+    z-index: 1;
+}
+html.is-scrolled .navbar.nav-bar.sunja-liquid-header {
+    box-shadow: 0 1px 1px rgba(255,255,255,.98) inset,
+        0 9px 29px rgba(9,38,83,.16) !important;
+}
+.navbar.nav-bar.sunja-liquid-header .navbar-brand {
+    margin: 0 auto 0 0;
+    min-height: 66px;
+    height: auto !important;
+    padding: 8px 18px !important;
+}
+.navbar.nav-bar.sunja-liquid-header .navbar-brand img {
+    height: 44px !important;
+    max-width: min(165px, 38vw);
+    width: auto;
+    object-fit: contain;
+    filter: none !important;
+    transform: none !important;
+}
+.navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link {
+    color: #183859;
+    font-size: .825rem;
+    font-weight: 600;
+    letter-spacing: .005em;
+    min-height: 44px;
+    padding: 12px 0;
+}
+.navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link.active,
+.navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link:hover {
+    color: #085ca0;
+}
+.navbar.nav-bar.sunja-liquid-header .navbar-toggler {
+    width: 46px;
+    height: 43px;
+    min-width: 46px;
+    margin: 0 12px 0 0 !important;
+    padding: 9px 10px;
+    border: 1px solid rgba(255,255,255,.88) !important;
+    border-radius: 14px;
+    background: linear-gradient(145deg,rgba(255,255,255,.81),rgba(210,234,253,.55));
+    box-shadow: 0 1px 0 rgba(255,255,255,.98) inset,
+        0 4px 12px rgba(15,62,100,.09);
+    touch-action: manipulation;
+}
+.navbar.nav-bar.sunja-liquid-header .navbar-toggler:focus {
+    box-shadow: 0 0 0 3px rgba(67,156,222,.2);
+}
+.navbar.nav-bar.sunja-liquid-header .navbar-toggler-icon {
+    width: 1.3em;
+    height: 1.3em;
+}
+@media (min-width: 992px) {
+    .navbar.nav-bar.sunja-liquid-header .navbar-collapse { padding-right: 10px; }
+    .navbar.nav-bar.sunja-liquid-header .navbar-nav .nav-link { margin-right: 18px; }
+}
+@media (max-width: 991.98px) {
+    .navbar.nav-bar.sunja-liquid-header {
+        width: calc(100% - 24px);
+        min-height: 62px;
+        margin: 9px auto 0 !important;
+        border-radius: 21px !important;
+        background: linear-gradient(136deg,rgba(255,255,255,.91),
+            rgba(230,245,255,.76)) !important;
+        -webkit-backdrop-filter: blur(14px) saturate(155%);
+        backdrop-filter: blur(14px) saturate(155%);
+    }
+    .navbar.nav-bar.sunja-liquid-header .navbar-brand { min-height: 62px; padding: 7px 14px !important; }
+    .navbar.nav-bar.sunja-liquid-header .navbar-brand img { height: 41px !important; }
+    .navbar.nav-bar.sunja-liquid-header #navbarCollapse {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: calc(100% + 7px);
+        margin: 0;
+        border: 1px solid rgba(255,255,255,.9) !important;
+        border-radius: 18px;
+        overflow: hidden;
+        background: rgba(245,251,255,.96) !important;
+        -webkit-backdrop-filter: blur(14px) saturate(140%);
+        backdrop-filter: blur(14px) saturate(140%);
+        box-shadow: 0 15px 30px rgba(8,35,73,.15);
+    }
+    .navbar.nav-bar.sunja-liquid-header #navbarCollapse .navbar-nav {
+        padding: 11px 20px !important;
+        border: none;
+    }
+    .navbar.nav-bar.sunja-liquid-header #navbarCollapse .nav-link {
+        margin: 0;
+        min-height: 44px;
+        padding: 12px 0;
+        border-bottom: 1px solid rgba(52,117,166,.085);
+    }
+}
+
+/* Frosted, floating action dock — no full-width opaque blue slab. */
+@media (max-width: 991.98px) {
+    .mobile-callbar.sunja-liquid-bottom {
+        position: fixed;
+        display: flex !important;
+        z-index: 1030;
+        left: 12px;
+        right: 12px;
+        bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+        width: auto;
+        gap: 6px;
+        padding: 6px;
+        border: 1px solid var(--liquid-edge);
+        border-radius: 24px !important;
+        overflow: visible !important;
+        background: linear-gradient(145deg,rgba(255,255,255,.70),
+            rgba(219,239,254,.53) 58%,rgba(250,253,255,.67)) !important;
+        -webkit-backdrop-filter: blur(22px) saturate(175%);
+        backdrop-filter: blur(22px) saturate(175%);
+        box-shadow: 0 1px 1px rgba(255,255,255,.98) inset,
+            0 -1px 1px rgba(42,107,167,.13) inset,
+            0 12px 36px rgba(10,36,75,.19), 0 2px 7px rgba(5,29,67,.09);
+        isolation: isolate;
+    }
+    .mobile-callbar.sunja-liquid-bottom::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(ellipse 68% 50% at 20% 0%,
+            rgba(255,255,255,.65),transparent 94%);
+        pointer-events: none;
+    }
+    .mobile-callbar.sunja-liquid-bottom a {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 1 1 0;
+        gap: 8px;
+        min-width: 0;
+        min-height: 51px;
+        padding: 10px 8px !important;
+        border-radius: 18px;
+        font-size: .84rem !important;
+        font-weight: 700;
+        letter-spacing: .035em;
+        text-transform: uppercase;
+        text-decoration: none;
+        transition: background-color .18s ease, box-shadow .18s ease !important;
+        touch-action: manipulation;
+    }
+    .mobile-callbar.sunja-liquid-bottom a.call {
+        color: #093f75 !important;
+        background: linear-gradient(155deg,rgba(198,232,255,.77),
+            rgba(234,248,255,.58)) !important;
+        border: 1px solid rgba(255,255,255,.7);
+        box-shadow: inset 0 1px rgba(255,255,255,.85);
+    }
+    .mobile-callbar.sunja-liquid-bottom a.dir {
+        color: #163753 !important;
+        background: linear-gradient(145deg,rgba(255,255,255,.76),
+            rgba(212,233,251,.49)) !important;
+        border: 1px solid rgba(255,255,255,.76);
+        box-shadow: inset 0 1px rgba(255,255,255,.88);
+    }
+    .mobile-callbar.sunja-liquid-bottom a:active {
+        background: rgba(186,226,252,.81) !important;
+        box-shadow: inset 0 2px 5px rgba(9,68,121,.09) !important;
+    }
+    .mobile-callbar.sunja-liquid-bottom a i {
+        font-size: 1.02rem;
+        margin: 0 !important;
+        pointer-events: none;
+    }
+    body { padding-bottom: calc(97px + env(safe-area-inset-bottom, 0px)) !important; }
+}
+@media (min-width: 992px) {
+    .mobile-callbar.sunja-liquid-bottom { display: none !important; }
+}
+
+/* Floating single-tap glass back-to-top control. */
+#backTop.sunja-liquid-top {
+    z-index: 1028 !important;
+    width: 51px !important;
+    height: 51px !important;
+    min-width: 51px;
+    min-height: 51px;
+    padding: 0 !important;
+    right: 22px !important;
+    bottom: 24px !important;
+    border-radius: 19px !important;
+    color: #07598e !important;
+    background: linear-gradient(147deg,rgba(255,255,255,.91),
+        rgba(192,228,252,.71) 58%,rgba(248,252,255,.81)) !important;
+    border: 1px solid rgba(255,255,255,.91) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(165%);
+    backdrop-filter: blur(16px) saturate(165%);
+    box-shadow: 0 1px 1px rgba(255,255,255,.98) inset,
+        0 -2px 3px rgba(48,102,159,.11) inset,
+        0 10px 28px rgba(13,52,96,.17) !important;
+    transition: opacity .18s ease, visibility .18s ease,
+        transform .18s ease, box-shadow .18s ease !important;
+    touch-action: manipulation;
+}
+#backTop.sunja-liquid-top::before {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 17px;
+    background: radial-gradient(ellipse 72% 42% at 28% 0%,
+        rgba(255,255,255,.9),transparent);
+    pointer-events: none;
+}
+#backTop.sunja-liquid-top i { position: relative; z-index: 1; font-size: 1.1rem; }
+#backTop.sunja-liquid-top.is-visible { transform: translateY(0) !important; }
+#backTop.sunja-liquid-top.is-visible:active { transform: scale(.96) !important; }
+@media (max-width: 991.98px) {
+    #backTop.sunja-liquid-top {
+        right: 20px !important;
+        bottom: calc(105px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+}
+
+/* Truly compact text: headings, description, list rows and mobile captions.
+   Reduces the screenshot's 30px body-copy impression while preserving legibility. */
+#o-nama > .container { max-width: 1140px; }
+#o-nama h1, #usluge h1, #galerija h1, #recenzije h1,
+#lokacija h1, #kontakt h1 {
+    font-size: clamp(1.55rem, 2.2vw, 2rem) !important;
+    line-height: 1.17 !important;
+    letter-spacing: -.025em !important;
+    margin-bottom: .95rem !important;
+}
+#o-nama h1 { max-width: none !important; }
+#o-nama p, #o-nama .ps-3 > span,
+.service .tab-content p, #galerija p, #recenzije p,
+#lokacija p, #kontakt p {
+    font-size: .875rem !important;
+    line-height: 1.6 !important;
+}
+#o-nama h6:not(.text-primary) { font-size: .96rem !important; line-height: 1.28; margin-bottom: .4rem; }
+#o-nama .ps-3 { padding-left: 13px !important; }
+#o-nama .ps-3 > span { display: block; color: #53667d; }
+#o-nama .row.g-4 { --bs-gutter-y: .85rem; --bs-gutter-x: .85rem; }
+#o-nama .row.g-4 .col-12 .bg-light {
+    width: 37px !important;
+    height: 37px !important;
+    border-radius: 11px;
+    background: #e8f1fa !important;
+    border: 1px solid #d9e7f5;
+}
+#o-nama .row.g-4 .col-12 .bg-light .fw-bold { font-size: .9rem; }
+#o-nama .row.g-5 { --bs-gutter-y: 1.3rem; }
+h6.text-primary.text-uppercase { font-size: .69rem !important; letter-spacing: .11em !important; }
+#header-carousel .carousel-caption h1 {
+    font-size: clamp(1.85rem, 3.6vw, 2.75rem) !important;
+    line-height: 1.1;
+}
+#header-carousel .carousel-caption p {
+    font-size: .91rem !important;
+    line-height: 1.58 !important;
+}
+#usluge h3 { font-size: 1.22rem !important; }
+.service .nav .nav-link h4 { font-size: .91rem !important; }
+.contact-spotlight-heading h3 { font-size: 1.38rem !important; }
+#recenzije .stars-big .stars { font-size: 1.95rem; }
+
+/* Photo geometry: never letterbox a portrait inside a forced 4:5 frame.
+   Natural image height determines each gallery card height; the whole photo
+   fills the width with 1:1 pixel mapping and zero cropping/stretching. */
+.team-item .position-relative {
+    aspect-ratio: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: #eff5fb !important;
+}
+.team-item .position-relative::before {
+    display: none !important;
+}
+.team-item .gallery-img,
+.gallery-img[data-gallery-img] {
+    position: relative;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    transform: none !important;
+    filter: none !important;
+}
+.team-item:hover .gallery-img { transform: none !important; }
+.team-item .team-overlay.gallery-tile-link {
+    border-radius: 0;
+    cursor: pointer;
+}
+.gallery-source-line {
+    background: #f4f8fc !important;
+    border-color: rgba(25,90,142,.09);
+}
+.service .tab-pane .col-md-6[style*="min-height"],
+#o-nama .col-lg-6[style*="min-height"] { min-height: 0 !important; }
+.svc-photo, img[data-svc-cat], img[data-about-photo] {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: none !important;
+    min-height: 0 !important;
+    aspect-ratio: auto !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    background: transparent !important;
+    filter: none !important;
+}
+#o-nama [data-about-photo] {
+    border-radius: 18px;
+}
+.service .tab-pane .row.g-4 { --bs-gutter-y: 1.2rem; }
+
+/* Three permanent hero photos remain uncropped at full original quality.
+   A darker, full-bleed copy of EACH SAME photo fills the unused side area:
+   no empty navy bars, while the sharp foreground is not enlarged/cropped. */
+#header-carousel .hero-bg {
+    background-image: linear-gradient(90deg,
+       rgba(3,16,37,.77),rgba(5,27,53,.48) 62%,rgba(3,16,37,.65)),
+       var(--hero-photo) !important;
+    background-size: cover !important;
+    background-position: center center !important;
+    background-repeat: no-repeat !important;
+    filter: none !important;
+    transform: none !important;
+}
+#header-carousel .carousel-item picture img {
+    object-fit: contain !important;
+    object-position: center !important;
+    image-rendering: auto !important;
+    transform: none !important;
+    filter: none !important;
+}
+#header-carousel .carousel-caption {
+    background: linear-gradient(90deg,
+        rgba(3,15,35,.78),rgba(3,15,35,.35) 62%,rgba(3,15,35,.22)) !important;
+}
+@media (max-width: 767.98px) {
+    #o-nama h1, #usluge h1, #galerija h1, #recenzije h1,
+    #lokacija h1, #kontakt h1 {
+        font-size: 1.42rem !important;
+        line-height: 1.2 !important;
+    }
+    #o-nama p, #o-nama .ps-3 > span,
+    .service .tab-content p, #galerija p, #recenzije p,
+    #lokacija p, #kontakt p {
+        font-size: .875rem !important;
+        line-height: 1.6 !important;
+    }
+    #o-nama .row.g-4 { margin-bottom: .8rem !important; padding-bottom: .7rem !important; }
+    #header-carousel .carousel-caption h1 {
+        font-size: clamp(1.65rem, 7.2vw, 1.95rem) !important;
+    }
+    #header-carousel .carousel-caption p { font-size: .85rem !important; line-height: 1.5 !important; }
+    #header-carousel .carousel-caption {
+        background: linear-gradient(0deg,
+            rgba(3,16,35,.9),rgba(3,16,35,.46) 66%,rgba(3,16,35,.18)) !important;
+    }
+    .container-xxl.py-5 { padding-top: 2.65rem !important; padding-bottom: 2.65rem !important; }
+    .service .nav .nav-link { min-height: 53px; padding: .66rem .82rem !important; }
+    .service .tab-content { padding: .8rem !important; }
+    .team-item { border-radius: 18px; }
+    .contact-spotlight { padding: 21px 17px; }
+}
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .navbar.nav-bar.sunja-liquid-header { background: #f1f8fd !important; }
+    .mobile-callbar.sunja-liquid-bottom { background: #e2f1fc !important; }
+    #backTop.sunja-liquid-top { background: #d7edfb !important; }
+}
+html.perf-lite .navbar.nav-bar.sunja-liquid-header,
+html.perf-lite .mobile-callbar.sunja-liquid-bottom,
+html.perf-lite #backTop.sunja-liquid-top {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+    .navbar.nav-bar.sunja-liquid-header,
+    .mobile-callbar.sunja-liquid-bottom,
+    .mobile-callbar.sunja-liquid-bottom a,
+    #backTop.sunja-liquid-top { transition: none !important; animation: none !important; }
+}
