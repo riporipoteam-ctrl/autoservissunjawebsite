@@ -1,0 +1,28 @@
+name: Temporary TikTok link media lookup
+on:
+  push:
+    branches: [fix/mobile-intro-map-v31]
+    paths: ['.github/workflows/tiktok-source-check.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    steps:
+      - name: Resolve TikTok link and metadata
+        run: |
+          python - <<'PY'
+          import urllib.request, html, re
+          url='https://vm.tiktok.com/ZN85hsoY9/'
+          req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; Chrome/130.0)'})
+          try:
+              with urllib.request.urlopen(req,timeout=14) as h:
+                  print('Final URL:',h.url)
+                  print('Content type:',h.headers.get('Content-Type'))
+                  s=h.read(300000).decode('utf8','replace')
+                  for key in ['og:image','og:description','og:title','twitter:image']:
+                      found=re.search(r'<meta[^>]+(?:property|name)=[\x22\x27]'+re.escape(key)+r'[\x22\x27][^>]+content=[\x22\x27]([^\x22\x27]+)',s,re.I)
+                      if found: print(key,html.unescape(found.group(1))[:350])
+          except Exception as exc:print('ACCESS ERROR:',str(exc))
+          PY
