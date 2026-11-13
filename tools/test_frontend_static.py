@@ -42,20 +42,19 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=30.0", INDEX)
-        self.assertIn("js/main.js?v=30.0", INDEX)
+        self.assertIn("css/style.css?v=31.0", INDEX)
+        self.assertIn("js/main.js?v=31.0", INDEX)
 
-    def test_fullscreen_loaders_are_removed(self):
-        self.assertNotIn('id="sunjaIntro"', INDEX)
-        self.assertNotIn('id="sunjaIntroVideo"', INDEX)
-        self.assertNotIn('sunja-intro-active', INDEX + CSS + JS)
-        self.assertNotIn('sunja-intro-fallback-logo', INDEX + CSS)
-        self.assertNotIn('sunja-logo-intro', INDEX)
-        self.assertNotIn('autoplay muted playsinline', INDEX)
-        self.assertNotIn('sunjaIntroSafety', INDEX)
-        self.assertIn('id="header-carousel"', INDEX)
-        self.assertIn('css/style.css?v=30.0', INDEX)
-        self.assertIn('js/main.js?v=30.0', INDEX)
+    def test_v31_logo_intro_is_video_only_with_safe_exit(self):
+        self.assertIn('id="sunjaIntro"', INDEX)
+        self.assertIn('id="sunjaIntroVideo"', INDEX)
+        self.assertIn('assets/video/sunja-logo-intro-clean-v27.mp4', INDEX)
+        self.assertIn("sunja-intro-active", INDEX + CSS)
+        self.assertIn("autoplay muted playsinline", INDEX)
+        self.assertIn("introSafetyTimeout", INDEX)
+        self.assertIn("prefers-reduced-motion: reduce", INDEX + CSS)
+        self.assertNotIn('id="sunjaIntroProgress"', INDEX)
+        self.assertNotIn('id="sunjaIntroLoading"', INDEX)
 
     def test_navbar_polish_is_actually_attached(self):
         self.assertIn('class="navbar navbar-expand-lg nav-bar ', INDEX)
@@ -167,8 +166,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=30.0", INDEX)
-        self.assertIn("js/main.js?v=30.0", INDEX)
+        self.assertIn("css/style.css?v=31.0", INDEX)
+        self.assertIn("js/main.js?v=31.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -195,8 +194,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=30.0", INDEX)
-        self.assertIn("js/main.js?v=30.0", INDEX)
+        self.assertIn("css/style.css?v=31.0", INDEX)
+        self.assertIn("js/main.js?v=31.0", INDEX)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
         self.assertNotIn("Upalila se lampica na instrument tabli?", INDEX)
@@ -314,65 +313,29 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("position: sticky !important", CSS)
         self.assertIn("height: 220svh !important", CSS)
 
-    def test_v26_sharp_short_intro_and_bounded_preload(self):
-        self.assertNotIn('id="sunjaIntro"', INDEX)
-        self.assertNotIn('id="sunjaIntroVideo"', INDEX)
-        self.assertNotIn('sunja-intro-active', INDEX + CSS + JS)
-        self.assertNotIn('sunja-intro-fallback-logo', INDEX + CSS)
-        self.assertNotIn('sunja-logo-intro', INDEX)
-        self.assertNotIn('autoplay muted playsinline', INDEX)
-        self.assertNotIn('sunjaIntroSafety', INDEX)
-        self.assertIn('id="header-carousel"', INDEX)
-        self.assertIn('css/style.css?v=30.0', INDEX)
-        self.assertIn('js/main.js?v=30.0', INDEX)
+    def test_v31_map_preloads_before_scroll_and_limits_tile_flooding(self):
+        self.assertIn("scheduleEarlyGlobeStart()", INDEX)
+        self.assertIn("window.addEventListener('load', scheduleEarlyGlobeStart", INDEX)
+        self.assertIn("cancelPendingTileRequestsWhileZooming: false", INDEX)
+        self.assertIn("var CAMERA_MIN_FRAME_MS = 140;", INDEX)
+        self.assertIn("duration: 320", INDEX)
+        self.assertIn("rootMargin: '850px 0px'", INDEX)
+        self.assertIn("setShopMarker(true)", INDEX)
+        self.assertIn("function settleMapScroll()", INDEX)
 
-    def test_v27_intro_replays_and_has_fallback_without_corner_guides(self):
-        self.assertNotIn('id="sunjaIntro"', INDEX)
-        self.assertNotIn('id="sunjaIntroVideo"', INDEX)
-        self.assertNotIn('sunja-intro-active', INDEX + CSS + JS)
-        self.assertNotIn('sunja-intro-fallback-logo', INDEX + CSS)
-        self.assertNotIn('sunja-logo-intro', INDEX)
-        self.assertNotIn('autoplay muted playsinline', INDEX)
-        self.assertNotIn('sunjaIntroSafety', INDEX)
-        self.assertIn('id="header-carousel"', INDEX)
-        self.assertIn('css/style.css?v=30.0', INDEX)
-        self.assertIn('js/main.js?v=30.0', INDEX)
+    def test_v31_mobile_browser_chrome_matches_the_fixed_callbar(self):
+        self.assertIn('name="theme-color" media="(max-width: 991.98px)" content="#0B5FA5"', INDEX)
+        self.assertIn('name="theme-color" media="(min-width: 992px)"', INDEX)
+        self.assertIn("/* v31: cross-browser fixed mobile action dock */", CSS)
+        self.assertIn("env(safe-area-inset-bottom", CSS)
+        self.assertIn(".mobile-callbar a.dir", CSS)
+        self.assertIn("background:#0b5fa5", CSS)
 
-    def test_v27_clean_video_has_valid_mp4_header(self):
-        self.assertNotIn('id="sunjaIntro"', INDEX)
-        self.assertNotIn('id="sunjaIntroVideo"', INDEX)
-        self.assertNotIn('sunja-intro-active', INDEX + CSS + JS)
-        self.assertNotIn('sunja-intro-fallback-logo', INDEX + CSS)
-        self.assertNotIn('sunja-logo-intro', INDEX)
-        self.assertNotIn('autoplay muted playsinline', INDEX)
-        self.assertNotIn('sunjaIntroSafety', INDEX)
-        self.assertIn('id="header-carousel"', INDEX)
-        self.assertIn('css/style.css?v=30.0', INDEX)
-        self.assertIn('js/main.js?v=30.0', INDEX)
-
-    def test_v26_high_resolution_mp4_is_real_media(self):
-        self.assertNotIn('id="sunjaIntro"', INDEX)
-        self.assertNotIn('id="sunjaIntroVideo"', INDEX)
-        self.assertNotIn('sunja-intro-active', INDEX + CSS + JS)
-        self.assertNotIn('sunja-intro-fallback-logo', INDEX + CSS)
-        self.assertNotIn('sunja-logo-intro', INDEX)
-        self.assertNotIn('autoplay muted playsinline', INDEX)
-        self.assertNotIn('sunjaIntroSafety', INDEX)
-        self.assertIn('id="header-carousel"', INDEX)
-        self.assertIn('css/style.css?v=30.0', INDEX)
-        self.assertIn('js/main.js?v=30.0', INDEX)
-
-    def test_v25_video_file_in_repository(self):
-        self.assertNotIn('id="sunjaIntro"', INDEX)
-        self.assertNotIn('id="sunjaIntroVideo"', INDEX)
-        self.assertNotIn('sunja-intro-active', INDEX + CSS + JS)
-        self.assertNotIn('sunja-intro-fallback-logo', INDEX + CSS)
-        self.assertNotIn('sunja-logo-intro', INDEX)
-        self.assertNotIn('autoplay muted playsinline', INDEX)
-        self.assertNotIn('sunjaIntroSafety', INDEX)
-        self.assertIn('id="header-carousel"', INDEX)
-        self.assertIn('css/style.css?v=30.0', INDEX)
-        self.assertIn('js/main.js?v=30.0', INDEX)
+    def test_v31_footer_uses_exact_supplied_tiktok_photo(self):
+        self.assertIn('assets/gallery/sunja-tiktok-7627945643490692373.webp', INDEX)
+        self.assertIn('https://vm.tiktok.com/ZN85hsoY9/', INDEX)
+        self.assertIn('class="footer-featured-photo"', INDEX)
+        self.assertIn("/* v31: featured real TikTok photo in footer */", CSS)
 
     def test_v24_map_keeps_fallback_and_directions(self):
         self.assertIn("wrap.classList.add('is-fallback')", INDEX)
@@ -396,8 +359,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=30.0", INDEX)
-        self.assertIn("js/main.js?v=30.0", INDEX)
+        self.assertIn("css/style.css?v=31.0", INDEX)
+        self.assertIn("js/main.js?v=31.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
