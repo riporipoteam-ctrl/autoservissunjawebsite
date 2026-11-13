@@ -365,7 +365,7 @@ class SiteInteractionTests(unittest.TestCase):
             ), "rgb(11, 33, 84)"
         )
 
-    def test_v33_video_error_shows_static_original_logo_not_custom_animation(self):
+    def test_v33_blocked_video_replays_actual_uploaded_frames_not_css_drawing(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
             is_mobile=True, has_touch=True, reduced_motion="no-preference",
@@ -378,12 +378,16 @@ class SiteInteractionTests(unittest.TestCase):
             video.evaluate("(v) => v.dispatchEvent(new Event('error'))")
             page.wait_for_function(
                 "() => document.querySelector('#sunjaIntro').classList.contains('sunja-intro-is-fallback')",
-                timeout=3000,
+                timeout=4000,
             )
-            logo = page.locator(".sunja-intro-fallback-logo")
-            expect(logo).to_be_visible()
+            frames = page.locator(".sunja-intro-fallback-frames")
+            expect(frames).to_be_visible()
+            self.assertIn(
+                "sunja-user-uploaded-frames-fallback-v33.webp",
+                frames.get_attribute("src"),
+            )
             self.assertEqual(
-                logo.evaluate("(e) => getComputedStyle(e).animationName"),
+                frames.evaluate("(e) => getComputedStyle(e).animationName"),
                 "none",
             )
             self.assertEqual(page.locator(".footer-featured-photo").count(), 0)
