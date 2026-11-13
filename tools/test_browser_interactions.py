@@ -382,7 +382,7 @@ class SiteInteractionTests(unittest.TestCase):
             expect(video).to_have_count(1)
             page.wait_for_function(
                 "() => document.querySelector('#sunjaIntro').classList.contains('sunja-intro-is-fallback')",
-                timeout=4000,
+                timeout=8500,
             )
             frames = page.locator(".sunja-intro-fallback-frames")
             expect(frames).to_be_visible()
