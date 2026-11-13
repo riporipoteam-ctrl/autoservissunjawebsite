@@ -365,7 +365,40 @@ class SiteInteractionTests(unittest.TestCase):
             ), "rgb(11, 33, 84)"
         )
 
-    def test_v32_logo_fallback_is_drawn_instead_of_disappearing(self):
+    def test_v33_blocked_video_replays_actual_uploaded_frames_not_css_drawing(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        try:
+            page = context.new_page()
+            # Block MP4 before navigation. Dispatching error after page load
+            # is flaky in WebKit because autoplay may already have started,
+            # and successful playback correctly refuses the fallback.
+            page.route("**/sunja-logo-intro-user-uploaded-v33.mp4",
+                       lambda route: route.abort())
+            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            video = page.locator("#sunjaIntroVideo")
+            expect(video).to_have_count(1)
+            page.wait_for_function(
+                "() => document.querySelector('#sunjaIntro').classList.contains('sunja-intro-is-fallback')",
+                timeout=8500,
+            )
+            frames = page.locator(".sunja-intro-fallback-frames")
+            expect(frames).to_be_visible()
+            self.assertIn(
+                "sunja-user-uploaded-frames-fallback-v33.webp",
+                frames.get_attribute("src"),
+            )
+            self.assertEqual(
+                frames.evaluate("(e) => getComputedStyle(e).animationName"),
+                "none",
+            )
+            self.assertEqual(page.locator(".footer-featured-photo").count(), 0)
+        finally:
+            context.close()
+
+    def test_v33_video_loader_uses_uploaded_mp4_on_mobile(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
             is_mobile=True, has_touch=True, reduced_motion="no-preference",
@@ -374,19 +407,10 @@ class SiteInteractionTests(unittest.TestCase):
             page = context.new_page()
             page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
             video = page.locator("#sunjaIntroVideo")
-            expect(video).to_have_count(1)
-            video.evaluate("(v) => v.dispatchEvent(new Event('error'))")
-            page.wait_for_function(
-                "() => document.querySelector('#sunjaIntro').classList.contains('sunja-intro-is-fallback')",
-                timeout=3000,
-            )
-            logo = page.locator(".sunja-intro-fallback-logo")
-            expect(logo).to_be_visible()
-            self.assertEqual(
-                logo.evaluate("(e) => getComputedStyle(e).animationName"),
-                "sunjaLogoDraw",
-            )
-            self.assertEqual(page.locator(".footer-featured-photo").count(), 0)
+            self.assertEqual(video.get_attribute("src"),
+                             "assets/video/sunja-logo-intro-user-uploaded-v33.mp4")
+            self.assertEqual(video.get_attribute("preload"), "auto")
+            self.assertEqual(page.locator("#sunjaIntroProgress, #sunjaIntroLoading").count(), 0)
         finally:
             context.close()
 
