@@ -276,7 +276,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("window.scrollBy(0, shift)", INDEX)
         self.assertIn("contactSection.getBoundingClientRect().top", INDEX)
         self.assertIn("map.easeTo({", INDEX)
-        self.assertIn("duration: 180", INDEX)
+        self.assertIn("duration: 320", INDEX)
         self.assertIn("/* v30: settled map takes one screen, not a second swipe */", CSS)
         self.assertIn("#globeScroll.globe-complete {", CSS)
         self.assertIn("height: 100svh !important", CSS)
@@ -291,7 +291,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("globe-complete", INDEX)
 
     def test_v29_map_avoids_scroll_frame_render_flood_and_starts_early(self):
-        self.assertIn("var CAMERA_MIN_FRAME_MS = 80;", INDEX)
+        self.assertIn("var CAMERA_MIN_FRAME_MS = 140;", INDEX)
         self.assertIn("lastCameraAt", INDEX)
         self.assertIn("progress - lastMapProgress", INDEX)
         self.assertIn("rootMargin: '850px 0px'", INDEX)
@@ -334,7 +334,7 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v31_footer_uses_exact_supplied_tiktok_photo(self):
         self.assertIn('assets/gallery/sunja-tiktok-7627945643490692373.webp', INDEX)
         self.assertIn('https://vm.tiktok.com/ZN85hsoY9/', INDEX)
-        self.assertIn('class="footer-featured-photo"', INDEX)
+        self.assertIn('class="container footer-featured-photo"', INDEX)
         self.assertIn("/* v31: featured real TikTok photo in footer */", CSS)
 
     def test_v24_map_keeps_fallback_and_directions(self):
