@@ -272,6 +272,16 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("window.scrollTo(0, 0)", INDEX)
         self.assertIn("pageshow", INDEX)
 
+    def test_v30_map_settle_restores_normal_flow_and_smooths_camera(self):
+        self.assertIn("function settleMapScroll()", INDEX)
+        self.assertIn("window.scrollBy(0, shift)", INDEX)
+        self.assertIn("contactSection.getBoundingClientRect().top", INDEX)
+        self.assertIn("map.easeTo({", INDEX)
+        self.assertIn("duration: 180", INDEX)
+        self.assertIn("/* v30: settled map takes one screen, not a second swipe */", CSS)
+        self.assertIn("#globeScroll.globe-complete {", CSS)
+        self.assertIn("height: 100svh !important", CSS)
+
     def test_v29_map_locks_permanently_after_arrival(self):
         self.assertIn("var mapCompleted = false;", INDEX)
         self.assertIn("function finishMapOnce()", INDEX)
