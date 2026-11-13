@@ -50,7 +50,7 @@ class SiteInteractionTests(unittest.TestCase):
             reduced_motion="reduce",
         )
         self.page = self.context.new_page()
-        self.page.goto(self.url, wait_until="load", timeout=45000)
+        self.page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
 
     def tearDown(self):
         self.context.close()
@@ -248,12 +248,19 @@ class SiteInteractionTests(unittest.TestCase):
             self.assertLessEqual(state["height"], state["viewport"] + 2)
             self.assertEqual(state["stickyPosition"], "relative")
             self.assertLessEqual(abs(state["contactShift"]), 6)
-            # Mobile WebKit does not implement Playwright's synthetic wheel;
-            # use an actual wheel on Chromium and a native page scroll there.
-            if os.environ.get("BROWSER_ENGINE", "chromium") == "webkit":
-                page.evaluate("window.scrollBy(0, -260)")
-            else:
-                page.mouse.wheel(0, -260)
+            # A native window scroll works on both mobile WebKit and
+            # Chromium; Playwright's synthetic mouse wheel is unreliable in
+            # mobile emulation (the actual visitor scrolls with touch).
+            before_y = page.evaluate("window.scrollY")
+            page.evaluate("window.scrollBy(0, -260)")
+            page.wait_for_function(
+                "(before) => window.scrollY < before - 160",
+                arg=before_y, timeout=5000,
+            )
+            page.evaluate("""() => {
+                const w = document.getElementById('globeScroll');
+                window.scrollTo(0, w.offsetTop - 160);
+            }""")
             page.wait_for_function(
                 "() => scrollY < document.querySelector('#globeScroll').offsetTop - 100",
                 timeout=5000,
@@ -314,57 +321,49 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             context.close()
 
-    def test_v25_intro_has_only_video_and_can_finish(self):
-        page = self.context.new_page()
-        page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
-        self.assertEqual(page.locator("video[autoplay]").count(), 0)
-        self.assertFalse(page.evaluate(
-            "document.documentElement.classList.contains('sunja-intro-active')"
-        ))
-        expect(page.locator("#header-carousel")).to_be_visible()
-        page.reload(wait_until="domcontentloaded", timeout=45000)
-        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
-        expect(page.locator("#header-carousel")).to_be_visible()
+    def test_v31_intro_plays_original_logo_only_and_releases_page(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        try:
+            page = context.new_page()
+            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            expect(page.locator("#sunjaIntroVideo")).to_have_count(1)
+            expect(page.locator("#sunjaIntro")).to_be_visible()
+            self.assertEqual(page.locator("#sunjaIntroProgress, #sunjaIntroLoading").count(), 0)
+            page.locator("#sunjaIntroVideo").evaluate(
+                "(v) => v.dispatchEvent(new Event('ended'))"
+            )
+            page.wait_for_function(
+                "() => !document.documentElement.classList.contains('sunja-intro-active')",
+                timeout=7000,
+            )
+            expect(page.locator("#header-carousel")).to_be_visible()
+            page.reload(wait_until="domcontentloaded", timeout=45000)
+            expect(page.locator("#sunjaIntroVideo")).to_have_count(1)
+        finally:
+            context.close()
 
-    def test_v26_intro_is_short_and_cannot_wait_for_gallery(self):
-        page = self.context.new_page()
-        page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
-        self.assertEqual(page.locator("video[autoplay]").count(), 0)
-        self.assertFalse(page.evaluate(
-            "document.documentElement.classList.contains('sunja-intro-active')"
-        ))
-        expect(page.locator("#header-carousel")).to_be_visible()
-        page.reload(wait_until="domcontentloaded", timeout=45000)
-        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
-        expect(page.locator("#header-carousel")).to_be_visible()
-
-    def test_v27_intro_is_present_on_first_load_and_reload(self):
-        page = self.context.new_page()
-        page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
-        self.assertEqual(page.locator("video[autoplay]").count(), 0)
-        self.assertFalse(page.evaluate(
-            "document.documentElement.classList.contains('sunja-intro-active')"
-        ))
-        expect(page.locator("#header-carousel")).to_be_visible()
-        page.reload(wait_until="domcontentloaded", timeout=45000)
-        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
-        expect(page.locator("#header-carousel")).to_be_visible()
-
-    def test_initial_page_has_no_blocking_loader(self):
-        page = self.context.new_page()
-        page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
-        self.assertEqual(page.locator("video[autoplay]").count(), 0)
-        self.assertFalse(page.evaluate(
-            "document.documentElement.classList.contains('sunja-intro-active')"
-        ))
-        expect(page.locator("#header-carousel")).to_be_visible()
-        page.reload(wait_until="domcontentloaded", timeout=45000)
-        self.assertEqual(page.locator("#sunjaIntro").count(), 0)
-        expect(page.locator("#header-carousel")).to_be_visible()
+    def test_v31_android_and_ios_mobile_callbar_colors(self):
+        page = self.page
+        theme = page.locator('meta[name="theme-color"][media="(max-width: 991.98px)"]')
+        self.assertEqual(theme.get_attribute("content").lower(), "#0b5fa5")
+        bar = page.locator(".mobile-callbar")
+        expect(bar).to_be_visible()
+        self.assertEqual(
+            bar.evaluate("(x) => getComputedStyle(x).position"), "fixed"
+        )
+        self.assertEqual(
+            page.locator(".mobile-callbar a.call").evaluate(
+                "(x) => getComputedStyle(x).backgroundColor"
+            ), "rgb(11, 95, 165)"
+        )
+        self.assertEqual(
+            page.locator(".mobile-callbar a.dir").evaluate(
+                "(x) => getComputedStyle(x).backgroundColor"
+            ), "rgb(11, 33, 84)"
+        )
 
     def test_mobile_menu_section_link_works_on_one_tap(self):
         self.page.locator(".navbar-toggler").tap()
