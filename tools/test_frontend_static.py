@@ -298,7 +298,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("cdn.jsdelivr.net/npm/maplibre-gl@5.6.0", INDEX)
         self.assertIn('href="https://cdn.jsdelivr.net"', INDEX)
         self.assertIn("pixelRatio: Math.min", INDEX)
-        self.assertIn("cancelPendingTileRequestsWhileZooming: true", INDEX)
+        self.assertIn("cancelPendingTileRequestsWhileZooming: false", INDEX)
         self.assertIn("/* v29: stable finished map", CSS)
 
     def test_v24_map_plays_real_camera_flight_after_loading(self):
