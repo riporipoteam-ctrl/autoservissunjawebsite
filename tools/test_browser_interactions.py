@@ -194,6 +194,74 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             context.close()
 
+
+    def test_v30_finished_map_releases_upward_scroll_without_page_jump(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        context.add_init_script("""
+            window.__mapJumps = [];
+            class FakeMap {
+                on(name, cb) {
+                    if (name === 'load') setTimeout(cb, 25);
+                    return this;
+                }
+                resize() {}
+                setProjection() {}
+                jumpTo(camera) { window.__mapJumps.push(camera); return this; }
+                easeTo(camera) { window.__mapJumps.push(camera); return this; }
+                stop() {}
+            }
+            class FakePopup { setHTML(){ return this; } }
+            class FakeMarker {
+                setLngLat(){return this;} setPopup(){return this;}
+                addTo(){return this;} togglePopup(){return this;}
+            }
+            window.maplibregl = {Map:FakeMap, Popup:FakePopup, Marker:FakeMarker};
+        """)
+        try:
+            page = context.new_page()
+            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            page.evaluate("""() => {
+                const map = document.querySelector('#globeScroll');
+                const target = map.offsetTop + (map.offsetHeight - innerHeight) * .99;
+                window.scrollTo(0, target);
+                window.__contactBeforeFinish =
+                    document.querySelector('#kontakt').getBoundingClientRect().top;
+            }""")
+            page.wait_for_function(
+                "() => document.querySelector('#globeScroll').classList.contains('globe-complete')",
+                timeout=10000,
+            )
+            state = page.evaluate("""() => {
+                const w = document.querySelector('#globeScroll');
+                return {
+                    height: w.getBoundingClientRect().height,
+                    viewport: innerHeight,
+                    stickyPosition: getComputedStyle(w.querySelector('.globe-sticky')).position,
+                    contactShift: document.querySelector('#kontakt').getBoundingClientRect().top -
+                        window.__contactBeforeFinish,
+                    jumps: window.__mapJumps.length,
+                };
+            }""")
+            self.assertLessEqual(state["height"], state["viewport"] + 2)
+            self.assertEqual(state["stickyPosition"], "relative")
+            self.assertLessEqual(abs(state["contactShift"]), 6)
+            # Mobile WebKit does not implement Playwright's synthetic wheel;
+            # use an actual wheel on Chromium and a native page scroll there.
+            if os.environ.get("BROWSER_ENGINE", "chromium") == "webkit":
+                page.evaluate("window.scrollBy(0, -260)")
+            else:
+                page.mouse.wheel(0, -260)
+            page.wait_for_function(
+                "() => scrollY < document.querySelector('#globeScroll').offsetTop - 100",
+                timeout=5000,
+            )
+            self.assertEqual(page.evaluate("window.__mapJumps.length"), state["jumps"])
+        finally:
+            context.close()
+
     def test_v29_scrolling_past_map_before_load_finishes_once(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},

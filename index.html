@@ -61,7 +61,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=29.0" rel="stylesheet">
+    <link href="css/style.css?v=30.0" rel="stylesheet">
 </head>
 
 <body>
@@ -782,7 +782,7 @@
     
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=29.0"></script>
+    <script src="js/main.js?v=30.0"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
@@ -1078,6 +1078,26 @@
                 }
             }
 
+            function settleMapScroll() {
+                if (!wrap) return;
+                // Collapse the long sticky flight into a normal one-screen map
+                // exactly once. Compensate for the removed height *before paint*
+                // so Kontakt and every section below stay in the same place on
+                // screen; reverse scrolling never enters the old sticky runway.
+                var contactSection = document.getElementById('kontakt');
+                var before = contactSection ? contactSection.getBoundingClientRect().top :
+                    wrap.getBoundingClientRect().bottom;
+                var rootStyle = document.documentElement.style;
+                var previousAnchor = rootStyle.overflowAnchor;
+                rootStyle.overflowAnchor = 'none';
+                wrap.classList.add('globe-complete');
+                var after = contactSection ? contactSection.getBoundingClientRect().top :
+                    wrap.getBoundingClientRect().bottom;
+                var shift = after - before;
+                if (Math.abs(shift) > .5) window.scrollBy(0, shift);
+                rootStyle.overflowAnchor = previousAnchor;
+            }
+
             function finishMapOnce() {
                 if (mapCompleted || fellBack || !loaded) return;
                 mapCompleted = true;
@@ -1089,13 +1109,15 @@
                 if (cameraTimer) clearTimeout(cameraTimer);
                 cameraTimer = 0;
                 lastMapProgress = 1;
-                wrap.classList.add('globe-arrived', 'globe-complete');
+                wrap.classList.add('globe-arrived');
                 if (stageEl) stageEl.textContent = 'Auto Servis Šunja';
                 if (hintEl) hintEl.style.opacity = '0';
+                if (typeof map.stop === 'function') map.stop();
                 map.jumpTo({
                     center: SHOP, zoom: SHOP_ZOOM, pitch: 40, bearing: 0
                 });
                 setShopMarker(true);
+                settleMapScroll();
             }
 
             function updateMapOnScroll() {
@@ -1136,13 +1158,27 @@
                 var t = Math.max(0, Math.min(1,
                     (scrub - left.p) / Math.max(.001, right.p - left.p)));
                 function mix(a, b) { return a + (b - a) * t; }
-                map.jumpTo({
+                var camera = {
                     center: [mix(left.center[0], right.center[0]),
                         mix(left.center[1], right.center[1])],
                     zoom: mix(left.zoom, right.zoom),
                     pitch: mix(left.pitch, right.pitch),
                     bearing: mix(left.bearing, right.bearing)
-                });
+                };
+                // Give the renderer time to interpolate between scroll samples,
+                // rather than abruptly snapping the canvas every 80ms. On
+                // reduced-motion / light devices use inexpensive direct jumps.
+                if (!reduceMapMotion && !perfLite && typeof map.easeTo === 'function') {
+                    map.easeTo({
+                        center: camera.center, zoom: camera.zoom,
+                        pitch: camera.pitch, bearing: camera.bearing,
+                        duration: 180, easing: function (value) {
+                            return 1 - Math.pow(1 - value, 2);
+                        }
+                    });
+                } else {
+                    map.jumpTo(camera);
+                }
                 if (stageEl) stageEl.textContent = t > .52 ? right.label : left.label;
             }
             function queueMapProgress() {
