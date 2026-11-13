@@ -9,7 +9,8 @@
     <script>
     (function () {
         if (/[?&]skipIntro=1(?:&|$)/.test(location.search)) return;
-        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        // Reduced motion uses a static logo instead of skipping the intro
+        // entirely. A system setting should never make the branding vanish.
         document.documentElement.classList.add('sunja-intro-active');
     })();
     </script>
@@ -36,6 +37,9 @@
         } catch (err) { /* Native history behaviour remains the fallback. */ }
     })();
     </script>
+    <!-- Unconditional theme fallback is understood by iOS Safari and Android;
+         the media-specific colours below remain for browsers supporting them. -->
+    <meta name="theme-color" content="#0B5FA5">
     <!-- Match Android browser chrome to the two-tone mobile action bar. -->
     <meta name="theme-color" media="(max-width: 991.98px)" content="#0B5FA5">
     <meta name="theme-color" media="(min-width: 992px)" content="#e8f4fc">
@@ -71,7 +75,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=31.0" rel="stylesheet">
+    <link href="css/style.css?v=32.0" rel="stylesheet">
 </head>
 
 <body>
@@ -91,66 +95,91 @@
         var video = document.getElementById('sunjaIntroVideo');
         if (!root.classList.contains('sunja-intro-active')) {
             overlay.hidden = true;
-            video.pause();
+            try { video.pause(); } catch (e) {}
             video.removeAttribute('src');
             return;
         }
+        var reducedMotion = !!(window.matchMedia &&
+            window.matchMedia('(prefers-reduced-motion: reduce)').matches);
         var finished = false, videoDone = false, criticalReady = false;
-        var introSafetyTimeout = window.setTimeout(finishIntro, 6900);
+        var videoStarted = false, fallbackStarted = false;
+        // The intro is never a blocking gate. It has no loader/progress UI.
+        var introSafetyTimeout = window.setTimeout(finishIntro, 7000);
+
         function finishIntro() {
             if (finished) return;
             finished = true;
-            clearTimeout(introSafetyTimeout);
+            window.clearTimeout(introSafetyTimeout);
             root.classList.remove('sunja-intro-active');
             overlay.hidden = true;
-            try { video.pause(); } catch (e) {}
+            try { video.pause(); } catch (ignored) {}
             video.removeAttribute('src');
-            // Release media memory when the overlay is no longer visible.
-            try { video.load(); } catch (e) {}
         }
         window.__sunjaIntroForceFinish = finishIntro;
-        function maybeFinish() { if (videoDone && criticalReady) finishIntro(); }
+
+        function showLogoFallback() {
+            if (finished || fallbackStarted) return;
+            fallbackStarted = true;
+            overlay.classList.add('sunja-intro-is-fallback');
+            // The actual company logo draws in from left to right if video
+            // autoplay fails. Respect reduced-motion with a static logo.
+            window.setTimeout(finishIntro, reducedMotion ? 1100 : 1850);
+        }
+        function maybeFinish() {
+            if (videoDone && criticalReady) finishIntro();
+        }
         function warmCriticalAssets() {
             var hero = document.querySelector('#header-carousel .carousel-item.active picture img');
             if (!hero) { criticalReady = true; maybeFinish(); return; }
-            var mobile = window.matchMedia && window.matchMedia('(max-width: 767.98px)').matches;
+            var mobile = !!(window.matchMedia &&
+                window.matchMedia('(max-width: 767.98px)').matches);
             var picture = hero.closest('picture');
             var source = picture && picture.querySelector('source');
-            var src = (mobile && source && source.getAttribute('srcset') ||
-                hero.getAttribute('src') || '').split(',')[0].trim().split(/\s+/)[0];
+            var src = ((mobile && source && source.getAttribute('srcset')) ||
+                hero.getAttribute('src') || '').split(',')[0].trim().split(/\\s+/)[0];
             if (!src) { criticalReady = true; maybeFinish(); return; }
             hero.loading = 'eager';
             hero.fetchPriority = 'high';
             var img = new Image();
             var ready = new Promise(function (resolve) {
-                img.onload = resolve; img.onerror = resolve;
+                img.onload = resolve;
+                img.onerror = resolve;
                 img.src = src;
                 if (img.complete) resolve();
             });
-            var limit = new Promise(function (resolve) {
-                window.setTimeout(resolve, 1400);
-            });
+            var limit = new Promise(function (resolve) { setTimeout(resolve, 1400); });
             Promise.race([ready, limit]).then(function () {
                 criticalReady = true;
                 maybeFinish();
-            }, function () { criticalReady = true; maybeFinish(); });
+            }, function () {
+                criticalReady = true;
+                maybeFinish();
+            });
         }
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', warmCriticalAssets, { once: true });
         } else warmCriticalAssets();
-        video.addEventListener('ended', function () { videoDone = true; maybeFinish(); });
-        video.addEventListener('error', function () {
-            overlay.classList.add('sunja-intro-is-fallback');
-            window.setTimeout(finishIntro, 900);
+
+        video.addEventListener('playing', function () { videoStarted = true; });
+        video.addEventListener('ended', function () {
+            videoDone = true;
+            maybeFinish();
         });
-        // Safari Low Power Mode may reject autoplay; the page must still open.
-        var attempt = video.play();
-        if (attempt && typeof attempt.catch === 'function') {
-            attempt.catch(function () {
-                overlay.classList.add('sunja-intro-is-fallback');
-                window.setTimeout(finishIntro, 900);
-            });
+        video.addEventListener('error', showLogoFallback);
+        if (reducedMotion) {
+            showLogoFallback();
+            return;
         }
+        var promise;
+        try { promise = video.play(); }
+        catch (ignored) { showLogoFallback(); }
+        if (promise && typeof promise.catch === 'function') {
+            promise.catch(showLogoFallback);
+        }
+        // Autoplay can hang without rejecting on some iOS browsers.
+        window.setTimeout(function () {
+            if (!videoStarted && !videoDone && !finished) showLogoFallback();
+        }, 2300);
     })();
     </script>
 <!-- Topbar Start -->
@@ -328,7 +357,7 @@
             <div class="row g-5">
                 <div class="col-lg-6 pt-4" style="min-height: 400px;">
                     <div class="position-relative h-100 wow fadeIn" data-wow-delay="0.1s">
-                        <img class="img-fluid w-100 svc-photo" data-about-photo src="assets/photos/tt-20260919-d3b7439d.webp" loading="lazy" decoding="async" alt="Ulaz u radionicu Auto Servis Šunja s natpisom AUTOSERVIS">
+                        <img class="img-fluid w-100 svc-photo" data-about-photo src="assets/gallery/sunja-tiktok-7627945643490692373.webp" loading="lazy" decoding="async" alt="Radionica Auto Servis Šunja, fotografija iz originalne TikTok objave">
                         <div class="position-absolute top-0 end-0 mt-n4 me-n4 py-4 px-4" style="background: rgba(11, 33, 84, .85);">
                             <h4 class="text-white mb-2">Google ocjena</h4>
                             <span class="stars" data-stars style="--fillw:92%">
@@ -825,26 +854,12 @@
                 </div>
             </div>
         </div>
-        <!-- Featured image from the exact TikTok post shared by the owner. -->
-        <div class="container footer-featured-photo">
-            <div class="footer-featured-photo__content">
-                <a href="https://vm.tiktok.com/ZN85hsoY9/" class="footer-featured-photo__visual"
-                    target="_blank" rel="noopener noreferrer"
-                    aria-label="Pogledajte originalnu objavu Auto Servis Šunja na TikToku">
-                    <img src="assets/gallery/sunja-tiktok-7627945643490692373.webp"
-                        alt="Fotografija iz originalne TikTok objave Auto Servis Šunja"
-                        loading="lazy" decoding="async" width="1081" height="1920">
-                </a>
-                <div class="footer-featured-photo__copy">
-                    <span class="footer-featured-photo__eyebrow"><i class="fab fa-tiktok" aria-hidden="true"></i> TikTok</span>
-                    <h4>Naša radionica na fotografiji</h4>
-                    <p>Pogledajte fotografiju iz originalne objave Auto Servis Šunja.</p>
-                    <a class="footer-featured-photo__link" href="https://vm.tiktok.com/ZN85hsoY9/"
-                        target="_blank" rel="noopener noreferrer">
-                        Pogledajte objavu <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                    </a>
-                </div>
-            </div>
+        <!-- Photo is now the background of the entire footer, not a card. -->
+        <div class="container footer-photo-credit">
+            <a href="https://vm.tiktok.com/ZN85hsoY9/" target="_blank" rel="noopener noreferrer"
+                aria-label="Originalna fotografija radionice na TikToku">
+                <i class="fab fa-tiktok" aria-hidden="true"></i> Fotografija naše radionice
+            </a>
         </div>
         <div class="container">
             <div class="copyright">
@@ -891,7 +906,7 @@
     
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=31.0"></script>
+    <script src="js/main.js?v=32.0"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
