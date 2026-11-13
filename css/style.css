@@ -2632,6 +2632,40 @@ html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-video {
     display: none !important;
 }
 
+/* v33: autoplay-safe animation displays ONLY frames extracted from the
+   user's uploaded MP4. No CSS path/clip drawing or invented logo motion. */
+.sunja-intro-fallback-frames {
+    display: none;
+    width: min(100vw, 760px);
+    aspect-ratio: 910 / 512;
+    height: auto;
+    max-height: 100dvh;
+    object-fit: contain;
+    background: #fff;
+    pointer-events: none;
+    border: 0;
+    transform: none !important;
+    animation: none !important;
+}
+html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback:not(.sunja-intro-is-static) .sunja-intro-fallback-frames {
+    display: block !important;
+}
+html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback:not(.sunja-intro-is-static) .sunja-intro-fallback-logo {
+    display: none !important;
+}
+html.sunja-intro-active #sunjaIntro.sunja-intro-is-static .sunja-intro-fallback-frames {
+    display: none !important;
+}
+html.sunja-intro-active #sunjaIntro.sunja-intro-is-static .sunja-intro-fallback-logo {
+    display: block !important;
+    animation: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+    html.sunja-intro-active #sunjaIntro .sunja-intro-fallback-frames {
+        display: none !important;
+    }
+}
+
 /* v32: matching mobile-safe-area background
    Only page-owned pixels can be painted. Native Safari toolbar remains OS UI. */
 @media (max-width: 991.98px) {
