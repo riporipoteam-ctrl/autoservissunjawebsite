@@ -1,0 +1,50 @@
+name: Temporary exact TikTok footer photo import
+on:
+  push:
+    branches: [fix/mobile-intro-map-v31]
+    paths: ['.github/workflows/fetch-tiktok-photo.yml']
+permissions:
+  contents: write
+jobs:
+  image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install gallery-dl pillow requests
+      - name: Fetch exact creator photo and optimise it
+        run: |
+          python - <<'PY'
+          import sys, io, os, requests
+          from PIL import Image, ImageOps
+          from tools.refresh_photos import _gallery_dl
+          url='https://www.tiktok.com/@autoservissunja/photo/7627945643490692373'
+          rows = _gallery_dl(url,limit=5,timeout=80)
+          print('Found image candidates:',len(rows))
+          for i,(link,meta) in enumerate(rows):
+              print('Candidate:',i,str(meta.get('extension')),str(meta.get('post_type'))[:30])
+              try:
+                  response = requests.get(link,headers={'User-Agent':'Mozilla/5.0','Referer':'https://www.tiktok.com/'},timeout=25)
+                  response.raise_for_status()
+                  im = Image.open(io.BytesIO(response.content))
+                  im = ImageOps.exif_transpose(im)
+                  if im.width < 480 or im.height < 320: continue
+                  im.thumbnail((1920,1920),Image.Resampling.LANCZOS)
+                  os.makedirs('assets/gallery',exist_ok=True)
+                  output='assets/gallery/sunja-tiktok-7627945643490692373.webp'
+                  im.convert('RGB').save(output,format='WEBP',quality=86,method=6)
+                  print('Saved:',output,'dimensions:',im.size,'bytes:',os.path.getsize(output))
+                  sys.exit(0)
+              except Exception as error: print('Candidate failed:',repr(error))
+          sys.exit('Could not retrieve matching image from the supplied TikTok post')
+          PY
+      - name: Commit supplied TikTok post photo into feature branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/gallery/sunja-tiktok-7627945643490692373.webp
+          git commit -m "asset: import exact TikTok photo for footer"
+          git push origin HEAD:fix/mobile-intro-map-v31
