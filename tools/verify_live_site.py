@@ -61,9 +61,29 @@ def verify():
         if hashlib.sha256(live_bytes).digest() != hashlib.sha256(source_bytes).digest():
             raise AssertionError(f"{asset} does not match the main-branch commit")
 
+    # The owner specifically requested this exact uploaded animation. Verify
+    # both publicly served media files byte-for-byte, not just the HTML src.
+    media_assets = (
+        ("assets/video/sunja-logo-intro-user-uploaded-v33.mp4",
+         "73e0c3297813c72d219d7770e65f0b3e05f2c1a7fa6dbe96d79378118ba4ac45",
+         'src="'),
+        ("assets/video/sunja-user-uploaded-frames-fallback-v33.webp",
+         "d254a8b4b1b99870d5feff3fb8b6a663e53e06268e23e5c346e9bae5a86e4e6e",
+         'data-src="'),
+    )
+    for asset, expected_sha, attribute in media_assets:
+        if attribute + asset + '"' not in html:
+            raise AssertionError(f"Live HTML does not reference {asset}")
+        source_bytes = (ROOT / asset).read_bytes()
+        live_bytes = get(f"/{asset}?deployment_check={stamp}")
+        for label, content in (("repository", source_bytes), ("live", live_bytes)):
+            digest = hashlib.sha256(content).hexdigest()
+            if digest != expected_sha:
+                raise AssertionError(f"{label} {asset}: wrong original-upload checksum ({digest})")
+
     print(
         f"PASS: live HTML references CSS v{css_version} and JS v{js_version}; "
-        "both assets match the repository byte-for-byte, no preloader."
+        "HTML/CSS/JS and exact uploaded MP4/WebP assets match the repository."
     )
 
 
