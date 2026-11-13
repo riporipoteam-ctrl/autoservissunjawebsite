@@ -2429,8 +2429,10 @@ html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallbac
     object-fit: contain;
 }
 #sunjaIntro[hidden], html:not(.sunja-intro-active) #sunjaIntro { display: none !important; }
+/* With Reduce Motion, show the actual still logo rather than hiding the
+   entire intro. The uploaded MP4 remains untouched for everyone else. */
 @media (prefers-reduced-motion: reduce) {
-    #sunjaIntro { display: none !important; }
+    #sunjaIntro .sunja-intro-fallback-logo { animation: none !important; }
 }
 
 /* v31: cross-browser fixed mobile action dock */
@@ -2615,32 +2617,19 @@ html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallbac
     }
 }
 
-/* v32: animated original-logo fallback if mobile Safari blocks MP4 autoplay.
-   No text, spinner, loading bar, or decorative corners. */
+/* v33: exact uploaded MP4 only; never draw a substitute logo animation.
+   If a device blocks video autoplay, display the plain original logo still. */
 html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallback-logo {
-    animation: sunjaLogoDraw 1.5s cubic-bezier(.18,.72,.3,1) both;
-    clip-path: inset(0 0 0 0);
-    -webkit-clip-path: inset(0 0 0 0);
+    display: block !important;
+    animation: none !important;
+    transition: none !important;
+    clip-path: none !important;
+    -webkit-clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
 }
-@keyframes sunjaLogoDraw {
-    0% {
-        clip-path: inset(0 100% 0 0);
-        -webkit-clip-path: inset(0 100% 0 0);
-        opacity: .75;
-    }
-    100% {
-        clip-path: inset(0 0 0 0);
-        -webkit-clip-path: inset(0 0 0 0);
-        opacity: 1;
-    }
-}
-@media (prefers-reduced-motion: reduce) {
-    html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallback-logo {
-        animation: none !important;
-        clip-path: none !important;
-        -webkit-clip-path: none !important;
-        opacity: 1 !important;
-    }
+html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-video {
+    display: none !important;
 }
 
 /* v32: matching mobile-safe-area background
