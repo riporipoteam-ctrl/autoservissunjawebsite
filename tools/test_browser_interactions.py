@@ -372,10 +372,14 @@ class SiteInteractionTests(unittest.TestCase):
         )
         try:
             page = context.new_page()
+            # Block MP4 before navigation. Dispatching error after page load
+            # is flaky in WebKit because autoplay may already have started,
+            # and successful playback correctly refuses the fallback.
+            page.route("**/sunja-logo-intro-user-uploaded-v33.mp4",
+                       lambda route: route.abort())
             page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
             video = page.locator("#sunjaIntroVideo")
             expect(video).to_have_count(1)
-            video.evaluate("(v) => v.dispatchEvent(new Event('error'))")
             page.wait_for_function(
                 "() => document.querySelector('#sunjaIntro').classList.contains('sunja-intro-is-fallback')",
                 timeout=4000,
