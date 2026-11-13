@@ -65,7 +65,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("sunjaLogoDraw 1.5s", CSS)
         self.assertNotIn("function showLogoFallback()", INDEX)
         self.assertIn("introSafetyTimeout", INDEX)
-        self.assertIn("assets/video/sunja-logo-intro-clean-v27.mp4", INDEX)
+        self.assertIn("assets/video/sunja-logo-intro-user-uploaded-v33.mp4", INDEX)
         self.assertIn("trim().split(/\\s+/)[0]", INDEX)
         self.assertNotIn("trim().split(/\\\\s+/)[0]", INDEX)
 
