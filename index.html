@@ -85,6 +85,9 @@
             src="assets/video/sunja-logo-intro-user-uploaded-v33.mp4" autoplay muted playsinline
             webkit-playsinline preload="auto" disablepictureinpicture
             aria-label="Animacija originalnog logotipa Auto Servis Šunja"></video>
+        <img class="sunja-intro-fallback-frames"
+            data-src="assets/video/sunja-user-uploaded-frames-fallback-v33.webp"
+            alt="" aria-hidden="true" decoding="async">
         <img class="sunja-intro-fallback-logo" src="assets/sunja-logo-transparent.webp"
             alt="" aria-hidden="true" decoding="async">
     </div>
@@ -103,9 +106,10 @@
             window.matchMedia('(prefers-reduced-motion: reduce)').matches);
         var finished = false, videoDone = false, criticalReady = false;
         var videoStarted = false, fallbackStarted = false, playbackRetried = false;
+        var fallbackFrames = overlay.querySelector('.sunja-intro-fallback-frames');
         // Play the actual user-supplied MP4 as-is. Never simulate the logo
         // with CSS, SVG, masking, or any replacement animation.
-        var introSafetyTimeout = window.setTimeout(finishIntro, 12500);
+        var introSafetyTimeout = window.setTimeout(finishIntro, 16000);
         function finishIntro() {
             if (finished) return;
             finished = true;
@@ -117,14 +121,29 @@
         }
         window.__sunjaIntroForceFinish = finishIntro;
 
-        // Only a STILL logo is permitted if playback cannot start.
-        // On iOS Low Power Mode Safari may block muted autoplay; do not invent
-        // another animated logo and pretend it is the uploaded video.
-        function showStaticFallback() {
+        // If iOS Low Power Mode blocks MP4 autoplay, show an animated WebP
+        // made from the SAME uploaded video's frames. It is not a synthetic
+        // logo draw, different design, or substitute animation.
+        function showUploadedFramesFallback() {
             if (finished || videoStarted || fallbackStarted) return;
             fallbackStarted = true;
             overlay.classList.add('sunja-intro-is-fallback');
-            window.setTimeout(finishIntro, reducedMotion ? 1100 : 2100);
+            function staticOnly() {
+                if (finished) return;
+                overlay.classList.add('sunja-intro-is-static');
+                window.setTimeout(finishIntro, 1300);
+            }
+            if (reducedMotion || !fallbackFrames) {
+                staticOnly();
+                return;
+            }
+            fallbackFrames.onload = function () {
+                if (finished) return;
+                // One complete showing of the original six-second clip.
+                window.setTimeout(finishIntro, 6350);
+            };
+            fallbackFrames.onerror = staticOnly;
+            fallbackFrames.src = fallbackFrames.getAttribute('data-src');
         }
         function maybeFinish() {
             if (videoDone && criticalReady) finishIntro();
@@ -166,9 +185,9 @@
             videoDone = true;
             maybeFinish();
         });
-        video.addEventListener('error', showStaticFallback);
+        video.addEventListener('error', showUploadedFramesFallback);
         if (reducedMotion) {
-            showStaticFallback();
+            showUploadedFramesFallback();
             return;
         }
         video.muted = true;
@@ -184,7 +203,7 @@
                 promise.catch(function () {
                     // Retry when enough video data has arrived; Safari sometimes
                     // rejects the first early play() call before metadata loads.
-                    if (video.readyState >= 2 || playbackRetried) showStaticFallback();
+                    if (video.readyState >= 2 || playbackRetried) showUploadedFramesFallback();
                 });
             }
         }
@@ -195,10 +214,10 @@
             }
         }, { once: true });
         attemptExactPlayback();
-        // No synthetic drawing animation: show an original static logo only
-        // if the real MP4 still cannot play after a bounded load attempt.
+        // No CSS-drawn animation: replay the real video frames if muted MP4
+        // playback cannot start on this device.
         window.setTimeout(function () {
-            if (!videoStarted && !videoDone && !finished) showStaticFallback();
+            if (!videoStarted && !videoDone && !finished) showUploadedFramesFallback();
         }, 5500);
     })();
     </script>
