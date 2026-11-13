@@ -248,12 +248,19 @@ class SiteInteractionTests(unittest.TestCase):
             self.assertLessEqual(state["height"], state["viewport"] + 2)
             self.assertEqual(state["stickyPosition"], "relative")
             self.assertLessEqual(abs(state["contactShift"]), 6)
-            # Mobile WebKit does not implement Playwright's synthetic wheel;
-            # use an actual wheel on Chromium and a native page scroll there.
-            if os.environ.get("BROWSER_ENGINE", "chromium") == "webkit":
-                page.evaluate("window.scrollBy(0, -260)")
-            else:
-                page.mouse.wheel(0, -260)
+            # A native window scroll works on both mobile WebKit and
+            # Chromium; Playwright's synthetic mouse wheel is unreliable in
+            # mobile emulation (the actual visitor scrolls with touch).
+            before_y = page.evaluate("window.scrollY")
+            page.evaluate("window.scrollBy(0, -260)")
+            page.wait_for_function(
+                "(before) => window.scrollY < before - 160",
+                arg=before_y, timeout=5000,
+            )
+            page.evaluate("""() => {
+                const w = document.getElementById('globeScroll');
+                window.scrollTo(0, w.offsetTop - 160);
+            }""")
             page.wait_for_function(
                 "() => scrollY < document.querySelector('#globeScroll').offsetTop - 100",
                 timeout=5000,
