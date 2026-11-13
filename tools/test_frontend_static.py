@@ -75,7 +75,7 @@ class FrontendStaticTests(unittest.TestCase):
 
     def test_v32_mobile_chrome_and_safe_area_remain_blue(self):
         self.assertIn('meta name="theme-color" content="#0B5FA5"', INDEX)
-        self.assertIn("/* v32: matching mobile-safe-area background */", CSS)
+        self.assertIn("/* v32: matching mobile-safe-area background", CSS)
         self.assertIn(".mobile-callbar::before", CSS)
         self.assertIn("env(safe-area-inset-bottom", CSS)
 
@@ -357,7 +357,8 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v31_footer_uses_exact_supplied_tiktok_photo(self):
         self.assertIn('assets/gallery/sunja-tiktok-7627945643490692373.webp', INDEX)
         self.assertIn('https://vm.tiktok.com/ZN85hsoY9/', INDEX)
-        self.assertIn('class="container footer-featured-photo"', INDEX)
+        self.assertNotIn('class="container footer-featured-photo"', INDEX)
+        self.assertIn('class="container footer-photo-credit"', INDEX)
         self.assertIn("/* v31: featured real TikTok photo in footer */", CSS)
 
     def test_v24_map_keeps_fallback_and_directions(self):
