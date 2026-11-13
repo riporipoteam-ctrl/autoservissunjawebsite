@@ -42,8 +42,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=31.0", INDEX)
-        self.assertIn("js/main.js?v=31.0", INDEX)
+        self.assertIn("css/style.css?v=32.0", INDEX)
+        self.assertIn("js/main.js?v=32.0", INDEX)
 
     def test_v31_logo_intro_is_video_only_with_safe_exit(self):
         self.assertIn('id="sunjaIntro"', INDEX)
@@ -55,6 +55,31 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("prefers-reduced-motion: reduce", INDEX + CSS)
         self.assertNotIn('id="sunjaIntroProgress"', INDEX)
         self.assertNotIn('id="sunjaIntroLoading"', INDEX)
+
+    def test_v32_intro_is_not_silently_skipped_and_has_animated_fallback(self):
+        self.assertIn("document.documentElement.classList.add('sunja-intro-active')", INDEX)
+        self.assertNotIn("if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;", INDEX)
+        self.assertIn("function showLogoFallback()", INDEX)
+        self.assertIn("@keyframes sunjaLogoDraw", CSS)
+        self.assertIn("sunjaLogoDraw 1.5s", CSS)
+        self.assertIn("introSafetyTimeout", INDEX)
+        self.assertIn("assets/video/sunja-logo-intro-clean-v27.mp4", INDEX)
+        self.assertIn("trim().split(/\\s+/)[0]", INDEX)
+        self.assertNotIn("trim().split(/\\\\s+/)[0]", INDEX)
+
+    def test_v32_photo_replaces_full_footer_background_and_about_photo(self):
+        photo = "assets/gallery/sunja-tiktok-7627945643490692373.webp"
+        self.assertIn('data-about-photo src="' + photo + '"', INDEX)
+        self.assertIn('url("../' + photo + '")', CSS)
+        self.assertIn("#siteFooter.footer", CSS)
+        self.assertNotIn('class="container footer-featured-photo"', INDEX)
+        self.assertIn("https://vm.tiktok.com/ZN85hsoY9/", INDEX)
+
+    def test_v32_mobile_chrome_and_safe_area_remain_blue(self):
+        self.assertIn('meta name="theme-color" content="#0B5FA5"', INDEX)
+        self.assertIn("/* v32: matching mobile-safe-area background", CSS)
+        self.assertIn(".mobile-callbar::before", CSS)
+        self.assertIn("env(safe-area-inset-bottom", CSS)
 
     def test_navbar_polish_is_actually_attached(self):
         self.assertIn('class="navbar navbar-expand-lg nav-bar ', INDEX)
@@ -166,8 +191,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=31.0", INDEX)
-        self.assertIn("js/main.js?v=31.0", INDEX)
+        self.assertIn("css/style.css?v=32.0", INDEX)
+        self.assertIn("js/main.js?v=32.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -194,8 +219,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=31.0", INDEX)
-        self.assertIn("js/main.js?v=31.0", INDEX)
+        self.assertIn("css/style.css?v=32.0", INDEX)
+        self.assertIn("js/main.js?v=32.0", INDEX)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
         self.assertNotIn("Upalila se lampica na instrument tabli?", INDEX)
@@ -334,7 +359,8 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v31_footer_uses_exact_supplied_tiktok_photo(self):
         self.assertIn('assets/gallery/sunja-tiktok-7627945643490692373.webp', INDEX)
         self.assertIn('https://vm.tiktok.com/ZN85hsoY9/', INDEX)
-        self.assertIn('class="container footer-featured-photo"', INDEX)
+        self.assertNotIn('class="container footer-featured-photo"', INDEX)
+        self.assertIn('class="container footer-photo-credit"', INDEX)
         self.assertIn("/* v31: featured real TikTok photo in footer */", CSS)
 
     def test_v24_map_keeps_fallback_and_directions(self):
@@ -359,8 +385,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=31.0", INDEX)
-        self.assertIn("js/main.js?v=31.0", INDEX)
+        self.assertIn("css/style.css?v=32.0", INDEX)
+        self.assertIn("js/main.js?v=32.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
