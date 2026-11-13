@@ -60,7 +60,7 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v33_original_uploaded_video_not_a_synthetic_logo_animation(self):
         self.assertIn("document.documentElement.classList.add('sunja-intro-active')", INDEX)
         self.assertNotIn("if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;", INDEX)
-        self.assertIn("function showStaticFallback()", INDEX)
+        self.assertIn("function showUploadedFramesFallback()", INDEX)
         self.assertNotIn("@keyframes sunjaLogoDraw", CSS)
         self.assertNotIn("sunjaLogoDraw 1.5s", CSS)
         self.assertNotIn("function showLogoFallback()", INDEX)
@@ -68,6 +68,16 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("assets/video/sunja-logo-intro-clean-v27.mp4", INDEX)
         self.assertIn("trim().split(/\\s+/)[0]", INDEX)
         self.assertNotIn("trim().split(/\\\\s+/)[0]", INDEX)
+
+    def test_v33_blocked_autoplay_uses_frames_of_uploaded_video(self):
+        self.assertIn('data-src="assets/video/sunja-user-uploaded-frames-fallback-v33.webp"', INDEX)
+        self.assertIn("function showUploadedFramesFallback()", INDEX)
+        self.assertNotIn("function showLogoFallback()", INDEX)
+        self.assertNotIn("@keyframes sunjaLogoDraw", CSS)
+        frames = ROOT / "assets/video/sunja-user-uploaded-frames-fallback-v33.webp"
+        self.assertTrue(frames.is_file())
+        self.assertEqual(hashlib.sha256(frames.read_bytes()).hexdigest(),
+                         "d254a8b4b1b99870d5feff3fb8b6a663e53e06268e23e5c346e9bae5a86e4e6e")
 
     def test_v33_exact_uploaded_mp4_is_binary_identical(self):
         video = ROOT / "assets/video/sunja-logo-intro-user-uploaded-v33.mp4"
