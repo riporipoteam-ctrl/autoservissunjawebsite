@@ -509,11 +509,12 @@ class SiteInteractionTests(unittest.TestCase):
             "(el) => el.getBoundingClientRect().height"
         ))
 
-    def test_v22_footer_is_plain_dark_without_a_photo(self):
+    def test_v32_footer_uses_workshop_photo_under_readable_overlay(self):
         footer = self.page.locator("#siteFooter")
         bg = footer.evaluate("(el) => getComputedStyle(el).backgroundImage")
-        self.assertNotIn("url(", bg)
-        self.assertIn("gradient", bg)
+        self.assertIn("sunja-tiktok-7627945643490692373.webp", bg)
+        self.assertIn("linear-gradient", bg)
+        self.assertEqual(self.page.locator(".footer-featured-photo").count(), 0)
 
     def test_v22_about_is_short_and_has_address(self):
         text = self.page.locator("#o-nama p.mb-4").first.inner_text()
