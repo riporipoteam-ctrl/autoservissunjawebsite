@@ -64,6 +64,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("sunjaLogoDraw 1.5s", CSS)
         self.assertIn("introSafetyTimeout", INDEX)
         self.assertIn("assets/video/sunja-logo-intro-clean-v27.mp4", INDEX)
+        self.assertIn("trim().split(/\\s+/)[0]", INDEX)
+        self.assertNotIn("trim().split(/\\\\s+/)[0]", INDEX)
 
     def test_v32_photo_replaces_full_footer_background_and_about_photo(self):
         photo = "assets/gallery/sunja-tiktok-7627945643490692373.webp"
