@@ -365,6 +365,45 @@ class SiteInteractionTests(unittest.TestCase):
             ), "rgb(11, 33, 84)"
         )
 
+    def test_v32_logo_fallback_is_drawn_instead_of_disappearing(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        try:
+            page = context.new_page()
+            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            video = page.locator("#sunjaIntroVideo")
+            expect(video).to_have_count(1)
+            video.evaluate("(v) => v.dispatchEvent(new Event('error'))")
+            page.wait_for_function(
+                "() => document.querySelector('#sunjaIntro').classList.contains('sunja-intro-is-fallback')",
+                timeout=3000,
+            )
+            logo = page.locator(".sunja-intro-fallback-logo")
+            expect(logo).to_be_visible()
+            self.assertEqual(
+                logo.evaluate("(e) => getComputedStyle(e).animationName"),
+                "sunjaLogoDraw",
+            )
+            self.assertEqual(page.locator(".footer-featured-photo").count(), 0)
+        finally:
+            context.close()
+
+    def test_v32_tiktok_background_about_photo_and_blue_mobile_root(self):
+        page = self.page
+        photo = "sunja-tiktok-7627945643490692373.webp"
+        self.assertIn(photo, page.locator("#o-nama [data-about-photo]").get_attribute("src"))
+        self.assertIn(
+            photo, page.locator("#siteFooter").evaluate(
+                "(e) => getComputedStyle(e).backgroundImage"
+            )
+        )
+        self.assertEqual(
+            page.evaluate("getComputedStyle(document.documentElement).backgroundColor"),
+            "rgb(11, 95, 165)",
+        )
+
     def test_mobile_menu_section_link_works_on_one_tap(self):
         self.page.locator(".navbar-toggler").tap()
         expect(self.page.locator("#navbarCollapse")).to_have_class(
