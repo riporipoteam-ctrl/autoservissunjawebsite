@@ -2384,3 +2384,182 @@ a[href] > *,button > * { pointer-events:none !important; }
         min-height: 420px !important;
     }
 }
+
+/* v31: original clean-logo intro; no loading bar, copy or background effects. */
+html.sunja-intro-active, html.sunja-intro-active body {
+    overflow: hidden !important;
+}
+#sunjaIntro { display: none; }
+html.sunja-intro-active #sunjaIntro:not([hidden]) {
+    display: grid !important;
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 2147483647 !important;
+    width: 100% !important;
+    height: 100vh;
+    height: 100dvh;
+    padding: 0 !important;
+    margin: 0 !important;
+    place-items: center;
+    background: #fff !important;
+    overflow: hidden;
+    isolation: isolate;
+}
+.sunja-intro-video {
+    display: block;
+    width: min(100vw, 760px);
+    max-height: 100dvh;
+    aspect-ratio: 16 / 9;
+    height: auto;
+    object-fit: contain;
+    background: #fff;
+    border: none;
+    box-shadow: none !important;
+    filter: none !important;
+    transform: none !important;
+    pointer-events: none;
+}
+.sunja-intro-fallback-logo { display: none; }
+#sunjaIntro.sunja-intro-is-fallback .sunja-intro-video { display: none !important; }
+html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallback-logo {
+    display: block;
+    width: min(74vw, 440px);
+    height: auto;
+    max-height: 45dvh;
+    object-fit: contain;
+}
+#sunjaIntro[hidden], html:not(.sunja-intro-active) #sunjaIntro { display: none !important; }
+@media (prefers-reduced-motion: reduce) {
+    #sunjaIntro { display: none !important; }
+}
+
+/* v31: cross-browser fixed mobile action dock */
+/* Android Chrome can theme browser chrome via meta theme-color; iOS Safari
+   keeps control of its native toolbar. The website-owned safe area is blue. */
+@media (max-width: 991.98px) {
+    html { background: #0b5fa5 !important; color-scheme: light; }
+    body { background: #fff !important; }
+    .mobile-callbar {
+        box-sizing: border-box !important;
+        background: linear-gradient(90deg, #0b5fa5 50%, #0b2154 50%) !important;
+        border: 0 !important;
+        border-radius: 14px 14px 0 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+        backface-visibility: hidden;
+    }
+    .mobile-callbar a.call { background: #0b5fa5 !important; }
+    .mobile-callbar a.dir { background: #0b2154 !important; }
+    .mobile-callbar a {
+        box-sizing: border-box;
+        padding-top: 12px !important;
+        padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important;
+        margin: 0 !important;
+        white-space: nowrap;
+        -webkit-tap-highlight-color: transparent;
+    }
+    #siteFooter {
+        padding-bottom: calc(108px + env(safe-area-inset-bottom, 0px)) !important;
+    }
+}
+
+/* v31: featured real TikTok photo in footer */
+#siteFooter .footer-featured-photo {
+    padding-bottom: 24px;
+    margin-top: -6px;
+}
+.footer-featured-photo__content {
+    display: flex;
+    align-items: center;
+    gap: clamp(18px, 4vw, 38px);
+    padding: clamp(16px, 3vw, 24px);
+    background: rgba(255, 255, 255, .05);
+    border: 1px solid rgba(255, 255, 255, .14);
+    border-radius: 18px;
+    max-width: 760px;
+    margin: auto;
+}
+.footer-featured-photo__visual {
+    width: clamp(118px, 17vw, 152px);
+    aspect-ratio: 1081 / 1920;
+    flex: 0 0 auto;
+    overflow: hidden;
+    border-radius: 12px;
+    display: block;
+    background: #081c3e;
+}
+.footer-featured-photo__visual img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.footer-featured-photo__copy { min-width: 0; }
+.footer-featured-photo__eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #a2d9ff;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+#siteFooter .footer-featured-photo__copy h4 {
+    margin-bottom: 9px;
+    color: #fff !important;
+    font-size: clamp(16px, 2vw, 20px) !important;
+    line-height: 1.25;
+}
+.footer-featured-photo__copy p {
+    font-size: 14px;
+    line-height: 1.55;
+    opacity: .85;
+    margin-bottom: 14px;
+}
+.footer-featured-photo__link {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    color: #fff;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+.footer-featured-photo__link:hover, .footer-featured-photo__link:focus-visible {
+    color: #b2e0ff;
+}
+@media (max-width: 480px) {
+    .footer-featured-photo__content { gap: 16px; padding: 12px; border-radius: 12px; }
+    .footer-featured-photo__visual { width: min(37vw, 135px); }
+    .footer-featured-photo__copy p { font-size: 12.5px; }
+    .footer-featured-photo__eyebrow { font-size: 11px; }
+}
+
+/* v31: a longer initial flight makes map progress less abrupt.
+   Once completed, v30 still releases the sticky track to one screen. */
+#globeScroll:not(.globe-complete):not(.is-fallback) {
+    height: 215svh !important;
+    min-height: 1250px !important;
+    max-height: none !important;
+}
+@media (max-width: 767.98px) {
+    #globeScroll:not(.globe-complete):not(.is-fallback) {
+        height: 230svh !important;
+        min-height: 1450px !important;
+    }
+    /* Fade, not layout movement, for offscreen section reveals on phones. */
+    .wow.is-revealed {
+        animation-name: sunjaRevealOpacity !important;
+        animation-duration: .38s !important;
+    }
+    @keyframes sunjaRevealOpacity {
+        from { opacity: .85; }
+        to { opacity: 1; }
+    }
+}
