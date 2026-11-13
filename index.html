@@ -125,7 +125,9 @@
         // made from the SAME uploaded video's frames. It is not a synthetic
         // logo draw, different design, or substitute animation.
         function showUploadedFramesFallback() {
-            if (finished || videoStarted || fallbackStarted) return;
+            // A video can fail after the 'playing' event (network or decoder
+            // errors). In that case still replay the owner's identical frames.
+            if (finished || fallbackStarted) return;
             fallbackStarted = true;
             overlay.classList.add('sunja-intro-is-fallback');
             function staticOnly() {
