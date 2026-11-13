@@ -2360,3 +2360,27 @@ a[href] > *,button > * { pointer-events:none !important; }
     height: auto !important;
     min-height: 280px !important;
 }
+
+/* v30: settled map takes one screen, not a second swipe */
+/* The globe flight still has room to play on the first downward scroll.
+   After reaching the garage, the wrapper becomes a normal map panel.
+   JavaScript preserves the next section's screen coordinate during release. */
+#globeScroll.globe-complete {
+    height: 100svh !important;
+    min-height: 480px !important;
+    max-height: none !important;
+    overflow: clip !important;
+}
+#globeScroll.globe-complete .globe-sticky {
+    position: relative !important;
+    top: auto !important;
+    height: 100% !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+}
+@media (max-width: 767.98px) {
+    #globeScroll.globe-complete {
+        height: 100svh !important;
+        min-height: 420px !important;
+    }
+}
