@@ -2563,3 +2563,114 @@ html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallbac
         to { opacity: 1; }
     }
 }
+
+/* v32: real shop photograph as the ENTIRE footer background.
+   No isolated photo card; keep the workshop visible and links legible. */
+#siteFooter.footer {
+    background-color: #131412 !important;
+    background-image:
+        linear-gradient(180deg, rgba(4, 5, 6, .62), rgba(3, 4, 5, .78)),
+        url("../assets/gallery/sunja-tiktok-7627945643490692373.webp") !important;
+    background-position: center 42% !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-attachment: scroll !important;
+}
+#siteFooter .footer-photo-credit {
+    margin-bottom: 22px;
+    text-align: center;
+}
+#siteFooter .footer-photo-credit a {
+    color: #fff;
+    font-weight: 600;
+    font-size: .82rem;
+    line-height: 1.4;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-shadow: 0 1px 5px rgba(0,0,0,.4);
+}
+#siteFooter .footer-photo-credit a:hover,
+#siteFooter .footer-photo-credit a:focus-visible {
+    color: #e5f5ff;
+}
+#siteFooter .footer-featured-photo,
+#siteFooter .footer-featured-photo__content { display: none !important; }
+
+/* Keep the user's actual portrait shop photo in About without an
+   excessively tall mobile section; preserve the real image and rating. */
+#o-nama img[data-about-photo] {
+    display: block !important;
+    width: 100% !important;
+    height: clamp(300px, 36vw, 440px) !important;
+    max-height: 440px !important;
+    min-height: 0 !important;
+    aspect-ratio: 4 / 3 !important;
+    object-fit: cover !important;
+    object-position: center 35% !important;
+    border-radius: 18px;
+}
+@media (max-width: 767.98px) {
+    #o-nama img[data-about-photo] {
+        height: clamp(300px, 90vw, 420px) !important;
+    }
+}
+
+/* v32: animated original-logo fallback if mobile Safari blocks MP4 autoplay.
+   No text, spinner, loading bar, or decorative corners. */
+html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallback-logo {
+    animation: sunjaLogoDraw 1.5s cubic-bezier(.18,.72,.3,1) both;
+    clip-path: inset(0 0 0 0);
+    -webkit-clip-path: inset(0 0 0 0);
+}
+@keyframes sunjaLogoDraw {
+    0% {
+        clip-path: inset(0 100% 0 0);
+        -webkit-clip-path: inset(0 100% 0 0);
+        opacity: .75;
+    }
+    100% {
+        clip-path: inset(0 0 0 0);
+        -webkit-clip-path: inset(0 0 0 0);
+        opacity: 1;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallback-logo {
+        animation: none !important;
+        clip-path: none !important;
+        -webkit-clip-path: none !important;
+        opacity: 1 !important;
+    }
+}
+
+/* v32: matching mobile-safe-area background
+   Only page-owned pixels can be painted. Native Safari toolbar remains OS UI. */
+@media (max-width: 991.98px) {
+    html {
+        background-color: #0b5fa5 !important;
+        color-scheme: light;
+    }
+    body { background-color: #fff !important; }
+    .mobile-callbar {
+        isolation: isolate;
+        background: linear-gradient(90deg, #0b5fa5 0 50%, #0b2154 50% 100%) !important;
+        border-radius: 14px 14px 0 0 !important;
+        padding: 0 !important;
+        padding-bottom: 0 !important;
+        overflow: hidden !important;
+    }
+    .mobile-callbar::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: calc(2px + env(safe-area-inset-bottom, 0px));
+        background: linear-gradient(90deg, #0b5fa5 0 50%, #0b2154 50% 100%);
+        pointer-events: none;
+        z-index: 0;
+    }
+    .mobile-callbar a { position: relative; z-index: 1; }
+    .mobile-callbar a.call { background-color: #0b5fa5 !important; }
+    .mobile-callbar a.dir { background-color: #0b2154 !important; }
+}
