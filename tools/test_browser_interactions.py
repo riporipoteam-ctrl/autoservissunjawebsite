@@ -365,7 +365,7 @@ class SiteInteractionTests(unittest.TestCase):
             ), "rgb(11, 33, 84)"
         )
 
-    def test_v32_logo_fallback_is_drawn_instead_of_disappearing(self):
+    def test_v33_video_error_shows_static_original_logo_not_custom_animation(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
             is_mobile=True, has_touch=True, reduced_motion="no-preference",
@@ -384,9 +384,25 @@ class SiteInteractionTests(unittest.TestCase):
             expect(logo).to_be_visible()
             self.assertEqual(
                 logo.evaluate("(e) => getComputedStyle(e).animationName"),
-                "sunjaLogoDraw",
+                "none",
             )
             self.assertEqual(page.locator(".footer-featured-photo").count(), 0)
+        finally:
+            context.close()
+
+    def test_v33_video_loader_uses_uploaded_mp4_on_mobile(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        try:
+            page = context.new_page()
+            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            video = page.locator("#sunjaIntroVideo")
+            self.assertEqual(video.get_attribute("src"),
+                             "assets/video/sunja-logo-intro-user-uploaded-v33.mp4")
+            self.assertEqual(video.get_attribute("preload"), "auto")
+            self.assertEqual(page.locator("#sunjaIntroProgress, #sunjaIntroLoading").count(), 0)
         finally:
             context.close()
 
