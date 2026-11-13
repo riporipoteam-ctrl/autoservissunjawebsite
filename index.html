@@ -136,7 +136,7 @@
             var picture = hero.closest('picture');
             var source = picture && picture.querySelector('source');
             var src = ((mobile && source && source.getAttribute('srcset')) ||
-                hero.getAttribute('src') || '').split(',')[0].trim().split(/\\s+/)[0];
+                hero.getAttribute('src') || '').split(',')[0].trim().split(/\s+/)[0];
             if (!src) { criticalReady = true; maybeFinish(); return; }
             hero.loading = 'eager';
             hero.fetchPriority = 'high';
