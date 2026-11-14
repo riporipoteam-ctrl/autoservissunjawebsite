@@ -33,7 +33,7 @@ class FrontendStaticTests(unittest.TestCase):
 
     def test_google_search_has_grounded_local_autorepair_schema(self):
         matches = re.findall(
-            r'<script type="application/ld\\+json">\\s*(.*?)\\s*</script>',
+            r'<script type="application/ld\+json">\s*(.*?)\s*</script>',
             INDEX, flags=re.S
         )
         self.assertEqual(len(matches), 1, "Use one canonical JSON-LD business record")
