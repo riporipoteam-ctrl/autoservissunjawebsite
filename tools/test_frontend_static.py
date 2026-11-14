@@ -45,15 +45,21 @@ class FrontendStaticTests(unittest.TestCase):
             self.assertNotIn(marked, INDEX)
         self.assertIn('25+ godina iskustva', INDEX)
 
-    def test_v37_no_sms_messages_or_broken_booking_links(self):
-        self.assertNotIn('id="smsForm"', INDEX)
+    def test_v39_appointment_form_replaced_by_phone_only(self):
+        self.assertNotIn('id="termin"', INDEX)
+        self.assertNotIn('href="#termin"', INDEX)
+        self.assertNotIn('id="fService"', INDEX)
+        self.assertNotIn('id="callBooking"', INDEX)
+        self.assertNotIn('booking-call-card', INDEX)
+        self.assertNotIn('pickServiceVal', INDEX)
+        self.assertNotIn('data-service=', INDEX)
+        self.assertNotIn('Zakažite termin', INDEX)
+        self.assertIn('class="contact-direct-phone h-100"', INDEX)
+        self.assertIn('class="contact-direct-phone-number"', INDEX)
+        self.assertIn('href="tel:+38761297847"', INDEX)
+        self.assertIn('061 297 847', INDEX)
         self.assertNotIn('sms:+387', INDEX)
         self.assertNotIn('Pošalji SMS', INDEX)
-        self.assertNotIn("SMS form", INDEX)
-        self.assertIn('id="termin"', INDEX)
-        self.assertIn('id="fService"', INDEX)
-        self.assertIn('id="callBooking"', INDEX)
-        self.assertIn('href="tel:+38761297847"', INDEX)
 
     def test_v37_carousel_continues_autoplay_and_has_no_hover_pause(self):
         self.assertIn('data-bs-pause="false"', INDEX)
@@ -170,7 +176,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=38.0", INDEX)
+        self.assertIn("css/style.css?v=39.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v36_intro_has_no_native_player_controls_or_interaction(self):
@@ -343,7 +349,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("--sunja-mobile-title: 20px;", CSS)
         self.assertIn("--sunja-desktop-copy: 15px;", CSS)
         self.assertIn("#siteFooter", CSS)
-        self.assertIn("#termin", CSS)
+        self.assertIn("#kontakt", CSS)
         self.assertIn(".service .nav .nav-link h4", CSS)
         self.assertIn("text-size-adjust: 100%", CSS)
 
@@ -351,7 +357,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=38.0", INDEX)
+        self.assertIn("css/style.css?v=39.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
@@ -379,7 +385,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=38.0", INDEX)
+        self.assertIn("css/style.css?v=39.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
@@ -435,9 +441,23 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('history.replaceState(null, "",', JS)
         self.assertIn('top: 0 !important;', CSS)
 
-    def test_book_service_is_a_direct_link(self):
-        self.assertIn('href="#termin" data-service="Autodijagnostika"', INDEX)
-        self.assertNotIn('<button class="btn btn-primary py-3 px-5 mt-3" data-service=', INDEX)
+    def test_v39_service_buttons_call_without_appointment_form(self):
+        self.assertNotIn('href="#termin"', INDEX)
+        self.assertEqual(INDEX.count('class="btn btn-primary py-3 px-5 mt-3" href="tel:+38761297847"'), 6)
+        self.assertNotIn('onclick="pickService', INDEX)
+        self.assertNotIn("function pickService(", INDEX)
+        self.assertNotIn('data-service=', INDEX)
+
+    def test_v39_25_years_experience_is_drawn_after_original_logo(self):
+        self.assertIn('class="sunja-experience-number-trace"', INDEX)
+        self.assertIn('class="sunja-experience-caption-trace"', INDEX)
+        self.assertIn('class="sunja-experience-number-solid"', INDEX)
+        self.assertIn('class="sunja-experience-caption-solid"', INDEX)
+        self.assertIn('playbackTimer = window.setTimeout(showExperience, 5080)', INDEX)
+        self.assertIn('stroke-dashoffset', CSS)
+        self.assertIn('@keyframes sunja-experience-trace', CSS)
+        self.assertIn('@keyframes sunja-experience-fill', CSS)
+        self.assertIn('sunja-intro-show-experience', INDEX)
 
     def test_gallery_tile_is_entirely_clickable(self):
         self.assertIn('class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link"', INDEX)
@@ -545,7 +565,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=38.0", INDEX)
+        self.assertIn("css/style.css?v=39.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
 
