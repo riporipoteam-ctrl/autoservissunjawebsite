@@ -75,81 +75,74 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=33.0" rel="stylesheet">
+    <link href="css/style.css?v=34.0" rel="stylesheet">
 </head>
 
 <body>
-    <!-- Only the original Šunja logo animation on a clean white screen. -->
-    <div id="sunjaIntro" class="sunja-intro" aria-label="Učitavanje stranice Auto Servis Šunja">
-        <video id="sunjaIntroVideo" class="sunja-intro-video"
-            src="assets/video/sunja-logo-intro-user-uploaded-v33.mp4" autoplay muted playsinline
-            webkit-playsinline preload="auto" disablepictureinpicture
-            aria-label="Animacija originalnog logotipa Auto Servis Šunja"></video>
-        <img class="sunja-intro-fallback-frames"
-            data-src="assets/video/sunja-user-uploaded-frames-fallback-v33.webp"
-            alt="" aria-hidden="true" decoding="async">
-        <img class="sunja-intro-fallback-logo" src="assets/sunja-logo-transparent.webp"
-            alt="" aria-hidden="true" decoding="async">
+    <!-- The owner's original animation frames, 20% faster.
+         An image has no native video player, play/pause button, or tap controls. -->
+    <div id="sunjaIntro" class="sunja-intro"
+         aria-label="Učitavanje stranice Auto Servis Šunja">
+        <img id="sunjaIntroFrames" class="sunja-intro-frames"
+             src="assets/video/sunja-logo-uploaded-120percent-v34.webp"
+             alt="" aria-hidden="true" draggable="false"
+             fetchpriority="high" decoding="sync">
+        <img class="sunja-intro-fallback-logo"
+             src="assets/sunja-logo-transparent.webp"
+             alt="" aria-hidden="true" draggable="false" decoding="async">
     </div>
     <script>
     (function () {
         var root = document.documentElement;
         var overlay = document.getElementById('sunjaIntro');
-        var video = document.getElementById('sunjaIntroVideo');
+        var frames = document.getElementById('sunjaIntroFrames');
         if (!root.classList.contains('sunja-intro-active')) {
             overlay.hidden = true;
-            try { video.pause(); } catch (e) {}
-            video.removeAttribute('src');
             return;
         }
+
+        // An animated image avoids Safari's native video-player overlay.
+        // It is generated exclusively from the owner's original MP4 frames,
+        // is encoded to run once at 120% speed, and has no pause interaction.
         var reducedMotion = !!(window.matchMedia &&
             window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-        var finished = false, videoDone = false, criticalReady = false;
-        var videoStarted = false, fallbackStarted = false, playbackRetried = false;
-        var fallbackFrames = overlay.querySelector('.sunja-intro-fallback-frames');
-        // Play the actual user-supplied MP4 as-is. Never simulate the logo
-        // with CSS, SVG, masking, or any replacement animation.
-        var introSafetyTimeout = window.setTimeout(finishIntro, 16000);
+        var finished = false, started = false;
+        var animationDone = false, criticalReady = false;
+        var playbackTimer = 0, stillTimer = 0;
+        var introSafetyTimeout = window.setTimeout(finishIntro, 9000);
+
         function finishIntro() {
             if (finished) return;
             finished = true;
             window.clearTimeout(introSafetyTimeout);
+            window.clearTimeout(playbackTimer);
+            window.clearTimeout(stillTimer);
             root.classList.remove('sunja-intro-active');
             overlay.hidden = true;
-            try { video.pause(); } catch (ignored) {}
-            video.removeAttribute('src');
         }
         window.__sunjaIntroForceFinish = finishIntro;
 
-        // If iOS Low Power Mode blocks MP4 autoplay, show an animated WebP
-        // made from the SAME uploaded video's frames. It is not a synthetic
-        // logo draw, different design, or substitute animation.
-        function showUploadedFramesFallback() {
-            // A video can fail after the 'playing' event (network or decoder
-            // errors). In that case still replay the owner's identical frames.
-            if (finished || fallbackStarted) return;
-            fallbackStarted = true;
-            overlay.classList.add('sunja-intro-is-fallback');
-            function staticOnly() {
-                if (finished) return;
-                overlay.classList.add('sunja-intro-is-static');
-                window.setTimeout(finishIntro, 1300);
-            }
-            if (reducedMotion || !fallbackFrames) {
-                staticOnly();
-                return;
-            }
-            fallbackFrames.onload = function () {
-                if (finished) return;
-                // One complete showing of the original six-second clip.
-                window.setTimeout(finishIntro, 6350);
-            };
-            fallbackFrames.onerror = staticOnly;
-            fallbackFrames.src = fallbackFrames.getAttribute('data-src');
-        }
         function maybeFinish() {
-            if (videoDone && criticalReady) finishIntro();
+            if (animationDone && criticalReady) finishIntro();
         }
+        function showIntroStill() {
+            if (finished) return;
+            overlay.classList.add('sunja-intro-is-static');
+            animationDone = true;
+            window.clearTimeout(playbackTimer);
+            stillTimer = window.setTimeout(finishIntro, reducedMotion ? 850 : 1200);
+        }
+        function beginIntroAnimation() {
+            if (started || finished || reducedMotion) return;
+            started = true;
+            // The WebP has one loop of 5,041 ms. Allow the final logo frame
+            // to finish before revealing the fully preloaded home page.
+            playbackTimer = window.setTimeout(function () {
+                animationDone = true;
+                maybeFinish();
+            }, 5100);
+        }
+
         function warmCriticalAssets() {
             var hero = document.querySelector('#header-carousel .carousel-item.active picture img');
             if (!hero) { criticalReady = true; maybeFinish(); return; }
@@ -169,7 +162,9 @@
                 img.src = src;
                 if (img.complete) resolve();
             });
-            var limit = new Promise(function (resolve) { setTimeout(resolve, 1400); });
+            var limit = new Promise(function (resolve) {
+                window.setTimeout(resolve, 1400);
+            });
             Promise.race([ready, limit]).then(function () {
                 criticalReady = true;
                 maybeFinish();
@@ -182,45 +177,19 @@
             document.addEventListener('DOMContentLoaded', warmCriticalAssets, { once: true });
         } else warmCriticalAssets();
 
-        video.addEventListener('playing', function () { videoStarted = true; });
-        video.addEventListener('ended', function () {
-            videoDone = true;
-            maybeFinish();
+        overlay.addEventListener('contextmenu', function (event) {
+            event.preventDefault();
         });
-        video.addEventListener('error', showUploadedFramesFallback);
         if (reducedMotion) {
-            showUploadedFramesFallback();
+            showIntroStill();
             return;
         }
-        video.muted = true;
-        video.defaultMuted = true;
-        video.playsInline = true;
-        video.autoplay = true;
-        function attemptExactPlayback() {
-            if (finished || fallbackStarted || videoStarted) return;
-            var promise;
-            try { promise = video.play(); }
-            catch (ignored) { return; }
-            if (promise && typeof promise.catch === 'function') {
-                promise.catch(function () {
-                    // Retry when enough video data has arrived; Safari sometimes
-                    // rejects the first early play() call before metadata loads.
-                    if (video.readyState >= 2 || playbackRetried) showUploadedFramesFallback();
-                });
-            }
+        frames.addEventListener('load', beginIntroAnimation, { once: true });
+        frames.addEventListener('error', showIntroStill, { once: true });
+        if (frames.complete) {
+            if (frames.naturalWidth > 0) beginIntroAnimation();
+            else showIntroStill();
         }
-        video.addEventListener('canplay', function () {
-            if (!videoStarted && !fallbackStarted && !playbackRetried) {
-                playbackRetried = true;
-                attemptExactPlayback();
-            }
-        }, { once: true });
-        attemptExactPlayback();
-        // No CSS-drawn animation: replay the real video frames if muted MP4
-        // playback cannot start on this device.
-        window.setTimeout(function () {
-            if (!videoStarted && !videoDone && !finished) showUploadedFramesFallback();
-        }, 5500);
     })();
     </script>
 <!-- Topbar Start -->
@@ -947,7 +916,7 @@
     
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=33.0"></script>
+    <script src="js/main.js?v=34.0"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
