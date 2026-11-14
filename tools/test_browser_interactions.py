@@ -321,7 +321,7 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             context.close()
 
-    def test_v31_intro_plays_original_logo_only_and_releases_page(self):
+    def test_v34_intro_image_has_no_player_overlay_and_cannot_be_paused_by_tap(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
             is_mobile=True, has_touch=True, reduced_motion="no-preference",
@@ -329,19 +329,32 @@ class SiteInteractionTests(unittest.TestCase):
         try:
             page = context.new_page()
             page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-            expect(page.locator("#sunjaIntroVideo")).to_have_count(1)
             expect(page.locator("#sunjaIntro")).to_be_visible()
-            self.assertEqual(page.locator("#sunjaIntroProgress, #sunjaIntroLoading").count(), 0)
-            page.locator("#sunjaIntroVideo").evaluate(
-                "(v) => v.dispatchEvent(new Event('ended'))"
-            )
+            frames = page.locator("#sunjaIntroFrames")
+            expect(frames).to_be_visible()
+            self.assertIn("sunja-logo-uploaded-120percent-v34.webp",
+                          frames.get_attribute("src"))
+            self.assertEqual(page.locator("#sunjaIntro video, #sunjaIntro button").count(), 0)
+            self.assertEqual(frames.get_attribute("draggable"), "false")
+            self.assertEqual(frames.evaluate(
+                "(img) => getComputedStyle(img).pointerEvents"), "none")
+            self.assertTrue(frames.evaluate("""(img) => {
+                const style = getComputedStyle(img);
+                return style.getPropertyValue("user-select") === "none"
+                    || style.getPropertyValue("-webkit-user-select") === "none";
+            }"""))
+            frames.evaluate("(img) => img.dispatchEvent(new MouseEvent('click', {bubbles:true}))")
+            self.assertTrue(page.evaluate(
+                "() => document.documentElement.classList.contains('sunja-intro-active')"
+            ))
+            page.evaluate("window.__sunjaIntroForceFinish()")
             page.wait_for_function(
                 "() => !document.documentElement.classList.contains('sunja-intro-active')",
-                timeout=7000,
+                timeout=3000,
             )
             expect(page.locator("#header-carousel")).to_be_visible()
             page.reload(wait_until="domcontentloaded", timeout=45000)
-            expect(page.locator("#sunjaIntroVideo")).to_have_count(1)
+            expect(page.locator("#sunjaIntroFrames")).to_have_count(1)
         finally:
             context.close()
 
@@ -365,40 +378,37 @@ class SiteInteractionTests(unittest.TestCase):
             ), "rgb(11, 33, 84)"
         )
 
-    def test_v33_blocked_video_replays_actual_uploaded_frames_not_css_drawing(self):
+    def test_v34_image_failure_releases_to_static_original_logo(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
             is_mobile=True, has_touch=True, reduced_motion="no-preference",
         )
         try:
             page = context.new_page()
-            # Block MP4 before navigation. Dispatching error after page load
-            # is flaky in WebKit because autoplay may already have started,
-            # and successful playback correctly refuses the fallback.
-            page.route("**/sunja-logo-intro-user-uploaded-v33.mp4",
+            page.route("**/sunja-logo-uploaded-120percent-v34.webp",
                        lambda route: route.abort())
-            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-            video = page.locator("#sunjaIntroVideo")
-            expect(video).to_have_count(1)
+            # Observe the brief error fallback before DOMContentLoaded;
+            # render-blocking fonts and scripts can otherwise outlast it.
+            page.goto(self.url, wait_until="commit", timeout=45000)
+            # Check the actual visible fallback *atomically*, because it is
+            # intentionally shown only briefly before the page is released.
+            page.wait_for_function("""() => {
+                const overlay = document.querySelector('#sunjaIntro');
+                const logo = document.querySelector('.sunja-intro-fallback-logo');
+                return document.documentElement.classList.contains('sunja-intro-active')
+                    && overlay.classList.contains('sunja-intro-is-static')
+                    && getComputedStyle(logo).display !== 'none';
+            }""", timeout=4500)
+            self.assertEqual(page.locator("#sunjaIntro video").count(), 0)
+            page.evaluate("window.__sunjaIntroForceFinish()")
             page.wait_for_function(
-                "() => document.querySelector('#sunjaIntro').classList.contains('sunja-intro-is-fallback')",
-                timeout=8500,
+                "() => !document.documentElement.classList.contains('sunja-intro-active')",
+                timeout=3000,
             )
-            frames = page.locator(".sunja-intro-fallback-frames")
-            expect(frames).to_be_visible()
-            self.assertIn(
-                "sunja-user-uploaded-frames-fallback-v33.webp",
-                frames.get_attribute("src"),
-            )
-            self.assertEqual(
-                frames.evaluate("(e) => getComputedStyle(e).animationName"),
-                "none",
-            )
-            self.assertEqual(page.locator(".footer-featured-photo").count(), 0)
         finally:
             context.close()
 
-    def test_v33_video_loader_uses_uploaded_mp4_on_mobile(self):
+    def test_v34_loader_uses_faster_animation_without_native_video_on_mobile(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
             is_mobile=True, has_touch=True, reduced_motion="no-preference",
@@ -406,10 +416,13 @@ class SiteInteractionTests(unittest.TestCase):
         try:
             page = context.new_page()
             page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-            video = page.locator("#sunjaIntroVideo")
-            self.assertEqual(video.get_attribute("src"),
-                             "assets/video/sunja-logo-intro-user-uploaded-v33.mp4")
-            self.assertEqual(video.get_attribute("preload"), "auto")
+            img = page.locator("#sunjaIntroFrames")
+            expect(img).to_have_count(1)
+            self.assertEqual(
+                img.get_attribute("src"),
+                "assets/video/sunja-logo-uploaded-120percent-v34.webp",
+            )
+            self.assertEqual(page.locator("#sunjaIntro video").count(), 0)
             self.assertEqual(page.locator("#sunjaIntroProgress, #sunjaIntroLoading").count(), 0)
         finally:
             context.close()
