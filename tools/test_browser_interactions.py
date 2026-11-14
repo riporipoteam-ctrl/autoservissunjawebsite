@@ -332,7 +332,7 @@ class SiteInteractionTests(unittest.TestCase):
             expect(page.locator("#sunjaIntro")).to_be_visible()
             frames = page.locator("#sunjaIntroFrames")
             expect(frames).to_be_visible()
-            self.assertIn("sunja-logo-uploaded-120percent-v34.webp",
+            self.assertIn("sunja-logo-sharp-smooth-v36.webp",
                           frames.get_attribute("src"))
             self.assertEqual(page.locator("#sunjaIntro video, #sunjaIntro button").count(), 0)
             self.assertEqual(frames.get_attribute("draggable"), "false")
@@ -385,7 +385,7 @@ class SiteInteractionTests(unittest.TestCase):
         )
         try:
             page = context.new_page()
-            page.route("**/sunja-logo-uploaded-120percent-v34.webp",
+            page.route("**/sunja-logo-sharp-smooth-v36.webp",
                        lambda route: route.abort())
             # Observe the brief error fallback before DOMContentLoaded;
             # render-blocking fonts and scripts can otherwise outlast it.
@@ -420,7 +420,7 @@ class SiteInteractionTests(unittest.TestCase):
             expect(img).to_have_count(1)
             self.assertEqual(
                 img.get_attribute("src"),
-                "assets/video/sunja-logo-uploaded-120percent-v34.webp",
+                "assets/video/sunja-logo-sharp-smooth-v36.webp",
             )
             self.assertEqual(page.locator("#sunjaIntro video").count(), 0)
             self.assertEqual(page.locator("#sunjaIntroProgress, #sunjaIntroLoading").count(), 0)
