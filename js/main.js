@@ -43,6 +43,76 @@
         }, { once: true });
     }
 
+    // v37: deterministic hero auto-rotation. Bootstrap may fail to arrive
+    // on restrictive mobile networks; keep a tiny no-dependency fallback.
+    // Do not spend carousel cycles underneath the full-screen brand intro.
+    function setupHeroCarousel() {
+        var hero = document.getElementById("header-carousel");
+        if (!hero) return;
+        var slides = Array.prototype.slice.call(hero.querySelectorAll(".carousel-item"));
+        var indicators = Array.prototype.slice.call(hero.querySelectorAll(".hero-indicators button"));
+        if (slides.length < 2) return;
+        var instance = null, fallbackTimer = 0, wiredFallback = false;
+
+        function rotateBy(delta) {
+            var active = slides.findIndex(function (slide) { return slide.classList.contains("active"); });
+            var next = (active + delta + slides.length) % slides.length;
+            slides.forEach(function (slide, i) {
+                slide.classList.toggle("active", i === next);
+            });
+            indicators.forEach(function (button, i) {
+                button.classList.toggle("active", i === next);
+                if (i === next) button.setAttribute("aria-current", "true");
+                else button.removeAttribute("aria-current");
+            });
+        }
+        function stop() {
+            if (fallbackTimer) window.clearInterval(fallbackTimer);
+            fallbackTimer = 0;
+            if (instance && typeof instance.pause === "function") instance.pause();
+        }
+        function startCycle() {
+            if (document.hidden || document.documentElement.classList.contains("sunja-intro-active")) return;
+            stop();
+            if (window.bootstrap && window.bootstrap.Carousel) {
+                try {
+                    instance = window.bootstrap.Carousel.getOrCreateInstance(hero, {
+                        interval: 6500, ride: false, pause: false, wrap: true, touch: true
+                    });
+                    instance.cycle();
+                    return;
+                } catch (error) {
+                    instance = null;
+                }
+            }
+            if (!wiredFallback) {
+                wiredFallback = true;
+                indicators.forEach(function (button, i) {
+                    button.addEventListener("click", function () {
+                        var current = slides.findIndex(function (slide) { return slide.classList.contains("active"); });
+                        rotateBy(i - current);
+                        startCycle();
+                    });
+                });
+                hero.querySelectorAll("[data-bs-slide]").forEach(function (button) {
+                    button.addEventListener("click", function () {
+                        rotateBy(button.getAttribute("data-bs-slide") === "prev" ? -1 : 1);
+                        startCycle();
+                    });
+                });
+            }
+            fallbackTimer = window.setInterval(function () { rotateBy(1); }, 6500);
+        }
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) stop();
+            else startCycle();
+        });
+        window.addEventListener("pageshow", startCycle);
+        window.addEventListener("sunja:intro-finished", startCycle);
+        startCycle();
+    }
+    setupHeroCarousel();
+
     var backTop = document.querySelector(".back-to-top");
     var chromeVisible = null;
     var scrollRaf = 0;
