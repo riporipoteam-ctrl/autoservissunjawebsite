@@ -12,6 +12,49 @@ JS = (ROOT / "js" / "main.js").read_text(encoding="utf-8")
 
 
 class FrontendStaticTests(unittest.TestCase):
+    def test_v37_experience_is_shown_after_logo_not_instead(self):
+        self.assertIn('id="sunjaExperience"', INDEX)
+        self.assertIn('25+', INDEX)
+        self.assertIn('godina iskustva', INDEX)
+        self.assertIn('function showExperience()', INDEX)
+        self.assertIn('sunja-intro-show-experience', INDEX)
+        self.assertIn('sunja:intro-finished', INDEX)
+        self.assertIn('#sunjaIntro.sunja-intro-show-experience', CSS)
+        self.assertIn('@media (prefers-reduced-motion: reduce)', CSS)
+
+    def test_v37_marked_extra_service_descriptions_removed(self):
+        for marked in (
+            "Originalni postupci i momenti stezanja",
+            "Provjera tekućina i guma",
+            "Vodena pumpa po potrebi",
+            "Imate pitanje ili neobičan kvar?",
+        ):
+            self.assertNotIn(marked, INDEX)
+        self.assertIn('25+ godina iskustva', INDEX)
+
+    def test_v37_no_sms_messages_or_broken_booking_links(self):
+        self.assertNotIn('id="smsForm"', INDEX)
+        self.assertNotIn('sms:+387', INDEX)
+        self.assertNotIn('Pošalji SMS', INDEX)
+        self.assertNotIn("SMS form", INDEX)
+        self.assertIn('id="termin"', INDEX)
+        self.assertIn('id="fService"', INDEX)
+        self.assertIn('id="callBooking"', INDEX)
+        self.assertIn('href="tel:+38761297847"', INDEX)
+
+    def test_v37_carousel_continues_autoplay_and_has_no_hover_pause(self):
+        self.assertIn('data-bs-pause="false"', INDEX)
+        self.assertIn('data-bs-interval="6500"', INDEX)
+        self.assertIn('function setupHeroCarousel()', JS)
+        self.assertIn('document.addEventListener("visibilitychange"', JS)
+        self.assertIn('bootstrap.Carousel', JS)
+        self.assertIn('window.setInterval', JS)
+
+    def test_v37_mobile_status_badge_wraps_inside_viewport(self):
+        self.assertIn('/* v37 mobile status overflow fix */', CSS)
+        self.assertIn('min-width: 0', CSS)
+        self.assertIn('white-space: normal !important', CSS)
+
     def test_google_search_sitemap_has_only_the_real_canonical_page(self):
         sitemap = ROOT / "sitemap.xml"
         self.assertTrue(sitemap.is_file(), "A public sitemap.xml is required")
