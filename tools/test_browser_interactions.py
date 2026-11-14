@@ -340,18 +340,12 @@ class SiteInteractionTests(unittest.TestCase):
                     im.currentSrc.startsWith('blob:') &&
                     getComputedStyle(im).display !== 'none';
             }""", timeout=12000)
-            def sample():
-                return page.evaluate("""() => {
-                    const im=document.querySelector('#sunjaIntroFrames');
-                    const c=document.createElement('canvas');
-                    c.width=96; c.height=54;
-                    c.getContext('2d').drawImage(im,0,0,96,54);
-                    return c.toDataURL('image/png');
-                }""")
+            # Screenshot the *composited browser pixels*. drawImage(canvas)
+            # can return the first WebP frame even while CSS paints motion.
             page.wait_for_timeout(350)
-            first=sample()
+            first=page.locator('#sunjaIntroFrames').screenshot()
             page.wait_for_timeout(1550)
-            second=sample()
+            second=page.locator('#sunjaIntroFrames').screenshot()
             self.assertNotEqual(first, second,
                 "Logo must be visibly drawing, not stuck on one cached frame")
             self.assertFalse(page.locator('#sunjaIntro').evaluate(
@@ -379,8 +373,9 @@ class SiteInteractionTests(unittest.TestCase):
             expect(page.locator("#sunjaIntro")).to_be_visible()
             frames = page.locator("#sunjaIntroFrames")
             expect(frames).to_be_visible()
-            self.assertIn("sunja-logo-sharp-smooth-v36.webp",
-                          frames.get_attribute("src"))
+            self.assertEqual(frames.get_attribute("data-animation-url"),
+                             "assets/video/sunja-logo-sharp-smooth-v36.webp")
+            self.assertTrue(frames.get_attribute("src").startswith("blob:"))
             self.assertEqual(page.locator("#sunjaIntro video, #sunjaIntro button").count(), 0)
             self.assertEqual(frames.get_attribute("draggable"), "false")
             self.assertEqual(frames.evaluate(
