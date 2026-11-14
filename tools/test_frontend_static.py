@@ -54,6 +54,12 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("aggregateRating", data)
         self.assertNotIn("review", data)
 
+    def test_search_console_verification_token_is_exact_in_html_head(self):
+        token = '<meta name="google-site-verification" content="SeUD1UgHTyjOPnkiG7U72gulqS9yaYa_5TpK-j-glJw" />'
+        self.assertEqual(INDEX.count(token), 1)
+        head = INDEX.split('</head>', 1)[0]
+        self.assertIn(token, head)
+
     def test_google_search_meta_tags_are_searchable_and_consistent(self):
         self.assertIn("Auto Servis Šunja Goražde", INDEX)
         self.assertIn('rel="canonical" href="https://autosunja.com/"', INDEX)
