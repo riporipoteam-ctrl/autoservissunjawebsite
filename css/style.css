@@ -2420,6 +2420,8 @@ html.sunja-intro-active #sunjaIntro:not([hidden]) {
     aspect-ratio: 910 / 512;
     object-fit: contain;
     image-rendering: auto;
+    /* Never display a half-played cached WebP before the fresh decoder starts. */
+    visibility: hidden;
     background: #fff;
     border: 0;
     border-radius: 0;
@@ -2432,6 +2434,9 @@ html.sunja-intro-active #sunjaIntro:not([hidden]) {
     -webkit-user-select: none !important;
     user-select: none !important;
     -webkit-touch-callout: none !important;
+}
+#sunjaIntro.sunja-intro-playing .sunja-intro-frames {
+    visibility: visible !important;
 }
 .sunja-intro-fallback-logo { display: none; }
 html.sunja-intro-active #sunjaIntro.sunja-intro-is-static .sunja-intro-frames {
@@ -2452,11 +2457,9 @@ html.sunja-intro-active #sunjaIntro.sunja-intro-is-static .sunja-intro-fallback-
 #sunjaIntro[hidden], html:not(.sunja-intro-active) #sunjaIntro {
     display: none !important;
 }
-@media (prefers-reduced-motion: reduce) {
-    html.sunja-intro-active #sunjaIntro .sunja-intro-frames {
-        display: none !important;
-    }
-}
+/* v38: the requested original logo drawing plays on all devices, including
+   Safari with Reduce Motion enabled. The optional experience transition
+   remains static under that setting below. */
 
 /* v31: cross-browser fixed mobile action dock */
 /* Android Chrome can theme browser chrome via meta theme-color; iOS Safari
