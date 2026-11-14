@@ -12,6 +12,19 @@ JS = (ROOT / "js" / "main.js").read_text(encoding="utf-8")
 
 
 class FrontendStaticTests(unittest.TestCase):
+    def test_v38_logo_restarts_from_a_fresh_animation_decoder(self):
+        # The v37 preload was free-running before the visible intro, which
+        # left Safari showing the WebP's final frame instead of the drawing.
+        self.assertIn('data-intro-src="assets/video/sunja-logo-sharp-smooth-v36.webp"', INDEX)
+        self.assertIn('URL.createObjectURL', INDEX)
+        self.assertIn('URL.revokeObjectURL', INDEX)
+        self.assertIn('requestAnimationFrame', INDEX)
+        self.assertIn('function startFreshLogoPlayback()', INDEX)
+        self.assertIn('function beginIntroAnimation()', INDEX)
+        self.assertIn('function showExperience()', INDEX)
+        self.assertNotIn('src="assets/video/sunja-logo-sharp-smooth-v36.webp"', INDEX)
+        self.assertNotIn("if (frames.complete)", INDEX)
+
     def test_v37_experience_is_shown_after_logo_not_instead(self):
         self.assertIn('id="sunjaExperience"', INDEX)
         self.assertIn('25+', INDEX)
