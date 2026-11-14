@@ -55,6 +55,17 @@ def verify():
     if 'gallery-tile-link' not in html or 'map-quick-link' not in html:
         raise AssertionError("Updated gallery/map links not published")
 
+    # Verify the actual publicly hosted Google Search Console token and
+    # crawler discovery files, not merely the source branch.
+    verification = '<meta name="google-site-verification" content="SeUD1UgHTyjOPnkiG7U72gulqS9yaYa_5TpK-j-glJw" />'
+    if verification not in html.split("</head>", 1)[0]:
+        raise AssertionError("Search Console verification token absent from live HTML head")
+    for resource in ("robots.txt", "sitemap.xml"):
+        live = get("/" + resource + "?deployment_check=" + stamp)
+        source = (ROOT / resource).read_bytes()
+        if hashlib.sha256(live).digest() != hashlib.sha256(source).digest():
+            raise AssertionError(f"Live {resource} differs from GitHub source")
+
     for asset, version in (("css/style.css", css_version), ("js/main.js", js_version)):
         live_bytes = get(f"/{asset}?v={version}&deployment_check={stamp}")
         source_bytes = (ROOT / asset).read_bytes()
