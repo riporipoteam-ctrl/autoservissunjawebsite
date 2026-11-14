@@ -559,11 +559,11 @@ class SiteInteractionTests(unittest.TestCase):
             }""", timeout=11500)
             page.locator(".hero-indicators button").nth(2).tap()
             expect(page.locator("#header-carousel .carousel-item").nth(2)).to_have_class(
-                re.compile(r"\\bactive\\b")
+                re.compile("active")
             )
             page.locator("#header-carousel .carousel-control-next").tap()
             expect(page.locator("#header-carousel .carousel-item").nth(0)).to_have_class(
-                re.compile(r"\\bactive\\b")
+                re.compile("active")
             )
         finally:
             context.close()
