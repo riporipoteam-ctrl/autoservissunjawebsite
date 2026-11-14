@@ -302,6 +302,10 @@ class SiteInteractionTests(unittest.TestCase):
                 const w=document.getElementById("globeScroll");
                 window.scrollTo(0, w.offsetTop + 20);
             }""")
+            # v37 intentionally defers map GPU work until the brand intro
+            # finishes; simulate that completion instead of testing the
+            # obsolete behaviour of animating the globe behind the loader.
+            pg.evaluate("window.__sunjaIntroForceFinish()")
             pg.wait_for_function("window.__mapStarted === true", timeout=5000)
             pg.evaluate("""() => {
                 const w=document.getElementById("globeScroll");
@@ -561,7 +565,9 @@ class SiteInteractionTests(unittest.TestCase):
             expect(page.locator("#header-carousel .carousel-item").nth(2)).to_have_class(
                 re.compile("active")
             )
-            page.locator("#header-carousel .carousel-control-next").tap()
+            # Mobile uses visible slide indicators; the arrow buttons are
+            # intentionally hidden at this viewport width.
+            page.locator(".hero-indicators button").nth(0).tap()
             expect(page.locator("#header-carousel .carousel-item").nth(0)).to_have_class(
                 re.compile("active")
             )
