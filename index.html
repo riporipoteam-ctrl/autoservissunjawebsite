@@ -134,7 +134,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=34.0" rel="stylesheet">
+    <link href="css/style.css?v=37.0" rel="stylesheet">
 </head>
 
 <body>
@@ -149,6 +149,11 @@
         <img class="sunja-intro-fallback-logo"
              src="assets/sunja-logo-transparent.webp"
              alt="" aria-hidden="true" draggable="false" decoding="async">
+        <div id="sunjaExperience" class="sunja-intro-experience" aria-label="25+ godina iskustva">
+            <span class="sunja-intro-experience-number">25<span>+</span></span>
+            <span class="sunja-intro-experience-line" aria-hidden="true"></span>
+            <span class="sunja-intro-experience-caption">godina iskustva</span>
+        </div>
     </div>
     <script>
     (function () {
@@ -165,10 +170,10 @@
         // is encoded to run once at 120% speed, and has no pause interaction.
         var reducedMotion = !!(window.matchMedia &&
             window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-        var finished = false, started = false;
-        var animationDone = false, criticalReady = false;
-        var playbackTimer = 0, stillTimer = 0;
-        var introSafetyTimeout = window.setTimeout(finishIntro, 9000);
+        var finished = false, started = false, experienceShown = false;
+        var animationDone = false, criticalReady = false, experienceDone = false;
+        var playbackTimer = 0, stillTimer = 0, experienceTimer = 0, exitTimer = 0;
+        var introSafetyTimeout = window.setTimeout(finishIntro, 10000);
 
         function finishIntro() {
             if (finished) return;
@@ -176,33 +181,44 @@
             window.clearTimeout(introSafetyTimeout);
             window.clearTimeout(playbackTimer);
             window.clearTimeout(stillTimer);
+            window.clearTimeout(experienceTimer);
+            window.clearTimeout(exitTimer);
             root.classList.remove('sunja-intro-active');
             overlay.hidden = true;
+            window.dispatchEvent(new Event('sunja:intro-finished'));
         }
         window.__sunjaIntroForceFinish = finishIntro;
 
         function maybeFinish() {
-            if (animationDone && criticalReady) finishIntro();
+            if (!experienceDone || !criticalReady || finished) return;
+            overlay.classList.add('sunja-intro-exiting');
+            exitTimer = window.setTimeout(finishIntro, reducedMotion ? 0 : 320);
+        }
+        function showExperience() {
+            if (experienceShown || finished) return;
+            experienceShown = true;
+            animationDone = true;
+            window.clearTimeout(stillTimer);
+            overlay.classList.remove('sunja-intro-is-static');
+            overlay.classList.add('sunja-intro-show-experience');
+            experienceTimer = window.setTimeout(function () {
+                experienceDone = true;
+                maybeFinish();
+            }, reducedMotion ? 1100 : 1640);
         }
         function showIntroStill() {
-            if (finished) return;
+            if (finished || experienceShown) return;
             overlay.classList.add('sunja-intro-is-static');
-            animationDone = true;
             window.clearTimeout(playbackTimer);
-            stillTimer = window.setTimeout(finishIntro, reducedMotion ? 850 : 1900);
+            stillTimer = window.setTimeout(showExperience, reducedMotion ? 650 : 900);
         }
         function beginIntroAnimation() {
             if (started || finished || reducedMotion) return;
             started = true;
-            // The WebP is the very same logo at 1.2x speed (5,033ms).
-            // Start the fallback deadline only when its bytes are ready, so
-            // slow connections cannot chop off the drawing mid-animation.
+            // Preserve every frame of the original 1.2x animation.
             window.clearTimeout(introSafetyTimeout);
-            introSafetyTimeout = window.setTimeout(finishIntro, 5700);
-            playbackTimer = window.setTimeout(function () {
-                animationDone = true;
-                maybeFinish();
-            }, 5080);
+            introSafetyTimeout = window.setTimeout(finishIntro, 8200);
+            playbackTimer = window.setTimeout(showExperience, 5080);
         }
 
         function warmCriticalAssets() {
@@ -312,7 +328,7 @@
 
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5" id="pocetna">
-        <div id="header-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="8000" data-bs-pause="hover">
+        <div id="header-carousel" class="carousel slide" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="hero-bg" id="heroMainBg" style="--hero-photo:url('/assets/photos/tt-wide-20260919-d3b7439d.webp');--hero-photo-mobile:url('/assets/photos/tt-20260919-d3b7439d.webp')"></div>
@@ -443,6 +459,10 @@
                     <h6 class="text-primary text-uppercase">O nama</h6>
                     <h1 class="mb-4"><span class="text-primary">Auto Servis Šunja</span> u Goraždu</h1>
                     <p class="mb-4">Auto Servis Šunja se nalazi na adresi Hajra Lakovića 38, 73000 Goražde. Bavimo se autodijagnostikom, malim i velikim servisima, autoelektrikom te izradom i programiranjem ključeva i daljinskih upravljača.</p>
+                    <div class="experience-feature" aria-label="25+ godina iskustva">
+                        <strong>25<span>+</span></strong>
+                        <div><span class="experience-feature-title">godina iskustva</span><span class="experience-feature-caption">Auto Servis Šunja · Goražde</span></div>
+                    </div>
                     <div class="row g-4 mb-3 pb-3">
                         <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
                             <div class="d-flex">
@@ -552,7 +572,6 @@
                                     <h3 class="mb-3">Peugeot servis</h3>
                                     <p class="mb-4">Održavanje i popravke Peugeot vozila.</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Poznavanje Peugeot sistema</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Originalni postupci i momenti stezanja</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Savjet za daljnje održavanje</p>
                                     <a class="btn btn-primary py-3 px-5 mt-3" href="#termin" data-service="Peugeot servis" onclick="pickService(this)">Zakažite<i class="fa fa-arrow-right ms-3"></i></a>
                                 </div>
@@ -570,7 +589,6 @@
                                     <p class="mb-4">Zamjena motornog ulja i filtera.</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Ulje i filteri po specifikaciji</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Pregled kočnica i ovjesa</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Provjera tekućina i guma</p>
                                     <a class="btn btn-primary py-3 px-5 mt-3" href="#termin" data-service="Mali servis" onclick="pickService(this)">Zakažite<i class="fa fa-arrow-right ms-3"></i></a>
                                 </div>
                             </div>
@@ -586,7 +604,6 @@
                                     <h3 class="mb-3">Veliki servis</h3>
                                     <p class="mb-4">Zamjena zupčastog remena i dijelova prema servisnom intervalu.</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Zupčasti remen i roleri</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Vodena pumpa po potrebi</p>
                                     <p><i class="fa fa-check text-success me-3"></i>Svjećice, filteri i tekućine</p>
                                     <a class="btn btn-primary py-3 px-5 mt-3" href="#termin" data-service="Veliki servis" onclick="pickService(this)">Zakažite<i class="fa fa-arrow-right ms-3"></i></a>
                                 </div>
@@ -629,7 +646,6 @@
                     </div>
                 </div>
             </div>
-            <p class="text-center mt-4 mb-0">Imate pitanje ili neobičan kvar? <a href="tel:+38761297847" class="fw-bold">Pozovite 061 297 847</a> i dogovorit ćemo se.</p>
         </div>
     </div>
     <!-- Service End -->
@@ -822,55 +838,23 @@
                     </section>
                 </div>
                 <div class="col-md-6" id="termin">
-                    <div class="wow fadeInUp" data-wow-delay="0.2s">
-                        <h4 class="mb-2">Pošaljite SMS upit za termin</h4>
-                        <p class="mb-4">Popunite formu i pritisnite dugme: otvara se vaša aplikacija za poruke s gotovim tekstom. Bez registracije i bez čekanja.</p>
-                        <form id="smsForm">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="fName" placeholder="Ime i prezime" required>
-                                        <label for="fName">Ime i prezime</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="fCar" placeholder="Vozilo" required>
-                                        <label for="fCar">Vozilo (npr. Peugeot 308, 2018)</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <select class="form-select" id="fService">
-                                            <option>Autodijagnostika</option>
-                                            <option>Peugeot servis</option>
-                                            <option>Mali servis</option>
-                                            <option>Veliki servis</option>
-                                            <option>Autoelektrika</option>
-                                            <option>Ključevi i daljinski</option>
-                                            <option>Nešto drugo</option>
-                                        </select>
-                                        <label for="fService">Usluga</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="date" class="form-control" id="fDate">
-                                        <label for="fDate">Željeni datum</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <textarea class="form-control" placeholder="Ukratko opišite problem" id="fMsg" style="height: 100px"></textarea>
-                                        <label for="fMsg">Ukratko opišite problem (neobavezno)</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" type="submit"><i class="fa fa-paper-plane me-2"></i>Pošalji SMS upit</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                    <section class="booking-call-card h-100" aria-labelledby="booking-call-heading">
+                        <span class="booking-call-eyebrow"><i class="fa fa-calendar-check" aria-hidden="true"></i> DOGOVOR TERMINA</span>
+                        <h4 id="booking-call-heading">Dogovorite termin</h4>
+                        <p>Odaberite uslugu, a zatim pozovite servis da dogovorimo termin.</p>
+                        <label for="fService" class="booking-call-label">Usluga</label>
+                        <select class="form-select" id="fService" aria-label="Odaberite uslugu">
+                            <option>Autodijagnostika</option>
+                            <option>Peugeot servis</option>
+                            <option>Mali servis</option>
+                            <option>Veliki servis</option>
+                            <option>Autoelektrika</option>
+                            <option>Ključevi i daljinski</option>
+                            <option>Nešto drugo</option>
+                        </select>
+                        <a id="callBooking" href="tel:+38761297847" class="btn booking-call-button"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite 061 297 847</a>
+                        <p class="booking-call-hours"><i class="far fa-clock" aria-hidden="true"></i> Ponedjeljak – subota, 10:00 – 18:00</p>
+                    </section>
                 </div>
             </div>
         </div>
@@ -978,7 +962,7 @@
     
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=34.0"></script>
+    <script src="js/main.js?v=37.0"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
@@ -1044,23 +1028,6 @@
         pickServiceVal(btn.getAttribute('data-service'));
 
     }
-
-    // SMS form — composes an sms: message to the shop
-    document.getElementById('smsForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var name = document.getElementById('fName').value.trim();
-        var car = document.getElementById('fCar').value.trim();
-        var service = document.getElementById('fService').value;
-        var date = document.getElementById('fDate').value;
-        var msg = document.getElementById('fMsg').value.trim();
-        var lines = ['Pozdrav! Želim zakazati termin.', 'Ime: ' + name, 'Vozilo: ' + car, 'Usluga: ' + service];
-        if (date) {
-            var parts = date.split('-');
-            lines.push('Željeni datum: ' + parts[2] + '.' + parts[1] + '.' + parts[0] + '.');
-        }
-        if (msg) lines.push('Opis: ' + msg);
-        window.location.href = 'sms:+38761297847?&body=' + encodeURIComponent(lines.join('\n'));
-    });
 
     // Footer service links also activate the matching service tab
     document.querySelectorAll('[data-svc-link]').forEach(function (a) {
@@ -1409,10 +1376,14 @@
         // fallback if page load is delayed on a slow network.
         var earlyGlobeScheduled = false;
         function scheduleEarlyGlobeStart() {
-            if (earlyGlobeScheduled || !wrap) return;
+            if (earlyGlobeScheduled || !wrap ||
+                document.documentElement.classList.contains('sunja-intro-active')) return;
             earlyGlobeScheduled = true;
-            window.setTimeout(startGlobe, 180);
+            // MapLibre's globe is GPU-heavy: don't initialise it while the
+            // user's high-resolution logo animation is decoding.
+            window.setTimeout(startGlobe, 420);
         }
+        window.addEventListener('sunja:intro-finished', scheduleEarlyGlobeStart, { once: true });
         if (document.readyState === 'complete') scheduleEarlyGlobeStart();
         else window.addEventListener('load', scheduleEarlyGlobeStart, { once: true });
         if (document.readyState === 'loading') {
@@ -1420,7 +1391,10 @@
         } else scheduleEarlyGlobeStart();
         if ('IntersectionObserver' in window && wrap) {
             var io = new IntersectionObserver(function (es) {
-                if (es[0].isIntersecting) { io.disconnect(); startGlobe(); }
+                if (es[0].isIntersecting &&
+                    !document.documentElement.classList.contains('sunja-intro-active')) {
+                    io.disconnect(); startGlobe();
+                }
             }, { rootMargin: '850px 0px' });
             io.observe(wrap);
         }

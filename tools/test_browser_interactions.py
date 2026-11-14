@@ -302,6 +302,10 @@ class SiteInteractionTests(unittest.TestCase):
                 const w=document.getElementById("globeScroll");
                 window.scrollTo(0, w.offsetTop + 20);
             }""")
+            # v37 intentionally defers map GPU work until the brand intro
+            # finishes; simulate that completion instead of testing the
+            # obsolete behaviour of animating the globe behind the loader.
+            pg.evaluate("window.__sunjaIntroForceFinish()")
             pg.wait_for_function("window.__mapStarted === true", timeout=5000)
             pg.evaluate("""() => {
                 const w=document.getElementById("globeScroll");
@@ -480,7 +484,7 @@ class SiteInteractionTests(unittest.TestCase):
             "#header-carousel .carousel-item.active a[href='#termin']"
         ).first.tap()
         expect(self.page).to_have_url(re.compile(r"#termin$"))
-        expect(self.page.locator("#smsForm")).to_be_attached()
+        expect(self.page.locator("#callBooking")).to_have_attribute("href", "tel:+38761297847")
 
     def test_service_booking_works_in_one_tap_and_preselects(self):
         self.page.locator(
@@ -519,6 +523,77 @@ class SiteInteractionTests(unittest.TestCase):
         expect(
             self.page.locator("#header-carousel .carousel-item").nth(1)
         ).to_have_class(re.compile(r"\bactive\b"))
+
+    def test_v37_experience_appears_only_after_original_logo_and_releases_site(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        try:
+            page = context.new_page()
+            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            expect(page.locator("#sunjaIntroFrames")).to_be_visible()
+            page.wait_for_function("""() => {
+                const intro = document.getElementById('sunjaIntro');
+                return intro.classList.contains('sunja-intro-show-experience');
+            }""", timeout=12500)
+            expect(page.locator("#sunjaExperience")).to_contain_text("godina iskustva")
+            self.assertTrue(page.locator("#sunjaIntroFrames").is_hidden())
+            page.wait_for_function(
+                "() => !document.documentElement.classList.contains('sunja-intro-active')",
+                timeout=5000
+            )
+            expect(page.locator("#sunjaIntro")).to_be_hidden()
+            expect(page.locator("#header-carousel")).to_be_visible()
+        finally:
+            context.close()
+
+    def test_v37_carousel_auto_rotates_even_if_bootstrap_cdn_is_unavailable(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844}, is_mobile=True,
+            has_touch=True, reduced_motion="reduce"
+        )
+        try:
+            page = context.new_page()
+            page.route("**/bootstrap@5.0.0/**", lambda route: route.abort())
+            page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_function("""() => {
+                const slides = [...document.querySelectorAll('#header-carousel .carousel-item')];
+                return slides.length === 3 && slides[1].classList.contains('active');
+            }""", timeout=11500)
+            page.locator(".hero-indicators button").nth(2).tap()
+            expect(page.locator("#header-carousel .carousel-item").nth(2)).to_have_class(
+                re.compile("active")
+            )
+            # Mobile uses visible slide indicators; the arrow buttons are
+            # intentionally hidden at this viewport width.
+            page.locator(".hero-indicators button").nth(0).tap()
+            expect(page.locator("#header-carousel .carousel-item").nth(0)).to_have_class(
+                re.compile("active")
+            )
+        finally:
+            context.close()
+
+    def test_v37_status_stays_inside_narrow_mobile_viewport(self):
+        self.page.evaluate("""() => {
+            document.querySelectorAll('[data-status-text]').forEach(el => {
+                el.textContent = 'Trenutno zatvoreno · otvaramo u ponedjeljak u 10:00';
+            });
+        }""")
+        result = self.page.evaluate("""() => {
+            const badge = document.querySelector('#header-carousel .status-pill');
+            const r = badge.getBoundingClientRect();
+            return {
+                right: r.right, left: r.left,
+                windowWidth: innerWidth,
+                pageWidth: document.documentElement.scrollWidth,
+                textBreak: getComputedStyle(badge).whiteSpace
+            };
+        }""")
+        self.assertGreaterEqual(result["left"], 0, result)
+        self.assertLessEqual(result["right"], result["windowWidth"] + 1, result)
+        self.assertLessEqual(result["pageWidth"], result["windowWidth"] + 1, result)
+        self.assertEqual(result["textBreak"], "normal", result)
 
     def test_v22_dock_retracts_over_footer_links(self):
         dock = self.page.locator(".mobile-callbar")
