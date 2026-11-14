@@ -838,55 +838,23 @@
                     </section>
                 </div>
                 <div class="col-md-6" id="termin">
-                    <div class="wow fadeInUp" data-wow-delay="0.2s">
-                        <h4 class="mb-2">Pošaljite SMS upit za termin</h4>
-                        <p class="mb-4">Popunite formu i pritisnite dugme: otvara se vaša aplikacija za poruke s gotovim tekstom. Bez registracije i bez čekanja.</p>
-                        <form id="smsForm">
-                            <div class="row g-3">
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="fName" placeholder="Ime i prezime" required>
-                                        <label for="fName">Ime i prezime</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="text" class="form-control" id="fCar" placeholder="Vozilo" required>
-                                        <label for="fCar">Vozilo (npr. Peugeot 308, 2018)</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <select class="form-select" id="fService">
-                                            <option>Autodijagnostika</option>
-                                            <option>Peugeot servis</option>
-                                            <option>Mali servis</option>
-                                            <option>Veliki servis</option>
-                                            <option>Autoelektrika</option>
-                                            <option>Ključevi i daljinski</option>
-                                            <option>Nešto drugo</option>
-                                        </select>
-                                        <label for="fService">Usluga</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-floating">
-                                        <input type="date" class="form-control" id="fDate">
-                                        <label for="fDate">Željeni datum</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <div class="form-floating">
-                                        <textarea class="form-control" placeholder="Ukratko opišite problem" id="fMsg" style="height: 100px"></textarea>
-                                        <label for="fMsg">Ukratko opišite problem (neobavezno)</label>
-                                    </div>
-                                </div>
-                                <div class="col-12">
-                                    <button class="btn btn-primary w-100 py-3" type="submit"><i class="fa fa-paper-plane me-2"></i>Pošalji SMS upit</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
+                    <section class="booking-call-card h-100" aria-labelledby="booking-call-heading">
+                        <span class="booking-call-eyebrow"><i class="fa fa-calendar-check" aria-hidden="true"></i> DOGOVOR TERMINA</span>
+                        <h4 id="booking-call-heading">Dogovorite termin</h4>
+                        <p>Odaberite uslugu, a zatim pozovite servis da dogovorimo termin.</p>
+                        <label for="fService" class="booking-call-label">Usluga</label>
+                        <select class="form-select" id="fService" aria-label="Odaberite uslugu">
+                            <option>Autodijagnostika</option>
+                            <option>Peugeot servis</option>
+                            <option>Mali servis</option>
+                            <option>Veliki servis</option>
+                            <option>Autoelektrika</option>
+                            <option>Ključevi i daljinski</option>
+                            <option>Nešto drugo</option>
+                        </select>
+                        <a id="callBooking" href="tel:+38761297847" class="btn booking-call-button"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite 061 297 847</a>
+                        <p class="booking-call-hours"><i class="far fa-clock" aria-hidden="true"></i> Ponedjeljak – subota, 10:00 – 18:00</p>
+                    </section>
                 </div>
             </div>
         </div>
@@ -1060,23 +1028,6 @@
         pickServiceVal(btn.getAttribute('data-service'));
 
     }
-
-    // SMS form — composes an sms: message to the shop
-    document.getElementById('smsForm').addEventListener('submit', function (e) {
-        e.preventDefault();
-        var name = document.getElementById('fName').value.trim();
-        var car = document.getElementById('fCar').value.trim();
-        var service = document.getElementById('fService').value;
-        var date = document.getElementById('fDate').value;
-        var msg = document.getElementById('fMsg').value.trim();
-        var lines = ['Pozdrav! Želim zakazati termin.', 'Ime: ' + name, 'Vozilo: ' + car, 'Usluga: ' + service];
-        if (date) {
-            var parts = date.split('-');
-            lines.push('Željeni datum: ' + parts[2] + '.' + parts[1] + '.' + parts[0] + '.');
-        }
-        if (msg) lines.push('Opis: ' + msg);
-        window.location.href = 'sms:+38761297847?&body=' + encodeURIComponent(lines.join('\n'));
-    });
 
     // Footer service links also activate the matching service tab
     document.querySelectorAll('[data-svc-link]').forEach(function (a) {
