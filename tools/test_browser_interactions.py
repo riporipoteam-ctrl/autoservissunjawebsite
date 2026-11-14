@@ -325,6 +325,49 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             context.close()
 
+    def test_v38_visible_logo_actually_animates_before_experience(self):
+        # v37 asserted merely that an img existed; it did not check playback.
+        context = self.browser.new_context(
+            viewport={"width":390,"height":844}, is_mobile=True,
+            has_touch=True, reduced_motion="no-preference",
+        )
+        try:
+            page=context.new_page()
+            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_function("""() => {
+                const im=document.querySelector('#sunjaIntroFrames');
+                return im && im.complete && im.naturalWidth > 0 &&
+                    im.currentSrc.startsWith('blob:') &&
+                    getComputedStyle(im).display !== 'none';
+            }""", timeout=12000)
+            def sample():
+                return page.evaluate("""() => {
+                    const im=document.querySelector('#sunjaIntroFrames');
+                    const c=document.createElement('canvas');
+                    c.width=96; c.height=54;
+                    c.getContext('2d').drawImage(im,0,0,96,54);
+                    return c.toDataURL('image/png');
+                }""")
+            page.wait_for_timeout(350)
+            first=sample()
+            page.wait_for_timeout(1550)
+            second=sample()
+            self.assertNotEqual(first, second,
+                "Logo must be visibly drawing, not stuck on one cached frame")
+            self.assertFalse(page.locator('#sunjaIntro').evaluate(
+                "(x)=>x.classList.contains('sunja-intro-show-experience')"
+            ))
+            page.wait_for_function(
+                "()=>document.querySelector('#sunjaIntro').classList.contains('sunja-intro-show-experience')",
+                timeout=7000
+            )
+            page.wait_for_function(
+                "()=>!document.documentElement.classList.contains('sunja-intro-active')",
+                timeout=5000
+            )
+        finally:
+            context.close()
+
     def test_v34_intro_image_has_no_player_overlay_and_cannot_be_paused_by_tap(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
