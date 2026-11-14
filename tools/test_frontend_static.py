@@ -43,51 +43,59 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=33.0", INDEX)
-        self.assertIn("js/main.js?v=33.0", INDEX)
+        self.assertIn("css/style.css?v=34.0", INDEX)
+        self.assertIn("js/main.js?v=34.0", INDEX)
 
-    def test_v31_logo_intro_is_video_only_with_safe_exit(self):
+    def test_v34_intro_has_no_native_player_controls_or_interaction(self):
         self.assertIn('id="sunjaIntro"', INDEX)
-        self.assertIn('id="sunjaIntroVideo"', INDEX)
-        self.assertIn('assets/video/sunja-logo-intro-user-uploaded-v33.mp4', INDEX)
-        self.assertIn("sunja-intro-active", INDEX + CSS)
-        self.assertIn("autoplay muted playsinline", INDEX)
+        self.assertIn('id="sunjaIntroFrames"', INDEX)
+        self.assertIn('src="assets/video/sunja-logo-uploaded-120percent-v34.webp"', INDEX)
+        self.assertNotIn('<video id="sunjaIntroVideo"', INDEX)
+        self.assertNotIn('<video', INDEX)
+        self.assertNotIn('video.play()', INDEX)
+        self.assertNotIn('showUploadedFramesFallback()', INDEX)
+        self.assertIn('draggable="false"', INDEX)
+        self.assertIn("pointer-events: none !important", CSS)
+        self.assertIn("user-select: none !important", CSS)
+        self.assertIn("window.__sunjaIntroForceFinish", INDEX)
         self.assertIn("introSafetyTimeout", INDEX)
-        self.assertIn("prefers-reduced-motion: reduce", INDEX + CSS)
+        self.assertIn("function beginIntroAnimation()", INDEX)
+        self.assertIn("function showIntroStill()", INDEX)
         self.assertNotIn('id="sunjaIntroProgress"', INDEX)
         self.assertNotIn('id="sunjaIntroLoading"', INDEX)
-
-    def test_v33_original_uploaded_video_not_a_synthetic_logo_animation(self):
-        self.assertIn("document.documentElement.classList.add('sunja-intro-active')", INDEX)
-        self.assertNotIn("if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;", INDEX)
-        self.assertIn("function showUploadedFramesFallback()", INDEX)
         self.assertNotIn("@keyframes sunjaLogoDraw", CSS)
-        self.assertNotIn("sunjaLogoDraw 1.5s", CSS)
-        self.assertNotIn("function showLogoFallback()", INDEX)
-        self.assertIn("introSafetyTimeout", INDEX)
-        self.assertIn("assets/video/sunja-logo-intro-user-uploaded-v33.mp4", INDEX)
-        self.assertIn("trim().split(/\\s+/)[0]", INDEX)
-        self.assertNotIn("trim().split(/\\\\s+/)[0]", INDEX)
 
-    def test_v33_blocked_autoplay_uses_frames_of_uploaded_video(self):
-        self.assertIn('data-src="assets/video/sunja-user-uploaded-frames-fallback-v33.webp"', INDEX)
-        self.assertIn("function showUploadedFramesFallback()", INDEX)
-        self.assertNotIn("function showLogoFallback()", INDEX)
-        self.assertNotIn("@keyframes sunjaLogoDraw", CSS)
-        frames = ROOT / "assets/video/sunja-user-uploaded-frames-fallback-v33.webp"
-        self.assertTrue(frames.is_file())
-        self.assertEqual(hashlib.sha256(frames.read_bytes()).hexdigest(),
-                         "d254a8b4b1b99870d5feff3fb8b6a663e53e06268e23e5c346e9bae5a86e4e6e")
+    def test_v34_animation_is_original_frames_at_120_percent_speed_once(self):
+        animation = ROOT / "assets/video/sunja-logo-uploaded-120percent-v34.webp"
+        self.assertTrue(animation.is_file(), "Must publish a generated animated image")
+        content = animation.read_bytes()
+        self.assertEqual(content[:4], b"RIFF")
+        self.assertEqual(content[8:12], b"WEBP")
+        durations = []
+        loop_count = None
+        offset = 12
+        while offset + 8 <= len(content):
+            kind = content[offset:offset+4]
+            length = int.from_bytes(content[offset+4:offset+8], "little")
+            payload = content[offset+8:offset+8+length]
+            if kind == b"ANIM":
+                loop_count = int.from_bytes(payload[4:6], "little")
+            if kind == b"ANMF":
+                durations.append(int.from_bytes(payload[12:15], "little"))
+            offset += 8 + length + (length % 2)
+        self.assertGreaterEqual(len(durations), 60)
+        self.assertEqual(loop_count, 1)
+        self.assertGreater(sum(durations), 4700)
+        self.assertLess(sum(durations), 5300)
+        self.assertLess(animation.stat().st_size, 900_000)
 
-    def test_v33_exact_uploaded_mp4_is_binary_identical(self):
-        video = ROOT / "assets/video/sunja-logo-intro-user-uploaded-v33.mp4"
-        self.assertTrue(video.is_file(), "The user's real MP4 must be committed")
-        self.assertEqual(video.stat().st_size, 421504)
-        self.assertEqual(hashlib.sha256(video.read_bytes()).hexdigest(),
+    def test_v34_preserves_user_uploaded_source_mp4(self):
+        source = ROOT / "assets/video/sunja-logo-intro-user-uploaded-v33.mp4"
+        self.assertTrue(source.is_file())
+        self.assertEqual(source.stat().st_size, 421504)
+        self.assertEqual(hashlib.sha256(source.read_bytes()).hexdigest(),
                          "73e0c3297813c72d219d7770e65f0b3e05f2c1a7fa6dbe96d79378118ba4ac45")
-        self.assertIn('src="assets/video/sunja-logo-intro-user-uploaded-v33.mp4"', INDEX)
-        self.assertNotIn('src="assets/video/sunja-logo-intro-clean-v27.mp4"', INDEX)
-        self.assertIn("autoplay muted playsinline", INDEX)
+        self.assertNotIn('src="assets/video/sunja-logo-intro-user-uploaded-v33.mp4"', INDEX)
 
     def test_v32_photo_replaces_full_footer_background_and_about_photo(self):
         photo = "assets/gallery/sunja-tiktok-7627945643490692373.webp"
@@ -213,8 +221,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=33.0", INDEX)
-        self.assertIn("js/main.js?v=33.0", INDEX)
+        self.assertIn("css/style.css?v=34.0", INDEX)
+        self.assertIn("js/main.js?v=34.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -241,8 +249,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=33.0", INDEX)
-        self.assertIn("js/main.js?v=33.0", INDEX)
+        self.assertIn("css/style.css?v=34.0", INDEX)
+        self.assertIn("js/main.js?v=34.0", INDEX)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
         self.assertNotIn("Upalila se lampica na instrument tabli?", INDEX)
@@ -407,8 +415,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=33.0", INDEX)
-        self.assertIn("js/main.js?v=33.0", INDEX)
+        self.assertIn("css/style.css?v=34.0", INDEX)
+        self.assertIn("js/main.js?v=34.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
