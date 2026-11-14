@@ -16,8 +16,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Install exact image encoder
-        run: python -m pip install --disable-pip-version-check pillow==12.3.0
+      - name: Install source decoder and pinned image encoder
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg
+          python -m pip install --disable-pip-version-check pillow==12.3.0
       - name: Generate original-logo frames and validate 30fps output
         run: |
           python tools/build_intro_animation.py
