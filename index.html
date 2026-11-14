@@ -328,7 +328,7 @@
 
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5" id="pocetna">
-        <div id="header-carousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true">
+        <div id="header-carousel" class="carousel slide" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="hero-bg" id="heroMainBg" style="--hero-photo:url('/assets/photos/tt-wide-20260919-d3b7439d.webp');--hero-photo-mobile:url('/assets/photos/tt-20260919-d3b7439d.webp')"></div>
@@ -1376,10 +1376,14 @@
         // fallback if page load is delayed on a slow network.
         var earlyGlobeScheduled = false;
         function scheduleEarlyGlobeStart() {
-            if (earlyGlobeScheduled || !wrap) return;
+            if (earlyGlobeScheduled || !wrap ||
+                document.documentElement.classList.contains('sunja-intro-active')) return;
             earlyGlobeScheduled = true;
-            window.setTimeout(startGlobe, 180);
+            // MapLibre's globe is GPU-heavy: don't initialise it while the
+            // user's high-resolution logo animation is decoding.
+            window.setTimeout(startGlobe, 420);
         }
+        window.addEventListener('sunja:intro-finished', scheduleEarlyGlobeStart, { once: true });
         if (document.readyState === 'complete') scheduleEarlyGlobeStart();
         else window.addEventListener('load', scheduleEarlyGlobeStart, { once: true });
         if (document.readyState === 'loading') {
@@ -1387,7 +1391,10 @@
         } else scheduleEarlyGlobeStart();
         if ('IntersectionObserver' in window && wrap) {
             var io = new IntersectionObserver(function (es) {
-                if (es[0].isIntersecting) { io.disconnect(); startGlobe(); }
+                if (es[0].isIntersecting &&
+                    !document.documentElement.classList.contains('sunja-intro-active')) {
+                    io.disconnect(); startGlobe();
+                }
             }, { rootMargin: '850px 0px' });
             io.observe(wrap);
         }
