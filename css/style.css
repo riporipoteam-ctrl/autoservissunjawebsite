@@ -2731,7 +2731,12 @@ html.sunja-intro-active #sunjaIntro.sunja-intro-is-static .sunja-intro-fallback-
     stroke-dasharray: 1500;
     stroke-dashoffset: 1500;
 }
-.sunja-experience-caption-trace { stroke-width: 1.25px; }
+.sunja-experience-caption-trace {
+    stroke-width: 1.25px;
+    stroke-dasharray: 180;
+    stroke-dashoffset: 180;
+    clip-path: inset(0 100% 0 0);
+}
 .sunja-experience-number-trace .sunja-experience-plus { stroke: #0b7cc4; }
 .sunja-experience-number-solid,
 .sunja-experience-caption-solid {
@@ -2757,14 +2762,17 @@ html.sunja-intro-active #sunjaIntro.sunja-intro-is-static .sunja-intro-fallback-
     animation: sunja-experience-trace .48s ease-out .95s both;
 }
 #sunjaIntro.sunja-intro-show-experience .sunja-experience-caption-trace {
-    animation: sunja-experience-trace 1.12s cubic-bezier(.26,.64,.16,1) .88s both;
+    animation: sunja-experience-trace .7s ease-out .88s both,
+               sunja-experience-caption-reveal 1.14s cubic-bezier(.22,.68,.17,1) .88s both;
 }
 #sunjaIntro.sunja-intro-show-experience .sunja-experience-caption-solid {
     animation: sunja-experience-fill .38s ease-out 1.79s both;
 }
 @keyframes sunja-experience-trace {
-    from { stroke-dashoffset: 1500; }
-    to   { stroke-dashoffset: 0; }
+    to { stroke-dashoffset: 0; }
+}
+@keyframes sunja-experience-caption-reveal {
+    to { clip-path: inset(0 0 0 0); }
 }
 @keyframes sunja-experience-fill {
     from { opacity: 0; }
@@ -2789,6 +2797,7 @@ html.sunja-intro-active #header-carousel .hero-bg {
     #sunjaIntro.sunja-intro-show-experience .sunja-experience-caption-solid {
         animation: none !important;
         stroke-dashoffset: 0 !important;
+        clip-path: none !important;
         opacity: 1 !important;
     }
     html.sunja-intro-active #sunjaIntro.sunja-intro-exiting {
