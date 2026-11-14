@@ -1,0 +1,28 @@
+name: Film actual Auto Servis Sunja web page for trailer
+on:
+  push:
+    branches: [creative/autosunja-launch-trailer]
+    paths:
+      - 'tools/capture_trailer_full_page.py'
+      - '.github/workflows/trailer-full-page.yml'
+permissions:
+  contents: read
+jobs:
+  film:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - run: python tools/capture_trailer_full_page.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: autosunja-real-fullpage-trailer-footage
+          path: trailer_full_page/
+          retention-days: 7
+          if-no-files-found: error
