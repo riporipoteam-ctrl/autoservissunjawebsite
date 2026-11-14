@@ -77,14 +77,14 @@ def verify():
     if '<video' in html or 'id="sunjaIntroVideo"' in html:
         raise AssertionError("Native media player has returned to the intro")
 
-    # The brand animation is the owner's MP4 frames at 120% speed. We check
-    # its exact published bytes as well as the preserved original upload.
-    animation = "assets/video/sunja-logo-uploaded-120percent-v34.webp"
+    # The sharper 30fps brand animation is sampled only from the owner's MP4
+    # at the established 120% speed, with the full original upload preserved.
+    animation = "assets/video/sunja-logo-sharp-smooth-v36.webp"
     original = "assets/video/sunja-logo-intro-user-uploaded-v33.mp4"
     if f'src="{animation}"' not in html:
         raise AssertionError("Live page does not use the non-interactive animation image")
     for asset, expected in (
-        (animation, "b01982c65c885f293200012d8a69c33440380e9344b7e3b79b4145d33b0e7050"),
+        (animation, "faffcf735b6ea397938644154b0e11bcd24a0345183066096d20e0c4dbd0a8f1"),
         (original, "73e0c3297813c72d219d7770e65f0b3e05f2c1a7fa6dbe96d79378118ba4ac45"),
     ):
         local_bytes = (ROOT / asset).read_bytes()
@@ -95,7 +95,7 @@ def verify():
 
     print(
         f"PASS: live CSS v{css_version}, JS v{js_version}, no HTML video player; "
-        "animation and original uploaded MP4 match GitHub byte-for-byte."
+        "30fps 5.03s optimized animation and original MP4 match GitHub byte-for-byte."
     )
 
 
