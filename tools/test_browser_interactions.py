@@ -385,11 +385,15 @@ class SiteInteractionTests(unittest.TestCase):
             page.route("**/sunja-logo-uploaded-120percent-v34.webp",
                        lambda route: route.abort())
             page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-            page.wait_for_function(
-                "() => document.querySelector('#sunjaIntro').classList.contains('sunja-intro-is-static')",
-                timeout=4500,
-            )
-            expect(page.locator(".sunja-intro-fallback-logo")).to_be_visible()
+            # Check the actual visible fallback *atomically*, because it is
+            # intentionally shown only briefly before the page is released.
+            page.wait_for_function("""() => {
+                const overlay = document.querySelector('#sunjaIntro');
+                const logo = document.querySelector('.sunja-intro-fallback-logo');
+                return document.documentElement.classList.contains('sunja-intro-active')
+                    && overlay.classList.contains('sunja-intro-is-static')
+                    && getComputedStyle(logo).display !== 'none';
+            }""", timeout=4500)
             self.assertEqual(page.locator("#sunjaIntro video").count(), 0)
             page.evaluate("window.__sunjaIntroForceFinish()")
             page.wait_for_function(
