@@ -1,4 +1,4 @@
-# Auto Servis Šunja — autosunja.sitey.my
+# Auto Servis Šunja — autosunja.com
 
 Public website for **Auto Servis Šunja**, Hajra Lakovića 38, 73000 Goražde.
 Phone **061 297 847** · Mon–Sat 10:00–18:00, Sunday closed · Peugeot specialist.

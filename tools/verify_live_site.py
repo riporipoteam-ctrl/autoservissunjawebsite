@@ -12,7 +12,7 @@ import time
 import urllib.error
 import urllib.request
 
-BASE = "https://autosunja.sitey.my"
+BASE = "https://autosunja.com"
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
