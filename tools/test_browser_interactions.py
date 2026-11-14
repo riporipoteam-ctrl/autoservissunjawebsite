@@ -338,8 +338,11 @@ class SiteInteractionTests(unittest.TestCase):
             self.assertEqual(frames.get_attribute("draggable"), "false")
             self.assertEqual(frames.evaluate(
                 "(img) => getComputedStyle(img).pointerEvents"), "none")
-            self.assertEqual(frames.evaluate(
-                "(img) => getComputedStyle(img).userSelect"), "none")
+            self.assertTrue(frames.evaluate("""(img) => {
+                const style = getComputedStyle(img);
+                return style.getPropertyValue("user-select") === "none"
+                    || style.getPropertyValue("-webkit-user-select") === "none";
+            }"""))
             frames.evaluate("(img) => img.dispatchEvent(new MouseEvent('click', {bubbles:true}))")
             self.assertTrue(page.evaluate(
                 "() => document.documentElement.classList.contains('sunja-intro-active')"
