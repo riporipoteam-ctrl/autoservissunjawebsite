@@ -86,14 +86,24 @@ class BrowserSmokeTests(unittest.TestCase):
 
         self.exercise_browsers(check)
 
-    def test_service_selection_books_on_first_tap(self):
+    def test_service_selection_calls_on_first_tap(self):
         def check(page):
             page.goto(self.origin + '?skipIntro=1', wait_until="domcontentloaded")
             page.locator('button[data-bs-target="#tab-pane-6"]').tap()
             expect(page.locator("#tab-pane-6")).to_have_class(re.compile(r"\bactive\b"))
-            page.locator('#tab-pane-6 a[data-service="Ključevi i daljinski"]').tap()
-            self.assertEqual(page.evaluate("location.hash"), "#termin")
-            self.assertEqual(page.locator("#fService").input_value(), "Ključevi i daljinski")
+            call = page.locator('#tab-pane-6 a[href="tel:+38761297847"]')
+            expect(call).to_have_count(1)
+            page.evaluate("""() => {
+                window.__phoneTapCount = 0;
+                document.querySelector('#tab-pane-6 a[href="tel:+38761297847"]')
+                    .addEventListener('click', event => {
+                        event.preventDefault();
+                        window.__phoneTapCount++;
+                    });
+            }""")
+            call.tap()
+            self.assertEqual(page.evaluate("window.__phoneTapCount"), 1)
+            self.assertEqual(page.locator("#fService, #termin").count(), 0)
 
         self.exercise_browsers(check)
 
