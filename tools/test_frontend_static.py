@@ -9,6 +9,18 @@ JS = (ROOT / "js" / "main.js").read_text(encoding="utf-8")
 
 
 class FrontendStaticTests(unittest.TestCase):
+    def test_custom_dot_com_domain_is_the_pages_domain(self):
+        self.assertEqual((ROOT / "CNAME").read_text(encoding="utf-8").strip(), "autosunja.com")
+        self.assertIn('rel="canonical" href="https://autosunja.com/"', INDEX)
+        self.assertIn('content="https://autosunja.com/"', INDEX)
+        self.assertIn('content="https://autosunja.com/assets/', INDEX)
+        self.assertNotIn("autosunja.sitey.my", INDEX)
+
+    def test_live_deployment_probe_targets_new_canonical_domain(self):
+        probe = (ROOT / "tools" / "verify_live_site.py").read_text(encoding="utf-8")
+        self.assertIn('BASE = "https://autosunja.com"', probe)
+        self.assertNotIn('BASE = "https://autosunja.sitey.my"', probe)
+
     def test_v22_footer_photo_completely_removed(self):
         self.assertNotIn("--footer-photo", CSS + INDEX)
         self.assertNotIn("footerPhoto", INDEX)
