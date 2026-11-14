@@ -149,6 +149,11 @@
         <img class="sunja-intro-fallback-logo"
              src="assets/sunja-logo-transparent.webp"
              alt="" aria-hidden="true" draggable="false" decoding="async">
+        <div id="sunjaExperience" class="sunja-intro-experience" aria-label="25+ godina iskustva">
+            <span class="sunja-intro-experience-number">25<span>+</span></span>
+            <span class="sunja-intro-experience-line" aria-hidden="true"></span>
+            <span class="sunja-intro-experience-caption">godina iskustva</span>
+        </div>
     </div>
     <script>
     (function () {
@@ -165,10 +170,10 @@
         // is encoded to run once at 120% speed, and has no pause interaction.
         var reducedMotion = !!(window.matchMedia &&
             window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-        var finished = false, started = false;
-        var animationDone = false, criticalReady = false;
-        var playbackTimer = 0, stillTimer = 0;
-        var introSafetyTimeout = window.setTimeout(finishIntro, 9000);
+        var finished = false, started = false, experienceShown = false;
+        var animationDone = false, criticalReady = false, experienceDone = false;
+        var playbackTimer = 0, stillTimer = 0, experienceTimer = 0, exitTimer = 0;
+        var introSafetyTimeout = window.setTimeout(finishIntro, 10000);
 
         function finishIntro() {
             if (finished) return;
@@ -176,33 +181,44 @@
             window.clearTimeout(introSafetyTimeout);
             window.clearTimeout(playbackTimer);
             window.clearTimeout(stillTimer);
+            window.clearTimeout(experienceTimer);
+            window.clearTimeout(exitTimer);
             root.classList.remove('sunja-intro-active');
             overlay.hidden = true;
+            window.dispatchEvent(new Event('sunja:intro-finished'));
         }
         window.__sunjaIntroForceFinish = finishIntro;
 
         function maybeFinish() {
-            if (animationDone && criticalReady) finishIntro();
+            if (!experienceDone || !criticalReady || finished) return;
+            overlay.classList.add('sunja-intro-exiting');
+            exitTimer = window.setTimeout(finishIntro, reducedMotion ? 0 : 320);
+        }
+        function showExperience() {
+            if (experienceShown || finished) return;
+            experienceShown = true;
+            animationDone = true;
+            window.clearTimeout(stillTimer);
+            overlay.classList.remove('sunja-intro-is-static');
+            overlay.classList.add('sunja-intro-show-experience');
+            experienceTimer = window.setTimeout(function () {
+                experienceDone = true;
+                maybeFinish();
+            }, reducedMotion ? 1100 : 1640);
         }
         function showIntroStill() {
-            if (finished) return;
+            if (finished || experienceShown) return;
             overlay.classList.add('sunja-intro-is-static');
-            animationDone = true;
             window.clearTimeout(playbackTimer);
-            stillTimer = window.setTimeout(finishIntro, reducedMotion ? 850 : 1900);
+            stillTimer = window.setTimeout(showExperience, reducedMotion ? 650 : 900);
         }
         function beginIntroAnimation() {
             if (started || finished || reducedMotion) return;
             started = true;
-            // The WebP is the very same logo at 1.2x speed (5,033ms).
-            // Start the fallback deadline only when its bytes are ready, so
-            // slow connections cannot chop off the drawing mid-animation.
+            // Preserve every frame of the original 1.2x animation.
             window.clearTimeout(introSafetyTimeout);
-            introSafetyTimeout = window.setTimeout(finishIntro, 5700);
-            playbackTimer = window.setTimeout(function () {
-                animationDone = true;
-                maybeFinish();
-            }, 5080);
+            introSafetyTimeout = window.setTimeout(finishIntro, 8200);
+            playbackTimer = window.setTimeout(showExperience, 5080);
         }
 
         function warmCriticalAssets() {
