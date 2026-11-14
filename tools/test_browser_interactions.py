@@ -161,6 +161,9 @@ class SiteInteractionTests(unittest.TestCase):
         try:
             page = context.new_page()
             page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            # The intro blocks visitor scrolling until its own animation has
+            # completed. Test the globe in that same reachable post-intro state.
+            page.evaluate("window.__sunjaIntroForceFinish()")
             page.evaluate("""() => {
                 const w = document.getElementById("globeScroll");
                 window.scrollTo(0, w.offsetTop + w.offsetHeight - innerHeight + 8);
@@ -616,7 +619,10 @@ class SiteInteractionTests(unittest.TestCase):
                 const intro = document.getElementById('sunjaIntro');
                 return intro.classList.contains('sunja-intro-show-experience');
             }""", timeout=12500)
-            expect(page.locator("#sunjaExperience")).to_contain_text("godina iskustva")
+            expect(page.locator("#sunjaExperience")).to_have_attribute(
+                "aria-label", "25+ godina iskustva")
+            expect(page.locator(".sunja-experience-caption-solid")).to_have_text(
+                "GODINA ISKUSTVA")
             self.assertTrue(page.locator("#sunjaIntroFrames").is_hidden())
             page.wait_for_function(
                 "() => !document.documentElement.classList.contains('sunja-intro-active')",
