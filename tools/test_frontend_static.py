@@ -117,10 +117,12 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("css/style.css?v=34.0", INDEX)
         self.assertIn("js/main.js?v=34.0", INDEX)
 
-    def test_v34_intro_has_no_native_player_controls_or_interaction(self):
+    def test_v36_intro_has_no_native_player_controls_or_interaction(self):
         self.assertIn('id="sunjaIntro"', INDEX)
         self.assertIn('id="sunjaIntroFrames"', INDEX)
-        self.assertIn('src="assets/video/sunja-logo-uploaded-120percent-v34.webp"', INDEX)
+        self.assertIn('rel="preload" as="image" href="assets/video/sunja-logo-sharp-smooth-v36.webp" fetchpriority="high"', INDEX)
+        self.assertIn('decoding="async"', INDEX)
+        self.assertIn('src="assets/video/sunja-logo-sharp-smooth-v36.webp"', INDEX)
         self.assertNotIn('<video id="sunjaIntroVideo"', INDEX)
         self.assertNotIn('<video', INDEX)
         self.assertNotIn('video.play()', INDEX)
@@ -136,8 +138,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn('id="sunjaIntroLoading"', INDEX)
         self.assertNotIn("@keyframes sunjaLogoDraw", CSS)
 
-    def test_v34_animation_is_original_frames_at_120_percent_speed_once(self):
-        animation = ROOT / "assets/video/sunja-logo-uploaded-120percent-v34.webp"
+    def test_v36_animation_is_sharper_and_30fps_at_original_speed(self):
+        animation = ROOT / "assets/video/sunja-logo-sharp-smooth-v36.webp"
         self.assertTrue(animation.is_file(), "Must publish a generated animated image")
         content = animation.read_bytes()
         self.assertEqual(content[:4], b"RIFF")
@@ -154,11 +156,12 @@ class FrontendStaticTests(unittest.TestCase):
             if kind == b"ANMF":
                 durations.append(int.from_bytes(payload[12:15], "little"))
             offset += 8 + length + (length % 2)
-        self.assertGreaterEqual(len(durations), 60)
+        self.assertGreaterEqual(len(durations), 125)
         self.assertEqual(loop_count, 1)
-        self.assertGreater(sum(durations), 4700)
-        self.assertLess(sum(durations), 5300)
-        self.assertLess(animation.stat().st_size, 900_000)
+        self.assertEqual(sum(durations), 5033)
+        self.assertLess(animation.stat().st_size, 1_500_000)
+        self.assertEqual(hashlib.sha256(content).hexdigest(),
+                         "faffcf735b6ea397938644154b0e11bcd24a0345183066096d20e0c4dbd0a8f1")
 
     def test_v34_preserves_user_uploaded_source_mp4(self):
         source = ROOT / "assets/video/sunja-logo-intro-user-uploaded-v33.mp4"
