@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <title>Auto Servis Šunja Goražde | Dijagnostika, servis i ključevi</title>
     <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
+    <!-- Fetch the original logo animation ahead of render-blocking styles/fonts. -->
+    <link rel="preload" as="image" href="assets/video/sunja-logo-sharp-smooth-v36.webp" fetchpriority="high">
     <!-- Restore the owner's original logo movie before first paint. -->
     <script>
     (function () {
@@ -141,9 +143,9 @@
     <div id="sunjaIntro" class="sunja-intro"
          aria-label="Učitavanje stranice Auto Servis Šunja">
         <img id="sunjaIntroFrames" class="sunja-intro-frames"
-             src="assets/video/sunja-logo-uploaded-120percent-v34.webp"
+             src="assets/video/sunja-logo-sharp-smooth-v36.webp"
              alt="" aria-hidden="true" draggable="false"
-             fetchpriority="high" decoding="sync">
+             fetchpriority="high" decoding="async">
         <img class="sunja-intro-fallback-logo"
              src="assets/sunja-logo-transparent.webp"
              alt="" aria-hidden="true" draggable="false" decoding="async">
@@ -192,12 +194,15 @@
         function beginIntroAnimation() {
             if (started || finished || reducedMotion) return;
             started = true;
-            // The WebP has one loop of 5,041 ms. Allow the final logo frame
-            // to finish before revealing the fully preloaded home page.
+            // The WebP is the very same logo at 1.2x speed (5,033ms).
+            // Start the fallback deadline only when its bytes are ready, so
+            // slow connections cannot chop off the drawing mid-animation.
+            window.clearTimeout(introSafetyTimeout);
+            introSafetyTimeout = window.setTimeout(finishIntro, 5700);
             playbackTimer = window.setTimeout(function () {
                 animationDone = true;
                 maybeFinish();
-            }, 5100);
+            }, 5080);
         }
 
         function warmCriticalAssets() {
