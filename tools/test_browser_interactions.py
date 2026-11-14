@@ -384,7 +384,9 @@ class SiteInteractionTests(unittest.TestCase):
             page = context.new_page()
             page.route("**/sunja-logo-uploaded-120percent-v34.webp",
                        lambda route: route.abort())
-            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            # Observe the brief error fallback before DOMContentLoaded;
+            # render-blocking fonts and scripts can otherwise outlast it.
+            page.goto(self.url, wait_until="commit", timeout=45000)
             # Check the actual visible fallback *atomically*, because it is
             # intentionally shown only briefly before the page is released.
             page.wait_for_function("""() => {
