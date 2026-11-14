@@ -61,29 +61,30 @@ def verify():
         if hashlib.sha256(live_bytes).digest() != hashlib.sha256(source_bytes).digest():
             raise AssertionError(f"{asset} does not match the main-branch commit")
 
-    # The owner specifically requested this exact uploaded animation. Verify
-    # both publicly served media files byte-for-byte, not just the HTML src.
-    media_assets = (
-        ("assets/video/sunja-logo-intro-user-uploaded-v33.mp4",
-         "73e0c3297813c72d219d7770e65f0b3e05f2c1a7fa6dbe96d79378118ba4ac45",
-         'src="'),
-        ("assets/video/sunja-user-uploaded-frames-fallback-v33.webp",
-         "d254a8b4b1b99870d5feff3fb8b6a663e53e06268e23e5c346e9bae5a86e4e6e",
-         'data-src="'),
-    )
-    for asset, expected_sha, attribute in media_assets:
-        if attribute + asset + '"' not in html:
-            raise AssertionError(f"Live HTML does not reference {asset}")
-        source_bytes = (ROOT / asset).read_bytes()
+    # No native HTML <video> element on the intro: those may expose a play
+    # overlay on Safari and let visitors pause the brand animation.
+    if '<video' in html or 'id="sunjaIntroVideo"' in html:
+        raise AssertionError("Native media player has returned to the intro")
+
+    # The brand animation is the owner's MP4 frames at 120% speed. We check
+    # its exact published bytes as well as the preserved original upload.
+    animation = "assets/video/sunja-logo-uploaded-120percent-v34.webp"
+    original = "assets/video/sunja-logo-intro-user-uploaded-v33.mp4"
+    if f'src="{animation}"' not in html:
+        raise AssertionError("Live page does not use the non-interactive animation image")
+    for asset, expected in (
+        (animation, "b01982c65c885f293200012d8a69c33440380e9344b7e3b79b4145d33b0e7050"),
+        (original, "73e0c3297813c72d219d7770e65f0b3e05f2c1a7fa6dbe96d79378118ba4ac45"),
+    ):
+        local_bytes = (ROOT / asset).read_bytes()
         live_bytes = get(f"/{asset}?deployment_check={stamp}")
-        for label, content in (("repository", source_bytes), ("live", live_bytes)):
-            digest = hashlib.sha256(content).hexdigest()
-            if digest != expected_sha:
-                raise AssertionError(f"{label} {asset}: wrong original-upload checksum ({digest})")
+        for label, payload in (("repository", local_bytes), ("live", live_bytes)):
+            if hashlib.sha256(payload).hexdigest() != expected:
+                raise AssertionError(f"{label} {asset} does not match expected original source")
 
     print(
-        f"PASS: live HTML references CSS v{css_version} and JS v{js_version}; "
-        "HTML/CSS/JS and exact uploaded MP4/WebP assets match the repository."
+        f"PASS: live CSS v{css_version}, JS v{js_version}, no HTML video player; "
+        "animation and original uploaded MP4 match GitHub byte-for-byte."
     )
 
 
