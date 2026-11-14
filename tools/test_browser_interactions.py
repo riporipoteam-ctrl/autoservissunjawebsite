@@ -161,6 +161,9 @@ class SiteInteractionTests(unittest.TestCase):
         try:
             page = context.new_page()
             page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            # The intro blocks visitor scrolling until its own animation has
+            # completed. Test the globe in that same reachable post-intro state.
+            page.evaluate("window.__sunjaIntroForceFinish()")
             page.evaluate("""() => {
                 const w = document.getElementById("globeScroll");
                 window.scrollTo(0, w.offsetTop + w.offsetHeight - innerHeight + 8);
@@ -362,6 +365,34 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             context.close()
 
+    def test_v39_experience_draws_with_svg_strokes(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844}, is_mobile=True,
+            has_touch=True, reduced_motion="no-preference"
+        )
+        try:
+            page = context.new_page()
+            page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
+            page.evaluate("""() => {
+                const intro = document.querySelector('#sunjaIntro');
+                intro.hidden = false;
+                document.documentElement.classList.add('sunja-intro-active');
+                intro.classList.add('sunja-intro-show-experience');
+            }""")
+            expect(page.locator(".sunja-intro-experience-art")).to_be_visible()
+            self.assertIn("sunja-experience-trace", page.locator(
+                ".sunja-experience-number-trace").evaluate(
+                    "(el) => getComputedStyle(el).animationName"))
+            self.assertIn("sunja-experience-trace", page.locator(
+                ".sunja-experience-caption-trace").evaluate(
+                    "(el) => getComputedStyle(el).animationName"))
+            self.assertIn("sunja-experience-fill", page.locator(
+                ".sunja-experience-number-solid").evaluate(
+                    "(el) => getComputedStyle(el).animationName"))
+            self.assertEqual(page.locator("#sunjaIntro video").count(), 0)
+        finally:
+            context.close()
+
     def test_v34_intro_image_has_no_player_overlay_and_cannot_be_paused_by_tap(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
@@ -517,24 +548,37 @@ class SiteInteractionTests(unittest.TestCase):
             re.compile(r"\bshow\b")
         )
 
-    def test_hero_booking_link_works_on_first_tap(self):
-        self.page.locator(
-            "#header-carousel .carousel-item.active a[href='#termin']"
-        ).first.tap()
-        expect(self.page).to_have_url(re.compile(r"#termin$"))
-        expect(self.page.locator("#callBooking")).to_have_attribute("href", "tel:+38761297847")
+    def test_v39_hero_slides_have_no_booking_buttons(self):
+        self.assertEqual(self.page.locator(
+            "#header-carousel a[href='#termin'], #header-carousel a[data-service]"
+        ).count(), 0)
+        self.assertEqual(self.page.locator(
+            "#header-carousel .carousel-item").count(), 3)
+        expect(self.page.locator(
+            "#header-carousel .carousel-item").nth(0).locator("a[href='tel:+38761297847']"
+        )).to_have_count(1)
+        expect(self.page.locator(
+            "#header-carousel .carousel-item").nth(1).locator("a[href='#usluge']"
+        )).to_have_count(1)
+        expect(self.page.locator(
+            "#header-carousel .carousel-item").nth(2).locator("a[href='tel:+38761297847']"
+        )).to_have_count(1)
 
-    def test_service_booking_works_in_one_tap_and_preselects(self):
+    def test_v39_service_tabs_have_direct_phone_action_only(self):
         self.page.locator(
             ".service .nav [data-bs-target='#tab-pane-6']"
         ).tap()
-        self.page.locator(
-            "#tab-pane-6 a[data-service='Ključevi i daljinski']"
-        ).tap()
-        expect(self.page).to_have_url(re.compile(r"#termin$"))
-        expect(self.page.locator("#fService")).to_have_value(
-            "Ključevi i daljinski"
+        expect(self.page.locator(
+            "#tab-pane-6 a[href='tel:+38761297847']"
+        )).to_have_count(1)
+        self.assertEqual(self.page.locator("#fService, #callBooking, #termin").count(), 0)
+
+    def test_v39_contact_panel_displays_tappable_phone_number(self):
+        expect(self.page.locator(".contact-direct-phone-number")).to_have_text("061 297 847")
+        expect(self.page.locator(".contact-direct-phone-number")).to_have_attribute(
+            "href", "tel:+38761297847"
         )
+        self.assertEqual(self.page.locator(".booking-call-card").count(), 0)
 
     def test_gallery_photo_opens_with_first_tap(self):
         # Capture the activation without contacting external social websites.
@@ -575,7 +619,10 @@ class SiteInteractionTests(unittest.TestCase):
                 const intro = document.getElementById('sunjaIntro');
                 return intro.classList.contains('sunja-intro-show-experience');
             }""", timeout=12500)
-            expect(page.locator("#sunjaExperience")).to_contain_text("godina iskustva")
+            expect(page.locator("#sunjaExperience")).to_have_attribute(
+                "aria-label", "25+ godina iskustva")
+            expect(page.locator(".sunja-experience-caption-solid")).to_have_text(
+                "GODINA ISKUSTVA")
             self.assertTrue(page.locator("#sunjaIntroFrames").is_hidden())
             page.wait_for_function(
                 "() => !document.documentElement.classList.contains('sunja-intro-active')",
@@ -785,8 +832,8 @@ class SiteInteractionTests(unittest.TestCase):
         )
         self.assertLessEqual(feature_size, 13.6)
 
-    def test_v213_text_keeps_booking_and_dock_tap_areas(self):
-        for selector in ("#o-nama a[href='#termin']",
+    def test_v39_text_keeps_call_and_dock_tap_areas(self):
+        for selector in ("#o-nama a[href='tel:+38761297847']",
                          ".mobile-callbar .call",
                          ".mobile-callbar .dir"):
             el = self.page.locator(selector).first
@@ -860,8 +907,7 @@ class SiteInteractionTests(unittest.TestCase):
             self.assertEqual(visible["display"], "flex", pos)
             self.assertEqual(visible["pointer"], "auto", pos)
             self.assertLessEqual(abs(visible["bottomOffset"]), 2, pos)
-        self.page.locator("#o-nama a[href='#termin']").tap()
-        expect(self.page).to_have_url(re.compile(r"#termin$"))
+        expect(self.page.locator("#o-nama a[href='tel:+38761297847']")).to_have_count(1)
 
     def test_v212_footer_has_no_unstyled_body_tail(self):
         self.assertEqual(
