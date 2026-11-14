@@ -134,7 +134,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=37.0" rel="stylesheet">
+    <link href="css/style.css?v=38.0" rel="stylesheet">
 </head>
 
 <body>
@@ -143,9 +143,9 @@
     <div id="sunjaIntro" class="sunja-intro"
          aria-label="Učitavanje stranice Auto Servis Šunja">
         <img id="sunjaIntroFrames" class="sunja-intro-frames"
-             src="assets/video/sunja-logo-sharp-smooth-v36.webp"
+             data-animation-url="assets/video/sunja-logo-sharp-smooth-v36.webp"
              alt="" aria-hidden="true" draggable="false"
-             fetchpriority="high" decoding="async">
+             fetchpriority="high" decoding="sync">
         <img class="sunja-intro-fallback-logo"
              src="assets/sunja-logo-transparent.webp"
              alt="" aria-hidden="true" draggable="false" decoding="async">
@@ -173,6 +173,7 @@
         var finished = false, started = false, experienceShown = false;
         var animationDone = false, criticalReady = false, experienceDone = false;
         var playbackTimer = 0, stillTimer = 0, experienceTimer = 0, exitTimer = 0;
+        var animationObjectUrl = null;
         var introSafetyTimeout = window.setTimeout(finishIntro, 10000);
 
         function finishIntro() {
@@ -183,6 +184,10 @@
             window.clearTimeout(stillTimer);
             window.clearTimeout(experienceTimer);
             window.clearTimeout(exitTimer);
+            if (animationObjectUrl) {
+                URL.revokeObjectURL(animationObjectUrl);
+                animationObjectUrl = null;
+            }
             root.classList.remove('sunja-intro-active');
             overlay.hidden = true;
             window.dispatchEvent(new Event('sunja:intro-finished'));
@@ -213,7 +218,7 @@
             stillTimer = window.setTimeout(showExperience, reducedMotion ? 650 : 900);
         }
         function beginIntroAnimation() {
-            if (started || finished || reducedMotion) return;
+            if (started || finished) return;
             started = true;
             // Preserve every frame of the original 1.2x animation.
             window.clearTimeout(introSafetyTimeout);
@@ -258,16 +263,35 @@
         overlay.addEventListener('contextmenu', function (event) {
             event.preventDefault();
         });
-        if (reducedMotion) {
-            showIntroStill();
-            return;
+        // v38: a preloaded animated WebP can start its image clock BEFORE
+        // CSS paints the intro, especially on Safari. Loading the file is
+        // not the same as playing the drawing. Decode a fresh Blob URL and
+        // start its *visible* playback clock after the first painted frame.
+        // The original WebP bytes, speed and art are never altered.
+        function startFreshLogoPlayback() {
+            var asset = frames.getAttribute('data-animation-url');
+            if (!asset) { showIntroStill(); return; }
+            fetch(asset, { cache: 'force-cache' })
+                .then(function (response) {
+                    if (!response.ok) throw new Error('Logo fetch: ' + response.status);
+                    return response.blob();
+                })
+                .then(function (blob) {
+                    if (finished || !blob.size) { if (!finished) showIntroStill(); return; }
+                    animationObjectUrl = URL.createObjectURL(blob);
+                    frames.onload = function () {
+                        if (finished) return;
+                        overlay.classList.add('sunja-intro-playing');
+                        window.requestAnimationFrame(function () {
+                            window.requestAnimationFrame(beginIntroAnimation);
+                        });
+                    };
+                    frames.onerror = showIntroStill;
+                    frames.src = animationObjectUrl;
+                })
+                .catch(showIntroStill);
         }
-        frames.addEventListener('load', beginIntroAnimation, { once: true });
-        frames.addEventListener('error', showIntroStill, { once: true });
-        if (frames.complete) {
-            if (frames.naturalWidth > 0) beginIntroAnimation();
-            else showIntroStill();
-        }
+        startFreshLogoPlayback();
     })();
     </script>
 <!-- Topbar Start -->
