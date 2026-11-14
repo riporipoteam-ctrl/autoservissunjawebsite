@@ -81,8 +81,10 @@ def verify():
     # at the established 120% speed, with the full original upload preserved.
     animation = "assets/video/sunja-logo-sharp-smooth-v36.webp"
     original = "assets/video/sunja-logo-intro-user-uploaded-v33.mp4"
-    if f'src="{animation}"' not in html:
-        raise AssertionError("Live page does not use the non-interactive animation image")
+    if f'data-animation-url="{animation}"' not in html:
+        raise AssertionError("Live page does not advertise the original logo animation")
+    if "function startFreshLogoPlayback()" not in html or "URL.createObjectURL" not in html:
+        raise AssertionError("Live page is missing the fresh-playback Safari fix")
     for asset, expected in (
         (animation, "faffcf735b6ea397938644154b0e11bcd24a0345183066096d20e0c4dbd0a8f1"),
         (original, "73e0c3297813c72d219d7770e65f0b3e05f2c1a7fa6dbe96d79378118ba4ac45"),
@@ -95,7 +97,7 @@ def verify():
 
     print(
         f"PASS: live CSS v{css_version}, JS v{js_version}, no HTML video player; "
-        "30fps 5.03s optimized animation and original MP4 match GitHub byte-for-byte."
+        "freshly restarted 30fps 5.03s animation and original MP4 match GitHub byte-for-byte."
     )
 
 
