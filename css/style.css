@@ -2385,7 +2385,9 @@ a[href] > *,button > * { pointer-events:none !important; }
     }
 }
 
-/* v31: original clean-logo intro; no loading bar, copy or background effects. */
+/* v34: play-control-free logo animation from the owner's MP4.
+   Animated WebP has no browser video UI, and the image cannot be paused
+   with a touch, tap, drag, or long press. */
 html.sunja-intro-active, html.sunja-intro-active body {
     overflow: hidden !important;
 }
@@ -2398,41 +2400,62 @@ html.sunja-intro-active #sunjaIntro:not([hidden]) {
     width: 100% !important;
     height: 100vh;
     height: 100dvh;
-    padding: 0 !important;
     margin: 0 !important;
+    padding: 0 !important;
     place-items: center;
     background: #fff !important;
-    overflow: hidden;
+    overflow: hidden !important;
+    pointer-events: auto;
+    touch-action: none;
     isolation: isolate;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
 }
-.sunja-intro-video {
+.sunja-intro-frames {
     display: block;
-    width: min(100vw, 760px);
+    width: min(100vw, 910px);
     max-height: 100dvh;
-    aspect-ratio: 16 / 9;
     height: auto;
+    aspect-ratio: 910 / 512;
     object-fit: contain;
+    image-rendering: auto;
     background: #fff;
-    border: none;
+    border: 0;
+    border-radius: 0;
     box-shadow: none !important;
     filter: none !important;
     transform: none !important;
-    pointer-events: none;
+    transition: none !important;
+    animation: none !important;
+    pointer-events: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
 }
 .sunja-intro-fallback-logo { display: none; }
-#sunjaIntro.sunja-intro-is-fallback .sunja-intro-video { display: none !important; }
-html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallback-logo {
-    display: block;
-    width: min(74vw, 440px);
-    height: auto;
-    max-height: 45dvh;
-    object-fit: contain;
+html.sunja-intro-active #sunjaIntro.sunja-intro-is-static .sunja-intro-frames {
+    display: none !important;
 }
-#sunjaIntro[hidden], html:not(.sunja-intro-active) #sunjaIntro { display: none !important; }
-/* With Reduce Motion, show the actual still logo rather than hiding the
-   entire intro. The uploaded MP4 remains untouched for everyone else. */
+html.sunja-intro-active #sunjaIntro.sunja-intro-is-static .sunja-intro-fallback-logo {
+    display: block !important;
+    width: min(74vw, 440px);
+    max-height: 45dvh;
+    height: auto;
+    object-fit: contain;
+    animation: none !important;
+    pointer-events: none !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    -webkit-touch-callout: none !important;
+}
+#sunjaIntro[hidden], html:not(.sunja-intro-active) #sunjaIntro {
+    display: none !important;
+}
 @media (prefers-reduced-motion: reduce) {
-    #sunjaIntro .sunja-intro-fallback-logo { animation: none !important; }
+    html.sunja-intro-active #sunjaIntro .sunja-intro-frames {
+        display: none !important;
+    }
 }
 
 /* v31: cross-browser fixed mobile action dock */
@@ -2614,55 +2637,6 @@ html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallbac
 @media (max-width: 767.98px) {
     #o-nama img[data-about-photo] {
         height: clamp(300px, 90vw, 420px) !important;
-    }
-}
-
-/* v33: exact uploaded MP4 only; never draw a substitute logo animation.
-   If a device blocks video autoplay, display the plain original logo still. */
-html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-fallback-logo {
-    display: block !important;
-    animation: none !important;
-    transition: none !important;
-    clip-path: none !important;
-    -webkit-clip-path: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-}
-html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback .sunja-intro-video {
-    display: none !important;
-}
-
-/* v33: autoplay-safe animation displays ONLY frames extracted from the
-   user's uploaded MP4. No CSS path/clip drawing or invented logo motion. */
-.sunja-intro-fallback-frames {
-    display: none;
-    width: min(100vw, 760px);
-    aspect-ratio: 910 / 512;
-    height: auto;
-    max-height: 100dvh;
-    object-fit: contain;
-    background: #fff;
-    pointer-events: none;
-    border: 0;
-    transform: none !important;
-    animation: none !important;
-}
-html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback:not(.sunja-intro-is-static) .sunja-intro-fallback-frames {
-    display: block !important;
-}
-html.sunja-intro-active #sunjaIntro.sunja-intro-is-fallback:not(.sunja-intro-is-static) .sunja-intro-fallback-logo {
-    display: none !important;
-}
-html.sunja-intro-active #sunjaIntro.sunja-intro-is-static .sunja-intro-fallback-frames {
-    display: none !important;
-}
-html.sunja-intro-active #sunjaIntro.sunja-intro-is-static .sunja-intro-fallback-logo {
-    display: block !important;
-    animation: none !important;
-}
-@media (prefers-reduced-motion: reduce) {
-    html.sunja-intro-active #sunjaIntro .sunja-intro-fallback-frames {
-        display: none !important;
     }
 }
 
