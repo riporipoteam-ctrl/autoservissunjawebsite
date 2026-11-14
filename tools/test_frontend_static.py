@@ -15,7 +15,7 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v38_logo_restarts_from_a_fresh_animation_decoder(self):
         # The v37 preload was free-running before the visible intro, which
         # left Safari showing the WebP's final frame instead of the drawing.
-        self.assertIn('data-intro-src="assets/video/sunja-logo-sharp-smooth-v36.webp"', INDEX)
+        self.assertIn('data-animation-url="assets/video/sunja-logo-sharp-smooth-v36.webp"', INDEX)
         self.assertIn('URL.createObjectURL', INDEX)
         self.assertIn('URL.revokeObjectURL', INDEX)
         self.assertIn('requestAnimationFrame', INDEX)
@@ -170,15 +170,15 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=37.0", INDEX)
+        self.assertIn("css/style.css?v=38.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v36_intro_has_no_native_player_controls_or_interaction(self):
         self.assertIn('id="sunjaIntro"', INDEX)
         self.assertIn('id="sunjaIntroFrames"', INDEX)
         self.assertIn('rel="preload" as="image" href="assets/video/sunja-logo-sharp-smooth-v36.webp" fetchpriority="high"', INDEX)
-        self.assertIn('decoding="async"', INDEX)
-        self.assertIn('src="assets/video/sunja-logo-sharp-smooth-v36.webp"', INDEX)
+        self.assertIn('decoding="sync"', INDEX)
+        self.assertIn('data-animation-url="assets/video/sunja-logo-sharp-smooth-v36.webp"', INDEX)
         self.assertNotIn('<video id="sunjaIntroVideo"', INDEX)
         self.assertNotIn('<video', INDEX)
         self.assertNotIn('video.play()', INDEX)
@@ -351,7 +351,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=37.0", INDEX)
+        self.assertIn("css/style.css?v=38.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
@@ -379,7 +379,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=37.0", INDEX)
+        self.assertIn("css/style.css?v=38.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
@@ -545,7 +545,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=37.0", INDEX)
+        self.assertIn("css/style.css?v=38.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
 
