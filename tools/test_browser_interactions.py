@@ -466,7 +466,7 @@ class SiteInteractionTests(unittest.TestCase):
             img = page.locator("#sunjaIntroFrames")
             expect(img).to_have_count(1)
             self.assertEqual(
-                img.get_attribute("src"),
+                img.get_attribute("data-animation-url"),
                 "assets/video/sunja-logo-sharp-smooth-v36.webp",
             )
             self.assertEqual(page.locator("#sunjaIntro video").count(), 0)
