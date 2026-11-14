@@ -1,6 +1,9 @@
 import hashlib
+import json
 import pathlib
+import re
 import unittest
+import xml.etree.ElementTree as ET
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 INDEX = (ROOT / "index.html").read_text(encoding="utf-8")
@@ -9,6 +12,56 @@ JS = (ROOT / "js" / "main.js").read_text(encoding="utf-8")
 
 
 class FrontendStaticTests(unittest.TestCase):
+    def test_google_search_sitemap_has_only_the_real_canonical_page(self):
+        sitemap = ROOT / "sitemap.xml"
+        self.assertTrue(sitemap.is_file(), "A public sitemap.xml is required")
+        root = ET.fromstring(sitemap.read_text(encoding="utf-8"))
+        ns = "{http://www.sitemaps.org/schemas/sitemap/0.9}"
+        self.assertEqual(root.tag, ns + "urlset")
+        urls = root.findall(ns + "url")
+        self.assertEqual(len(urls), 1, "Only the actual homepage is a distinct page")
+        self.assertEqual(urls[0].findtext(ns + "loc"), "https://autosunja.com/")
+        self.assertEqual(urls[0].findtext(ns + "lastmod"), "2026-11-14")
+        self.assertNotIn("sitey.my", sitemap.read_text(encoding="utf-8"))
+
+    def test_google_search_robots_allows_crawling_and_advertises_sitemap(self):
+        robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
+        self.assertIn("User-agent: *", robots)
+        self.assertIn("Allow: /", robots)
+        self.assertIn("Sitemap: https://autosunja.com/sitemap.xml", robots)
+        self.assertNotIn("Disallow: /", robots)
+
+    def test_google_search_has_grounded_local_autorepair_schema(self):
+        matches = re.findall(
+            r'<script type="application/ld\\+json">\\s*(.*?)\\s*</script>',
+            INDEX, flags=re.S
+        )
+        self.assertEqual(len(matches), 1, "Use one canonical JSON-LD business record")
+        data = json.loads(matches[0])
+        self.assertEqual(data["@context"], "https://schema.org")
+        self.assertEqual(data["@type"], "AutoRepair")
+        self.assertEqual(data["name"], "Auto Servis Šunja")
+        self.assertEqual(data["url"], "https://autosunja.com/")
+        self.assertEqual(data["telephone"], "+38761297847")
+        self.assertEqual(data["address"]["streetAddress"], "Hajra Lakovića 38")
+        self.assertEqual(data["address"]["addressLocality"], "Goražde")
+        self.assertEqual(data["address"]["postalCode"], "73000")
+        self.assertEqual(data["address"]["addressCountry"], "BA")
+        self.assertEqual(data["openingHoursSpecification"]["opens"], "10:00")
+        self.assertEqual(data["openingHoursSpecification"]["closes"], "18:00")
+        self.assertEqual(len(data["openingHoursSpecification"]["dayOfWeek"]), 6)
+        self.assertIn("https://www.tiktok.com/@autoservissunja", data["sameAs"])
+        self.assertNotIn("aggregateRating", data)
+        self.assertNotIn("review", data)
+
+    def test_google_search_meta_tags_are_searchable_and_consistent(self):
+        self.assertIn("Auto Servis Šunja Goražde", INDEX)
+        self.assertIn('rel="canonical" href="https://autosunja.com/"', INDEX)
+        self.assertIn('property="og:locale" content="bs_BA"', INDEX)
+        self.assertIn('name="robots" content="index, follow, max-image-preview:large"', INDEX)
+        self.assertNotIn('content="noindex"', INDEX)
+        self.assertNotIn("autosunja.sitey.my", INDEX)
+
     def test_custom_dot_com_domain_is_the_pages_domain(self):
         self.assertEqual((ROOT / "CNAME").read_text(encoding="utf-8").strip(), "autosunja.com")
         self.assertIn('rel="canonical" href="https://autosunja.com/"', INDEX)
