@@ -139,7 +139,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=45.0" rel="stylesheet">
+    <link href="css/style.css?v=46.0" rel="stylesheet">
 </head>
 
 <body>
@@ -1127,6 +1127,7 @@
     (function () {
         var wrap = document.getElementById('globeScroll');
         var el = document.getElementById('globeMap');
+        var stickyEl = wrap ? wrap.querySelector('.globe-sticky') : null;
         var stageEl = document.getElementById('globeStage');
         var hintEl = document.getElementById('globeHint');
         var fellBack = false;
@@ -1235,9 +1236,10 @@
             var marker = null;
             var mapCompleted = false;
             var lastMapProgress = -1;
+            var lastMapScrollY = null;
             var lastCameraAt = 0;
             var CAMERA_MIN_FRAME_MS = 80;
-            var mapFrame = 0, cameraTimer = 0;
+            var mapFrame = 0, cameraTimer = 0, viewportSyncFrame = 0;
             var reduceMapMotion = !!(window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
@@ -1306,8 +1308,14 @@
                 // This is intentionally one-way. Stop all scroll-driven
                 // camera work and remove the scroll listener permanently.
                 window.removeEventListener('scroll', queueMapProgress);
+                window.removeEventListener('resize', syncMapProgressOnViewportChange);
+                window.removeEventListener('orientationchange', syncMapProgressOnViewportChange);
+                if (window.visualViewport)
+                    window.visualViewport.removeEventListener('resize', syncMapProgressOnViewportChange);
                 if (mapFrame) cancelAnimationFrame(mapFrame);
                 mapFrame = 0;
+                if (viewportSyncFrame) cancelAnimationFrame(viewportSyncFrame);
+                viewportSyncFrame = 0;
                 if (cameraTimer) clearTimeout(cameraTimer);
                 cameraTimer = 0;
                 lastMapProgress = 1;
@@ -1330,9 +1338,14 @@
                 // style loads. In that case finish immediately, don't replay.
                 if (rect.bottom <= 0) { finishMapOnce(); return; }
                 if (rect.top > innerHeight + 300) return;
-                var distance = Math.max(1, rect.height - innerHeight);
+                // Progress belongs to the actual sticky runway. innerHeight
+                // can change with mobile browser chrome while 100svh keeps the
+                // rendered map panel at a different height.
+                var stickyHeight = stickyEl ? stickyEl.getBoundingClientRect().height : innerHeight;
+                var distance = Math.max(1, rect.height - stickyHeight);
                 var progress = Math.max(0, Math.min(1, -rect.top / distance));
                 if (progress >= .985) { finishMapOnce(); return; }
+                lastMapScrollY = window.scrollY;
                 if (Math.abs(progress - lastMapProgress) < .018) return;
                 var now = performance.now();
                 // MapLibre repaints and fetches new tiles with each jumpTo.
@@ -1387,7 +1400,41 @@
                 if (mapCompleted || fellBack || mapFrame) return;
                 mapFrame = requestAnimationFrame(updateMapOnScroll);
             }
+            function syncMapProgressOnViewportChange() {
+                if (mapCompleted || fellBack || !loaded || !wrap || viewportSyncFrame) return;
+                viewportSyncFrame = requestAnimationFrame(function () {
+                    viewportSyncFrame = 0;
+                    if (mapCompleted || fellBack || !loaded || !wrap) return;
+                    if (mapFrame) { cancelAnimationFrame(mapFrame); mapFrame = 0; }
+                    // Responsive reflow can shorten content above the map when
+                    // a phone rotates or a tablet crosses a breakpoint. Keep
+                    // the current stage anchored only when the visitor was
+                    // still scrolling the active runway, never after leaving it.
+                    if (lastMapProgress >= 0 && lastMapProgress < .985 &&
+                        lastMapScrollY !== null &&
+                        Math.abs(window.scrollY - lastMapScrollY) <= 80) {
+                        var rect = wrap.getBoundingClientRect();
+                        var sectionTop = rect.top + window.scrollY;
+                        var stickyHeight = stickyEl ? stickyEl.getBoundingClientRect().height : innerHeight;
+                        var runway = Math.max(1, rect.height - stickyHeight);
+                        var targetScrollY = sectionTop + runway * lastMapProgress;
+                        if (Math.abs(targetScrollY - window.scrollY) > 1) {
+                            window.scrollTo({ top: Math.max(0, targetScrollY), behavior: 'instant' });
+                        }
+                        lastMapScrollY = window.scrollY;
+                    }
+                    queueMapProgress();
+                });
+            }
             window.addEventListener('scroll', queueMapProgress, { passive: true });
+            // Viewport/orientation changes can change the sticky runway even
+            // when no scroll event follows; preserve the active progress when
+            // responsive content above the map reflows. ResizeObserver below
+            // still owns MapLibre canvas resizing.
+            window.addEventListener('resize', syncMapProgressOnViewportChange, { passive: true });
+            window.addEventListener('orientationchange', syncMapProgressOnViewportChange, { passive: true });
+            if (window.visualViewport)
+                window.visualViewport.addEventListener('resize', syncMapProgressOnViewportChange, { passive: true });
             // Resize when the actual map container changes size, not whenever
             // Safari's browser toolbar changes the visual viewport.
             if (typeof ResizeObserver !== 'undefined') {

@@ -267,7 +267,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=45.0", INDEX)
+        self.assertIn("css/style.css?v=46.0", INDEX)
         self.assertIn("js/main.js?v=38.0", INDEX)
 
     def test_v36_intro_has_no_native_player_controls_or_interaction(self):
@@ -448,7 +448,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=45.0", INDEX)
+        self.assertIn("css/style.css?v=46.0", INDEX)
         self.assertIn("js/main.js?v=38.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
@@ -476,7 +476,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=45.0", INDEX)
+        self.assertIn("css/style.css?v=46.0", INDEX)
         self.assertIn("js/main.js?v=38.0", INDEX)
         self.assertIn("/* v42 — full post-intro review redesign.", CSS)
         self.assertIn("html:not(.sunja-intro-active) #header-carousel", CSS)
@@ -662,7 +662,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=45.0", INDEX)
+        self.assertIn("css/style.css?v=46.0", INDEX)
         self.assertIn("js/main.js?v=38.0", INDEX)
 
 
@@ -722,7 +722,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("color: #8ed8ff !important;", CSS)
         self.assertIn("color: #f8fbff !important;", CSS)
         self.assertIn("color: #e4edf7 !important;", CSS)
-        self.assertIn("css/style.css?v=45.0", INDEX)
+        self.assertIn("css/style.css?v=46.0", INDEX)
 
     def test_v45_map_waits_for_first_render_and_tolerates_retryable_errors(self):
         self.assertIn("fallback(sawPreloadError ? 'karta nije odgovorila nakon ponovnog pokušaja' : 'isteklo vrijeme učitavanja');", INDEX)
