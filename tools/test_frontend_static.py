@@ -24,10 +24,10 @@ class FrontendStaticTests(unittest.TestCase):
             asset = ROOT / f"favicon-{size}x{size}.png"
             self.assertTrue(asset.is_file(), f"Missing {asset}")
             header = asset.read_bytes()[:24]
-            self.assertTrue(header.startswith(b"\\x89PNG\\r\\n\\x1a\\n"))
+            self.assertTrue(header.startswith(bytes.fromhex("89504e470d0a1a0a")))
             self.assertEqual(struct.unpack(">II", header[16:24]), (size, size))
         ico = (ROOT / "favicon.ico").read_bytes()
-        self.assertEqual(ico[:4], b"\\x00\\x00\\x01\\x00")
+        self.assertEqual(ico[:4], bytes.fromhex("00000100"))
         self.assertGreaterEqual(int.from_bytes(ico[4:6], "little"), 3)
         apple = (ROOT / "apple-touch-icon.png").read_bytes()
         self.assertEqual(struct.unpack(">II", apple[16:24]), (180, 180))
