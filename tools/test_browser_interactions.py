@@ -584,6 +584,72 @@ class SiteInteractionTests(unittest.TestCase):
             re.compile(r"\bshow\b")
         )
 
+    def test_v41_service_images_ignore_duplicate_feed_and_layout_fits_legacy_devices(self):
+        duplicate_photo_feed = {
+            "gallery": [],
+            "services": {
+                key: {"src": "assets/photos/tt-20261108-234cf88c.webp"}
+                for key in ("dijagnostika", "peugeot", "mali", "veliki", "elektrika", "kljucevi")
+            },
+        }
+        self.page.route(
+            "**/photos.json",
+            lambda route: route.fulfill(
+                status=200,
+                content_type="application/json",
+                body=json.dumps(duplicate_photo_feed),
+            ),
+        )
+        with self.page.expect_response(lambda response: response.url.endswith("/photos.json")):
+            self.page.reload(wait_until="load")
+        images = self.page.locator("#usluge img.svc-photo")
+        self.assertEqual(images.count(), 6)
+        sources = [images.nth(i).get_attribute("src") for i in range(6)]
+        self.assertEqual(6, len(set(sources)))
+        self.assertIn("assets/gallery/radionica-dijagnostika.webp", sources)
+        self.assertIn("assets/gallery/kljucevi-programiranje.webp", sources)
+
+        # Exercise older phones, current phones, tablets and laptop/desktop widths.
+        for width, height in ((320, 568), (375, 667), (390, 844),
+                              (768, 1024), (1024, 768), (1440, 900)):
+            self.page.set_viewport_size({"width": width, "height": height})
+            geometry = self.page.locator("#usluge .service-nav-grid").evaluate("""el => ({
+                columns: getComputedStyle(el).gridTemplateColumns,
+                scrollWidth: document.documentElement.scrollWidth,
+                viewport: innerWidth
+            })""")
+            self.assertLessEqual(
+                geometry["scrollWidth"], geometry["viewport"] + 1,
+                f"Horizontal overflow at {width}px: {geometry}"
+            )
+            if width <= 991:
+                self.assertEqual(
+                    len(geometry["columns"].split()), 2,
+                    f"Services should use two columns at {width}px: {geometry}"
+                )
+        for index in range(1, 7):
+            button = self.page.locator(
+                '.service-nav-grid [data-bs-target="#tab-pane-' + str(index) + '"]'
+            )
+            button.tap()
+            expect(button).to_have_class(re.compile(r"\\bactive\\b"))
+            expect(self.page.locator("#tab-pane-" + str(index))).to_have_class(
+                re.compile(r"\\bactive\\b")
+            )
+
+    def test_v41_hero_fades_and_keeps_all_three_real_slides(self):
+        hero = self.page.locator("#header-carousel")
+        expect(hero).to_have_class(re.compile(r"\\bcarousel-fade\\b"))
+        self.assertEqual(hero.locator(".carousel-item").count(), 3)
+        self.assertIn(
+            "assets/gallery/radionica-dijagnostika.webp",
+            hero.locator(".carousel-item").nth(1).locator("img").get_attribute("src"),
+        )
+        self.assertIn(
+            "assets/gallery/kljucevi-programiranje.webp",
+            hero.locator(".carousel-item").nth(2).locator("img").get_attribute("src"),
+        )
+
     def test_v39_hero_slides_have_no_booking_buttons(self):
         self.assertEqual(self.page.locator(
             "#header-carousel a[href='#termin'], #header-carousel a[data-service]"
