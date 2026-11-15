@@ -2905,3 +2905,210 @@ html.sunja-intro-active #header-carousel .hero-bg {
     .contact-direct-phone { padding: 25px 16px; min-height: 142px; border-radius: 16px; }
     .experience-feature { gap: 14px; padding: 12px 14px; }
 }
+
+/* v41: clearer sections, unique service frames and calmer slides.
+   Same white and blue workshop look. No glass, no blurred photos,
+   and section reveals still play only once. */
+#usluge,
+#lokacija {
+    background: #f4f8fc;
+}
+#galerija,
+#o-nama,
+#kontakt,
+#recenzije {
+    background: #fff;
+}
+h6.text-primary.text-uppercase {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+h6.text-primary.text-uppercase::before {
+    content: "";
+    width: 22px;
+    height: 3px;
+    border-radius: 3px;
+    background: #0b5fa5;
+    flex: 0 0 auto;
+}
+#usluge .nav.nav-pills .nav-link {
+    background: #fff !important;
+    color: #0b2154;
+    border: 1px solid #d5e4f2;
+    border-radius: 14px !important;
+    box-shadow: 0 8px 18px rgba(11, 33, 84, .045);
+    margin-bottom: 10px !important;
+    transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+#usluge .nav.nav-pills .nav-link i {
+    width: 40px;
+    height: 40px;
+    margin-right: 12px !important;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    background: #e7f2fb;
+    color: #0b5fa5;
+    font-size: 16px !important;
+}
+#usluge .nav.nav-pills .nav-link.active,
+#usluge .nav.nav-pills .nav-link.active:hover {
+    background: #0b5fa5 !important;
+    border-color: #0b5fa5 !important;
+    color: #fff;
+}
+#usluge .nav.nav-pills .nav-link.active i {
+    background: rgba(255, 255, 255, .16);
+    color: #fff;
+}
+#usluge .nav.nav-pills .nav-link.active h4 {
+    color: #fff !important;
+}
+#usluge .tab-content {
+    background: #fff;
+    border: 1px solid #d5e4f2;
+    border-radius: 18px;
+    padding: 18px !important;
+    box-shadow: 0 16px 34px rgba(11, 33, 84, .06);
+}
+#usluge img.svc-photo,
+#usluge [data-svc-cat] {
+    border-radius: 14px;
+    background: #eef4fa !important;
+}
+.social-tile {
+    border-radius: 16px;
+    min-height: 88px;
+    box-shadow: 0 10px 24px rgba(11, 33, 84, .08);
+}
+@media (hover: hover) and (pointer: fine) {
+    .social-tile .fa-arrow-right {
+        transition: transform .25s ease;
+    }
+    .social-tile:hover .fa-arrow-right {
+        transform: translateX(4px);
+    }
+}
+#header-carousel.carousel-fade .carousel-item {
+    display: block;
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity .65s ease;
+}
+#header-carousel.carousel-fade .carousel-item.active {
+    position: relative;
+    z-index: 1;
+    opacity: 1;
+}
+#header-carousel .carousel-caption {
+    background: linear-gradient(90deg, rgba(7, 22, 48, .78) 0%, rgba(7, 22, 48, .4) 42%, rgba(7, 22, 48, .04) 70%) !important;
+}
+#header-carousel .hero-indicators button.active > span {
+    animation: heroFill 6.5s linear forwards !important;
+}
+.gallery-source-line {
+    padding-top: 10px !important;
+    padding-bottom: 10px !important;
+}
+.gallery-source-line small {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: #3d5670;
+    font-weight: 600;
+    letter-spacing: .01em;
+}
+#kontakt .bg-light,
+.contact-spotlight,
+.experience-feature {
+    box-shadow: 0 10px 26px rgba(11, 33, 84, .05);
+}
+html.perf-lite #header-carousel .carousel-item,
+html.perf-lite .wow.is-revealed,
+html.perf-lite .social-tile .fa-arrow-right,
+html.perf-lite #usluge .nav.nav-pills .nav-link {
+    animation: none !important;
+    transition: none !important;
+}
+@media (max-width: 991.98px) {
+    #usluge .nav.nav-pills {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    #usluge .nav.nav-pills .nav-link {
+        width: 100% !important;
+        margin: 0 !important;
+        min-height: 52px;
+        padding: 8px 10px !important;
+    }
+    #usluge .tab-content {
+        padding: 12px !important;
+    }
+}
+@media (max-width: 767.98px) {
+    #header-carousel .carousel-item {
+        height: min(76svh, 620px) !important;
+        min-height: 460px !important;
+        max-height: 640px !important;
+    }
+    #header-carousel .carousel-caption {
+        align-items: flex-end !important;
+        padding-bottom: 4.4rem !important;
+        background: linear-gradient(180deg, rgba(7, 22, 48, .02) 0%, rgba(7, 22, 48, .5) 48%, rgba(7, 22, 48, .9) 100%) !important;
+    }
+    #header-carousel .carousel-caption .btn {
+        width: auto;
+        min-width: 168px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+@media (max-width: 380px) {
+    #usluge .nav.nav-pills {
+        grid-template-columns: 1fr;
+    }
+    .mobile-callbar a {
+        font-size: 12.5px !important;
+        gap: 6px;
+    }
+    #header-carousel .carousel-caption h1 {
+        font-size: 22px !important;
+    }
+}
+@media (min-width: 768px) and (max-width: 1199.98px) {
+    #header-carousel .carousel-item {
+        height: min(72vh, 640px);
+        min-height: 480px;
+    }
+    #usluge .tab-content {
+        padding: 16px !important;
+    }
+}
+@media (min-width: 1400px) {
+    #header-carousel .carousel-item {
+        height: min(74vh, 760px);
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    #header-carousel.carousel-fade .carousel-item,
+    #usluge .nav.nav-pills .nav-link,
+    .social-tile .fa-arrow-right {
+        transition: none !important;
+        animation: none !important;
+    }
+}
+
+/* Keep slide controls inside the first desktop screen, under the top bar. */
+@media (min-width: 992px) {
+    #header-carousel .carousel-item {
+        height: min(640px, calc(100svh - 210px)) !important;
+        min-height: 520px !important;
+        max-height: 680px !important;
+    }
+}
