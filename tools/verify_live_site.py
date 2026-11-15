@@ -72,6 +72,20 @@ def verify():
         if hashlib.sha256(live_bytes).digest() != hashlib.sha256(source_bytes).digest():
             raise AssertionError(f"{asset} does not match the main-branch commit")
 
+    # The root icon is critical for Google Search (not only browser tabs):
+    # require actual, valid, square binary assets served from the live domain.
+    for name in ("favicon.ico", "favicon-48x48.png", "favicon-96x96.png",
+                 "favicon-192x192.png", "favicon-512x512.png",
+                 "apple-touch-icon.png", "site.webmanifest"):
+        local = (ROOT / name).read_bytes()
+        remote = get(f"/{name}?deployment_check={stamp}")
+        if hashlib.sha256(remote).digest() != hashlib.sha256(local).digest():
+            raise AssertionError(f"{name} does not match deployed favicon assets")
+    if '<link rel="icon" href="/favicon.ico"' not in html:
+        raise AssertionError("Google Search root favicon declaration missing")
+    if "sunja:intro-experience-start" not in html or "primeMapLibrary" not in html:
+        raise AssertionError("Early MapLibre warm-up did not deploy")
+
     # No native HTML <video> element on the intro: those may expose a play
     # overlay on Safari and let visitors pause the brand animation.
     if '<video' in html or 'id="sunjaIntroVideo"' in html:
