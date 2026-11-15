@@ -432,7 +432,8 @@ html { scroll-behavior: smooth; }
 #globeScroll.globe-done .globe-sticky { position: relative; top: auto; height: 70vh; }
 
 /*** v9: slider fix (mobile overlap), marquee removed, plainer/professional look ***/
-html, body { overflow-x: clip; }
+/* Keep clipping on the root: body overflow-x:clip computes to a scroll container and breaks sticky descendants. */
+html { overflow-x: clip; }
 body { -webkit-tap-highlight-color: transparent; }
 .marquee { display: none !important; }
 .carousel-item.active > img { animation: none !important; }
@@ -1371,8 +1372,8 @@ html {
     /* Section scroll-margin supplies the sole sticky-header offset. */
     -webkit-text-size-adjust: 100%;
 }
-body { overflow-x: clip; }
-
+/* The root clips horizontal overflow; a visible body lets sticky sections track the viewport. */
+body { overflow: visible; }
 /* The navbar must not move away when the first link is tapped. */
 .navbar-light.sticky-top {
     top: 0 !important;
@@ -3991,7 +3992,7 @@ html:not(.sunja-intro-active) #header-carousel .hero-nav .carousel-control-next-
     #galerija .row.g-4 > .col-lg-4 { grid-column: span 6; }
 }
 @media (max-width: 767.98px) {
-    body { overflow-x: hidden; }
+    body { overflow: visible; }
     #pocetna { margin-top: 0; }
     html:not(.sunja-intro-active) #header-carousel .carousel-inner { border-bottom-width: 4px; }
     html:not(.sunja-intro-active) #header-carousel .carousel-item {

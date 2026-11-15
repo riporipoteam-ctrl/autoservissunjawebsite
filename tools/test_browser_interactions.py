@@ -199,6 +199,262 @@ class SiteInteractionTests(unittest.TestCase):
             context.close()
 
 
+    def test_v46_mobile_map_completes_on_measured_sticky_runway_after_viewport_height_mismatch(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        context.add_init_script("""
+            window.__mapCameras = [];
+            class FakeMap {
+                on(name, cb) { if (name === 'load') setTimeout(cb, 20); return this; }
+                resize() {}
+                setProjection() {}
+                jumpTo(camera) { window.__mapCameras.push(camera); return this; }
+                easeTo(camera) { window.__mapCameras.push(camera); return this; }
+                stop() {}
+            }
+            class FakePopup { setHTML(){ return this; } }
+            class FakeMarker {
+                setLngLat(){ return this; } setPopup(){ return this; }
+                addTo(){ return this; } togglePopup(){ return this; }
+            }
+            window.maplibregl = {Map:FakeMap, Popup:FakePopup, Marker:FakeMarker};
+        """)
+        try:
+            page = context.new_page()
+            page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_function(
+                "document.querySelector('#globeScroll').classList.contains('is-loaded')",
+                timeout=10000,
+            )
+            page.evaluate("""() => {
+                const section = document.getElementById('globeScroll');
+                const sticky = section.querySelector('.globe-sticky');
+                const sectionTop = section.getBoundingClientRect().top + scrollY;
+                const sectionHeight = section.getBoundingClientRect().height;
+                const stickyHeight = sticky.getBoundingClientRect().height;
+                const runway = Math.max(1, sectionHeight - stickyHeight);
+                // Simulate mobile browser chrome changing innerHeight while
+                // the CSS-sized sticky panel remains at its measured height.
+                Object.defineProperty(window, 'innerHeight', {
+                    configurable: true, value: Math.max(220, stickyHeight - 260)
+                });
+                window.__mapRunwayTarget = sectionTop + runway;
+                // Coalesce a sequence of rapid scroll positions into the end
+                // of the actual sticky travel, as a strong touch fling can.
+                [0.03, 0.16, 0.39, 0.68, 0.91, 1].forEach(function (part) {
+                    window.scrollTo(0, sectionTop + runway * part);
+                });
+            }""")
+            page.wait_for_function(
+                "document.querySelector('#globeScroll').classList.contains('globe-complete')",
+                timeout=6000,
+            )
+            state = page.evaluate("""() => ({
+                complete: document.getElementById('globeScroll').classList.contains('globe-complete'),
+                lastCamera: window.__mapCameras.at(-1),
+                cameraCount: window.__mapCameras.length,
+                dockPosition: getComputedStyle(document.querySelector('.mobile-callbar')).position
+            })""")
+            self.assertTrue(state["complete"], state)
+            self.assertAlmostEqual(state["lastCamera"]["zoom"], 16.2, delta=.1, msg=str(state))
+            self.assertGreaterEqual(state["cameraCount"], 1)
+            self.assertEqual(state["dockPosition"], "fixed")
+            camera_count = state["cameraCount"]
+            page.evaluate("window.scrollTo(0, 0)")
+            page.wait_for_timeout(180)
+            self.assertEqual(page.evaluate("window.__mapCameras.length"), camera_count)
+        finally:
+            context.close()
+
+    def test_v46_mobile_map_resynchronizes_without_scroll_after_orientation_change(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        context.add_init_script("""
+            window.__mapCameras = [];
+            class FakeMap {
+                on(name, cb) { if (name === 'load') setTimeout(cb, 20); return this; }
+                resize() {}
+                setProjection() {}
+                jumpTo(camera) { window.__mapCameras.push(camera); return this; }
+                easeTo(camera) { window.__mapCameras.push(camera); return this; }
+                stop() {}
+            }
+            class FakePopup { setHTML(){ return this; } }
+            class FakeMarker {
+                setLngLat(){ return this; } setPopup(){ return this; }
+                addTo(){ return this; } togglePopup(){ return this; }
+            }
+            window.maplibregl = {Map:FakeMap, Popup:FakePopup, Marker:FakeMarker};
+        """)
+        try:
+            page = context.new_page()
+            page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
+            page.wait_for_function(
+                "document.querySelector('#globeScroll').classList.contains('is-loaded')",
+                timeout=10000,
+            )
+            page.evaluate("document.documentElement.style.scrollBehavior = 'auto'")
+            page.evaluate("""() => {
+                const section = document.getElementById('globeScroll');
+                const sticky = section.querySelector('.globe-sticky');
+                const sectionTop = section.getBoundingClientRect().top + scrollY;
+                const runway = Math.max(1,
+                    section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
+                window.scrollTo(0, sectionTop + runway * .4);
+            }""")
+            page.wait_for_function("window.__mapCameras.length > 0", timeout=5000)
+            portrait_pin = page.evaluate("""() => {
+                const section = document.querySelector('#globeScroll');
+                const sticky = section.querySelector('.globe-sticky');
+                const runway = Math.max(1,
+                    section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
+                return {top: sticky.getBoundingClientRect().top,
+                    position: getComputedStyle(sticky).position,
+                    progress: -section.getBoundingClientRect().top / runway,
+                    stage: document.querySelector('#globeStage').textContent,
+                    complete: section.classList.contains('globe-complete')};
+            }""")
+            self.assertEqual(portrait_pin["position"], "sticky", portrait_pin)
+            self.assertAlmostEqual(portrait_pin["top"], 0, delta=1, msg=str(portrait_pin))
+            self.assertAlmostEqual(portrait_pin["progress"], .4, delta=.03, msg=str(portrait_pin))
+            self.assertFalse(portrait_pin["complete"], portrait_pin)
+            page.set_viewport_size({"width": 844, "height": 390})
+            page.wait_for_function(
+                """() => {
+                    const section = document.querySelector('#globeScroll');
+                    const sticky = section.querySelector('.globe-sticky');
+                    const runway = Math.max(1,
+                        section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
+                    return innerWidth === 844 && Math.abs(-section.getBoundingClientRect().top / runway - .4) < .03;
+                }""",
+                timeout=6000,
+            )
+            landscape_pin = page.evaluate("""() => {
+                const section = document.querySelector('#globeScroll');
+                const sticky = section.querySelector('.globe-sticky');
+                const runway = Math.max(1,
+                    section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
+                return {top: sticky.getBoundingClientRect().top,
+                    position: getComputedStyle(sticky).position,
+                    progress: -section.getBoundingClientRect().top / runway,
+                    stage: document.querySelector('#globeStage').textContent,
+                    complete: section.classList.contains('globe-complete')};
+            }""")
+            self.assertEqual(landscape_pin["position"], "sticky", landscape_pin)
+            self.assertAlmostEqual(landscape_pin["top"], 0, delta=1, msg=str(landscape_pin))
+            self.assertAlmostEqual(landscape_pin["progress"], portrait_pin["progress"], delta=.03,
+                msg=str({"portrait": portrait_pin, "landscape": landscape_pin}))
+            self.assertEqual(landscape_pin["stage"], portrait_pin["stage"],
+                msg=str({"portrait": portrait_pin, "landscape": landscape_pin}))
+            self.assertFalse(landscape_pin["complete"], landscape_pin)
+            page.evaluate("""() => {
+                const section = document.getElementById('globeScroll');
+                const sticky = section.querySelector('.globe-sticky');
+                const sectionTop = section.getBoundingClientRect().top + scrollY;
+                const runway = Math.max(1,
+                    section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
+                window.scrollTo(0, sectionTop + runway);
+            }""")
+            page.wait_for_function(
+                "document.querySelector('#globeScroll').classList.contains('globe-complete')",
+                timeout=6000,
+            )
+            final = page.evaluate("window.__mapCameras.at(-1)")
+            self.assertAlmostEqual(final["zoom"], 16.2, delta=.1, msg=str(final))
+        finally:
+            context.close()
+
+    def test_v46_map_stays_pinned_across_phone_tablet_laptop_and_desktop_viewports(self):
+        profiles = [
+            ("phone-narrow", 360, 800, True),
+            ("phone-portrait", 390, 844, True),
+            ("phone-landscape", 844, 390, True),
+            ("tablet-portrait", 768, 1024, True),
+            ("tablet-landscape", 1024, 768, True),
+            ("laptop", 1366, 768, False),
+            ("desktop", 1920, 1080, False),
+        ]
+        fake_map = """
+            window.__mapCameras = [];
+            class FakeMap {
+                on(name, cb) { if (name === 'load') setTimeout(cb, 20); return this; }
+                resize() {}
+                setProjection() {}
+                jumpTo(camera) { window.__mapCameras.push(camera); return this; }
+                easeTo(camera) { window.__mapCameras.push(camera); return this; }
+                stop() {}
+            }
+            class FakePopup { setHTML(){ return this; } }
+            class FakeMarker {
+                setLngLat(){ return this; } setPopup(){ return this; }
+                addTo(){ return this; } togglePopup(){ return this; }
+            }
+            window.maplibregl = {Map:FakeMap, Popup:FakePopup, Marker:FakeMarker};
+        """
+        for label, width, height, touch in profiles:
+            with self.subTest(viewport=label):
+                context = self.browser.new_context(
+                    viewport={"width": width, "height": height},
+                    is_mobile=touch, has_touch=touch, reduced_motion="no-preference",
+                )
+                context.add_init_script(fake_map)
+                try:
+                    page = context.new_page()
+                    page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
+                    page.wait_for_function(
+                        "document.querySelector('#globeScroll').classList.contains('is-loaded')",
+                        timeout=10000,
+                    )
+                    page.evaluate("document.documentElement.style.scrollBehavior = 'auto'")
+                    page.evaluate("""() => {
+                        const section = document.querySelector('#globeScroll');
+                        const sticky = section.querySelector('.globe-sticky');
+                        const sectionTop = section.getBoundingClientRect().top + scrollY;
+                        const runway = Math.max(1,
+                            section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
+                        window.scrollTo(0, sectionTop + runway * .4);
+                    }""")
+                    page.wait_for_function("window.__mapCameras.length > 0", timeout=5000)
+                    page.wait_for_function("""() => {
+                        const section = document.querySelector('#globeScroll');
+                        const sticky = section.querySelector('.globe-sticky');
+                        const runway = Math.max(1,
+                            section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
+                        return Math.abs(-section.getBoundingClientRect().top / runway - .4) < .04;
+                    }""", timeout=5000)
+                    state = page.evaluate("""() => {
+                        const section = document.querySelector('#globeScroll');
+                        const sticky = section.querySelector('.globe-sticky');
+                        const runway = Math.max(1,
+                            section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
+                        const y = scrollY;
+                        window.scrollTo({left: 100, top: y, behavior: 'instant'});
+                        const horizontalScroll = scrollX;
+                        window.scrollTo({left: 0, top: y, behavior: 'instant'});
+                        return {
+                            top: sticky.getBoundingClientRect().top,
+                            position: getComputedStyle(sticky).position,
+                            progress: -section.getBoundingClientRect().top / runway,
+                            complete: section.classList.contains('globe-complete'),
+                            dockPosition: getComputedStyle(document.querySelector('.mobile-callbar')).position,
+                            horizontalScroll
+                        };
+                    }""")
+                    self.assertEqual(state["position"], "sticky", {"viewport": label, **state})
+                    self.assertAlmostEqual(state["top"], 0, delta=1, msg=str({"viewport": label, **state}))
+                    self.assertAlmostEqual(state["progress"], .4, delta=.04, msg=str({"viewport": label, **state}))
+                    self.assertFalse(state["complete"], {"viewport": label, **state})
+                    self.assertEqual(state["horizontalScroll"], 0, {"viewport": label, **state})
+                    if width <= 991:
+                        self.assertEqual(state["dockPosition"], "fixed", {"viewport": label, **state})
+                finally:
+                    context.close()
+
+
     def test_v30_finished_map_releases_upward_scroll_without_page_jump(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
