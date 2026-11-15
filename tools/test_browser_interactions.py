@@ -6,6 +6,7 @@ Requires: pip install playwright; python -m playwright install chromium
 import functools
 import os
 import http.server
+import json
 import re
 import threading
 import unittest
@@ -632,14 +633,14 @@ class SiteInteractionTests(unittest.TestCase):
                 '.service-nav-grid [data-bs-target="#tab-pane-' + str(index) + '"]'
             )
             button.tap()
-            expect(button).to_have_class(re.compile(r"\\bactive\\b"))
+            expect(button).to_have_class(re.compile(r"\bactive\b"))
             expect(self.page.locator("#tab-pane-" + str(index))).to_have_class(
-                re.compile(r"\\bactive\\b")
+                re.compile(r"\bactive\b")
             )
 
     def test_v41_hero_fades_and_keeps_all_three_real_slides(self):
         hero = self.page.locator("#header-carousel")
-        expect(hero).to_have_class(re.compile(r"\\bcarousel-fade\\b"))
+        expect(hero).to_have_class(re.compile(r"\bcarousel-fade\b"))
         self.assertEqual(hero.locator(".carousel-item").count(), 3)
         self.assertIn(
             "assets/gallery/radionica-dijagnostika.webp",
