@@ -139,7 +139,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=39.0" rel="stylesheet">
+    <link href="css/style.css?v=41.0" rel="stylesheet">
 </head>
 
 <body>
@@ -367,7 +367,7 @@
 
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5" id="pocetna">
-        <div id="header-carousel" class="carousel slide" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true">
+        <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="hero-bg" id="heroMainBg" style="--hero-photo:url('/assets/photos/tt-wide-20260919-d3b7439d.webp');--hero-photo-mobile:url('/assets/photos/tt-20260919-d3b7439d.webp')"></div>
@@ -666,7 +666,7 @@
                             <div class="row g-4">
                                 <div class="col-md-6" style="min-height: 350px;">
                                     <div>
-                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="kljucevi" src="assets/photos/tt-20261027-cce4aa19.webp" loading="lazy" decoding="async" alt="Ključevi i daljinski">
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="kljucevi" src="assets/gallery/kljucevi-programiranje.webp" loading="lazy" decoding="async" alt="Ključevi i daljinski">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -1077,13 +1077,46 @@
             return (b.date || '') < (a.date || '') ? -1 : 1;
         });
 
-        // Every service image gets a full-quality social original. Prefer the
-        // matching category, otherwise use another sharp workshop photo rather
-        // than falling back to an older compressed template asset.
-        document.querySelectorAll('[data-svc-cat]').forEach(function (img, idx) {
-            var service = d.services && d.services[img.getAttribute('data-svc-cat')];
-            var fallback = sharpGallery.length ? sharpGallery[idx % sharpGallery.length] : null;
-            var src = localPhotoPath((service && service.src) || (fallback && fallback.src));
+        // Each Usluge tab keeps its own photograph. A missing category used to
+        // borrow gallery[index], so Ključevi showed the same diagnostics photo.
+        // Dedicated social photos win, the real keys photograph stays on that
+        // service, and a source is never assigned twice.
+        var curatedServicePhoto = {
+            kljucevi: 'assets/gallery/kljucevi-programiranje.webp'
+        };
+        function localAssetPath(path) {
+            return typeof path === 'string' && path.indexOf('..') === -1 && /^assets\/(?:photos|gallery)\/[A-Za-z0-9_.\/-]+\.(?:webp|jpe?g|png)$/.test(path) ? path : '';
+        }
+        var serviceNodes = Array.prototype.slice.call(document.querySelectorAll('[data-svc-cat]'));
+        var usedServiceSrc = {};
+        var assignedServiceSrc = {};
+        function claimServicePhoto(cat, path) {
+            var safe = localAssetPath(path);
+            if (!cat || !safe || usedServiceSrc[safe] || assignedServiceSrc[cat]) return false;
+            usedServiceSrc[safe] = cat;
+            assignedServiceSrc[cat] = safe;
+            return true;
+        }
+        serviceNodes.forEach(function (img) {
+            var cat = img.getAttribute('data-svc-cat');
+            var service = d.services && d.services[cat];
+            claimServicePhoto(cat, service && service.src);
+        });
+        serviceNodes.forEach(function (img) {
+            claimServicePhoto(img.getAttribute('data-svc-cat'), curatedServicePhoto[img.getAttribute('data-svc-cat')]);
+        });
+        serviceNodes.forEach(function (img) {
+            claimServicePhoto(img.getAttribute('data-svc-cat'), img.getAttribute('src'));
+        });
+        serviceNodes.forEach(function (img) {
+            var cat = img.getAttribute('data-svc-cat');
+            if (assignedServiceSrc[cat]) return;
+            for (var i = 0; i < sharpGallery.length; i++) {
+                if (claimServicePhoto(cat, sharpGallery[i].src)) break;
+            }
+        });
+        serviceNodes.forEach(function (img) {
+            var src = assignedServiceSrc[img.getAttribute('data-svc-cat')];
             if (src && src !== img.getAttribute('src')) {
                 img.src = src;
                 img.decoding = 'async';
@@ -1098,9 +1131,24 @@
             for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
             var seq = [];
             var usedTitles = {};
-            if (newestFirst) { seq.push(newestFirst); usedTitles[newestFirst.title] = 1; }
-            pool.forEach(function (e) { if (seq.length < 5 && !usedTitles[e.title]) { seq.push(e); usedTitles[e.title] = 1; } });
-            pool.forEach(function (e) { if (seq.length < 5 && seq.indexOf(e) === -1) seq.push(e); });
+            var usedGallerySrc = {};
+            function takeGallery(entry) {
+                if (!entry || seq.length >= 5 || seq.indexOf(entry) !== -1) return;
+                var safe = localPhotoPath(entry.src);
+                if (!safe || usedGallerySrc[safe] || (entry.title && usedTitles[entry.title])) return;
+                seq.push(entry);
+                usedGallerySrc[safe] = 1;
+                if (entry.title) usedTitles[entry.title] = 1;
+            }
+            takeGallery(newestFirst);
+            pool.forEach(takeGallery);
+            pool.forEach(function (e) {
+                if (seq.length >= 5 || seq.indexOf(e) !== -1) return;
+                var safe = localPhotoPath(e.src);
+                if (!safe || usedGallerySrc[safe]) return;
+                seq.push(e);
+                usedGallerySrc[safe] = 1;
+            });
             if (!seq.length) seq = pool;
             document.querySelectorAll('[data-gallery-img]').forEach(function (img, idx) {
                 var item = seq[idx % seq.length];
@@ -1124,7 +1172,7 @@
     }).catch(function () {});
 
     // Image self-heal — if any swapped photo fails to paint, retry it once fresh
-    document.querySelectorAll('[data-gallery-img], #heroMainImg').forEach(function (img) {
+    document.querySelectorAll('[data-gallery-img], #heroMainImg, [data-svc-cat]').forEach(function (img) {
         function heal() {
             if (img.dataset.healed === '1') return;
             if (img.complete && img.naturalWidth === 0) {
