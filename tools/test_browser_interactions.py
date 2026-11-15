@@ -393,6 +393,42 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             context.close()
 
+    def test_v40_map_engine_preloads_during_experience_without_rendering(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        try:
+            page = context.new_page()
+            page.route("**/maplibre-gl@5.6.0/dist/maplibre-gl.js",
+                       lambda route: route.fulfill(
+                           status=200, content_type="text/javascript",
+                           body="/* library warmed during intro */"
+                       ))
+            page.route("**/maplibre-gl@5.6.0/dist/maplibre-gl.css",
+                       lambda route: route.fulfill(
+                           status=200, content_type="text/css", body=""
+                       ))
+            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            self.assertTrue(page.evaluate(
+                "() => document.documentElement.classList.contains('sunja-intro-active')"
+            ))
+            page.evaluate(
+                "window.dispatchEvent(new Event('sunja:intro-experience-start'))"
+            )
+            expect(page.locator(
+                'script[src*="maplibre-gl@5.6.0/dist/maplibre-gl.js"]'
+            )).to_have_count(1)
+            expect(page.locator(
+                'link[rel="stylesheet"][href*="maplibre-gl@5.6.0/dist/maplibre-gl.css"]'
+            )).to_have_count(1)
+            self.assertFalse(page.locator("#globeScroll").evaluate(
+                "(el) => el.classList.contains('is-loaded')"
+            ), "Preloading must not activate the map behind the logo intro")
+            page.evaluate("window.__sunjaIntroForceFinish()")
+        finally:
+            context.close()
+
     def test_v34_intro_image_has_no_player_overlay_and_cannot_be_paused_by_tap(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
