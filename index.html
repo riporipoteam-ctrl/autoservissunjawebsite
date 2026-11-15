@@ -110,8 +110,13 @@
     }
     </script>
 
-    <!-- Favicon -->
-    <link href="assets/sunja-logo-transparent.png" rel="icon" type="image/png">
+    <!-- Square original Šunja emblem: Google Search, browser tabs and iOS. 
+         Keep stable public URLs so Google can recrawl the icon. -->
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon-48x48.png" type="image/png" sizes="48x48">
+    <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+    <link rel="manifest" href="/site.webmanifest">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -213,6 +218,9 @@
             window.clearTimeout(stillTimer);
             overlay.classList.remove('sunja-intro-is-static');
             overlay.classList.add('sunja-intro-show-experience');
+            // Start downloading the map library while this text animates.
+            // Avoid WebGL initialization until the intro has fully closed.
+            window.dispatchEvent(new Event('sunja:intro-experience-start'));
             experienceTimer = window.setTimeout(function () {
                 experienceDone = true;
                 maybeFinish();
@@ -1145,10 +1153,16 @@
             el.innerHTML = '<div class="map-fallback-content"><p class="mb-3">Kartu nije moguće učitati. Lokacija servisa je Hajra Lakovića 38, Goražde.</p><a class="btn btn-primary py-3 px-4" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a></div>';
         }
         var globeStarted = false;
-        function startGlobe() {
-            if (globeStarted) return;
-            globeStarted = true;
-            if (typeof maplibregl !== 'undefined') { initGlobe(); return; }
+        var globeInitialized = false;
+        var libraryLoading = false;
+        var libraryFailed = false;
+        var libraryWatchdog = 0;
+        function primeMapLibrary() {
+            // Cache the engine and its stylesheet during the 25+ years reveal,
+            // while leaving GPU-intensive MapLibre construction until afterwards.
+            if (libraryLoading || libraryFailed ||
+                typeof maplibregl !== 'undefined') return;
+            libraryLoading = true;
             var css = document.createElement('link');
             css.rel = 'stylesheet';
             css.href = 'https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css';
@@ -1156,22 +1170,33 @@
             var sc = document.createElement('script');
             sc.src = 'https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js';
             sc.async = true;
-            // A blocked CDN may never fire error; fail open to the address,
-            // rather than trapping the visitor on an empty map.
-            var scriptWatchdog = window.setTimeout(function () {
-                fallback('biblioteka karte nije odgovorila');
-            }, 9000);
             sc.onload = function () {
-                window.clearTimeout(scriptWatchdog);
-                if (!fellBack) initGlobe();
+                window.clearTimeout(libraryWatchdog);
+                if (globeStarted && !fellBack) initGlobe();
             };
             sc.onerror = function () {
-                window.clearTimeout(scriptWatchdog);
-                fallback('knjižnica karte nedostupna');
+                window.clearTimeout(libraryWatchdog);
+                libraryFailed = true;
+                if (globeStarted) fallback('knjižnica karte nedostupna');
             };
             document.head.appendChild(sc);
         }
+        function startGlobe() {
+            if (globeStarted || fellBack) return;
+            globeStarted = true;
+            if (typeof maplibregl !== 'undefined') { initGlobe(); return; }
+            if (libraryFailed) { fallback('knjižnica karte nedostupna'); return; }
+            primeMapLibrary();
+            // Library might be blocked; never leave a blank map indefinitely.
+            libraryWatchdog = window.setTimeout(function () {
+                if (!globeInitialized && !fellBack)
+                    fallback('biblioteka karte nije odgovorila');
+            }, 9000);
+        }
         function initGlobe() {
+        if (globeInitialized || fellBack) return;
+        globeInitialized = true;
+        window.clearTimeout(libraryWatchdog);
         var safetyTimer = setTimeout(function () { fallback('isteklo vrijeme učitavanja'); }, 9000);
         try {
             if (!wrap || !el) { clearTimeout(safetyTimer); return; }
@@ -1340,7 +1365,7 @@
                     map.easeTo({
                         center: camera.center, zoom: camera.zoom,
                         pitch: camera.pitch, bearing: camera.bearing,
-                        duration: 320, easing: function (value) {
+                        duration: 180, easing: function (value) {
                             return 1 - Math.pow(1 - value, 2);
                         }
                     });
@@ -1386,8 +1411,9 @@
             earlyGlobeScheduled = true;
             // MapLibre's globe is GPU-heavy: don't initialise it while the
             // user's high-resolution logo animation is decoding.
-            window.setTimeout(startGlobe, 420);
+            window.setTimeout(startGlobe, 90);
         }
+        window.addEventListener('sunja:intro-experience-start', primeMapLibrary, { once: true });
         window.addEventListener('sunja:intro-finished', scheduleEarlyGlobeStart, { once: true });
         if (document.readyState === 'complete') scheduleEarlyGlobeStart();
         else window.addEventListener('load', scheduleEarlyGlobeStart, { once: true });
