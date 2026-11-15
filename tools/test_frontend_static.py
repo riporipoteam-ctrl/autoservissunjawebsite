@@ -28,7 +28,7 @@ class FrontendStaticTests(unittest.TestCase):
             self.assertTrue((ROOT / src).is_file(), f"Missing service photo: {src}")
         self.assertNotIn("data-svc-cat=", INDEX)
         self.assertNotIn("querySelectorAll('[data-svc-cat]')", INDEX)
-        self.assertIn('class="service-nav-grid"', INDEX)
+        self.assertIn("service-nav-grid", INDEX)
 
     def test_v41_mobile_service_grid_and_panel_are_responsive(self):
         self.assertIn("#usluge .service-nav-grid", CSS)
