@@ -252,7 +252,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("css/style.css?v=41.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v36_intro_has_no_native_player_controls_or_interaction(self):
@@ -433,7 +433,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("css/style.css?v=41.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
@@ -461,7 +461,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("css/style.css?v=41.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
@@ -641,7 +641,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("css/style.css?v=41.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
 
