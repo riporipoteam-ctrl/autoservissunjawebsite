@@ -1774,7 +1774,7 @@ h6.text-primary.text-uppercase { font-size: .69rem !important; letter-spacing: .
     background-position: center center !important;
     background-repeat: no-repeat !important;
     filter: none !important;
-    transform: none !important;
+    /* v41: the active background may use a restrained zoom animation. */
 }
 #header-carousel .carousel-item picture img {
     object-fit: contain !important;
