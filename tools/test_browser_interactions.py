@@ -617,11 +617,16 @@ class SiteInteractionTests(unittest.TestCase):
             geometry = self.page.locator("#usluge .service-nav-grid").evaluate("""el => ({
                 columns: getComputedStyle(el).gridTemplateColumns,
                 scrollWidth: document.documentElement.scrollWidth,
+                bodyWidth: document.body.scrollWidth,
                 viewport: innerWidth
             })""")
             self.assertLessEqual(
                 geometry["scrollWidth"], geometry["viewport"] + 1,
                 f"Horizontal overflow at {width}px: {geometry}"
+            )
+            self.assertLessEqual(
+                geometry["bodyWidth"], geometry["viewport"] + 1,
+                f"Body-level horizontal overflow at {width}px: {geometry}"
             )
             if width <= 991:
                 self.assertEqual(
@@ -850,11 +855,11 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             desktop.close()
 
-    def test_v213_typography_across_narrow_phone_tablet_desktop(self):
+    def test_v42_readable_type_across_narrow_phone_tablet_desktop(self):
         sizes = (
-            (320, 700, 20.5, 13.6),
-            (820, 900, 25.5, 15.1),
-            (1280, 800, 32.5, 15.1),
+            (320, 700, 35, 16.5),
+            (820, 900, 39, 16.5),
+            (1280, 800, 48, 16.5),
         )
         for width, height, heading_limit, copy_limit in sizes:
             with self.subTest(width=width):
@@ -874,8 +879,9 @@ class SiteInteractionTests(unittest.TestCase):
                         "(node) => parseFloat(getComputedStyle(node).fontSize)"
                     )
                     self.assertLessEqual(heading, heading_limit)
+                    self.assertGreaterEqual(heading, 31)
                     self.assertLessEqual(copy, copy_limit)
-                    self.assertGreaterEqual(copy, 13)
+                    self.assertGreaterEqual(copy, 15.5)
                 finally:
                     context.close()
 
@@ -917,23 +923,26 @@ class SiteInteractionTests(unittest.TestCase):
         tile.tap()
         self.assertEqual(self.page.evaluate("window.__oneTapHits"), 1)
 
-    def test_v213_all_mobile_sections_have_compact_typography(self):
+    def test_v42_all_mobile_sections_have_readable_typography(self):
         for section in ("o-nama", "usluge", "galerija", "recenzije",
                         "lokacija", "kontakt"):
             title = self.page.locator("#" + section + " h1").first
             size = title.evaluate("(el) => parseFloat(getComputedStyle(el).fontSize)")
-            self.assertLessEqual(size, 21, section)
+            self.assertLessEqual(size, 34, section)
+            self.assertGreaterEqual(size, 30, section)
 
         about_copy = self.page.locator("#o-nama p.mb-4").first
         size = about_copy.evaluate(
             "(el) => parseFloat(getComputedStyle(el).fontSize)"
         )
-        self.assertLessEqual(size, 13.6)
+        self.assertLessEqual(size, 16.5)
+        self.assertGreaterEqual(size, 15.5)
         feature_copy = self.page.locator("#o-nama .ps-3 > span").first
         feature_size = feature_copy.evaluate(
             "(el) => parseFloat(getComputedStyle(el).fontSize)"
         )
-        self.assertLessEqual(feature_size, 13.6)
+        self.assertLessEqual(feature_size, 16)
+        self.assertGreaterEqual(feature_size, 15)
 
     def test_v39_text_keeps_call_and_dock_tap_areas(self):
         for selector in ("#o-nama a[href='tel:+38761297847']",
@@ -959,13 +968,17 @@ class SiteInteractionTests(unittest.TestCase):
                 self.assertIn(text, description)
                 self.assertLess(len(description), 105)
 
-    def test_v21_mobile_type_is_genuinely_smaller(self):
+    def test_v42_mobile_type_uses_readable_redesign_scale(self):
         title = self.page.locator("#o-nama h1")
         para = self.page.locator("#o-nama > .container p").first
         title_size = title.evaluate("(node) => parseFloat(getComputedStyle(node).fontSize)")
         para_size = para.evaluate("(node) => parseFloat(getComputedStyle(node).fontSize)")
-        self.assertLessEqual(title_size, 26)
-        self.assertLessEqual(para_size, 15)
+        self.assertEqual(title_size, 32)
+        self.assertEqual(para_size, 16)
+        copy_color = self.page.locator(".contact-spotlight-copy").evaluate(
+            "(node) => getComputedStyle(node).color"
+        )
+        self.assertEqual(copy_color, "rgb(244, 248, 255)")
 
     def test_v21_gallery_photo_fills_natural_width_without_crop(self):
         img = self.page.locator("[data-gallery-img]").first
@@ -1058,6 +1071,64 @@ class SiteInteractionTests(unittest.TestCase):
             expect(page).to_have_url(re.compile(r"#usluge$"))
         finally:
             desktop.close()
+
+    def test_v43_device_profiles_and_text_contrast(self):
+        profiles = (
+            ("rich", 8, 8, "no-preference", "motion-rich", "sunjaReviewHeroBackdrop"),
+            ("light", 2, 2, "no-preference", "perf-lite", "none"),
+            ("reduced", 8, 8, "reduce", "motion-reduced", "none"),
+        )
+        for name, memory, cores, motion, expected_class, expected_animation in profiles:
+            with self.subTest(profile=name):
+                context = self.browser.new_context(
+                    viewport={"width": 1440, "height": 1000},
+                    reduced_motion=motion,
+                )
+                context.add_init_script(
+                    "Object.defineProperty(navigator, 'deviceMemory', "
+                    "{configurable:true, get:() => " + str(memory) + "});"
+                    "Object.defineProperty(navigator, 'hardwareConcurrency', "
+                    "{configurable:true, get:() => " + str(cores) + "});"
+                )
+                try:
+                    page = context.new_page()
+                    page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
+                    page.wait_for_function(
+                        "(className) => document.documentElement.classList.contains(className)",
+                        arg=expected_class,
+                        timeout=5000,
+                    )
+                    state = page.locator("#header-carousel .carousel-item.active .hero-bg").evaluate(
+                        "(el) => getComputedStyle(el).animationName"
+                    )
+                    self.assertEqual(state, expected_animation)
+                    if name == "light":
+                        self.assertFalse(page.locator("html").evaluate(
+                            "el => el.classList.contains('motion-rich')"
+                        ))
+                finally:
+                    context.close()
+
+        readings = self.page.locator("#o-nama p.mb-4").first.evaluate("""(el) => {
+            const parse = value => (value.match(/[\\d.]+/g) || []).slice(0, 3).map(Number);
+            const lum = value => {
+                const rgb = parse(value).map(channel => channel / 255).map(channel =>
+                    channel <= .04045 ? channel / 12.92 : Math.pow((channel + .055) / 1.055, 2.4));
+                return .2126 * rgb[0] + .7152 * rgb[1] + .0722 * rgb[2];
+            };
+            const background = node => {
+                while (node) {
+                    const color = getComputedStyle(node).backgroundColor;
+                    if (color && color !== 'rgba(0, 0, 0, 0)') return color;
+                    node = node.parentElement;
+                }
+                return 'rgb(255, 255, 255)';
+            };
+            const fg = getComputedStyle(el).color, bg = background(el);
+            const a = lum(fg), b = lum(bg);
+            return { fg, bg, ratio: (Math.max(a, b) + .05) / (Math.min(a, b) + .05) };
+        }""")
+        self.assertGreaterEqual(readings["ratio"], 4.5, readings)
 
 
 if __name__ == "__main__":

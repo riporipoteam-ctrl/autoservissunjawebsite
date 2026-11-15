@@ -54,6 +54,21 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn(":focus-visible", CSS)
         self.assertIn("perf-lite", CSS)
 
+    def test_v42_tablet_nav_fits_and_contact_copy_is_high_contrast(self):
+        self.assertIn("@media (min-width: 992px) and (max-width: 1199.98px)", CSS)
+        self.assertIn(".navbar.nav-bar .navbar-brand { padding-inline: 32px !important; }", CSS)
+        self.assertIn(".navbar.nav-bar .navbar-nav .nav-link { margin-right: 23px; }", CSS)
+        self.assertIn("#kontakt .contact-spotlight-copy { color: #f4f8ff !important; }", CSS)
+
+    def test_v43_readability_palette_and_progressive_motion_profiles(self):
+        self.assertIn("--sunja-review-body: #33465c", CSS)
+        self.assertIn("--sunja-review-muted: #52657c", CSS)
+        self.assertIn("root.classList.toggle(\"motion-rich\", motionRich)", JS)
+        self.assertIn("root.classList.toggle(\"motion-standard\"", JS)
+        self.assertIn("root.classList.toggle(\"motion-reduced\", reduceMotion)", JS)
+        self.assertIn("deviceMemory >= 8 && hardwareConcurrency >= 6", JS)
+        self.assertIn("html.perf-lite:not(.sunja-intro-active)", CSS)
+
     def test_v40_google_and_browser_favicons_are_square_and_accessible(self):
         import struct
         self.assertIn('<link rel="icon" href="/favicon.ico"', INDEX)
@@ -252,8 +267,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=41.0", INDEX)
-        self.assertIn("js/main.js?v=37.0", INDEX)
+        self.assertIn("css/style.css?v=44.0", INDEX)
+        self.assertIn("js/main.js?v=38.0", INDEX)
 
     def test_v36_intro_has_no_native_player_controls_or_interaction(self):
         self.assertIn('id="sunjaIntro"', INDEX)
@@ -335,7 +350,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('window.addEventListener("load", function ()', JS)
         self.assertIn('querySelectorAll(".carousel-item:not(.active) picture img")', JS)
         self.assertIn('slideImg.loading = "eager"', JS)
-        self.assertIn('if (!saveData && !perfLite)', JS)
+        self.assertIn('if (!saveData && !slowConnection && !perfLite)', JS)
 
     def test_v21_glass_is_only_on_three_requested_controls(self):
         self.assertNotIn("sunja-liquid-", INDEX + CSS + JS)
@@ -433,8 +448,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=41.0", INDEX)
-        self.assertIn("js/main.js?v=37.0", INDEX)
+        self.assertIn("css/style.css?v=44.0", INDEX)
+        self.assertIn("js/main.js?v=38.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -461,8 +476,12 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=41.0", INDEX)
-        self.assertIn("js/main.js?v=37.0", INDEX)
+        self.assertIn("css/style.css?v=44.0", INDEX)
+        self.assertIn("js/main.js?v=38.0", INDEX)
+        self.assertIn("/* v42 — full post-intro review redesign.", CSS)
+        self.assertIn("html:not(.sunja-intro-active) #header-carousel", CSS)
+        self.assertIn("#usluge .service-nav-grid", CSS)
+        self.assertIn("font-size: 16px !important;", CSS)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
         self.assertNotIn("Upalila se lampica na instrument tabli?", INDEX)
@@ -641,8 +660,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=41.0", INDEX)
-        self.assertIn("js/main.js?v=37.0", INDEX)
+        self.assertIn("css/style.css?v=44.0", INDEX)
+        self.assertIn("js/main.js?v=38.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):

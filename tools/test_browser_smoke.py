@@ -62,7 +62,7 @@ class BrowserSmokeTests(unittest.TestCase):
                 finally:
                     context.close()
 
-    def test_no_preloader_and_compact_typography(self):
+    def test_no_preloader_and_readable_section_typography(self):
         def check(page):
             page.goto(self.origin + '?skipIntro=1', wait_until="domcontentloaded")
             self.assertEqual(page.locator("#preloader").count(), 0)
@@ -70,7 +70,8 @@ class BrowserSmokeTests(unittest.TestCase):
             size = page.locator("#o-nama h1").evaluate(
                 "(el) => parseFloat(getComputedStyle(el).fontSize)"
             )
-            self.assertLessEqual(size, 40)
+            self.assertGreaterEqual(size, 31)
+            self.assertLessEqual(size, 48)
             self.assertEqual(page.locator(".gallery-tile-link").count(), 5)
 
         self.exercise_browsers(check)

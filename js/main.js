@@ -9,11 +9,25 @@
 
     var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     var saveData = !!(connection && connection.saveData);
-    var lowMemory = typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 2;
-    var lowCpu = typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency <= 2;
+    var effectiveType = connection && typeof connection.effectiveType === "string"
+        ? connection.effectiveType.toLowerCase() : "";
+    var slowConnection = /^(slow-2g|2g|3g)$/.test(effectiveType);
+    var deviceMemory = typeof navigator.deviceMemory === "number"
+        ? navigator.deviceMemory : null;
+    var hardwareConcurrency = typeof navigator.hardwareConcurrency === "number"
+        ? navigator.hardwareConcurrency : null;
+    var lowMemory = deviceMemory !== null && deviceMemory <= 2;
+    var lowCpu = hardwareConcurrency !== null && hardwareConcurrency <= 2;
     var perfLite = saveData || lowMemory || lowCpu;
-
-    if (perfLite) document.documentElement.classList.add("perf-lite");
+    // Device age/model is not reliably exposed (and guessing it is brittle).
+    // Upgrade motion only when both reported capability hints are strong.
+    var motionRich = !reduceMotion && !perfLite && deviceMemory !== null &&
+        hardwareConcurrency !== null && deviceMemory >= 8 && hardwareConcurrency >= 6;
+    var root = document.documentElement;
+    root.classList.toggle("perf-lite", perfLite);
+    root.classList.toggle("motion-rich", motionRich);
+    root.classList.toggle("motion-standard", !motionRich && !perfLite && !reduceMotion);
+    root.classList.toggle("motion-reduced", reduceMotion);
 
     // Reveal only when useful. All content is visible and clickable before
     // this runs; nothing is blocked behind an animation or a loading screen.
@@ -33,7 +47,7 @@
     // The first hero photo retains fetchpriority=high. Once the page is loaded,
     // fetch the other two permanent slides on capable connections so Bootstrap
     // does not reveal an empty lazy image during the automatic transition.
-    if (!saveData && !perfLite) {
+    if (!saveData && !slowConnection && !perfLite) {
         window.addEventListener("load", function () {
             var slides = document.querySelectorAll(".carousel-item:not(.active) picture img");
             slides.forEach(function (slideImg) {
