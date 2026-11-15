@@ -4352,3 +4352,112 @@ html.perf-lite #galerija .team-item:hover {
         gap: 8px;
     }
 }
+
+
+/* v45 — make the original workshop photos the hero, not a small inset card. */
+@media (min-width: 768px) {
+    html:not(.sunja-intro-active) #header-carousel .carousel-item {
+        isolation: isolate;
+        background: #071a31;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item .hero-bg {
+        display: none !important;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item::after {
+        display: none !important;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item picture {
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: auto;
+        width: 52%;
+        height: 100%;
+        max-width: none;
+        aspect-ratio: auto;
+        padding: 0;
+        overflow: hidden;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        box-shadow: none;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item picture img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: cover !important;
+        object-position: center 52%;
+        border-radius: 0;
+        background: #071a31;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item:nth-child(2) picture img {
+        object-position: center 66%;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item:nth-child(3) picture img {
+        object-position: center 68%;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption {
+        background: linear-gradient(90deg,
+            #071a31 0%,
+            #071a31 34%,
+            rgba(7, 26, 49, .97) 43%,
+            rgba(7, 26, 49, .78) 53%,
+            rgba(7, 26, 49, .18) 69%,
+            transparent 84%) !important;
+        z-index: 3;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption .col-lg-8 {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption h6 {
+        color: #8ed8ff !important;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption h6::before {
+        background: #8ed8ff;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 {
+        max-width: 13ch;
+        color: #f8fbff !important;
+        font-size: clamp(2.55rem, 4.25vw, 4.2rem) !important;
+        line-height: 1.04;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption p {
+        max-width: 460px;
+        color: #e4edf7 !important;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 991.98px) {
+    html:not(.sunja-intro-active) #header-carousel .carousel-item picture {
+        width: 48%;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption .col-lg-8 {
+        flex-basis: 54%;
+        max-width: 54%;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 {
+        font-size: clamp(2.35rem, 4.7vw, 3.2rem) !important;
+    }
+}
+
+@media (max-width: 767.98px) {
+    /* The sharp picture is the only photo layer; the caption supplies contrast. */
+    html:not(.sunja-intro-active) #header-carousel .carousel-item .hero-bg {
+        display: none !important;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item::after {
+        display: none !important;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item picture img {
+        object-fit: cover !important;
+        object-position: center;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption {
+        background: linear-gradient(180deg,
+            rgba(5, 19, 37, .02) 0%,
+            rgba(5, 19, 37, .08) 32%,
+            rgba(5, 19, 37, .48) 56%,
+            rgba(5, 19, 37, .94) 100%) !important;
+    }
+}

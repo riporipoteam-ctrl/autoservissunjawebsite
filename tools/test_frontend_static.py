@@ -267,7 +267,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=44.0", INDEX)
+        self.assertIn("css/style.css?v=45.0", INDEX)
         self.assertIn("js/main.js?v=38.0", INDEX)
 
     def test_v36_intro_has_no_native_player_controls_or_interaction(self):
@@ -448,7 +448,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=44.0", INDEX)
+        self.assertIn("css/style.css?v=45.0", INDEX)
         self.assertIn("js/main.js?v=38.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
@@ -476,7 +476,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=44.0", INDEX)
+        self.assertIn("css/style.css?v=45.0", INDEX)
         self.assertIn("js/main.js?v=38.0", INDEX)
         self.assertIn("/* v42 — full post-intro review redesign.", CSS)
         self.assertIn("html:not(.sunja-intro-active) #header-carousel", CSS)
@@ -573,7 +573,9 @@ class FrontendStaticTests(unittest.TestCase):
 
     def test_v30_map_settle_restores_normal_flow_and_smooths_camera(self):
         self.assertIn("function settleMapScroll()", INDEX)
-        self.assertIn("window.scrollBy(0, shift)", INDEX)
+        self.assertNotIn("window.scrollBy(0, shift)", INDEX)
+        self.assertIn("window.scrollTo({ top: Math.max(0, beforeScrollY + shift), behavior: 'instant' });", INDEX)
+        self.assertIn("window.requestAnimationFrame(function () {", INDEX)
         self.assertIn("contactSection.getBoundingClientRect().top", INDEX)
         self.assertIn("map.easeTo({", INDEX)
         self.assertIn("duration: 180", INDEX)
@@ -591,7 +593,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("globe-complete", INDEX)
 
     def test_v29_map_avoids_scroll_frame_render_flood_and_starts_early(self):
-        self.assertIn("var CAMERA_MIN_FRAME_MS = 140;", INDEX)
+        self.assertIn("var CAMERA_MIN_FRAME_MS = 80;", INDEX)
         self.assertIn("lastCameraAt", INDEX)
         self.assertIn("progress - lastMapProgress", INDEX)
         self.assertIn("rootMargin: '850px 0px'", INDEX)
@@ -617,7 +619,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("scheduleEarlyGlobeStart()", INDEX)
         self.assertIn("window.addEventListener('load', scheduleEarlyGlobeStart", INDEX)
         self.assertIn("cancelPendingTileRequestsWhileZooming: false", INDEX)
-        self.assertIn("var CAMERA_MIN_FRAME_MS = 140;", INDEX)
+        self.assertIn("var CAMERA_MIN_FRAME_MS = 80;", INDEX)
         self.assertIn("duration: 180", INDEX)
         self.assertIn("rootMargin: '850px 0px'", INDEX)
         self.assertIn("setShopMarker(true)", INDEX)
@@ -660,7 +662,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=44.0", INDEX)
+        self.assertIn("css/style.css?v=45.0", INDEX)
         self.assertIn("js/main.js?v=38.0", INDEX)
 
 
@@ -710,6 +712,24 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('id="globeMap"', INDEX)
         self.assertIn("globe-complete", INDEX)
         self.assertNotIn("sunjaV19Scanner", CSS)
+
+    def test_v45_hero_uses_one_large_photo_layer_with_contrast(self):
+        self.assertIn("/* v45 — make the original workshop photos the hero", CSS)
+        self.assertIn("width: 52%;", CSS)
+        self.assertIn("background: linear-gradient(90deg,", CSS)
+        self.assertIn("object-fit: cover !important;", CSS)
+        self.assertIn("display: none !important;", CSS)
+        self.assertIn("color: #8ed8ff !important;", CSS)
+        self.assertIn("color: #f8fbff !important;", CSS)
+        self.assertIn("color: #e4edf7 !important;", CSS)
+        self.assertIn("css/style.css?v=45.0", INDEX)
+
+    def test_v45_map_waits_for_first_render_and_tolerates_retryable_errors(self):
+        self.assertIn("fallback(sawPreloadError ? 'karta nije odgovorila nakon ponovnog pokušaja' : 'isteklo vrijeme učitavanja');", INDEX)
+        self.assertIn("}, 45000);", INDEX)
+        self.assertIn("map.on('error', function (e) { if (!loaded && e && e.error) sawPreloadError = true; });", INDEX)
+        self.assertNotIn("if (!loaded) fallback('greška karte:", INDEX)
+        self.assertIn("if (fellBack) return;", INDEX)
 
 
 if __name__ == "__main__":

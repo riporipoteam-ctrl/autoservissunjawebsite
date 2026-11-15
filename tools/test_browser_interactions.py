@@ -238,6 +238,10 @@ class SiteInteractionTests(unittest.TestCase):
                 "() => document.querySelector('#globeScroll').classList.contains('globe-complete')",
                 timeout=10000,
             )
+            page.wait_for_function(
+                "() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve(true))))",
+                timeout=5000,
+            )
             state = page.evaluate("""() => {
                 const w = document.querySelector('#globeScroll');
                 return {
@@ -270,6 +274,69 @@ class SiteInteractionTests(unittest.TestCase):
                 timeout=5000,
             )
             self.assertEqual(page.evaluate("window.__mapJumps.length"), state["jumps"])
+        finally:
+            context.close()
+
+    def test_v45_transient_map_error_waits_for_delayed_successful_load(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="no-preference",
+        )
+        context.route(
+            "**/maplibre-gl@5.6.0/dist/maplibre-gl.js*",
+            lambda route: route.fulfill(status=200, content_type="text/javascript", body="/* fake map */"),
+        )
+        context.route(
+            "**/maplibre-gl@5.6.0/dist/maplibre-gl.css*",
+            lambda route: route.fulfill(status=200, content_type="text/css", body=""),
+        )
+        context.add_init_script("""
+            window.__mapErrorAt = 0;
+            window.__mapLoadAt = 0;
+            class FakeMap {
+                on(name, cb) {
+                    if (name === 'error') setTimeout(() => {
+                        window.__mapErrorAt = performance.now();
+                        cb({error: new Error('temporary tile fetch failure')});
+                    }, 35);
+                    if (name === 'load') setTimeout(() => {
+                        window.__mapLoadAt = performance.now();
+                        cb();
+                    }, 650);
+                    return this;
+                }
+                resize() {}
+                setProjection() {}
+                jumpTo() {}
+                easeTo() {}
+                stop() {}
+            }
+            class FakePopup { setHTML(){ return this; } }
+            class FakeMarker {
+                setLngLat(){ return this; }
+                setPopup(){ return this; }
+                addTo(){ return this; }
+                togglePopup(){ return this; }
+                remove(){}
+            }
+            window.maplibregl = {Map:FakeMap, Popup:FakePopup, Marker:FakeMarker};
+        """)
+        try:
+            page = context.new_page()
+            page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
+            page.locator("#globeMap").scroll_into_view_if_needed()
+            page.wait_for_function("window.__mapLoadAt > 0", timeout=8000)
+            state = page.locator("#globeScroll").evaluate("""el => ({
+                loaded: el.classList.contains('is-loaded'),
+                fallback: el.classList.contains('is-fallback'),
+                errorAt: window.__mapErrorAt,
+                loadAt: window.__mapLoadAt
+            })""")
+            self.assertGreater(state["errorAt"], 0, state)
+            self.assertGreater(state["loadAt"], state["errorAt"] + 400, state)
+            self.assertTrue(state["loaded"], state)
+            self.assertFalse(state["fallback"], state)
+            self.assertEqual(page.locator(".map-fallback-content").count(), 0)
         finally:
             context.close()
 

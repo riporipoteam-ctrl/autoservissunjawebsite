@@ -139,7 +139,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=44.0" rel="stylesheet">
+    <link href="css/style.css?v=45.0" rel="stylesheet">
 </head>
 
 <body>
@@ -1184,7 +1184,10 @@
         if (globeInitialized || fellBack) return;
         globeInitialized = true;
         window.clearTimeout(libraryWatchdog);
-        var safetyTimer = setTimeout(function () { fallback('isteklo vrijeme učitavanja'); }, 9000);
+        var sawPreloadError = false;
+        var safetyTimer = setTimeout(function () {
+            fallback(sawPreloadError ? 'karta nije odgovorila nakon ponovnog pokušaja' : 'isteklo vrijeme učitavanja');
+        }, 45000);
         try {
             if (!wrap || !el) { clearTimeout(safetyTimer); return; }
             if (typeof maplibregl === 'undefined') { fallback('knjižnica karte nedostupna'); clearTimeout(safetyTimer); return; }
@@ -1203,8 +1206,13 @@
                 cancelPendingTileRequestsWhileZooming: false
             });
             var loaded = false;
-            map.on('error', function (e) { if (!loaded) fallback('greška karte: ' + (e && e.error ? String(e.error).slice(0, 80) : 'nepoznata')); });
+            // MapLibre reports transient tile/style fetch failures through this
+            // event and retries them. Do not replace the map while that retry
+            // can still produce the first render; the longer watchdog handles
+            // a permanent failure instead.
+            map.on('error', function (e) { if (!loaded && e && e.error) sawPreloadError = true; });
             map.on('load', function () {
+                if (fellBack) return;
                 loaded = true;
                 clearTimeout(safetyTimer);
                 wrap.classList.add('is-loaded');
@@ -1228,7 +1236,7 @@
             var mapCompleted = false;
             var lastMapProgress = -1;
             var lastCameraAt = 0;
-            var CAMERA_MIN_FRAME_MS = 140;
+            var CAMERA_MIN_FRAME_MS = 80;
             var mapFrame = 0, cameraTimer = 0;
             var reduceMapMotion = !!(window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches);
@@ -1261,12 +1269,13 @@
             function settleMapScroll() {
                 if (!wrap) return;
                 // Collapse the long sticky flight into a normal one-screen map
-                // exactly once. Compensate for the removed height *before paint*
-                // so Kontakt and every section below stay in the same place on
-                // screen; reverse scrolling never enters the old sticky runway.
+                // exactly once. Preserve Kontakt's viewport coordinate using
+                // an exact scroll target, then correct after Safari's next
+                // layout frames; reverse scrolling never enters the old runway.
                 var contactSection = document.getElementById('kontakt');
                 var before = contactSection ? contactSection.getBoundingClientRect().top :
                     wrap.getBoundingClientRect().bottom;
+                var beforeScrollY = window.scrollY;
                 var rootStyle = document.documentElement.style;
                 var previousAnchor = rootStyle.overflowAnchor;
                 rootStyle.overflowAnchor = 'none';
@@ -1274,8 +1283,21 @@
                 var after = contactSection ? contactSection.getBoundingClientRect().top :
                     wrap.getBoundingClientRect().bottom;
                 var shift = after - before;
-                if (Math.abs(shift) > .5) window.scrollBy(0, shift);
-                rootStyle.overflowAnchor = previousAnchor;
+                if (Math.abs(shift) > .5) {
+                    window.scrollTo({ top: Math.max(0, beforeScrollY + shift), behavior: 'instant' });
+                }
+                function correctContactAnchor() {
+                    if (contactSection) {
+                        var remaining = contactSection.getBoundingClientRect().top - before;
+                        if (Math.abs(remaining) > .5) {
+                            window.scrollTo({ top: Math.max(0, window.scrollY + remaining), behavior: 'instant' });
+                        }
+                    }
+                    rootStyle.overflowAnchor = previousAnchor;
+                }
+                window.requestAnimationFrame(function () {
+                    window.requestAnimationFrame(correctContactAnchor);
+                });
             }
 
             function finishMapOnce() {
