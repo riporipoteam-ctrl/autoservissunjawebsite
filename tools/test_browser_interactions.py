@@ -227,12 +227,31 @@ class SiteInteractionTests(unittest.TestCase):
         try:
             page = context.new_page()
             page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
+            page.locator("#globeScroll").scroll_into_view_if_needed()
+            page.wait_for_function(
+                "document.querySelector('#globeScroll').classList.contains('is-loaded')",
+                timeout=10000,
+            )
             page.evaluate("""() => {
                 const map = document.querySelector('#globeScroll');
-                const target = map.offsetTop + (map.offsetHeight - innerHeight) * .99;
-                window.scrollTo(0, target);
+                const distance = map.offsetHeight - innerHeight;
+                window.__mapStartTarget = map.offsetTop + distance * .96;
+                window.scrollTo(0, window.__mapStartTarget);
+            }""")
+            page.wait_for_function(
+                "() => Math.abs(window.scrollY - window.__mapStartTarget) <= 2",
+                timeout=5000,
+            )
+            page.evaluate("""() => {
+                const map = document.querySelector('#globeScroll');
                 window.__contactBeforeFinish =
                     document.querySelector('#kontakt').getBoundingClientRect().top;
+                window.__mapScrollBeforeFinish = window.scrollY;
+                window.__mapFinishTarget = map.offsetTop +
+                    (map.offsetHeight - innerHeight) * .99;
+                window.__expectedContactShift =
+                    -(window.__mapFinishTarget - window.__mapScrollBeforeFinish);
+                window.scrollTo(0, window.__mapFinishTarget);
             }""")
             page.wait_for_function(
                 "() => document.querySelector('#globeScroll').classList.contains('globe-complete')",
@@ -250,12 +269,16 @@ class SiteInteractionTests(unittest.TestCase):
                     stickyPosition: getComputedStyle(w.querySelector('.globe-sticky')).position,
                     contactShift: document.querySelector('#kontakt').getBoundingClientRect().top -
                         window.__contactBeforeFinish,
+                    expectedContactShift: window.__expectedContactShift,
                     jumps: window.__mapJumps.length,
                 };
             }""")
             self.assertLessEqual(state["height"], state["viewport"] + 2)
             self.assertEqual(state["stickyPosition"], "relative")
-            self.assertLessEqual(abs(state["contactShift"]), 6)
+            self.assertLessEqual(
+                abs(state["contactShift"] - state["expectedContactShift"]), 6,
+                state,
+            )
             # A native window scroll works on both mobile WebKit and
             # Chromium; Playwright's synthetic mouse wheel is unreliable in
             # mobile emulation (the actual visitor scrolls with touch).
