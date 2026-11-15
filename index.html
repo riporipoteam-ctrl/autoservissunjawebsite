@@ -367,7 +367,7 @@
 
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5" id="pocetna">
-        <div id="header-carousel" class="carousel slide" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true">
+        <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true">
             <div class="carousel-inner">
                 <div class="carousel-item active">
                     <div class="hero-bg" id="heroMainBg" style="--hero-photo:url('/assets/photos/tt-wide-20260919-d3b7439d.webp');--hero-photo-mobile:url('/assets/photos/tt-20260919-d3b7439d.webp')"></div>
@@ -551,7 +551,7 @@
             </div>
             <div class="row g-4 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="col-lg-4">
-                    <div class="nav w-100 nav-pills me-4">
+                    <div class="nav w-100 nav-pills me-4 service-nav-grid">
                         <button class="nav-link w-100 d-flex align-items-center text-start p-4 mb-4 active" data-bs-toggle="pill" data-bs-target="#tab-pane-1" type="button">
                             <i class="fa fa-laptop-code fa-2x me-3"></i>
                             <h4 class="m-0">Autodijagnostika</h4>
@@ -582,9 +582,9 @@
                     <div class="tab-content w-100">
                         <div class="tab-pane fade show active" id="tab-pane-1">
                             <div class="row g-4">
-                                <div class="col-md-6" style="min-height: 350px;">
-                                    <div>
-                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="dijagnostika" src="assets/photos/tt-20261023-180d1783.webp" loading="lazy" decoding="async" alt="Autodijagnostika">
+                                <div class="col-md-6 service-media-column">
+                                    <div class="service-media-frame">
+                                        <img class="img-fluid w-100 svc-photo" src="assets/gallery/radionica-dijagnostika.webp" loading="lazy" decoding="async" alt="Autodijagnostika u vozilu">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -599,9 +599,9 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-2">
                             <div class="row g-4">
-                                <div class="col-md-6" style="min-height: 350px;">
-                                    <div>
-                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="peugeot" src="assets/photos/tt-20261108-574b96bf.webp" loading="lazy" decoding="async" alt="Peugeot servis">
+                                <div class="col-md-6 service-media-column">
+                                    <div class="service-media-frame">
+                                        <img class="img-fluid w-100 svc-photo" src="assets/photos/tt-20261108-574b96bf.webp" loading="lazy" decoding="async" alt="Peugeot servis u radionici">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -615,9 +615,9 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-3">
                             <div class="row g-4">
-                                <div class="col-md-6" style="min-height: 350px;">
-                                    <div>
-                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="mali" src="assets/photos/tt-20261031-a32411f2.webp" loading="lazy" decoding="async" alt="Mali servis">
+                                <div class="col-md-6 service-media-column">
+                                    <div class="service-media-frame">
+                                        <img class="img-fluid w-100 svc-photo" src="assets/photos/tt-20261023-72158e75.webp" loading="lazy" decoding="async" alt="Motor pri redovnom održavanju">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -631,9 +631,9 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-4">
                             <div class="row g-4">
-                                <div class="col-md-6" style="min-height: 350px;">
-                                    <div>
-                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="veliki" src="assets/photos/tt-20261004-2d828014.webp" loading="lazy" decoding="async" alt="Veliki servis">
+                                <div class="col-md-6 service-media-column">
+                                    <div class="service-media-frame">
+                                        <img class="img-fluid w-100 svc-photo" src="assets/photos/tt-20261004-2d828014.webp" loading="lazy" decoding="async" alt="Dijelovi motora za veliki servis">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -647,9 +647,9 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-5">
                             <div class="row g-4">
-                                <div class="col-md-6" style="min-height: 350px;">
-                                    <div>
-                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="elektrika" src="assets/photos/tt-20261108-234cf88c.webp" loading="lazy" decoding="async" alt="Autoelektrika">
+                                <div class="col-md-6 service-media-column">
+                                    <div class="service-media-frame">
+                                        <img class="img-fluid w-100 svc-photo" src="assets/photos/tt-20261108-234cf88c.webp" loading="lazy" decoding="async" alt="Elektronika i dijagnostika vozila">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -664,9 +664,9 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-6">
                             <div class="row g-4">
-                                <div class="col-md-6" style="min-height: 350px;">
-                                    <div>
-                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="kljucevi" src="assets/photos/tt-20261027-cce4aa19.webp" loading="lazy" decoding="async" alt="Ključevi i daljinski">
+                                <div class="col-md-6 service-media-column">
+                                    <div class="service-media-frame">
+                                        <img class="img-fluid w-100 svc-photo" src="assets/gallery/kljucevi-programiranje.webp" loading="lazy" decoding="async" alt="Programiranje automobilskih ključeva">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -1075,19 +1075,6 @@
             return Number(entry.quality_v || 0) >= 2 && localPhotoPath(entry.src);
         }).sort(function (a, b) {
             return (b.date || '') < (a.date || '') ? -1 : 1;
-        });
-
-        // Every service image gets a full-quality social original. Prefer the
-        // matching category, otherwise use another sharp workshop photo rather
-        // than falling back to an older compressed template asset.
-        document.querySelectorAll('[data-svc-cat]').forEach(function (img, idx) {
-            var service = d.services && d.services[img.getAttribute('data-svc-cat')];
-            var fallback = sharpGallery.length ? sharpGallery[idx % sharpGallery.length] : null;
-            var src = localPhotoPath((service && service.src) || (fallback && fallback.src));
-            if (src && src !== img.getAttribute('src')) {
-                img.src = src;
-                img.decoding = 'async';
-            }
         });
 
         var footer = document.getElementById('siteFooter');
