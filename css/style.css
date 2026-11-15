@@ -1774,7 +1774,7 @@ h6.text-primary.text-uppercase { font-size: .69rem !important; letter-spacing: .
     background-position: center center !important;
     background-repeat: no-repeat !important;
     filter: none !important;
-    transform: none !important;
+    /* v41: the active background may use a restrained zoom animation. */
 }
 #header-carousel .carousel-item picture img {
     object-fit: contain !important;
@@ -2904,4 +2904,349 @@ html.sunja-intro-active #header-carousel .hero-bg {
     .contact-status-row, .contact-spotlight-copy { min-width: 0; max-width: 100%; }
     .contact-direct-phone { padding: 25px 16px; min-height: 142px; border-radius: 16px; }
     .experience-feature { gap: 14px; padding: 12px 14px; }
+}
+
+/* v41 — refined responsive identity, service cards and lightweight motion.
+   Scoped additions preserve the approved white / navy / Šunja-blue design. */
+:root {
+    --sunja-blue: #0b5fa5;
+    --sunja-navy: #0b2154;
+    --sunja-ink: #13264d;
+    --sunja-muted: #64758b;
+    --sunja-line: #dfe8f1;
+    --sunja-soft: #f4f8fc;
+    --sunja-card-shadow: 0 14px 38px rgba(11, 33, 84, .075);
+}
+html { scroll-padding-top: 88px; }
+#o-nama, #usluge, #galerija, #recenzije, #lokacija, #kontakt {
+    scroll-margin-top: 88px;
+}
+body {
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: var(--sunja-ink);
+    text-wrap: pretty;
+}
+h6.text-primary.text-uppercase {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--sunja-blue) !important;
+    font-weight: 800 !important;
+    letter-spacing: .12em !important;
+}
+h6.text-primary.text-uppercase::before {
+    content: "";
+    display: inline-block;
+    width: 30px;
+    height: 3px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #4ea8e0, var(--sunja-blue));
+}
+#o-nama, #galerija, #recenzije, #kontakt { background-color: #fff; }
+#usluge, #lokacija { background-color: #f5f8fc; }
+#o-nama .experience-feature,
+#kontakt .contact-spotlight,
+#kontakt .contact-facts,
+#galerija .team-item,
+#usluge .tab-content {
+    box-shadow: var(--sunja-card-shadow);
+}
+#o-nama .experience-feature,
+#kontakt .contact-spotlight {
+    border-color: #e1eaf3;
+    border-radius: 18px;
+}
+.btn {
+    min-height: 44px;
+    font-weight: 700;
+    letter-spacing: .005em;
+}
+.btn-primary {
+    box-shadow: 0 6px 17px rgba(11, 95, 165, .13);
+}
+.btn-primary:focus-visible, .btn-outline-light:focus-visible {
+    outline-color: #55a9e4;
+    outline-offset: 3px;
+}
+
+/* Hero: cross-fade between the real workshop photographs and gently animate
+   only the blurred/full-bleed backdrop, never the sharp foreground original. */
+#header-carousel.carousel-fade .carousel-item {
+    transition: opacity .72s ease-in-out;
+}
+#header-carousel .carousel-item {
+    overflow: hidden;
+    isolation: isolate;
+}
+#header-carousel .carousel-caption {
+    z-index: 3;
+    padding-top: clamp(2rem, 6vw, 5rem);
+}
+#header-carousel .carousel-caption .container { max-width: 1320px; }
+#header-carousel .carousel-caption h1 {
+    max-width: 15ch;
+    text-wrap: balance;
+    letter-spacing: -.045em !important;
+}
+#header-carousel .carousel-caption p {
+    max-width: 54ch;
+    text-wrap: pretty;
+}
+#header-carousel .hero-bg {
+    transform: scale(1.025);
+    transform-origin: center;
+}
+#header-carousel .carousel-item.active .hero-bg {
+    animation: sunjaHeroBackdrop 7s cubic-bezier(.18,.6,.25,1) both;
+}
+@keyframes sunjaHeroBackdrop {
+    from { transform: scale(1.025); }
+    to { transform: scale(1.085); }
+}
+#header-carousel .hero-indicators button.active span {
+    animation: heroFill 6.5s linear forwards;
+}
+#header-carousel .hero-nav {
+    border: 1px solid rgba(255,255,255,.34);
+    box-shadow: 0 8px 22px rgba(5,20,45,.2);
+    transition: background-color .2s ease, box-shadow .2s ease;
+}
+
+/* Service chooser: consistent cards on desktop, a compact two-column grid on
+   tablets and phones so visitors see the selected service without a long list. */
+#usluge .service-nav-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+#usluge .service-nav-grid .nav-link {
+    box-sizing: border-box;
+    display: flex !important;
+    align-items: center;
+    gap: 13px;
+    width: 100%;
+    min-width: 0;
+    min-height: 68px;
+    margin: 0 !important;
+    padding: 13px 15px !important;
+    border: 1px solid #e0e8f0;
+    border-radius: 15px !important;
+    background: #fff !important;
+    color: var(--sunja-ink) !important;
+    text-align: left;
+    box-shadow: 0 5px 15px rgba(11,33,84,.035);
+    transition: border-color .2s ease, background-color .2s ease,
+                box-shadow .2s ease, color .2s ease;
+}
+#usluge .service-nav-grid .nav-link i {
+    flex: 0 0 42px;
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    margin: 0 !important;
+    border-radius: 12px;
+    background: #edf5fc;
+    color: var(--sunja-blue) !important;
+    font-size: 1.22rem !important;
+}
+#usluge .service-nav-grid .nav-link h4 {
+    min-width: 0;
+    margin: 0 !important;
+    color: inherit !important;
+    font-size: clamp(.94rem, 1.1vw, 1.03rem) !important;
+    font-weight: 750 !important;
+    line-height: 1.26 !important;
+    overflow-wrap: anywhere;
+}
+#usluge .service-nav-grid .nav-link.active {
+    border-color: var(--sunja-blue) !important;
+    background: linear-gradient(135deg, #126eb5, #0b5598) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 24px rgba(11,95,165,.20);
+}
+#usluge .service-nav-grid .nav-link.active i {
+    background: rgba(255,255,255,.16);
+    color: #fff !important;
+}
+#usluge .service-nav-grid .nav-link:focus-visible {
+    outline: 3px solid #55a9e4;
+    outline-offset: 3px;
+}
+#usluge .tab-content {
+    box-sizing: border-box;
+    min-width: 0;
+    padding: clamp(15px, 2vw, 25px) !important;
+    border: 1px solid #e3ebf3;
+    border-radius: 22px;
+    background: #fff;
+}
+#usluge .tab-pane .row {
+    align-items: center;
+}
+#usluge .service-media-column {
+    min-width: 0;
+}
+#usluge .service-media-frame {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+    max-height: 560px;
+    overflow: hidden;
+    border: 1px solid #e3ebf2;
+    border-radius: 17px;
+    background: linear-gradient(145deg, #f8fbfe, #edf4fa);
+}
+#usluge .service-media-frame .svc-photo {
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 560px !important;
+    min-height: 0 !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    border-radius: 16px;
+}
+#usluge .tab-pane h3 {
+    margin-bottom: 12px !important;
+    color: var(--sunja-navy);
+    font-size: clamp(1.25rem, 2vw, 1.55rem) !important;
+    font-weight: 800;
+    letter-spacing: -.025em;
+}
+#usluge .tab-pane p {
+    margin-bottom: 11px;
+    color: #52647a;
+    font-size: .94rem;
+    line-height: 1.6;
+}
+#usluge .tab-pane p .fa-check {
+    color: #16835c !important;
+}
+#usluge .tab-pane .btn {
+    margin-top: 8px !important;
+    border-radius: 12px;
+}
+#usluge .tab-pane.active {
+    animation: sunjaServiceIn .32s cubic-bezier(.18,.7,.25,1) both;
+}
+@keyframes sunjaServiceIn {
+    from { opacity: .45; transform: translateY(7px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Gallery and contact cards: calm borders, consistent corners and real depth. */
+#galerija .team-item {
+    border: 1px solid #e4ebf2;
+    border-radius: 18px;
+    background: #fff;
+    overflow: hidden;
+}
+#galerija .gallery-source-line {
+    border-top: 1px solid #e8eef4;
+    color: #566980;
+    font-size: .84rem;
+}
+#kontakt .contact-fact {
+    border: 1px solid #e6edf4;
+    border-radius: 14px;
+    background: #fff;
+}
+#siteFooter { border-top: 1px solid rgba(255,255,255,.12); }
+
+/* Responsive service selector and detail card. */
+@media (max-width: 991.98px) {
+    #usluge .service-nav-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px !important;
+        margin: 0 0 15px !important;
+    }
+    #usluge .service-nav-grid .nav-link {
+        min-height: 72px;
+        padding: 10px 11px !important;
+        gap: 9px;
+        border-radius: 13px !important;
+    }
+    #usluge .service-nav-grid .nav-link i {
+        flex-basis: 36px;
+        width: 36px;
+        height: 36px;
+        font-size: 1.08rem !important;
+        border-radius: 10px;
+    }
+    #usluge .service-nav-grid .nav-link h4 {
+        font-size: .9rem !important;
+    }
+    #usluge .tab-content {
+        padding: 14px !important;
+        border-radius: 18px;
+    }
+    #usluge .service-media-frame {
+        max-height: 600px;
+    }
+    #usluge .service-media-frame .svc-photo {
+        max-height: 600px !important;
+    }
+}
+@media (max-width: 575.98px) {
+    #usluge { padding-top: 2.6rem !important; padding-bottom: 2.6rem !important; }
+    #usluge .service-nav-grid { gap: 8px !important; }
+    #usluge .service-nav-grid .nav-link {
+        min-height: 68px;
+        padding: 9px 9px !important;
+        gap: 7px;
+    }
+    #usluge .service-nav-grid .nav-link i {
+        flex-basis: 31px;
+        width: 31px;
+        height: 31px;
+        font-size: .98rem !important;
+    }
+    #usluge .service-nav-grid .nav-link h4 {
+        font-size: .82rem !important;
+        line-height: 1.22 !important;
+    }
+    #usluge .tab-content { padding: 11px !important; }
+    #usluge .service-media-frame {
+        max-height: 570px;
+        border-radius: 14px;
+    }
+    #usluge .service-media-frame .svc-photo {
+        max-height: 570px !important;
+    }
+    #usluge .tab-pane h3 { font-size: 1.18rem !important; }
+    #usluge .tab-pane p { font-size: .88rem !important; line-height: 1.55; }
+    #header-carousel .carousel-caption .container { padding-left: 20px; padding-right: 20px; }
+    #header-carousel .hero-indicators { bottom: 1.25rem; }
+}
+
+/* Use low-cost effects on older phones/tablets and respect OS motion settings. */
+.perf-lite #header-carousel .carousel-item.active .hero-bg {
+    animation: none !important;
+    transform: none !important;
+}
+.perf-lite #usluge .tab-pane.active {
+    animation: none !important;
+}
+.perf-lite #usluge .tab-content,
+.perf-lite #galerija .team-item,
+.perf-lite #kontakt .contact-fact {
+    box-shadow: 0 4px 14px rgba(11,33,84,.045) !important;
+}
+@media (prefers-reduced-motion: reduce) {
+    #header-carousel .carousel-item.active .hero-bg,
+    #usluge .tab-pane.active {
+        animation: none !important;
+        transform: none !important;
+    }
+    #header-carousel.carousel-fade .carousel-item {
+        transition: none !important;
+    }
 }

@@ -12,6 +12,48 @@ JS = (ROOT / "js" / "main.js").read_text(encoding="utf-8")
 
 
 class FrontendStaticTests(unittest.TestCase):
+    def test_v41_service_photos_are_curated_unique_and_not_randomized(self):
+        import re
+        from html.parser import HTMLParser
+        images = re.findall(
+            r'<img[^>]*class="[^"]*\bsvc-photo\b[^"]*\bservice-image\b[^"]*"[^>]*src="([^"]+)"',
+            INDEX
+        )
+        self.assertEqual(6, len(images), "Every service must keep exactly one real image")
+        self.assertEqual(6, len(set(images)), "Service images must never repeat")
+        self.assertIn("assets/gallery/radionica-dijagnostika.webp", images)
+        self.assertIn("assets/gallery/kljucevi-programiranje.webp", images)
+        self.assertIn("assets/photos/tt-20261023-72158e75.webp", images)
+        for src in images:
+            self.assertTrue((ROOT / src).is_file(), f"Missing service photo: {src}")
+        self.assertNotIn("data-svc-cat=", INDEX)
+        self.assertNotIn("querySelectorAll('[data-svc-cat]')", INDEX)
+        self.assertIn("service-nav-grid", INDEX)
+
+    def test_v41_mobile_service_grid_and_panel_are_responsive(self):
+        self.assertIn("#usluge .service-nav-grid", CSS)
+        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", CSS)
+        self.assertIn("service-media-frame", INDEX)
+        self.assertIn("object-fit: contain", CSS)
+        self.assertIn("@media (prefers-reduced-motion: reduce)", CSS)
+        self.assertIn(".service-nav-grid .nav-link", CSS)
+
+    def test_v41_hero_uses_fade_and_timed_progress_that_matches_autoplay(self):
+        self.assertIn('id="header-carousel" class="carousel slide carousel-fade"', INDEX)
+        self.assertIn("animation: heroFill 6.5s linear forwards", CSS)
+        self.assertIn("6500", JS)
+        self.assertIn("#header-carousel .carousel-item.active .hero-bg", CSS)
+        self.assertIn("@keyframes sunjaHeroBackdrop", CSS)
+
+    def test_v41_site_wide_ui_polish_is_scoped_and_accessible(self):
+        for selector in ("#o-nama", "#usluge", "#galerija", "#recenzije",
+                         "#lokacija", "#kontakt", "#siteFooter"):
+            self.assertIn(selector, CSS)
+        self.assertIn("scroll-margin-top", CSS)
+        self.assertIn("prefers-reduced-motion: reduce", CSS)
+        self.assertIn(":focus-visible", CSS)
+        self.assertIn("perf-lite", CSS)
+
     def test_v40_google_and_browser_favicons_are_square_and_accessible(self):
         import struct
         self.assertIn('<link rel="icon" href="/favicon.ico"', INDEX)
@@ -210,7 +252,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("css/style.css?v=41.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v36_intro_has_no_native_player_controls_or_interaction(self):
@@ -391,7 +433,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("css/style.css?v=41.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
@@ -419,7 +461,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("css/style.css?v=41.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
@@ -599,7 +641,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("css/style.css?v=41.0", INDEX)
         self.assertIn("js/main.js?v=37.0", INDEX)
 
 
