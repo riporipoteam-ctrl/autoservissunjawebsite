@@ -16,7 +16,7 @@ class FrontendStaticTests(unittest.TestCase):
         import re
         from html.parser import HTMLParser
         images = re.findall(
-            r'<img[^>]*class="[^"]*\\bsvc-photo\\b[^"]*"[^>]*src="([^"]+)"',
+            r'<img[^>]*class="[^"]*\bsvc-photo\b[^"]*"[^>]*src="([^"]+)"',
             INDEX
         )
         self.assertEqual(6, len(images), "Every service must keep exactly one real image")
