@@ -33,7 +33,7 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v41_mobile_service_grid_and_panel_are_responsive(self):
         self.assertIn("#usluge .service-nav-grid", CSS)
         self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", CSS)
-        self.assertIn(".service-media-frame", INDEX)
+        self.assertIn("service-media-frame", INDEX)
         self.assertIn("object-fit: contain", CSS)
         self.assertIn("@media (prefers-reduced-motion: reduce)", CSS)
         self.assertIn(".service-nav-grid .nav-link", CSS)
