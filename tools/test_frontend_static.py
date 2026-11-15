@@ -12,6 +12,40 @@ JS = (ROOT / "js" / "main.js").read_text(encoding="utf-8")
 
 
 class FrontendStaticTests(unittest.TestCase):
+    def test_v40_google_and_browser_favicons_are_square_and_accessible(self):
+        import struct
+        self.assertIn('<link rel="icon" href="/favicon.ico"', INDEX)
+        self.assertIn('href="/favicon-96x96.png"', INDEX)
+        self.assertIn('href="/favicon-48x48.png"', INDEX)
+        self.assertIn('href="/apple-touch-icon.png"', INDEX)
+        self.assertIn('href="/site.webmanifest"', INDEX)
+        self.assertNotIn('<link href="assets/sunja-logo-transparent.png" rel="icon"', INDEX)
+        for size in (48, 96, 192, 512):
+            asset = ROOT / f"favicon-{size}x{size}.png"
+            self.assertTrue(asset.is_file(), f"Missing {asset}")
+            header = asset.read_bytes()[:24]
+            self.assertTrue(header.startswith(b"\\x89PNG\\r\\n\\x1a\\n"))
+            self.assertEqual(struct.unpack(">II", header[16:24]), (size, size))
+        ico = (ROOT / "favicon.ico").read_bytes()
+        self.assertEqual(ico[:4], b"\\x00\\x00\\x01\\x00")
+        self.assertGreaterEqual(int.from_bytes(ico[4:6], "little"), 3)
+        apple = (ROOT / "apple-touch-icon.png").read_bytes()
+        self.assertEqual(struct.unpack(">II", apple[16:24]), (180, 180))
+        manifest = json.loads((ROOT / "site.webmanifest").read_text(encoding="utf-8"))
+        self.assertEqual(manifest["name"], "Auto Servis Šunja")
+        self.assertIn("/favicon-512x512.png", [item["src"] for item in manifest["icons"]])
+
+    def test_v40_map_library_warms_during_intro_without_starting_globe_early(self):
+        self.assertIn("function primeMapLibrary()", INDEX)
+        self.assertIn("sunja:intro-experience-start", INDEX)
+        self.assertIn("window.addEventListener('sunja:intro-experience-start', primeMapLibrary", INDEX)
+        self.assertIn("window.setTimeout(startGlobe, 90)", INDEX)
+        self.assertIn("if (globeStarted && !fellBack) initGlobe()", INDEX)
+        self.assertIn("window.addEventListener('sunja:intro-finished'", INDEX)
+        self.assertIn("function settleMapScroll()", INDEX)
+        self.assertIn("wrap.classList.add('globe-complete')", INDEX)
+
+
     def test_v38_logo_restarts_from_a_fresh_animation_decoder(self):
         # The v37 preload was free-running before the visible intro, which
         # left Safari showing the WebP's final frame instead of the drawing.
