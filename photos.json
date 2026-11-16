@@ -561,19 +561,6 @@
    "media_id": "tiktok:7686981816414113044:0",
    "media_index": 0,
    "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20260917-052437.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7686581783609052437",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-17",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7686581783609052437",
-   "media_id": "tiktok:7686581783609052437:0",
-   "media_index": 0
   }
  ],
  "heroMobile": [
@@ -1015,7 +1002,7 @@
    "status": "not-photo",
    "count": 0,
    "attempts": 1,
-   "last": 1794778885
+   "last": 1794792399
   },
   "7685022963149704468": {
    "status": "photo",
