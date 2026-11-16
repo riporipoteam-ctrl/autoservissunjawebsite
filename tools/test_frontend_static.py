@@ -731,6 +731,15 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("if (!loaded) fallback('greška karte:", INDEX)
         self.assertIn("if (fellBack) return;", INDEX)
 
+    def test_testing_page_is_unlisted_and_does_not_replace_home(self):
+        page = (ROOT / "testing" / "index.html").read_text(encoding="utf-8")
+        self.assertIn('content="noindex, nofollow"', page)
+        self.assertIn('id="stage"', page)
+        self.assertIn("Auto Servis Šunja", page)
+        self.assertNotIn('href="/testing"', INDEX)
+        self.assertNotIn("autosunja.com/testing", INDEX)
+        self.assertNotIn("testing/testing.css", INDEX)
+
 
 if __name__ == "__main__":
     unittest.main()

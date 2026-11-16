@@ -1,1499 +1,265 @@
 <!DOCTYPE html>
 <html lang="bs">
-
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="robots" content="noindex, nofollow">
     <title>Auto Servis Šunja Goražde | Dijagnostika, servis i ključevi</title>
-    <meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport">
-    <!-- Fetch the original logo animation ahead of render-blocking styles/fonts. -->
-    <link rel="preload" as="image" href="/assets/video/sunja-logo-sharp-smooth-v36.webp" fetchpriority="high">
-    <!-- Restore the owner's original logo movie before first paint. -->
-    <script>
-    (function () {
-        if (/[?&]skipIntro=1(?:&|$)/.test(location.search)) return;
-        // Reduced motion uses a static logo instead of skipping the intro
-        // entirely. A system setting should never make the branding vanish.
-        document.documentElement.classList.add('sunja-intro-active');
-    })();
-    </script>
-    <!-- Early refresh reset: Safari must not restore a previous hash/scroll. -->
-    <script>
-    (function () {
-        try {
-            var nav = performance.getEntriesByType &&
-                performance.getEntriesByType('navigation')[0];
-            var navigationType = nav && nav.type;
-            if (!navigationType && performance.navigation) {
-                navigationType = performance.navigation.type === 1 ? 'reload' : 'navigate';
-            }
-            if (navigationType === 'reload') {
-                history.scrollRestoration = 'manual';
-                if (location.hash) {
-                    history.replaceState(history.state, '', location.pathname + location.search);
-                }
-                function resetReloadPosition() { window.scrollTo(0, 0); }
-                document.addEventListener('DOMContentLoaded', resetReloadPosition, { once: true });
-                window.addEventListener('pageshow', resetReloadPosition, { once: true });
-                window.addEventListener('load', resetReloadPosition, { once: true });
-            }
-        } catch (err) { /* Native history behaviour remains the fallback. */ }
-    })();
-    </script>
-    <!-- Unconditional theme fallback is understood by iOS Safari and Android;
-         the media-specific colours below remain for browsers supporting them. -->
-    <meta name="theme-color" content="#0B5FA5">
-    <!-- Match Android browser chrome to the two-tone mobile action bar. -->
-    <meta name="theme-color" media="(max-width: 991.98px)" content="#0B1118">
-    <meta name="theme-color" media="(min-width: 992px)" content="#e8f4fc">
     <meta name="description" content="Auto Servis Šunja u Goraždu – autodijagnostika, autoelektrika, mali i veliki servis, ključevi i daljinski. Hajra Lakovića 38. Tel: 061 297 847.">
-    <meta name="robots" content="noindex, nofollow, noarchive">
-    <meta name="google-site-verification" content="SeUD1UgHTyjOPnkiG7U72gulqS9yaYa_5TpK-j-glJw" />
-    <meta property="og:locale" content="bs_BA">
-    <meta property="og:site_name" content="Auto Servis Šunja">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="Auto Servis Šunja Goražde | Dijagnostika, servis i ključevi">
-    <meta property="og:description" content="Servis i popravke za sve marke vozila: dijagnostika, mali i veliki servis, autoelektrika, ključevi i daljinski. Hajra Lakovića 38, Goražde, 061 297 847.">
-    <meta property="og:image" content="https://autosunja.com/assets/photos/tt-wide-20260919-d3b7439d.webp">
-    <meta property="og:url" content="https://autosunja.com/testing/">
-    <meta name="twitter:card" content="summary_large_image">
-    <!-- Search Console-friendly canonical details for this actual workshop.
-         No fabricated reviews, awards, service prices or ratings. -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "AutoRepair",
-      "@id": "https://autosunja.com/#auto-servis-sunja",
-      "name": "Auto Servis Šunja",
-      "alternateName": [
-        "Auto Servis Sunja",
-        "AutoSunja"
-      ],
-      "url": "https://autosunja.com/",
-      "description": "Auto servis u Goraždu: autodijagnostika, mali i veliki servis, autoelektrika, ključevi i daljinski za automobile.",
-      "image": "https://autosunja.com/assets/photos/tt-wide-20260919-d3b7439d.webp",
-      "logo": "https://autosunja.com/assets/sunja-logo-transparent.png",
-      "telephone": "+38761297847",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Hajra Lakovića 38",
-        "addressLocality": "Goražde",
-        "postalCode": "73000",
-        "addressCountry": "BA"
-      },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": 43.6651456,
-        "longitude": 18.982064
-      },
-      "openingHoursSpecification": {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": [
-          "https://schema.org/Monday",
-          "https://schema.org/Tuesday",
-          "https://schema.org/Wednesday",
-          "https://schema.org/Thursday",
-          "https://schema.org/Friday",
-          "https://schema.org/Saturday"
-        ],
-        "opens": "10:00",
-        "closes": "18:00"
-      },
-      "sameAs": [
-        "https://www.tiktok.com/@autoservissunja",
-        "https://www.instagram.com/sunja_servis_peugeot/"
-      ],
-      "areaServed": {
-        "@type": "City",
-        "name": "Goražde"
-      }
-    }
-    </script>
-
-    <!-- Square original Šunja emblem: Google Search, browser tabs and iOS.
-         Keep stable public URLs so Google can recrawl the icon. -->
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="/favicon-48x48.png" type="image/png" sizes="48x48">
-    <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
-    <link rel="manifest" href="/site.webmanifest">
-
-    <!-- Google Web Fonts -->
+    <link rel="icon" href="/favicon.ico">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700&family=Ubuntu:wght@400;500&display=swap" rel="stylesheet">
-
-    <!-- Icon Font Stylesheet -->
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700;800&family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-
-
-    <!-- Libraries Stylesheet -->
-
-
-    <!-- Customized Bootstrap Stylesheet -->
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-
-    <!-- Leaflet (custom globe map) -->
-    <link rel="preconnect" href="https://tiles.openfreemap.org">
-    <link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
-    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-
-    <!-- Template Stylesheet -->
-    <link href="/css/style.css?v=46.0" rel="stylesheet">
-    <meta name="googlebot" content="noindex, nofollow, noarchive">
-    <link rel="stylesheet" href="/testing/testing.css">
+    <link href="testing.css" rel="stylesheet">
 </head>
+<body>
+    <canvas id="stage" aria-hidden="true"></canvas>
+    <div class="scroll-progress" aria-hidden="true"><span id="scrollBar"></span></div>
 
-<body class="testing-design">
-    <!-- The owner's original animation frames, 20% faster.
-         An image has no native video player, play/pause button, or tap controls. -->
-    <div id="sunjaIntro" class="sunja-intro"
-         aria-label="Učitavanje stranice Auto Servis Šunja">
-        <img id="sunjaIntroFrames" class="sunja-intro-frames"
-             data-animation-url="/assets/video/sunja-logo-sharp-smooth-v36.webp"
-             alt="" aria-hidden="true" draggable="false"
-             fetchpriority="high" decoding="sync">
-        <img class="sunja-intro-fallback-logo"
-             src="/assets/sunja-logo-transparent.webp"
-             alt="" aria-hidden="true" draggable="false" decoding="async">
-        <div id="sunjaExperience" class="sunja-intro-experience" role="img" aria-label="25+ godina iskustva">
-            <!-- Letter outlines draw in the same visual language as the original
-                 logo reveal, only once the original logo has finished playing. -->
-            <svg class="sunja-intro-experience-art" viewBox="0 0 720 350"
-                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
-                <text class="sunja-experience-number-trace" x="360" y="202" text-anchor="middle">25<tspan class="sunja-experience-plus">+</tspan></text>
-                <text class="sunja-experience-number-solid" x="360" y="202" text-anchor="middle">25<tspan class="sunja-experience-plus">+</tspan></text>
-                <path class="sunja-experience-rule" d="M265 235 H455" />
-                <text class="sunja-experience-caption-trace" x="360" y="286" text-anchor="middle">GODINA ISKUSTVA</text>
-                <text class="sunja-experience-caption-solid" x="360" y="286" text-anchor="middle">GODINA ISKUSTVA</text>
-            </svg>
+    <header class="topbar">
+        <a class="brand" href="#pocetna"><img src="../assets/sunja-logo-light.webp" alt="Auto Servis Šunja"></a>
+        <nav class="toplinks" aria-label="Sekcije">
+            <a href="#pocetna">Početna</a>
+            <a href="#o-nama">O nama</a>
+            <a href="#usluge">Usluge</a>
+            <a href="#galerija">Galerija</a>
+            <a href="#lokacija">Lokacija</a>
+            <a href="#kontakt">Kontakt</a>
+        </nav>
+        <a class="top-call" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a>
+    </header>
+
+    <main>
+        <section class="panel hero" id="pocetna">
+            <p class="kicker" data-reveal>Goražde, Hajra Lakovića 38</p>
+            <h1 data-reveal>Auto Servis Šunja</h1>
+            <p class="lead" data-reveal>Servis i popravke za sve marke vozila, uz posebno iskustvo s Peugeotom. Dijagnostika, servis, autoelektrika i ključevi, sve na jednom mjestu.</p>
+            <p data-reveal><span class="status-pill" data-status><span class="dot"></span><span data-status-text>Provjera radnog vremena…</span></span></p>
+            <a class="btn" href="tel:+38761297847" data-reveal><i class="fa fa-phone-alt" aria-hidden="true"></i> 061 297 847</a>
+            <p class="scroll-hint">Naše usluge</p>
+        </section>
+
+        <section class="panel split" id="iskustvo">
+            <div>
+                <p class="kicker" data-reveal>O nama</p>
+                <p class="years" data-reveal>25<span>+</span></p>
+                <h2 data-reveal>godina iskustva</h2>
+                <p class="muted" data-reveal>Auto Servis Šunja · Goražde</p>
+            </div>
+        </section>
+
+        <section class="panel split" id="o-nama">
+            <div class="copy">
+                <p class="kicker" data-reveal>O nama</p>
+                <h2 data-reveal><span>Auto Servis Šunja</span> u Goraždu</h2>
+                <p data-reveal>Auto Servis Šunja se nalazi na adresi Hajra Lakovića 38, 73000 Goražde. Bavimo se autodijagnostikom, malim i velikim servisima, autoelektrikom te izradom i programiranjem ključeva i daljinskih upravljača.</p>
+                <ol class="points">
+                    <li data-reveal><strong>01 Servis za sve marke</strong><span>Servis i popravke svih marki vozila, uključujući Peugeot.</span></li>
+                    <li data-reveal><strong>02 Moderna dijagnostika</strong><span>Precizna dijagnostika i brzo otkrivanje kvarova.</span></li>
+                    <li data-reveal><strong>03 Ključevi i daljinski</strong><span>Kodiranje i programiranje auto ključeva i daljinskih upravljača.</span></li>
+                </ol>
+                <a class="btn" href="tel:+38761297847" data-reveal><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite nas</a>
+            </div>
+        </section>
+
+        <section class="h-pin" id="usluge">
+            <div class="h-sticky">
+                <div class="h-head">
+                    <p class="kicker">Naše usluge</p>
+                    <h2>Šta radimo</h2>
+                </div>
+                <div class="h-track" id="serviceTrack">
+                    <article class="svc">
+                        <p class="kicker">Naše usluge</p>
+                        <h3>Autodijagnostika</h3>
+                        <p>Dijagnostika i otkrivanje kvarova na vozilu.</p>
+                        <ul>
+                            <li>Čitanje i brisanje grešaka</li>
+                            <li>Provjera svih sistema vozila</li>
+                            <li>Jasan nalaz prije popravke</li>
+                        </ul>
+                        <a class="btn" href="tel:+38761297847">Pozovite</a>
+                    </article>
+                    <article class="svc">
+                        <p class="kicker">Naše usluge</p>
+                        <h3>Peugeot servis</h3>
+                        <p>Održavanje i popravke Peugeot vozila.</p>
+                        <ul>
+                            <li>Poznavanje Peugeot sistema</li>
+                            <li>Savjet za daljnje održavanje</li>
+                        </ul>
+                        <a class="btn" href="tel:+38761297847">Pozovite</a>
+                    </article>
+                    <article class="svc">
+                        <p class="kicker">Naše usluge</p>
+                        <h3>Mali servis</h3>
+                        <p>Zamjena motornog ulja i filtera.</p>
+                        <ul>
+                            <li>Ulje i filteri po specifikaciji</li>
+                            <li>Pregled kočnica i ovjesa</li>
+                        </ul>
+                        <a class="btn" href="tel:+38761297847">Pozovite</a>
+                    </article>
+                    <article class="svc">
+                        <p class="kicker">Naše usluge</p>
+                        <h3>Veliki servis</h3>
+                        <p>Zamjena zupčastog remena i dijelova prema servisnom intervalu.</p>
+                        <ul>
+                            <li>Zupčasti remen i roleri</li>
+                            <li>Svjećice, filteri i tekućine</li>
+                        </ul>
+                        <a class="btn" href="tel:+38761297847">Pozovite</a>
+                    </article>
+                    <article class="svc">
+                        <p class="kicker">Naše usluge</p>
+                        <h3>Autoelektrika</h3>
+                        <p>Dijagnostika i popravka električnih sistema vozila.</p>
+                        <ul>
+                            <li>Akumulator, alternator, elektropokretač</li>
+                            <li>Instalacije i osigurači</li>
+                            <li>Senzori i elektronika vozila</li>
+                        </ul>
+                        <a class="btn" href="tel:+38761297847">Pozovite</a>
+                    </article>
+                    <article class="svc">
+                        <p class="kicker">Naše usluge</p>
+                        <h3>Ključevi i daljinski</h3>
+                        <p>Izrada i programiranje auto ključeva i daljinskih upravljača.</p>
+                        <ul>
+                            <li>Rezervni i izgubljeni ključevi</li>
+                            <li>Kodiranje i programiranje</li>
+                            <li>Popravka daljinskih upravljača</li>
+                        </ul>
+                        <a class="btn" href="tel:+38761297847">Pozovite</a>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="panel" id="galerija">
+            <p class="kicker" data-reveal>Galerija</p>
+            <h2 data-reveal>Iz naše radionice</h2>
+            <div class="film" data-reveal>
+                <a class="shot" href="https://www.tiktok.com/@autoservissunja/photo/7702943115132325141" target="_blank" rel="noopener">
+                    <img src="../assets/photos/tt-20261031-a32411f2.webp" alt="Renault Clio na dizalici">
+                    <span>Objava s TikToka</span>
+                </a>
+                <a class="shot" href="https://www.tiktok.com/@autoservissunja/photo/7696249910995258645" target="_blank" rel="noopener">
+                    <img src="../assets/photos/tt-20261013-235e6ce1.webp" alt="Peugeot na dizalici">
+                    <span>Objava s TikToka</span>
+                </a>
+                <a class="shot" href="https://www.tiktok.com/@autoservissunja/photo/7699972445880536341" target="_blank" rel="noopener">
+                    <img src="../assets/photos/tt-20261023-72158e75.webp" alt="Motor pod haubom">
+                    <span>Objava s TikToka</span>
+                </a>
+                <a class="shot" href="https://www.tiktok.com/@autoservissunja/photo/7697738557175123220" target="_blank" rel="noopener">
+                    <img src="../assets/photos/tt-20261017-8d087753.webp" alt="ECU jedinica">
+                    <span>Objava s TikToka</span>
+                </a>
+                <a class="shot" href="https://www.tiktok.com/@autoservissunja/photo/7692814793178107188" target="_blank" rel="noopener">
+                    <img src="../assets/photos/tt-20261004-2d828014.webp" alt="Glava motora">
+                    <span>Objava s TikToka</span>
+                </a>
+                <a class="shot follow" href="https://www.tiktok.com/@autoservissunja" target="_blank" rel="noopener">
+                    <i class="fab fa-tiktok" aria-hidden="true"></i>
+                    <h3>@autoservissunja</h3>
+                    <p>Pratite nas na TikToku: snimci iz radionice, popravke i savjeti.</p>
+                    <span class="btn light">Zapratite</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="panel center" id="recenzije">
+            <p class="kicker" data-reveal>Recenzije</p>
+            <h2 data-reveal>Ocjena na Google kartama</h2>
+            <p class="stars" data-stars data-reveal aria-hidden="true">★★★★★</p>
+            <p class="lead" data-reveal>Prosječna ocjena servisa na Google kartama, na osnovu <strong><span data-reviews>33</span> recenzija</strong> naših mušterija. Hvala vam na povjerenju!</p>
+            <a class="btn" data-reveal href="https://www.google.com/maps/search/?api=1&query=Auto+Servis+%C5%A0unja+Gora%C5%BEde" target="_blank" rel="noopener">Pogledajte na Google kartama</a>
+        </section>
+
+        <section class="panel split" id="lokacija">
+            <div class="copy">
+                <p class="kicker" data-reveal>Lokacija</p>
+                <h2 data-reveal>Lokacija servisa</h2>
+                <p class="flight" id="flightLabel" data-reveal>Svijet</p>
+                <p data-reveal>Hajra Lakovića 38, 73000 Goražde, Bosna i Hercegovina.</p>
+                <p data-reveal>Nalazimo se na adresi Hajra Lakovića 38. Na karti iznad možete pogledati tačnu lokaciju i isplanirati dolazak.</p>
+                <a class="btn" data-reveal href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a>
+            </div>
+            <div class="map-frame" data-reveal>
+                <iframe title="Lokacija servisa" loading="lazy" referrerpolicy="no-referrer" src="https://www.openstreetmap.org/export/embed.html?bbox=18.955%2C43.652%2C19.010%2C43.678&layer=mapnik&marker=43.6651456%2C18.982064"></iframe>
+            </div>
+        </section>
+
+        <section class="panel center" id="kontakt">
+            <p class="kicker" data-reveal>Kontakt</p>
+            <h2 data-reveal>Kontaktirajte Auto Servis Šunja</h2>
+            <p data-reveal><span class="status-pill" data-status><span class="dot"></span><span data-status-text>Provjera radnog vremena…</span></span></p>
+            <a class="phone" href="tel:+38761297847" data-reveal>061 297 847</a>
+            <ul class="facts" data-reveal>
+                <li><span>Adresa</span>Hajra Lakovića 38, 73000 Goražde</li>
+                <li><span>Pozovite</span><a href="tel:+38761297847">061 297 847</a></li>
+                <li><span>Radno vrijeme</span>Pon – Sub: 10:00 – 18:00 · Ned: zatvoreno</li>
+            </ul>
+            <div class="actions" data-reveal>
+                <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a>
+                <a class="btn ghost" href="https://wa.me/38761297847" target="_blank" rel="noopener">WhatsApp</a>
+            </div>
+            <div class="socials" data-reveal>
+                <a href="https://www.tiktok.com/@autoservissunja" target="_blank" rel="noopener">TikTok · @autoservissunja</a>
+                <a href="https://www.facebook.com/share/1MTp82REEF/?mibextid=wwXIfr" target="_blank" rel="noopener">Facebook · Auto Servis Šunja</a>
+                <a href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener">Instagram · @sunja_servis_peugeot</a>
+            </div>
+        </section>
+    </main>
+
+    <footer class="foot" id="siteFooter">
+        <div>
+            <h3>NAŠ SERVIS</h3>
+            <p>Auto Servis Šunja</p>
+            <p>Auto Servis Šunja, Goražde. Servis za sve marke vozila: dijagnostika, servisi, autoelektrika, ključevi i daljinski.</p>
         </div>
+        <div>
+            <h3>ADRESA</h3>
+            <p>Hajra Lakovića 38, 73000 Goražde</p>
+            <h3>TELEFON</h3>
+            <p><a href="tel:+38761297847">061 297 847</a></p>
+        </div>
+        <div>
+            <h3>RADNO VRIJEME</h3>
+            <div class="hours-list">
+                <p data-day="1"><span>Ponedjeljak</span><span>10:00 – 18:00</span></p>
+                <p data-day="2"><span>Utorak</span><span>10:00 – 18:00</span></p>
+                <p data-day="3"><span>Srijeda</span><span>10:00 – 18:00</span></p>
+                <p data-day="4"><span>Četvrtak</span><span>10:00 – 18:00</span></p>
+                <p data-day="5"><span>Petak</span><span>10:00 – 18:00</span></p>
+                <p data-day="6"><span>Subota</span><span>10:00 – 18:00</span></p>
+                <p data-day="0"><span>Nedjelja</span><span>Zatvoreno</span></p>
+            </div>
+        </div>
+        <div class="legal">
+            <p>&copy; <a href="#pocetna">Auto Servis Šunja</a>, sva prava zadržana.</p>
+            <p>Designed by <a href="https://www.facebook.com/share/18raYJEbQj/?mibextid=wwXIfr" target="_blank" rel="noopener">Armin Šunja</a></p>
+            <p><a href="https://vm.tiktok.com/ZN85hsoY9/" target="_blank" rel="noopener">Fotografija naše radionice</a></p>
+        </div>
+    </footer>
+
+    <div class="dock">
+        <a class="call" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> 061 297 847</a>
+        <a class="dir" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener"><i class="fa fa-map-marker-alt" aria-hidden="true"></i> Upute</a>
     </div>
-    <script>
-    (function () {
-        var root = document.documentElement;
-        var overlay = document.getElementById('sunjaIntro');
-        var frames = document.getElementById('sunjaIntroFrames');
-        if (!root.classList.contains('sunja-intro-active')) {
-            overlay.hidden = true;
-            return;
-        }
 
-        // An animated image avoids Safari's native video-player overlay.
-        // It is generated exclusively from the owner's original MP4 frames,
-        // is encoded to run once at 120% speed, and has no pause interaction.
-        var reducedMotion = !!(window.matchMedia &&
-            window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-        var finished = false, started = false, experienceShown = false;
-        var animationDone = false, criticalReady = false, experienceDone = false;
-        var playbackTimer = 0, stillTimer = 0, experienceTimer = 0, exitTimer = 0;
-        var animationObjectUrl = null;
-        var introSafetyTimeout = window.setTimeout(finishIntro, 10000);
-
-        function finishIntro() {
-            if (finished) return;
-            finished = true;
-            window.clearTimeout(introSafetyTimeout);
-            window.clearTimeout(playbackTimer);
-            window.clearTimeout(stillTimer);
-            window.clearTimeout(experienceTimer);
-            window.clearTimeout(exitTimer);
-            if (animationObjectUrl) {
-                URL.revokeObjectURL(animationObjectUrl);
-                animationObjectUrl = null;
-            }
-            root.classList.remove('sunja-intro-active');
-            overlay.hidden = true;
-            window.dispatchEvent(new Event('sunja:intro-finished'));
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.1/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.1/examples/jsm/"
         }
-        window.__sunjaIntroForceFinish = finishIntro;
-
-        function maybeFinish() {
-            if (!experienceDone || !criticalReady || finished) return;
-            overlay.classList.add('sunja-intro-exiting');
-            exitTimer = window.setTimeout(finishIntro, reducedMotion ? 0 : 320);
-        }
-        function showExperience() {
-            if (experienceShown || finished) return;
-            experienceShown = true;
-            animationDone = true;
-            window.clearTimeout(stillTimer);
-            overlay.classList.remove('sunja-intro-is-static');
-            overlay.classList.add('sunja-intro-show-experience');
-            // Start downloading the map library while this text animates.
-            // Avoid WebGL initialization until the intro has fully closed.
-            window.dispatchEvent(new Event('sunja:intro-experience-start'));
-            experienceTimer = window.setTimeout(function () {
-                experienceDone = true;
-                maybeFinish();
-            }, reducedMotion ? 1100 : 2380);
-        }
-        function showIntroStill() {
-            if (finished || experienceShown) return;
-            overlay.classList.add('sunja-intro-is-static');
-            window.clearTimeout(playbackTimer);
-            stillTimer = window.setTimeout(showExperience, reducedMotion ? 650 : 900);
-        }
-        function beginIntroAnimation() {
-            if (started || finished) return;
-            started = true;
-            // Preserve every frame of the original 1.2x animation.
-            window.clearTimeout(introSafetyTimeout);
-            introSafetyTimeout = window.setTimeout(finishIntro, 8200);
-            playbackTimer = window.setTimeout(showExperience, 5080);
-        }
-
-        function warmCriticalAssets() {
-            var hero = document.querySelector('#header-carousel .carousel-item.active picture img');
-            if (!hero) { criticalReady = true; maybeFinish(); return; }
-            var mobile = !!(window.matchMedia &&
-                window.matchMedia('(max-width: 767.98px)').matches);
-            var picture = hero.closest('picture');
-            var source = picture && picture.querySelector('source');
-            var src = ((mobile && source && source.getAttribute('srcset')) ||
-                hero.getAttribute('src') || '').split(',')[0].trim().split(/\s+/)[0];
-            if (!src) { criticalReady = true; maybeFinish(); return; }
-            hero.loading = 'eager';
-            hero.fetchPriority = 'high';
-            var img = new Image();
-            var ready = new Promise(function (resolve) {
-                img.onload = resolve;
-                img.onerror = resolve;
-                img.src = src;
-                if (img.complete) resolve();
-            });
-            var limit = new Promise(function (resolve) {
-                window.setTimeout(resolve, 1400);
-            });
-            Promise.race([ready, limit]).then(function () {
-                criticalReady = true;
-                maybeFinish();
-            }, function () {
-                criticalReady = true;
-                maybeFinish();
-            });
-        }
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', warmCriticalAssets, { once: true });
-        } else warmCriticalAssets();
-
-        overlay.addEventListener('contextmenu', function (event) {
-            event.preventDefault();
-        });
-        // v38: a preloaded animated WebP can start its image clock BEFORE
-        // CSS paints the intro, especially on Safari. Loading the file is
-        // not the same as playing the drawing. Decode a fresh Blob URL and
-        // start its *visible* playback clock after the first painted frame.
-        // The original WebP bytes, speed and art are never altered.
-        function startFreshLogoPlayback() {
-            var asset = frames.getAttribute('data-animation-url');
-            if (!asset) { showIntroStill(); return; }
-            fetch(asset, { cache: 'force-cache' })
-                .then(function (response) {
-                    if (!response.ok) throw new Error('Logo fetch: ' + response.status);
-                    return response.blob();
-                })
-                .then(function (blob) {
-                    if (finished || !blob.size) { if (!finished) showIntroStill(); return; }
-                    animationObjectUrl = URL.createObjectURL(blob);
-                    frames.onload = function () {
-                        if (finished) return;
-                        overlay.classList.add('sunja-intro-playing');
-                        window.requestAnimationFrame(function () {
-                            window.requestAnimationFrame(beginIntroAnimation);
-                        });
-                    };
-                    frames.onerror = showIntroStill;
-                    frames.src = animationObjectUrl;
-                })
-                .catch(showIntroStill);
-        }
-        startFreshLogoPlayback();
-    })();
+    }
     </script>
-<!-- Topbar Start -->
-    <div class="container-fluid bg-light p-0">
-        <div class="row gx-0 d-none d-lg-flex">
-            <div class="col-lg-7 px-5 text-start">
-                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
-                    <small class="fa fa-map-marker-alt text-primary me-2"></small>
-                    <small>Hajra Lakovića 38, 73000 Goražde</small>
-                </div>
-                <div class="h-100 d-inline-flex align-items-center py-3">
-                    <small class="far fa-clock text-primary me-2"></small>
-                    <small>Pon – Sub : 10:00 – 18:00</small>
-                </div>
-            </div>
-            <div class="col-lg-5 px-5 text-end">
-                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
-                    <span class="status-pill" data-status style="box-shadow: 0 1px 6px rgba(0,0,0,.12);"><span class="dot"></span><span data-status-text>Provjera radnog vremena…</span></span>
-                </div>
-                <div class="h-100 d-inline-flex align-items-center py-3 me-4">
-                    <small class="fa fa-phone-alt text-primary me-2"></small>
-                    <small><a href="tel:+38761297847" class="text-dark text-decoration-none fw-bold">061 297 847</a></small>
-                </div>
-                <div class="h-100 d-inline-flex align-items-center">
-                    <a class="btn btn-sm-square bg-white text-primary me-1" href="https://www.tiktok.com/@autoservissunja" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                    <a class="btn btn-sm-square bg-white text-primary me-1" href="https://www.facebook.com/share/1MTp82REEF/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a class="btn btn-sm-square bg-white text-primary me-0" href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Topbar End -->
-
-
-    <!-- Navbar Start -->
-    <nav class="navbar navbar-expand-lg nav-bar bg-white navbar-light shadow sticky-top p-0">
-
-        <a href="#pocetna" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <img src="/assets/sunja-logo-transparent.webp" alt="Auto Servis Šunja">
-        </a>
-        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarCollapse">
-            <div class="navbar-nav ms-auto p-4 p-lg-0">
-                <a href="#pocetna" class="nav-item nav-link active">Početna</a>
-                <a href="#o-nama" class="nav-item nav-link">O nama</a>
-                <a href="#usluge" class="nav-item nav-link">Usluge</a>
-                <a href="#galerija" class="nav-item nav-link">Galerija</a>
-                <a href="#lokacija" class="nav-item nav-link">Lokacija</a>
-                <a href="#kontakt" class="nav-item nav-link">Kontakt</a>
-            </div>
-            <a href="tel:+38761297847" class="btn btn-primary py-3 px-lg-5 d-none d-lg-block"><i class="fa fa-phone-alt me-2"></i>Pozovite</a>
-        </div>
-    </nav>
-    <!-- Navbar End -->
-
-
-    <!-- Carousel Start -->
-    <div class="container-fluid p-0 mb-5" id="pocetna">
-        <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true">
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <div class="hero-bg" id="heroMainBg" style="--hero-photo:url('/assets/photos/tt-wide-20260919-d3b7439d.webp');--hero-photo-mobile:url('/assets/photos/tt-20260919-d3b7439d.webp')"></div>
-                    <picture><source id="heroMainSrc" media="(max-width: 767.98px)" srcset="/assets/photos/tt-20260919-d3b7439d.webp"><img class="w-100" id="heroMainImg" src="/assets/photos/tt-wide-20260919-d3b7439d.webp" alt="Ulaz i natpis AUTOSERVIS, Auto Servis Šunja" fetchpriority="high"></picture>
-                    <div class="carousel-caption d-flex align-items-center">
-                        <div class="container">
-                            <div class="row align-items-center justify-content-center justify-content-lg-start">
-                                <div class="col-12 col-lg-8 text-start">
-                                    <h6 class="text-white text-uppercase mb-3 h-anim">Goražde, Hajra Lakovića 38</h6>
-                                    <h1 class="display-3 text-white mb-4 pb-3 h-anim">Auto Servis Šunja</h1>
-                                    <p class="text-white mb-4 h-anim">Servis i popravke za sve marke vozila, uz posebno iskustvo s Peugeotom. Dijagnostika, servis, autoelektrika i ključevi, sve na jednom mjestu.</p>
-                                    <div class="mb-4 h-anim">
-                                        <span class="status-pill on-dark" data-status><span class="dot"></span><span data-status-text>Provjera radnog vremena…</span></span>
-                                    </div>
-                                    <a href="tel:+38761297847" class="btn btn-outline-light py-3 px-5 h-anim ms-2"><i class="fa fa-phone-alt me-2"></i>061 297 847</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="hero-bg" style="--hero-photo:url('/assets/gallery/radionica-dijagnostika.webp')"></div>
-                    <picture><img class="w-100" src="/assets/gallery/radionica-dijagnostika.webp" loading="lazy" decoding="async" alt="Dijagnostički uređaj unutar vozila Auto Servisa Šunja"></picture>
-                    <div class="carousel-caption d-flex align-items-center">
-                        <div class="container">
-                            <div class="row align-items-center justify-content-center justify-content-lg-start">
-                                <div class="col-12 col-lg-8 text-start">
-                                    <h6 class="text-white text-uppercase mb-3 h-anim">Naše usluge</h6>
-                                    <h1 class="display-3 text-white mb-4 pb-3 h-anim">Autodijagnostika</h1>
-                                    <p class="text-white mb-4 h-anim">Kompjuterska dijagnostika brzo i tačno otkriva uzrok kvara, bez nagađanja i nepotrebnih troškova.</p>
-                                    <a href="#usluge" class="btn btn-outline-light py-3 px-5 h-anim ms-2">Sve usluge</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="hero-bg" style="--hero-photo:url('/assets/gallery/kljucevi-programiranje.webp')"></div>
-                    <picture><img class="w-100" src="/assets/gallery/kljucevi-programiranje.webp" loading="lazy" decoding="async" alt="Originalni automobilski ključevi tokom programiranja u servisu Šunja"></picture>
-                    <div class="carousel-caption d-flex align-items-center">
-                        <div class="container">
-                            <div class="row align-items-center justify-content-center justify-content-lg-start">
-                                <div class="col-12 col-lg-8 text-start">
-                                    <h6 class="text-white text-uppercase mb-3 h-anim">Naše usluge</h6>
-                                    <h1 class="display-3 text-white mb-4 pb-3 h-anim">Ključevi i daljinski</h1>
-                                    <p class="text-white mb-4 h-anim">Izrada, kodiranje i programiranje ključeva i daljinskih upravljača za većinu vozila.</p>
-                                    <a href="tel:+38761297847" class="btn btn-outline-light py-3 px-5 h-anim ms-2"><i class="fa fa-phone-alt me-2"></i>Pozovite</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-                    <div class="testing-car-stage" aria-hidden="true">
-                <div class="testing-car-orbit testing-car-orbit-a"></div>
-                <div class="testing-car-orbit testing-car-orbit-b"></div>
-                <img class="testing-car-art" src="/assets/sunja-car.webp" alt="" fetchpriority="high" decoding="async">
-            </div>
-    <div class="carousel-indicators hero-indicators">
-                <button type="button" data-bs-target="#header-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slajd 1"><span></span></button>
-                <button type="button" data-bs-target="#header-carousel" data-bs-slide-to="1" aria-label="Slajd 2"><span></span></button>
-                <button type="button" data-bs-target="#header-carousel" data-bs-slide-to="2" aria-label="Slajd 3"><span></span></button>
-            </div>
-            <button class="carousel-control-prev hero-nav" type="button" data-bs-target="#header-carousel" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Prethodno</span>
-            </button>
-            <button class="carousel-control-next hero-nav" type="button" data-bs-target="#header-carousel" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Sljedeće</span>
-            </button>
-
-        </div>
-    </div>
-    <!-- Carousel End -->
-
-
-    <!-- Social strip Start -->
-    <div class="container-xxl pb-5">
-        <div class="container">
-            <div class="row g-4">
-                <div class="col-md-4 wow fadeInUp" data-wow-delay="0.1s">
-                    <a href="https://www.tiktok.com/@autoservissunja" target="_blank" rel="noopener" class="social-tile d-flex align-items-center p-4 text-decoration-none h-100" style="background: #000000;">
-                        <i class="fab fa-tiktok text-white me-3" style="font-size: 2.2rem;"></i>
-                        <span><span class="d-block text-white fw-bold">TikTok</span><span class="text-white-50">@autoservissunja</span></span>
-                        <i class="fa fa-arrow-right text-white ms-auto"></i>
-                    </a>
-                </div>
-                <div class="col-md-4 wow fadeInUp" data-wow-delay="0.2s">
-                    <a href="https://www.facebook.com/share/1MTp82REEF/?mibextid=wwXIfr" target="_blank" rel="noopener" class="social-tile d-flex align-items-center p-4 text-decoration-none h-100" style="background: #1877F2;">
-                        <i class="fab fa-facebook-f text-white me-3" style="font-size: 2.2rem;"></i>
-                        <span><span class="d-block text-white fw-bold">Facebook</span><span class="text-white-50">Auto Servis Šunja</span></span>
-                        <i class="fa fa-arrow-right text-white ms-auto"></i>
-                    </a>
-                </div>
-                <div class="col-md-4 wow fadeInUp" data-wow-delay="0.3s">
-                    <a href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener" class="social-tile d-flex align-items-center p-4 text-decoration-none h-100" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
-                        <i class="fab fa-instagram text-white me-3" style="font-size: 2.2rem;"></i>
-                        <span><span class="d-block text-white fw-bold">Instagram</span><span class="text-white-50">@sunja_servis_peugeot</span></span>
-                        <i class="fa fa-arrow-right text-white ms-auto"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Social strip End -->
-
-
-
-
-
-
-    <!-- About Start -->
-    <div class="container-xxl py-5" id="o-nama">
-        <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-6 pt-4" style="min-height: 400px;">
-                    <div class="position-relative h-100 wow fadeIn" data-wow-delay="0.1s">
-                        <img class="img-fluid w-100 svc-photo" data-about-photo src="/assets/gallery/sunja-tiktok-7627945643490692373.webp" loading="lazy" decoding="async" alt="Radionica Auto Servis Šunja, fotografija iz originalne TikTok objave">
-                        <div class="position-absolute top-0 end-0 mt-n4 me-n4 py-4 px-4" style="background: rgba(11, 33, 84, .85);">
-                            <h4 class="text-white mb-2">Google ocjena</h4>
-                            <span class="stars" data-stars style="--fillw:92%">
-                                <span class="stars-row stars-bg"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span>
-                                <span class="stars-fg"><span class="stars-row"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span></span>
-                            </span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6">
-                    <h6 class="text-primary text-uppercase">O nama</h6>
-                    <h1 class="mb-4"><span class="text-primary">Auto Servis Šunja</span> u Goraždu</h1>
-                    <p class="mb-4">Auto Servis Šunja se nalazi na adresi Hajra Lakovića 38, 73000 Goražde. Bavimo se autodijagnostikom, malim i velikim servisima, autoelektrikom te izradom i programiranjem ključeva i daljinskih upravljača.</p>
-                    <div class="experience-feature" aria-label="25+ godina iskustva">
-                        <strong>25<span>+</span></strong>
-                        <div><span class="experience-feature-title">godina iskustva</span><span class="experience-feature-caption">Auto Servis Šunja · Goražde</span></div>
-                    </div>
-                    <div class="row g-4 mb-3 pb-3">
-                        <div class="col-12 wow fadeIn" data-wow-delay="0.1s">
-                            <div class="d-flex">
-                                <div class="bg-light d-flex flex-shrink-0 align-items-center justify-content-center mt-1" style="width: 45px; height: 45px;">
-                                    <span class="fw-bold text-secondary">01</span>
-                                </div>
-                                <div class="ps-3">
-                                    <h6>Servis za sve marke</h6>
-                                    <span>Servis i popravke svih marki vozila, uključujući Peugeot.</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 wow fadeIn" data-wow-delay="0.3s">
-                            <div class="d-flex">
-                                <div class="bg-light d-flex flex-shrink-0 align-items-center justify-content-center mt-1" style="width: 45px; height: 45px;">
-                                    <span class="fw-bold text-secondary">02</span>
-                                </div>
-                                <div class="ps-3">
-                                    <h6>Moderna dijagnostika</h6>
-                                    <span>Precizna dijagnostika i brzo otkrivanje kvarova.</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-12 wow fadeIn" data-wow-delay="0.5s">
-                            <div class="d-flex">
-                                <div class="bg-light d-flex flex-shrink-0 align-items-center justify-content-center mt-1" style="width: 45px; height: 45px;">
-                                    <span class="fw-bold text-secondary">03</span>
-                                </div>
-                                <div class="ps-3">
-                                    <h6>Ključevi i daljinski</h6>
-                                    <span>Kodiranje i programiranje auto ključeva i daljinskih upravljača.</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="tel:+38761297847" class="btn btn-primary py-3 px-5"><i class="fa fa-phone-alt me-2"></i>Pozovite nas</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- About End -->
-
-
-    <!-- Service Start -->
-    <div class="container-xxl service py-5" id="usluge">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="text-primary text-uppercase">Naše usluge</h6>
-                <h1 class="mb-5">Šta radimo</h1>
-            </div>
-            <div class="row g-4 wow fadeInUp" data-wow-delay="0.3s">
-                <div class="col-lg-4">
-                    <div class="nav w-100 nav-pills me-4 service-nav-grid">
-                        <button class="nav-link w-100 d-flex align-items-center text-start p-4 mb-4 active" data-bs-toggle="pill" data-bs-target="#tab-pane-1" type="button">
-                            <i class="fa fa-laptop-code fa-2x me-3"></i>
-                            <h4 class="m-0">Autodijagnostika</h4>
-                        </button>
-                        <button class="nav-link w-100 d-flex align-items-center text-start p-4 mb-4" data-bs-toggle="pill" data-bs-target="#tab-pane-2" type="button">
-                            <i class="fa fa-car fa-2x me-3"></i>
-                            <h4 class="m-0">Peugeot servis</h4>
-                        </button>
-                        <button class="nav-link w-100 d-flex align-items-center text-start p-4 mb-4" data-bs-toggle="pill" data-bs-target="#tab-pane-3" type="button">
-                            <i class="fa fa-oil-can fa-2x me-3"></i>
-                            <h4 class="m-0">Mali servis</h4>
-                        </button>
-                        <button class="nav-link w-100 d-flex align-items-center text-start p-4 mb-4" data-bs-toggle="pill" data-bs-target="#tab-pane-4" type="button">
-                            <i class="fa fa-cog fa-2x me-3"></i>
-                            <h4 class="m-0">Veliki servis</h4>
-                        </button>
-                        <button class="nav-link w-100 d-flex align-items-center text-start p-4 mb-4" data-bs-toggle="pill" data-bs-target="#tab-pane-5" type="button">
-                            <i class="fa fa-bolt fa-2x me-3"></i>
-                            <h4 class="m-0">Autoelektrika</h4>
-                        </button>
-                        <button class="nav-link w-100 d-flex align-items-center text-start p-4 mb-0" data-bs-toggle="pill" data-bs-target="#tab-pane-6" type="button">
-                            <i class="fa fa-key fa-2x me-3"></i>
-                            <h4 class="m-0">Ključevi i daljinski</h4>
-                        </button>
-                    </div>
-                </div>
-                <div class="col-lg-8">
-                    <div class="tab-content w-100">
-                        <div class="tab-pane fade show active" id="tab-pane-1">
-                            <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="/assets/gallery/radionica-dijagnostika.webp" loading="lazy" decoding="async" alt="Autodijagnostika u vozilu">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <h3 class="mb-3">Autodijagnostika</h3>
-                                    <p class="mb-4">Dijagnostika i otkrivanje kvarova na vozilu.</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Čitanje i brisanje grešaka</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Provjera svih sistema vozila</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Jasan nalaz prije popravke</p>
-                                    <a class="btn btn-primary py-3 px-5 mt-3" href="tel:+38761297847"><i class="fa fa-phone-alt me-2"></i>Pozovite</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="tab-pane-2">
-                            <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="/assets/photos/tt-20261108-574b96bf.webp" loading="lazy" decoding="async" alt="Peugeot servis u radionici">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <h3 class="mb-3">Peugeot servis</h3>
-                                    <p class="mb-4">Održavanje i popravke Peugeot vozila.</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Poznavanje Peugeot sistema</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Savjet za daljnje održavanje</p>
-                                    <a class="btn btn-primary py-3 px-5 mt-3" href="tel:+38761297847"><i class="fa fa-phone-alt me-2"></i>Pozovite</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="tab-pane-3">
-                            <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="/assets/photos/tt-20261023-72158e75.webp" loading="lazy" decoding="async" alt="Motor pri redovnom održavanju">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <h3 class="mb-3">Mali servis</h3>
-                                    <p class="mb-4">Zamjena motornog ulja i filtera.</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Ulje i filteri po specifikaciji</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Pregled kočnica i ovjesa</p>
-                                    <a class="btn btn-primary py-3 px-5 mt-3" href="tel:+38761297847"><i class="fa fa-phone-alt me-2"></i>Pozovite</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="tab-pane-4">
-                            <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="/assets/photos/tt-20261004-2d828014.webp" loading="lazy" decoding="async" alt="Dijelovi motora za veliki servis">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <h3 class="mb-3">Veliki servis</h3>
-                                    <p class="mb-4">Zamjena zupčastog remena i dijelova prema servisnom intervalu.</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Zupčasti remen i roleri</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Svjećice, filteri i tekućine</p>
-                                    <a class="btn btn-primary py-3 px-5 mt-3" href="tel:+38761297847"><i class="fa fa-phone-alt me-2"></i>Pozovite</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="tab-pane-5">
-                            <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="/assets/photos/tt-20261108-234cf88c.webp" loading="lazy" decoding="async" alt="Elektronika i dijagnostika vozila">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <h3 class="mb-3">Autoelektrika</h3>
-                                    <p class="mb-4">Dijagnostika i popravka električnih sistema vozila.</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Akumulator, alternator, elektropokretač</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Instalacije i osigurači</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Senzori i elektronika vozila</p>
-                                    <a class="btn btn-primary py-3 px-5 mt-3" href="tel:+38761297847"><i class="fa fa-phone-alt me-2"></i>Pozovite</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="tab-pane-6">
-                            <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="/assets/gallery/kljucevi-programiranje.webp" loading="lazy" decoding="async" alt="Programiranje automobilskih ključeva">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <h3 class="mb-3">Ključevi i daljinski</h3>
-                                    <p class="mb-4">Izrada i programiranje auto ključeva i daljinskih upravljača.</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Rezervni i izgubljeni ključevi</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Kodiranje i programiranje</p>
-                                    <p><i class="fa fa-check text-success me-3"></i>Popravka daljinskih upravljača</p>
-                                    <a class="btn btn-primary py-3 px-5 mt-3" href="tel:+38761297847"><i class="fa fa-phone-alt me-2"></i>Pozovite</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Service End -->
-
-
-    <!-- Gallery Start -->
-    <div class="container-xxl py-5" id="galerija">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="text-primary text-uppercase">Galerija</h6>
-                <h1 class="mb-5">Iz naše radionice</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                    <div class="team-item">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="/assets/photos/tt-20261031-a32411f2.webp" loading="lazy" decoding="async" alt="Renault Clio na dizalici">
-                            <a class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7702943115132325141" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a>
-                        </div>
-                        <div class="gallery-source-line bg-light text-center p-3">
-                            <small data-gallery-sub>Objava s TikToka</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
-                    <div class="team-item">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="/assets/photos/tt-20261013-235e6ce1.webp" loading="lazy" decoding="async" alt="Peugeot na dizalici">
-                            <a class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7696249910995258645" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a>
-                        </div>
-                        <div class="gallery-source-line bg-light text-center p-3">
-                            <small data-gallery-sub>Objava s TikToka</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="team-item">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="/assets/photos/tt-20261023-72158e75.webp" loading="lazy" decoding="async" alt="Motor pod haubom">
-                            <a class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7699972445880536341" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a>
-                        </div>
-                        <div class="gallery-source-line bg-light text-center p-3">
-                            <small data-gallery-sub>Objava s TikToka</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
-                    <div class="team-item">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="/assets/photos/tt-20261017-8d087753.webp" loading="lazy" decoding="async" alt="ECU jedinica">
-                            <a class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7697738557175123220" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a>
-                        </div>
-                        <div class="gallery-source-line bg-light text-center p-3">
-                            <small data-gallery-sub>Objava s TikToka</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="team-item">
-                        <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="/assets/photos/tt-20261004-2d828014.webp" loading="lazy" decoding="async" alt="Glava motora">
-                            <a class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7692814793178107188" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a>
-                        </div>
-                        <div class="gallery-source-line bg-light text-center p-3">
-                            <small data-gallery-sub>Objava s TikToka</small>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.6s">
-                    <div class="team-item h-100">
-                        <a href="https://www.tiktok.com/@autoservissunja" target="_blank" rel="noopener" class="d-flex flex-column align-items-center justify-content-center text-center p-5 h-100 text-decoration-none" style="background: #000000; min-height: 430px;">
-                            <i class="fab fa-tiktok text-white mb-4" style="font-size: 4rem;"></i>
-                            <h4 class="text-white mb-3">@autoservissunja</h4>
-                            <p class="text-white mb-4">Pratite nas na TikToku: snimci iz radionice, popravke i savjeti.</p>
-                            <span class="btn btn-light py-2 px-4">Zapratite<i class="fa fa-arrow-right ms-2"></i></span>
-                        </a>
-                    </div>
-                </div>
-                        </div>
-        </div>
-    </div>
-    <!-- Gallery End -->
-
-
-    <!-- Testimonial Start -->
-    <div class="container-xxl py-5 bg-light" id="recenzije">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="text-primary text-uppercase">Recenzije</h6>
-                <h1 class="mb-5">Ocjena na Google kartama</h1>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-8 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="bg-white text-center p-5 shadow-sm">
-                        <div class="mb-3 stars-big">
-                            <span class="stars" data-stars style="--fillw:92%">
-                                <span class="stars-row stars-bg"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span>
-                                <span class="stars-fg"><span class="stars-row"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span></span>
-                            </span>
-                        </div>
-                        <p class="mb-4">Prosječna ocjena servisa na Google kartama, na osnovu <strong><span data-reviews>33</span> recenzija</strong> naših mušterija. Hvala vam na povjerenju!</p>
-                        <a class="btn btn-primary py-3 px-5" href="https://www.google.com/maps/search/?api=1&query=Auto+Servis+%C5%A0unja+Gora%C5%BEde" target="_blank" rel="noopener">Pogledajte na Google kartama<i class="fa fa-arrow-right ms-3"></i></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Testimonial End -->
-
-
-    <!-- Globe Map Start -->
-    <div class="container-xxl pt-5" id="lokacija">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="text-primary text-uppercase">Lokacija</h6>
-                <h1 class="mb-3">Lokacija servisa</h1>
-                <p class="mb-0">Hajra Lakovića 38, 73000 Goražde, Bosna i Hercegovina.</p>
-            </div>
-        </div>
-    </div>
-    <div class="globe-scroll" id="globeScroll">
-        <div class="globe-sticky">
-            <div id="globeMap"></div>
-            <a class="map-quick-link" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener"><i class="fa fa-directions" aria-hidden="true"></i> Upute za vožnju</a>
-
-            <div class="globe-stage" id="globeStage">Svijet</div>
-        </div>
-    </div>
-    <!-- Globe Map End -->
-
-
-    <!-- Contact Start -->
-    <div class="container-xxl py-5" id="kontakt">
-        <div class="container">
-            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
-                <h6 class="text-primary text-uppercase">Kontakt</h6>
-                <h1 class="mb-5">Kontaktirajte Auto Servis Šunja</h1>
-            </div>
-            <div class="row g-4">
-                <div class="col-12">
-                    <div class="row gy-4">
-                        <div class="col-md-4">
-                            <div class="bg-light d-flex flex-column justify-content-center p-4">
-                                <h5 class="text-uppercase">Adresa</h5>
-                                <p class="m-0"><i class="fa fa-map-marker-alt text-primary me-2"></i>Hajra Lakovića 38, 73000 Goražde</p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="bg-light d-flex flex-column justify-content-center p-4">
-                                <h5 class="text-uppercase">Pozovite</h5>
-                                <p class="m-0"><i class="fa fa-phone-alt text-primary me-2"></i><a href="tel:+38761297847" class="text-dark text-decoration-none fw-bold">061 297 847</a></p>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="bg-light d-flex flex-column justify-content-center p-4">
-                                <h5 class="text-uppercase">Radno vrijeme</h5>
-                                <p class="m-0"><i class="far fa-clock text-primary me-2"></i>Pon – Sub: 10:00 – 18:00 · Ned: zatvoreno</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 wow fadeIn" data-wow-delay="0.1s">
-                    <section class="contact-spotlight h-100" aria-labelledby="shop-contact-heading">
-                        <div class="contact-spotlight-heading">
-                            <span class="contact-eyebrow"><span class="contact-eyebrow-dot"></span>NAŠ SERVIS</span>
-                            <h3 id="shop-contact-heading" class="text-white mb-0">Auto Servis Šunja</h3>
-                        </div>
-                        <div class="contact-facts">
-                            <div class="contact-fact">
-                                <span class="contact-fact-icon"><i class="fa fa-map-marker-alt" aria-hidden="true"></i></span>
-                                <div><span class="contact-fact-label">ADRESA</span><p>Hajra Lakovića 38, 73000 Goražde</p></div>
-                            </div>
-                            <div class="contact-fact">
-                                <span class="contact-fact-icon"><i class="fa fa-phone-alt" aria-hidden="true"></i></span>
-                                <div><span class="contact-fact-label">TELEFON</span><p><a href="tel:+38761297847">061 297 847</a></p></div>
-                            </div>
-                            <div class="contact-fact">
-                                <span class="contact-fact-icon"><i class="far fa-clock" aria-hidden="true"></i></span>
-                                <div><span class="contact-fact-label">RADNO VRIJEME</span><p>Pon – Sub: 10:00 – 18:00 <span class="contact-muted">· Nedjelja: zatvoreno</span></p></div>
-                            </div>
-                        </div>
-                        <div class="contact-status-row" aria-live="polite">
-                            <span class="status-pill on-dark" data-status><span class="dot"></span><span data-status-text>Provjera radnog vremena…</span></span>
-                        </div>
-                        <p class="contact-spotlight-copy">Nalazimo se na adresi Hajra Lakovića 38. Na karti iznad možete pogledati tačnu lokaciju i isplanirati dolazak.</p>
-                        <div class="contact-actions">
-                            <a class="btn contact-btn-primary" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener"><i class="fa fa-location-arrow" aria-hidden="true"></i><span>Upute za vožnju</span></a>
-                            <a class="btn contact-btn-secondary" href="https://wa.me/38761297847" target="_blank" rel="noopener"><i class="fab fa-whatsapp" aria-hidden="true"></i><span>WhatsApp</span></a>
-                        </div>
-                    </section>
-                </div>
-                <div class="col-md-6">
-                    <div class="contact-direct-phone h-100">
-                        <span class="contact-direct-phone-label"><i class="fa fa-phone-alt" aria-hidden="true"></i> TELEFON</span>
-                        <a class="contact-direct-phone-number" href="tel:+38761297847">061 297 847</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Contact End -->
-
-
-    <div class="footer-wave" aria-hidden="true"><svg viewBox="0 0 1440 70" preserveAspectRatio="none"><path d="M0,40 C240,80 480,0 720,25 C960,50 1200,75 1440,35 L1440,70 L0,70 Z" fill="#0B2154"/></svg></div>
-    <!-- Footer Start -->
-    <div id="siteFooter" class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
-        <div class="container py-5">
-            <div class="row g-5">
-                <div class="col-lg-3 col-md-6 footer-brand">
-                    <img src="/assets/sunja-logo-light.webp" alt="Auto Servis Šunja" class="mb-4">
-                    <p>Auto Servis Šunja, Goražde. Servis za sve marke vozila: dijagnostika, servisi, autoelektrika, ključevi i daljinski.</p>
-                    <div class="d-flex pt-2">
-                        <a class="btn btn-outline-light btn-social" href="https://www.tiktok.com/@autoservissunja" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                        <a class="btn btn-outline-light btn-social" href="https://www.facebook.com/share/1MTp82REEF/?mibextid=wwXIfr" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a class="btn btn-outline-light btn-social" href="https://www.instagram.com/sunja_servis_peugeot/" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                        <a class="btn btn-outline-light btn-social" href="tel:+38761297847" aria-label="Pozovi"><i class="fa fa-phone-alt"></i></a>
-                        <a class="btn btn-outline-light btn-social" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener" aria-label="Upute za vožnju"><i class="fa fa-map-marker-alt"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-light mb-4">Adresa</h4>
-                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>Hajra Lakovića 38, 73000 Goražde</p>
-                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>061 297 847</p>
-                    <p class="mb-2"><i class="fab fa-tiktok me-3"></i>@autoservissunja</p>
-                    <p class="mb-2"><i class="fab fa-facebook-f me-3"></i>Auto Servis Šunja</p>
-                    <p class="mb-2"><i class="fab fa-instagram me-3"></i>@sunja_servis_peugeot</p>
-                    <p class="mb-0 mt-4"><span class="status-pill on-dark" data-status><span class="dot"></span><span data-status-text>Provjera radnog vremena…</span></span></p>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-light mb-4">Radno vrijeme</h4>
-                    <div class="hours-list">
-                        <p data-day="1"><span>Ponedjeljak</span><span>10:00 – 18:00</span></p>
-                        <p data-day="2"><span>Utorak</span><span>10:00 – 18:00</span></p>
-                        <p data-day="3"><span>Srijeda</span><span>10:00 – 18:00</span></p>
-                        <p data-day="4"><span>Četvrtak</span><span>10:00 – 18:00</span></p>
-                        <p data-day="5"><span>Petak</span><span>10:00 – 18:00</span></p>
-                        <p data-day="6"><span>Subota</span><span>10:00 – 18:00</span></p>
-                        <p data-day="0"><span>Nedjelja</span><span>Zatvoreno</span></p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <h4 class="text-light mb-4">Usluge</h4>
-                    <a class="btn btn-link" href="#usluge" data-svc-link="1">Autodijagnostika</a>
-                    <a class="btn btn-link" href="#usluge" data-svc-link="2">Peugeot servis</a>
-                    <a class="btn btn-link" href="#usluge" data-svc-link="3">Mali servis</a>
-                    <a class="btn btn-link" href="#usluge" data-svc-link="4">Veliki servis</a>
-                    <a class="btn btn-link" href="#usluge" data-svc-link="5">Autoelektrika</a>
-                    <a class="btn btn-link" href="#usluge" data-svc-link="6">Ključevi i daljinski</a>
-                </div>
-            </div>
-        </div>
-        <!-- Photo is now the background of the entire footer, not a card. -->
-        <div class="container footer-photo-credit">
-            <a href="https://vm.tiktok.com/ZN85hsoY9/" target="_blank" rel="noopener noreferrer"
-                aria-label="Originalna fotografija radionice na TikToku">
-                <i class="fab fa-tiktok" aria-hidden="true"></i> Fotografija naše radionice
-            </a>
-        </div>
-        <div class="container">
-            <div class="copyright">
-                <div class="row">
-                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                        &copy; <a class="border-bottom" href="#pocetna">Auto Servis Šunja</a>, sva prava zadržana.<br>
-                        Designed by <a class="border-bottom" href="https://www.facebook.com/share/18raYJEbQj/?mibextid=wwXIfr" target="_blank" rel="noopener">Armin Šunja</a>
-
-                    </div>
-                    <div class="col-md-6 text-center text-md-end">
-                        <div class="footer-menu">
-                            <a href="#pocetna">Početna</a>
-                            <a href="#o-nama">O nama</a>
-                            <a href="#usluge">Usluge</a>
-                            <a href="#galerija">Galerija</a>
-                            <a href="#lokacija">Lokacija</a>
-                            <a href="#kontakt">Kontakt</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Footer End -->
-
-
-    <!-- Mobile call bar -->
-    <div class="mobile-callbar">
-
-        <a class="call" href="tel:+38761297847"><i class="fa fa-phone-alt me-2"></i>061 297 847</a>
-        <a class="dir" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener"><i class="fa fa-map-marker-alt me-2"></i>Upute</a>
-    </div>
-
-
-    <!-- Back to Top -->
-    <button type="button" id="backTop" class="btn btn-lg btn-primary btn-lg-square back-to-top" aria-label="Nazad na vrh" title="Nazad na vrh"><i class="fa fa-arrow-up"></i></button>
-
-
-    <!-- JavaScript Libraries -->
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
-
-    <!-- Template Javascript -->
-    <script src="/js/main.js?v=38.0"></script>
-
-    <!-- Auto Servis Šunja custom scripts -->
-    <script>
-    // Live open/closed status (Europe/Sarajevo, Mon–Sat 10:00–18:00)
-    (function () {
-        function sarajevoNow() {
-            return new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Sarajevo' }));
-        }
-        function fmt(d) { return d.getDate() + '.' + (d.getMonth() + 1) + '.'; }
-        function update() {
-            var now = sarajevoNow(), day = now.getDay(), mins = now.getHours() * 60 + now.getMinutes();
-            var open = day >= 1 && day <= 6 && mins >= 600 && mins < 1080;
-            var text;
-            if (open) {
-                text = 'Trenutno otvoreno · do 18:00';
-            } else if (day >= 1 && day <= 6 && mins < 600) {
-                text = 'Trenutno zatvoreno · otvaramo danas u 10:00';
-            } else if (day === 6 || (day === 0)) {
-                text = 'Trenutno zatvoreno · otvaramo u ponedjeljak u 10:00';
-            } else {
-                text = 'Trenutno zatvoreno · otvaramo sutra u 10:00';
-            }
-            document.querySelectorAll('[data-status]').forEach(function (el) {
-                el.classList.toggle('closed', !open);
-                var t = el.querySelector('[data-status-text]');
-                if (t) t.textContent = text;
-            });
-            document.querySelectorAll('.hours-list p').forEach(function (p) {
-                p.classList.toggle('today', parseInt(p.getAttribute('data-day'), 10) === day);
-            });
-        }
-        update();
-        setInterval(update, 60000);
-    })();
-
-    // Google rating — loaded from rating.json; drives the animated stars
-    fetch('/rating.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
-        if (!d || typeof d.rating !== 'number') return;
-        var pct = Math.max(0, Math.min(100, d.rating / 5 * 100));
-        document.querySelectorAll('[data-stars]').forEach(function (el) { el.style.setProperty('--fillw', pct + '%'); });
-        if (typeof d.count === 'number') {
-            document.querySelectorAll('[data-reviews]').forEach(function (el) { el.textContent = d.count; });
-        }
-    }).catch(function () {});
-
-    // Stars fill up when scrolled into view
-    (function () {
-        var els = document.querySelectorAll('[data-stars]');
-        if (!els.length) return;
-        if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('on'); }); return; }
-        var io = new IntersectionObserver(function (entries) {
-            entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('on'); io.unobserve(en.target); } });
-        }, { threshold: 0.4 });
-        els.forEach(function (e) { io.observe(e); });
-    })();
-
-    // Footer service links also activate the matching service tab
-    document.querySelectorAll('[data-svc-link]').forEach(function (a) {
-        a.addEventListener('click', function () {
-            var btn = document.querySelector('[data-bs-target="#tab-pane-' + a.getAttribute('data-svc-link') + '"]');
-            if (btn) { btn.click(); }
-        });
-    });
-
-    // Photo randomizer — fresh picks from photos.json on every visit
-    fetch('/photos.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
-        function freshPool(list, min) {
-            if (!list || !list.length) return [];
-            var maxAge = 60 * 24 * 3600 * 1000, now = Date.now();
-            var fresh = list.filter(function (e) { return e.date && (now - new Date(e.date + 'T12:00:00').getTime()) <= maxAge; });
-            if (fresh.length >= (min || 1)) return fresh;
-            return list.slice().sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
-        }
-        function platformMeta(item) {
-            var source = (item && item.source || '').toLowerCase();
-            var href = (item && item.href || '').toLowerCase();
-            if (source === 'instagram' || href.indexOf('instagram.com') > -1) return { icon: 'fab fa-instagram', label: 'Objava s Instagrama' };
-            if (source === 'facebook' || href.indexOf('facebook.com') > -1) return { icon: 'fab fa-facebook-f', label: 'Objava s Facebooka' };
-            return { icon: 'fab fa-tiktok', label: 'Objava s TikToka' };
-        }
-        function localPhotoPath(path) {
-            return typeof path === 'string' && /^assets\/photos\/[A-Za-z0-9_.\/-]+$/.test(path) ? '/' + path : '';
-        }
-        // The three main carousel images are permanent, curated originals.
-        // Photo sync updates gallery, services and footer; never the three slides.
-        var sharpGallery = (d.gallery || []).filter(function (entry) {
-            return Number(entry.quality_v || 0) >= 2 && localPhotoPath(entry.src);
-        }).sort(function (a, b) {
-            return (b.date || '') < (a.date || '') ? -1 : 1;
-        });
-
-        var footer = document.getElementById('siteFooter');
-        if (sharpGallery.length) {
-            var pool = freshPool(sharpGallery, 5);
-            pool = pool.slice().sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
-            var newestFirst = pool.shift();
-            for (var i = pool.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = pool[i]; pool[i] = pool[j]; pool[j] = t; }
-            var seq = [];
-            var usedTitles = {};
-            if (newestFirst) { seq.push(newestFirst); usedTitles[newestFirst.title] = 1; }
-            pool.forEach(function (e) { if (seq.length < 5 && !usedTitles[e.title]) { seq.push(e); usedTitles[e.title] = 1; } });
-            pool.forEach(function (e) { if (seq.length < 5 && seq.indexOf(e) === -1) seq.push(e); });
-            if (!seq.length) seq = pool;
-            document.querySelectorAll('[data-gallery-img]').forEach(function (img, idx) {
-                var item = seq[idx % seq.length];
-                var safeSrc = localPhotoPath(item.src);
-                if (!safeSrc) return;
-                img.src = safeSrc; img.alt = item.title || 'Auto Servis Šunja';
-                var card = img.closest('.team-item');
-                if (!card) return;
-                var mediaWrap = img.parentElement;
-                if (mediaWrap) mediaWrap.style.setProperty('--gallery-bg', 'url("' + safeSrc + '")');
-                var meta = platformMeta(item);
-                var link = card.querySelector('[data-gallery-link]');
-                if (link) {
-                    link.href = item.href || '#';
-                    var ic = link.querySelector('i');
-                    if (ic) ic.className = meta.icon;
-                }
-                var sub = card.querySelector('[data-gallery-sub]'); if (sub) sub.textContent = meta.label;
-            });
-        }
-    }).catch(function () {});
-
-    // Image self-heal — if any swapped photo fails to paint, retry it once fresh
-    document.querySelectorAll('[data-gallery-img], #heroMainImg').forEach(function (img) {
-        function heal() {
-            if (img.dataset.healed === '1') return;
-            if (img.complete && img.naturalWidth === 0) {
-                img.dataset.healed = '1';
-                img.src = img.src.split('?')[0] + '?r=1';
-            }
-        }
-        img.addEventListener('error', heal);
-        setTimeout(heal, 3000);
-    });
-
-    // Globe map (MapLibre 3D globe) — scroll flies from space into the shop
-    (function () {
-        var wrap = document.getElementById('globeScroll');
-        var el = document.getElementById('globeMap');
-        var stickyEl = wrap ? wrap.querySelector('.globe-sticky') : null;
-        var stageEl = document.getElementById('globeStage');
-        var hintEl = document.getElementById('globeHint');
-        var fellBack = false;
-        function fallback(reason) {
-            if (fellBack || !el) return;
-            fellBack = true;
-            if (wrap) wrap.classList.add('is-fallback');
-            // Never interpolate network errors into HTML; the directions
-            // link remains usable even when tiles or MapLibre cannot load.
-            if (window.console && console.warn) console.warn('Mapa nije dostupna:', reason);
-            el.innerHTML = '<div class="map-fallback-content"><p class="mb-3">Kartu nije moguće učitati. Lokacija servisa je Hajra Lakovića 38, Goražde.</p><a class="btn btn-primary py-3 px-4" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a></div>';
-        }
-        var globeStarted = false;
-        var globeInitialized = false;
-        var libraryLoading = false;
-        var libraryFailed = false;
-        var libraryWatchdog = 0;
-        function primeMapLibrary() {
-            // Cache the engine and its stylesheet during the 25+ years reveal,
-            // while leaving GPU-intensive MapLibre construction until afterwards.
-            if (libraryLoading || libraryFailed ||
-                typeof maplibregl !== 'undefined') return;
-            libraryLoading = true;
-            var css = document.createElement('link');
-            css.rel = 'stylesheet';
-            css.href = 'https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css';
-            document.head.appendChild(css);
-            var sc = document.createElement('script');
-            sc.src = 'https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js';
-            sc.async = true;
-            sc.onload = function () {
-                window.clearTimeout(libraryWatchdog);
-                if (globeStarted && !fellBack) initGlobe();
-            };
-            sc.onerror = function () {
-                window.clearTimeout(libraryWatchdog);
-                libraryFailed = true;
-                if (globeStarted) fallback('knjižnica karte nedostupna');
-            };
-            document.head.appendChild(sc);
-        }
-        function startGlobe() {
-            if (globeStarted || fellBack) return;
-            globeStarted = true;
-            if (typeof maplibregl !== 'undefined') { initGlobe(); return; }
-            if (libraryFailed) { fallback('knjižnica karte nedostupna'); return; }
-            primeMapLibrary();
-            // Library might be blocked; never leave a blank map indefinitely.
-            libraryWatchdog = window.setTimeout(function () {
-                if (!globeInitialized && !fellBack)
-                    fallback('biblioteka karte nije odgovorila');
-            }, 9000);
-        }
-        function initGlobe() {
-        if (globeInitialized || fellBack) return;
-        globeInitialized = true;
-        window.clearTimeout(libraryWatchdog);
-        var sawPreloadError = false;
-        var safetyTimer = setTimeout(function () {
-            fallback(sawPreloadError ? 'karta nije odgovorila nakon ponovnog pokušaja' : 'isteklo vrijeme učitavanja');
-        }, 45000);
-        try {
-            if (!wrap || !el) { clearTimeout(safetyTimer); return; }
-            if (typeof maplibregl === 'undefined') { fallback('knjižnica karte nedostupna'); clearTimeout(safetyTimer); return; }
-            var SHOP = [18.982064, 43.6651456];
-            var SHOP_ZOOM = 16.2;
-            var perfLite = document.documentElement.classList.contains('perf-lite');
-            var map = new maplibregl.Map({
-                container: el,
-                style: 'https://tiles.openfreemap.org/styles/liberty',
-                center: [12, 32], zoom: 1.6, pitch: 0, bearing: -15,
-                interactive: false,
-                attributionControl: { compact: true },
-                pixelRatio: Math.min(window.devicePixelRatio || 1, perfLite ? 1 : 1.1),
-                fadeDuration: 0,
-                renderWorldCopies: false,
-                cancelPendingTileRequestsWhileZooming: false
-            });
-            var loaded = false;
-            // MapLibre reports transient tile/style fetch failures through this
-            // event and retries them. Do not replace the map while that retry
-            // can still produce the first render; the longer watchdog handles
-            // a permanent failure instead.
-            map.on('error', function (e) { if (!loaded && e && e.error) sawPreloadError = true; });
-            map.on('load', function () {
-                if (fellBack) return;
-                loaded = true;
-                clearTimeout(safetyTimer);
-                wrap.classList.add('is-loaded');
-                map.resize();
-                if (!perfLite) {
-                    try { map.setProjection({ type: 'globe' }); } catch (e) {}
-                }
-                queueMapProgress();
-            });
-
-            // Scroll controls the first visit only. Reaching the shop is a
-            // permanent state: no reverse flight on scrolling back up.
-            var mapFlightStops = [
-                { p: 0, center: [12, 32], zoom: 1.6, pitch: 0, bearing: -15, label: 'Svijet' },
-                { p: .24, center: [15, 46], zoom: 3.4, pitch: 0, bearing: -6, label: 'Evropa' },
-                { p: .48, center: [18.40, 43.95], zoom: 5.6, pitch: 12, bearing: 0, label: 'Bosna i Hercegovina' },
-                { p: .72, center: [18.95, 43.69], zoom: 9.5, pitch: 25, bearing: 0, label: 'Goražde' },
-                { p: 1, center: SHOP, zoom: SHOP_ZOOM, pitch: 40, bearing: 0, label: 'Auto Servis Šunja' }
-            ];
-            var marker = null;
-            var mapCompleted = false;
-            var lastMapProgress = -1;
-            var lastMapScrollY = null;
-            var lastCameraAt = 0;
-            var CAMERA_MIN_FRAME_MS = 80;
-            var mapFrame = 0, cameraTimer = 0, viewportSyncFrame = 0;
-            var reduceMapMotion = !!(window.matchMedia &&
-                window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-
-            function setShopMarker(show) {
-                if (!loaded) return;
-                if (show && !marker) {
-                    var popupHTML = '<div class="sunja-map-card">' +
-                        '<span class="sunja-map-card__kicker">GORAŽDE</span>' +
-                        '<strong class="sunja-map-card__title">Auto Servis Šunja</strong>' +
-                        '<span class="sunja-map-card__address">Hajra Lakovića 38, Goražde</span>' +
-                        '<div class="sunja-map-card__actions">' +
-                            '<a class="sunja-map-card__directions" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener" aria-label="Upute za vožnju do Auto Servisa Šunja">Upute <i class="fa fa-arrow-right" aria-hidden="true"></i></a>' +
-                            '<a class="sunja-map-card__phone" href="tel:+38761297847" aria-label="Pozovite Auto Servis Šunja"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a>' +
-                        '</div>' +
-                    '</div>';
-                    var popup = new maplibregl.Popup({
-                        offset: 22, closeOnClick: false, closeButton: false,
-                        focusAfterOpen: false, className: 'sunja-map-popup',
-                        maxWidth: '300px'
-                    }).setHTML(popupHTML);
-                    marker = new maplibregl.Marker({ color: '#0B5FA5' })
-                        .setLngLat(SHOP)
-                        .setPopup(popup)
-                        .addTo(map);
-                    marker.togglePopup();
-                }
-            }
-
-            function settleMapScroll() {
-                if (!wrap) return;
-                // Collapse the long sticky flight into a normal one-screen map
-                // exactly once. Preserve Kontakt's viewport coordinate using
-                // an exact scroll target, then correct after Safari's next
-                // layout frames; reverse scrolling never enters the old runway.
-                var contactSection = document.getElementById('kontakt');
-                var before = contactSection ? contactSection.getBoundingClientRect().top :
-                    wrap.getBoundingClientRect().bottom;
-                var beforeScrollY = window.scrollY;
-                var rootStyle = document.documentElement.style;
-                var previousAnchor = rootStyle.overflowAnchor;
-                rootStyle.overflowAnchor = 'none';
-                wrap.classList.add('globe-complete');
-                var after = contactSection ? contactSection.getBoundingClientRect().top :
-                    wrap.getBoundingClientRect().bottom;
-                var shift = after - before;
-                if (Math.abs(shift) > .5) {
-                    window.scrollTo({ top: Math.max(0, beforeScrollY + shift), behavior: 'instant' });
-                }
-                function correctContactAnchor() {
-                    if (contactSection) {
-                        var remaining = contactSection.getBoundingClientRect().top - before;
-                        if (Math.abs(remaining) > .5) {
-                            window.scrollTo({ top: Math.max(0, window.scrollY + remaining), behavior: 'instant' });
-                        }
-                    }
-                    rootStyle.overflowAnchor = previousAnchor;
-                }
-                window.requestAnimationFrame(function () {
-                    window.requestAnimationFrame(correctContactAnchor);
-                });
-            }
-
-            function finishMapOnce() {
-                if (mapCompleted || fellBack || !loaded) return;
-                mapCompleted = true;
-                // This is intentionally one-way. Stop all scroll-driven
-                // camera work and remove the scroll listener permanently.
-                window.removeEventListener('scroll', queueMapProgress);
-                window.removeEventListener('resize', syncMapProgressOnViewportChange);
-                window.removeEventListener('orientationchange', syncMapProgressOnViewportChange);
-                if (window.visualViewport)
-                    window.visualViewport.removeEventListener('resize', syncMapProgressOnViewportChange);
-                if (mapFrame) cancelAnimationFrame(mapFrame);
-                mapFrame = 0;
-                if (viewportSyncFrame) cancelAnimationFrame(viewportSyncFrame);
-                viewportSyncFrame = 0;
-                if (cameraTimer) clearTimeout(cameraTimer);
-                cameraTimer = 0;
-                lastMapProgress = 1;
-                wrap.classList.add('globe-arrived');
-                if (stageEl) stageEl.textContent = 'Auto Servis Šunja';
-                if (hintEl) hintEl.style.opacity = '0';
-                if (typeof map.stop === 'function') map.stop();
-                map.jumpTo({
-                    center: SHOP, zoom: SHOP_ZOOM, pitch: 40, bearing: 0
-                });
-                setShopMarker(true);
-                settleMapScroll();
-            }
-
-            function updateMapOnScroll() {
-                mapFrame = 0;
-                if (mapCompleted || fellBack || !loaded || !wrap) return;
-                var rect = wrap.getBoundingClientRect();
-                // Fast scrollers might reach the next section before the
-                // style loads. In that case finish immediately, don't replay.
-                if (rect.bottom <= 0) { finishMapOnce(); return; }
-                if (rect.top > innerHeight + 300) return;
-                // Progress belongs to the actual sticky runway. innerHeight
-                // can change with mobile browser chrome while 100svh keeps the
-                // rendered map panel at a different height.
-                var stickyHeight = stickyEl ? stickyEl.getBoundingClientRect().height : innerHeight;
-                var distance = Math.max(1, rect.height - stickyHeight);
-                var progress = Math.max(0, Math.min(1, -rect.top / distance));
-                if (progress >= .985) { finishMapOnce(); return; }
-                lastMapScrollY = window.scrollY;
-                if (Math.abs(progress - lastMapProgress) < .018) return;
-                var now = performance.now();
-                // MapLibre repaints and fetches new tiles with each jumpTo.
-                // Cap camera updates at 12.5fps instead of every scroll event.
-                if (lastCameraAt && now - lastCameraAt < CAMERA_MIN_FRAME_MS) {
-                    if (!cameraTimer) {
-                        cameraTimer = setTimeout(function () {
-                            cameraTimer = 0;
-                            queueMapProgress();
-                        }, CAMERA_MIN_FRAME_MS - (now - lastCameraAt));
-                    }
-                    return;
-                }
-                lastCameraAt = now;
-                lastMapProgress = progress;
-                var scrub = reduceMapMotion ? (progress > .5 ? 1 : 0) : progress;
-                var left = mapFlightStops[0], right = mapFlightStops[mapFlightStops.length - 1];
-                for (var m = 1; m < mapFlightStops.length; m++) {
-                    if (scrub <= mapFlightStops[m].p) {
-                        left = mapFlightStops[m - 1];
-                        right = mapFlightStops[m];
-                        break;
-                    }
-                }
-                var t = Math.max(0, Math.min(1,
-                    (scrub - left.p) / Math.max(.001, right.p - left.p)));
-                function mix(a, b) { return a + (b - a) * t; }
-                var camera = {
-                    center: [mix(left.center[0], right.center[0]),
-                        mix(left.center[1], right.center[1])],
-                    zoom: mix(left.zoom, right.zoom),
-                    pitch: mix(left.pitch, right.pitch),
-                    bearing: mix(left.bearing, right.bearing)
-                };
-                // Give the renderer time to interpolate between scroll samples,
-                // rather than abruptly snapping the canvas every 80ms. On
-                // reduced-motion / light devices use inexpensive direct jumps.
-                if (!reduceMapMotion && !perfLite && typeof map.easeTo === 'function') {
-                    map.easeTo({
-                        center: camera.center, zoom: camera.zoom,
-                        pitch: camera.pitch, bearing: camera.bearing,
-                        duration: 180, easing: function (value) {
-                            return 1 - Math.pow(1 - value, 2);
-                        }
-                    });
-                } else {
-                    map.jumpTo(camera);
-                }
-                if (stageEl) stageEl.textContent = t > .52 ? right.label : left.label;
-            }
-            function queueMapProgress() {
-                if (mapCompleted || fellBack || mapFrame) return;
-                mapFrame = requestAnimationFrame(updateMapOnScroll);
-            }
-            function syncMapProgressOnViewportChange() {
-                if (mapCompleted || fellBack || !loaded || !wrap || viewportSyncFrame) return;
-                viewportSyncFrame = requestAnimationFrame(function () {
-                    viewportSyncFrame = 0;
-                    if (mapCompleted || fellBack || !loaded || !wrap) return;
-                    if (mapFrame) { cancelAnimationFrame(mapFrame); mapFrame = 0; }
-                    // Responsive reflow can shorten content above the map when
-                    // a phone rotates or a tablet crosses a breakpoint. Keep
-                    // the current stage anchored only when the visitor was
-                    // still scrolling the active runway, never after leaving it.
-                    if (lastMapProgress >= 0 && lastMapProgress < .985 &&
-                        lastMapScrollY !== null &&
-                        Math.abs(window.scrollY - lastMapScrollY) <= 80) {
-                        var rect = wrap.getBoundingClientRect();
-                        var sectionTop = rect.top + window.scrollY;
-                        var stickyHeight = stickyEl ? stickyEl.getBoundingClientRect().height : innerHeight;
-                        var runway = Math.max(1, rect.height - stickyHeight);
-                        var targetScrollY = sectionTop + runway * lastMapProgress;
-                        if (Math.abs(targetScrollY - window.scrollY) > 1) {
-                            window.scrollTo({ top: Math.max(0, targetScrollY), behavior: 'instant' });
-                        }
-                        lastMapScrollY = window.scrollY;
-                    }
-                    queueMapProgress();
-                });
-            }
-            window.addEventListener('scroll', queueMapProgress, { passive: true });
-            // Viewport/orientation changes can change the sticky runway even
-            // when no scroll event follows; preserve the active progress when
-            // responsive content above the map reflows. ResizeObserver below
-            // still owns MapLibre canvas resizing.
-            window.addEventListener('resize', syncMapProgressOnViewportChange, { passive: true });
-            window.addEventListener('orientationchange', syncMapProgressOnViewportChange, { passive: true });
-            if (window.visualViewport)
-                window.visualViewport.addEventListener('resize', syncMapProgressOnViewportChange, { passive: true });
-            // Resize when the actual map container changes size, not whenever
-            // Safari's browser toolbar changes the visual viewport.
-            if (typeof ResizeObserver !== 'undefined') {
-                var resizeObserver = new ResizeObserver(function () {
-                    if (loaded && !fellBack) map.resize();
-                });
-                resizeObserver.observe(el);
-            } else {
-                var lastWidth = window.innerWidth;
-                window.addEventListener('resize', function () {
-                    if (window.innerWidth === lastWidth) return;
-                    lastWidth = window.innerWidth;
-                    if (loaded && !fellBack) map.resize();
-                }, { passive: true });
-            }
-            // The load event may arrive after the visitor already passed
-            // the map. Process its current scroll location exactly once.
-            if (loaded) queueMapProgress();
-        } catch (e) {
-            fallback('iznimka: ' + String(e).slice(0, 80));
-        }
-        }
-        // Begin fetching the engine/style/tiles while the logo animation runs,
-        // well before anyone reaches Lokacija. An observer remains as a
-        // fallback if page load is delayed on a slow network.
-        var earlyGlobeScheduled = false;
-        function scheduleEarlyGlobeStart() {
-            if (earlyGlobeScheduled || !wrap ||
-                document.documentElement.classList.contains('sunja-intro-active')) return;
-            earlyGlobeScheduled = true;
-            // MapLibre's globe is GPU-heavy: don't initialise it while the
-            // user's high-resolution logo animation is decoding.
-            window.setTimeout(startGlobe, 90);
-        }
-        window.addEventListener('sunja:intro-experience-start', primeMapLibrary, { once: true });
-        window.addEventListener('sunja:intro-finished', scheduleEarlyGlobeStart, { once: true });
-        if (document.readyState === 'complete') scheduleEarlyGlobeStart();
-        else window.addEventListener('load', scheduleEarlyGlobeStart, { once: true });
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', scheduleEarlyGlobeStart, { once: true });
-        } else scheduleEarlyGlobeStart();
-        if ('IntersectionObserver' in window && wrap) {
-            var io = new IntersectionObserver(function (es) {
-                if (es[0].isIntersecting &&
-                    !document.documentElement.classList.contains('sunja-intro-active')) {
-                    io.disconnect(); startGlobe();
-                }
-            }, { rootMargin: '850px 0px' });
-            io.observe(wrap);
-        }
-    })();
-    </script>
-    <script src="/testing/testing.js"></script>
+    <script type="module" src="testing.js"></script>
 </body>
-
 </html>
