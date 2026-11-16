@@ -1,0 +1,206 @@
+/* Isolated experimental redesign. Loaded only by /testing/; shared homepage files remain untouched. */
+.testing-design {
+    --primary: #1877f2;
+    --secondary: #101d2a;
+    --light: #f1f0eb;
+    --dark: #0b1118;
+    --ink: #101820;
+    --paper: #f1f0eb;
+    --blue: #1877f2;
+    --acid: #ccf267;
+    --muted: #75808a;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: "Inter", "Arial", sans-serif;
+    overflow-x: clip;
+}
+.testing-design *, .testing-design *::before, .testing-design *::after { box-sizing: border-box; }
+.testing-design a { transition: color .25s ease, background-color .25s ease, border-color .25s ease, transform .25s ease; }
+.testing-design h1, .testing-design h2, .testing-design h3, .testing-design h4 { letter-spacing: -.045em; }
+.testing-design h1, .testing-design h2 { font-family: Georgia, "Times New Roman", serif; font-weight: 500; }
+.testing-design h1 { line-height: .96; }
+.testing-design .text-primary { color: var(--blue) !important; }
+.testing-design .bg-light { background-color: var(--paper) !important; }
+.testing-design .btn { border-radius: 999px; font-size: .76rem; font-weight: 750; letter-spacing: .08em; padding: 1rem 1.5rem; }
+.testing-design .btn-primary { background: var(--blue); border-color: var(--blue); box-shadow: 0 10px 28px rgba(24,119,242,.2); }
+.testing-design .btn-primary:hover { background: #075fd0; border-color: #075fd0; transform: translateY(-2px); }
+.testing-design .btn-outline-light { border-width: 1px; border-color: rgba(255,255,255,.55); }
+.testing-design .container-xxl { max-width: 1500px; }
+
+/* Quiet utility bar + a compact, glassy navigation. */
+.testing-design > .container-fluid.bg-light { background: #0b1118 !important; color: #dce3e8; }
+.testing-design > .container-fluid.bg-light a { color: #fff !important; }
+.testing-design .status-pill { border-radius: 999px !important; padding: .42rem .8rem; background: rgba(255,255,255,.09) !important; color: #fff; }
+.testing-design .nav-bar { position: sticky; top: 0; z-index: 1100; min-height: 82px; padding: 0 max(2vw, 18px) !important; background: rgba(244,244,240,.9) !important; border-bottom: 1px solid rgba(16,24,32,.1); box-shadow: 0 8px 28px rgba(16,24,32,.05) !important; backdrop-filter: blur(18px); }
+.testing-design .navbar-brand { padding-left: 0 !important; }
+.testing-design .navbar-brand img { height: 47px; width: auto; }
+.testing-design .navbar-light .navbar-nav .nav-link { color: #15202a; font-size: .72rem; font-weight: 750; letter-spacing: .1em; margin: 0 1rem 0 0; padding: 1.5rem 0; }
+.testing-design .navbar-light .navbar-nav .nav-link:hover, .testing-design .navbar-light .navbar-nav .nav-link.active { color: var(--blue); }
+.testing-design .nav-bar > .btn { margin-left: 1rem; height: auto; padding: .9rem 1.35rem; }
+.testing-design .navbar-toggler { border: 0; box-shadow: none !important; }
+
+/* Immersive hero: real workshop photography + a floating, perspective-treated Peugeot. */
+.testing-design .container-fluid.p-0.mb-5 { margin: 0 !important; }
+.testing-design #header-carousel { position: relative; overflow: hidden; background: #080e15; isolation: isolate; }
+.testing-design .carousel-item { min-height: 680px; height: min(88vh, 940px); }
+.testing-design .carousel-item > picture { position: absolute; inset: 0; display: block; }
+.testing-design .carousel-item > picture img { width: 100%; height: 100%; object-fit: cover; opacity: .5; filter: saturate(.72) contrast(1.06); }
+.testing-design .hero-bg { position: absolute; inset: 0; background-size: cover; background-position: center 44%; opacity: .8; }
+.testing-design .carousel-item::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(90deg, rgba(5,10,15,.94) 0%, rgba(5,10,15,.78) 39%, rgba(5,10,15,.16) 75%), linear-gradient(0deg, rgba(5,10,15,.44), transparent 40%); pointer-events: none; }
+.testing-design .carousel-caption { z-index: 5; inset: 0; bottom: auto; height: 100%; padding: 8rem 7vw 7rem; text-align: left; }
+.testing-design .carousel-caption > .container { max-width: 1420px; }
+.testing-design .carousel-caption .row { min-height: 100%; }
+.testing-design .carousel-caption h6 { color: var(--acid); font-size: .72rem; font-weight: 750; letter-spacing: .23em; }
+.testing-design .carousel-caption h1 { max-width: 860px; margin-bottom: 1.5rem !important; font-size: clamp(4.4rem, 9.1vw, 9.8rem); letter-spacing: -.075em; }
+.testing-design .carousel-caption p { max-width: 490px; color: rgba(255,255,255,.8); font-size: clamp(1rem, 1.35vw, 1.22rem); line-height: 1.75; }
+.testing-design .carousel-caption .btn { margin-left: 0 !important; }
+.testing-design .testing-car-stage { position: absolute; z-index: 4; right: -3%; top: 11%; width: 67%; height: 79%; display: grid; place-items: center; perspective: 1150px; pointer-events: none; transform-style: preserve-3d; }
+.testing-design .testing-car-art { position: relative; z-index: 2; display: block; width: min(80vw, 1120px); height: auto; max-height: 100%; object-fit: contain; filter: drop-shadow(0 42px 36px rgba(0,0,0,.62)) drop-shadow(0 0 40px rgba(28,111,241,.16)); transform-style: preserve-3d; will-change: transform; }
+.testing-design .testing-car-orbit { position: absolute; width: min(39vw, 560px); aspect-ratio: 1; border: 1px solid rgba(204,242,103,.24); border-radius: 50%; transform: rotateX(70deg) rotateZ(-18deg); box-shadow: 0 0 55px rgba(24,119,242,.13), inset 0 0 50px rgba(24,119,242,.1); }
+.testing-design .testing-car-orbit-b { width: min(52vw, 720px); border-color: rgba(255,255,255,.09); transform: rotateX(72deg) rotateZ(25deg); }
+.testing-design .hero-indicators { z-index: 8; bottom: 28px; justify-content: flex-start; margin-left: 7vw; gap: 8px; }
+.testing-design .hero-indicators button { width: 34px; height: 4px; border: 0; border-radius: 9px; opacity: .35; }
+.testing-design .hero-indicators button.active { width: 70px; background: var(--acid); opacity: 1; }
+.testing-design .hero-nav { z-index: 7; width: 54px; height: 54px; top: auto; bottom: 50px; border: 1px solid rgba(255,255,255,.2); border-radius: 50%; opacity: .75; }
+.testing-design .carousel-control-prev { left: auto; right: 112px; }
+.testing-design .carousel-control-next { right: 42px; }
+
+/* Social links become dark instrument-panel tiles. */
+.testing-design .container-xxl.pb-5 { padding-top: 2rem; padding-bottom: 5rem !important; }
+.testing-design .social-tile { min-height: 112px; border: 1px solid rgba(255,255,255,.1); border-radius: 20px; background: #101922 !important; box-shadow: 0 16px 40px rgba(11,17,24,.12); }
+.testing-design .social-tile:hover { transform: translateY(-5px); border-color: rgba(204,242,103,.55); }
+.testing-design .social-tile > i:first-child { color: var(--acid) !important; }
+.testing-design .social-tile span.text-white-50 { color: rgba(255,255,255,.58) !important; }
+
+/* About becomes a high-contrast workshop feature spread. */
+.testing-design #o-nama { position: relative; padding-top: 7rem !important; padding-bottom: 8rem !important; }
+.testing-design #o-nama .row { align-items: center; }
+.testing-design #o-nama .position-relative.h-100 { min-height: 560px !important; overflow: visible; }
+.testing-design #o-nama .svc-photo { height: 560px; object-fit: cover; border-radius: 4px 90px 4px 4px; box-shadow: 24px 24px 0 #d8e2ee; }
+.testing-design #o-nama .position-absolute.top-0.end-0 { top: auto !important; right: -20px !important; bottom: -24px; margin: 0 !important; padding: 1rem 1.2rem !important; border: 1px solid rgba(255,255,255,.2); border-radius: 14px; backdrop-filter: blur(14px); box-shadow: 0 20px 50px rgba(0,0,0,.18); }
+.testing-design #o-nama h6, .testing-design #usluge h6, .testing-design #galerija h6, .testing-design #recenzije h6, .testing-design #lokacija h6, .testing-design #kontakt h6 { font-size: .72rem; font-weight: 800; letter-spacing: .22em; }
+.testing-design #o-nama h1 { max-width: 680px; font-size: clamp(3.2rem, 5.5vw, 5.4rem); }
+.testing-design .experience-feature { display: inline-flex; gap: 16px; align-items: center; margin: .25rem 0 1.75rem; padding: .85rem 1.15rem; border-radius: 12px; background: #101922; color: white; box-shadow: 0 16px 35px rgba(10,20,30,.14); }
+.testing-design .experience-feature strong { color: var(--acid); font-size: 2.8rem; line-height: 1; }
+.testing-design .experience-feature-title { color: white; font-weight: 800; }
+.testing-design .experience-feature-caption { color: rgba(255,255,255,.55); }
+.testing-design #o-nama .row.g-4.mb-3.pb-3 .bg-light { background: transparent !important; border: 1px solid rgba(16,24,32,.11); border-radius: 12px; }
+.testing-design #o-nama .row.g-4.mb-3.pb-3 .d-flex { padding: .35rem; }
+.testing-design #o-nama .row.g-4.mb-3.pb-3 .bg-light > span { color: var(--blue) !important; }
+
+/* Services: midnight-blue canvas with electric-blue active state. */
+.testing-design #usluge { max-width: none; padding: 7.5rem 0 !important; color: #f3f5f6; background: #0b1118; }
+.testing-design #usluge > .container { max-width: 1320px; }
+.testing-design #usluge h1 { margin-bottom: 3.2rem !important; font-size: clamp(3rem, 5.4vw, 5.4rem); }
+.testing-design #usluge h6 { color: var(--acid) !important; }
+.testing-design .service-nav-grid .nav-link { min-height: 82px; margin: 0 0 .7rem !important; padding: 1.2rem !important; border: 1px solid rgba(255,255,255,.1); border-radius: 14px; color: #eaf0f4; background: rgba(255,255,255,.045); transition: .3s ease; }
+.testing-design .service-nav-grid .nav-link:hover { transform: translateX(5px); border-color: rgba(204,242,103,.4); }
+.testing-design .service-nav-grid .nav-link.active { color: #071018 !important; background: var(--acid) !important; border-color: var(--acid); box-shadow: 0 12px 28px rgba(204,242,103,.14); }
+.testing-design .service-nav-grid .nav-link.active h4 { color: #071018 !important; }
+.testing-design .service-nav-grid .nav-link h4 { font-size: 1.05rem; font-weight: 700; letter-spacing: -.02em; }
+.testing-design .service-nav-grid .nav-link i { color: var(--blue); }
+.testing-design .service-nav-grid .nav-link.active i { color: #071018; }
+.testing-design .service .tab-pane { padding: 1.2rem; border: 1px solid rgba(255,255,255,.12); border-radius: 20px; background: #121c27; }
+.testing-design .service .tab-pane h3 { font-family: Georgia, serif; font-size: 2.3rem; }
+.testing-design .service .tab-pane p { color: rgba(241,245,248,.78); }
+.testing-design .service .service-media-frame { min-height: 300px; overflow: hidden; border-radius: 15px; }
+.testing-design .service .service-image { min-height: 340px; object-fit: cover; transition: transform .7s cubic-bezier(.2,.75,.25,1); }
+.testing-design .service .tab-pane:hover .service-image { transform: scale(1.035); }
+.testing-design .service .fa-check { color: var(--acid) !important; }
+.testing-design .service .btn-primary { margin-top: .6rem !important; }
+
+/* Photography, rating, and map keep their original content and dynamic sources. */
+.testing-design #galerija, .testing-design #recenzije { padding-top: 7rem !important; padding-bottom: 7rem !important; }
+.testing-design #galerija h1, .testing-design #recenzije h1, .testing-design #lokacija h1, .testing-design #kontakt h1 { font-size: clamp(3rem, 5vw, 5rem); }
+.testing-design #galerija .gallery-card, .testing-design #galerija .gallery-item, .testing-design #galerija [data-gallery-card] { border-radius: 18px; overflow: hidden; }
+.testing-design #galerija img { transition: transform .75s cubic-bezier(.2,.7,.2,1); }
+.testing-design #galerija a:hover img { transform: scale(1.04); }
+.testing-design #recenzije .bg-white { max-width: 900px; margin: auto; padding: clamp(2rem, 6vw, 5.5rem) !important; border: 1px solid rgba(16,24,32,.09); border-radius: 24px; background: #fff !important; box-shadow: 0 28px 80px rgba(18,31,42,.1) !important; }
+.testing-design #recenzije p { max-width: 650px; margin-left: auto; margin-right: auto; line-height: 1.8; }
+.testing-design #lokacija { padding-top: 6rem !important; }
+.testing-design #globeScroll { margin-top: 1.5rem; }
+.testing-design .globe-sticky { overflow: hidden; border-radius: 2px; }
+.testing-design #globeMap { background: #101d2a; }
+.testing-design .map-quick-link { border: 1px solid rgba(255,255,255,.22); border-radius: 999px; box-shadow: 0 12px 35px rgba(0,0,0,.26); }
+.testing-design .globe-stage { border: 1px solid rgba(204,242,103,.3); border-radius: 999px; box-shadow: 0 12px 35px rgba(0,0,0,.24); }
+
+/* Contact and footer become a clear, high-contrast final panel. */
+.testing-design #kontakt { padding-top: 7rem !important; padding-bottom: 6rem !important; }
+.testing-design #kontakt .bg-light { min-height: 130px; border: 1px solid rgba(16,24,32,.1); border-radius: 14px; background: rgba(255,255,255,.55) !important; }
+.testing-design .contact-spotlight { border-radius: 20px; box-shadow: 0 24px 65px rgba(8,16,24,.2); }
+.testing-design .footer { margin-top: 0 !important; padding-top: 5rem !important; background: #080e14 !important; }
+.testing-design .footer .copyright { border-color: rgba(255,255,255,.14) !important; }
+.testing-design .footer-photo-credit { color: rgba(255,255,255,.6); }
+.testing-design .mobile-callbar { z-index: 1200; overflow: hidden; border-top: 1px solid rgba(255,255,255,.12); border-radius: 16px 16px 0 0; box-shadow: 0 -10px 35px rgba(0,0,0,.2); }
+.testing-design .mobile-callbar a.call { background: var(--blue); }
+.testing-design .mobile-callbar a.dir { background: #101d2a; }
+.testing-design #backTop { border-radius: 50%; }
+
+/* Scroll-triggered entrance and pointer tilt; all motion respects reduced-motion preference. */
+.testing-design [data-testing-reveal] { opacity: 0; transform: translate3d(0,28px,0) scale(.99); filter: blur(5px); transition: opacity .75s ease, transform .85s cubic-bezier(.18,.67,.26,1), filter .8s ease; }
+.testing-design [data-testing-reveal].is-testing-visible { opacity: 1; transform: translate3d(0,0,0) scale(1); filter: blur(0); }
+.testing-design [data-testing-tilt] { transform-style: preserve-3d; transition: transform .3s ease, box-shadow .3s ease; }
+.testing-design [data-testing-tilt]:hover { box-shadow: 0 24px 50px rgba(12,27,42,.17); }
+
+@media (max-width: 991.98px) {
+    .testing-design .nav-bar { min-height: 72px; }
+    .testing-design .navbar-collapse { padding: .8rem 0 1rem; }
+    .testing-design .navbar-light .navbar-nav .nav-link { padding: .8rem 0; }
+    .testing-design .carousel-item { min-height: 710px; height: 88svh; max-height: 920px; }
+    .testing-design .carousel-caption { padding: 8rem 6vw 6.5rem; }
+    .testing-design .carousel-caption h1 { font-size: clamp(4rem, 11vw, 7rem); }
+    .testing-design .testing-car-stage { right: -15%; width: 82%; opacity: .86; }
+    .testing-design .testing-car-art { width: 95vw; }
+    .testing-design #o-nama { padding: 5rem 0 !important; }
+}
+@media (max-width: 767.98px) {
+    .testing-design .carousel-item { min-height: 740px; height: 91svh; max-height: 900px; }
+    .testing-design .carousel-item::after { background: linear-gradient(90deg, rgba(5,10,15,.86), rgba(5,10,15,.38)), linear-gradient(0deg, rgba(5,10,15,.5), transparent 62%); }
+    .testing-design .carousel-caption { align-items: flex-start !important; padding: 6.5rem 7vw 7rem; }
+    .testing-design .carousel-caption .container, .testing-design .carousel-caption .row { height: 100%; }
+    .testing-design .carousel-caption h1 { max-width: 95%; font-size: clamp(3.7rem, 14vw, 6rem); }
+    .testing-design .carousel-caption p { max-width: 420px; font-size: .98rem; }
+    .testing-design .testing-car-stage { top: auto; right: -32%; bottom: -1%; width: 125%; height: 48%; opacity: .63; }
+    .testing-design .testing-car-art { width: 125vw; }
+    .testing-design .testing-car-orbit-a { width: 75vw; }
+    .testing-design .testing-car-orbit-b { width: 92vw; }
+    .testing-design .hero-indicators { margin-left: 7vw; }
+    .testing-design .hero-nav { display: none; }
+    .testing-design .container-xxl.pb-5 { padding-bottom: 3rem !important; }
+    .testing-design .social-tile { min-height: 90px; }
+    .testing-design #o-nama .position-relative.h-100 { min-height: 360px !important; }
+    .testing-design #o-nama .svc-photo { height: 360px; }
+    .testing-design #o-nama .position-absolute.top-0.end-0 { right: -8px !important; }
+    .testing-design #usluge { padding: 5rem 0 !important; }
+    .testing-design #usluge .service-nav-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+    .testing-design .service-nav-grid .nav-link { min-height: 80px; margin: 0 !important; padding: .8rem !important; }
+    .testing-design .service-nav-grid .nav-link h4 { font-size: .85rem; }
+    .testing-design .service-nav-grid .nav-link i { font-size: 1.2rem; margin-right: .65rem !important; }
+    .testing-design .service .tab-pane { margin-top: .5rem; padding: .8rem; }
+    .testing-design .service .service-image { min-height: 230px; max-height: 320px; }
+    .testing-design #galerija, .testing-design #recenzije { padding: 5rem 0 !important; }
+    .testing-design #globeScroll { height: 150svh; }
+    .testing-design .globe-sticky { height: 100svh; border-radius: 0; }
+    .testing-design #kontakt { padding: 5rem 0 4rem !important; }
+    .testing-design .mobile-callbar a { padding: .95rem .5rem; font-size: .82rem; }
+}
+@media (max-width: 420px) {
+    .testing-design .carousel-caption h1 { font-size: 3.4rem; }
+    .testing-design .testing-car-stage { right: -42%; width: 138%; opacity: .54; }
+    .testing-design .service-nav-grid .nav-link { flex-wrap: wrap; gap: .4rem; }
+    .testing-design .service-nav-grid .nav-link h4 { width: 100%; margin-left: 0 !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .testing-design *, .testing-design *::before, .testing-design *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    .testing-design [data-testing-reveal] { opacity: 1; transform: none; filter: none; }
+}
+
+/* Contrast correction for the inherited utility/status strip. */
+body.testing-design .container-fluid.bg-light { background-color: #0b1118 !important; background-image: none !important; color: #dce3e8 !important; }
+body.testing-design .container-fluid.bg-light small,
+body.testing-design .container-fluid.bg-light a,
+body.testing-design .container-fluid.bg-light [data-status-text] { color: #eef3f6 !important; opacity: 1 !important; }
+body.testing-design .container-fluid.bg-light .status-pill { background: #1d2a37 !important; border: 1px solid rgba(255,255,255,.16) !important; color: #fff !important; }
+body.testing-design .container-fluid.bg-light .status-pill [data-status-text] { color: #fff !important; }
+body.testing-design .carousel-caption .status-pill,
+body.testing-design .carousel-caption .status-pill [data-status-text] { color: #fff !important; opacity: 1 !important; }
