@@ -397,16 +397,16 @@ class FrontendStaticTests(unittest.TestCase):
 
     def test_v214_hero_backdrops_resolve_from_site_root(self):
         fixed_slides = (
-            "assets/slides/slide-01-wide.webp",
-            "assets/slides/slide-01-mobile.webp",
+            "assets/gallery/sunja-tiktok-7627945643490692373.webp",
             "assets/slides/slide-02.webp",
             "assets/slides/slide-03.webp",
         )
         for src in fixed_slides:
             self.assertIn(src, INDEX)
             self.assertTrue((ROOT / src).is_file(), f"Missing fixed slide photo: {src}")
-        self.assertIn("--hero-photo:url('/assets/slides/slide-01-wide.webp')", INDEX)
-        self.assertIn("--hero-photo-mobile:url('/assets/slides/slide-01-mobile.webp')", INDEX)
+        workshop = "assets/gallery/sunja-tiktok-7627945643490692373.webp"
+        self.assertIn("--hero-photo:url('/" + workshop + "')", INDEX)
+        self.assertIn("--hero-photo-mobile:url('/" + workshop + "')", INDEX)
         self.assertIn("--hero-photo:url('/assets/slides/slide-02.webp')", INDEX)
         self.assertIn("--hero-photo:url('/assets/slides/slide-03.webp')", INDEX)
         self.assertNotIn("--hero-photo:url('assets/", INDEX)
@@ -710,8 +710,7 @@ class FrontendStaticTests(unittest.TestCase):
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
         fixed_slides = (
-            "assets/slides/slide-01-wide.webp",
-            "assets/slides/slide-01-mobile.webp",
+            "assets/gallery/sunja-tiktok-7627945643490692373.webp",
             "assets/slides/slide-02.webp",
             "assets/slides/slide-03.webp",
         )
