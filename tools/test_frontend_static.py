@@ -800,17 +800,22 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v47_all_hero_and_service_photos_are_fixed_local_assets_with_fallbacks(self):
         from html.parser import HTMLParser
         import re
-        hero_tag = re.search(r'<img(?=[^>]*\\bid="heroMainImg")[^>]*>', INDEX)
-        self.assertIsNotNone(hero_tag)
-        hero_src = re.search(r'\\bsrc="([^"]+)"', hero_tag.group(0))
+        hero_src = re.search(
+            r'<img class="w-100" id="heroMainImg" src="([^"]+)"', INDEX
+        )
         self.assertIsNotNone(hero_src)
         self.assertEqual(
             "assets/gallery/sunja-tiktok-7627945643490692373.webp", hero_src.group(1)
         )
-        service_images = re.findall(
-            r'<img[^>]*class="[^"]*\bservice-image\b[^"]*"[^>]*src="([^"]+)"[^>]*data-fallback-src="([^"]+)"',
-            INDEX
+        service_tags = re.findall(
+            r'<img[^>]*class="[^"]*service-image[^"]*"[^>]*>', INDEX
         )
+        service_images = []
+        for tag in service_tags:
+            source = re.search(r'\bsrc="([^"]+)"', tag)
+            fallback = re.search(r'\bdata-fallback-src="([^"]+)"', tag)
+            if source and fallback:
+                service_images.append((source.group(1), fallback.group(1)))
         self.assertEqual(6, len(service_images))
         sources = [src for src, fallback in service_images]
         fallbacks = [fallback for src, fallback in service_images]
