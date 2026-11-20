@@ -25,6 +25,39 @@ MAX_AGE_DAYS = 60
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"}
 CATS = ["kljucevi", "dijagnostika", "elektrika", "veliki", "mali", "peugeot"]
 
+SOCIAL_PHOTO_FILE_RE = re.compile(
+    r"^(?:tt|ig|fb|social)(?:-wide)?-\d{8}-[0-9a-f]{8}\.webp$"
+)
+
+def _generated_photo_path(src):
+    """Resolve only a flat, generated social image under assets/photos."""
+    if not isinstance(src, str):
+        return None
+    rel = src.replace("\\", "/")
+    match = re.fullmatch(r"assets/photos/([^/]+)", rel)
+    if not match or not SOCIAL_PHOTO_FILE_RE.fullmatch(match.group(1)):
+        return None
+    root = os.path.realpath(ROOT)
+    expected_photo_dir = os.path.join(root, "assets", "photos")
+    if os.path.islink(expected_photo_dir):
+        return None
+    photo_dir = os.path.realpath(expected_photo_dir)
+    if os.path.realpath(PHOTO_DIR) != photo_dir:
+        return None
+    path = os.path.realpath(os.path.join(root, rel))
+    # Resolve symlinks as well as traversal so cleanup cannot escape the
+    # refreshable photo directory or remove any fixed site asset.
+    if os.path.dirname(path) != photo_dir:
+        return None
+    return path
+
+def _remove_generated_photo(src):
+    path = _generated_photo_path(src)
+    if not path or not os.path.isfile(path):
+        return False
+    os.remove(path)
+    return True
+
 def log(*a):
     print("[refresh]", *a, flush=True)
 
@@ -839,11 +872,7 @@ def main():
                     if source_of(e) == "tiktok" and pid in confirmed_gone:
                         removed += 1
                         src = e.get("src", "")
-                        base = os.path.basename(src)
-                        if re.match(r"tt(?:-wide)?-\d{8}-[A-Za-z0-9]+\.webp$", base):
-                            fp = os.path.join(ROOT, src)
-                            if os.path.isfile(fp):
-                                os.remove(fp)
+                        _remove_generated_photo(src)
                         log("removed deleted TikTok media:", pid, src)
                         continue
                     keep.append(e)
@@ -878,9 +907,7 @@ def main():
         pools[pool] = keep
         for e in drop:
             retired += 1
-            fp = os.path.join(ROOT, e.get("src", ""))
-            if os.path.isfile(fp):
-                os.remove(fp)
+            if _remove_generated_photo(e.get("src", "")):
                 log("retired (too old)", e["src"])
 
     # Keep slider/mobile pools in lock-step with the upgraded gallery so old

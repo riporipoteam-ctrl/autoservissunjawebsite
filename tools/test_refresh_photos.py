@@ -1,3 +1,5 @@
+import pathlib
+import tempfile
 import unittest
 from unittest.mock import patch
 
@@ -164,6 +166,57 @@ class SocialPhotoTests(unittest.TestCase):
             rebuilt["hero"][0]["src"],
         )
         self.assertEqual(2, rebuilt["hero"][0]["quality_v"])
+
+    def test_cleanup_removes_only_generated_files_under_assets_photos(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = pathlib.Path(temp)
+            photos = root / "assets" / "photos"
+            slides = root / "assets" / "slides"
+            services = root / "assets" / "services"
+            gallery = root / "assets" / "gallery"
+            for folder in (photos, slides, services, gallery):
+                folder.mkdir(parents=True, exist_ok=True)
+
+            generated = photos / "tt-20261120-0123abcd.webp"
+            generated.write_bytes(b"generated")
+            slide = slides / "slide-01-wide.webp"
+            slide.write_bytes(b"fixed slide")
+            service = services / "peugeot-servis.webp"
+            service.write_bytes(b"fixed service")
+            fallback = gallery / "tiktok-fallback-01.webp"
+            fallback.write_bytes(b"fixed fallback")
+            symlink = photos / "tt-20261120-9876abcd.webp"
+            symlink.symlink_to(slide)
+
+            with patch.object(rp, "ROOT", str(root)), patch.object(rp, "PHOTO_DIR", str(photos)):
+                self.assertTrue(rp._remove_generated_photo("assets/photos/tt-20261120-0123abcd.webp"))
+                self.assertFalse(generated.exists())
+                self.assertFalse(rp._remove_generated_photo("assets/slides/slide-01-wide.webp"))
+                self.assertFalse(rp._remove_generated_photo("assets/services/peugeot-servis.webp"))
+                self.assertFalse(rp._remove_generated_photo("assets/gallery/tiktok-fallback-01.webp"))
+                self.assertFalse(rp._remove_generated_photo("assets/photos/../slides/slide-01-wide.webp"))
+                self.assertFalse(rp._remove_generated_photo("assets/photos/tt-20261120-9876abcd.webp"))
+
+            self.assertTrue(slide.is_file())
+            self.assertTrue(service.is_file())
+            self.assertTrue(fallback.is_file())
+            self.assertTrue(symlink.is_symlink())
+
+    def test_cleanup_refuses_assets_photos_directory_symlink(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = pathlib.Path(temp)
+            assets = root / "assets"
+            slides = assets / "slides"
+            slides.mkdir(parents=True)
+            generated_name = "tt-20261120-1234abcd.webp"
+            protected_file = slides / generated_name
+            protected_file.write_bytes(b"fixed site asset")
+            photo_link = assets / "photos"
+            photo_link.symlink_to(slides, target_is_directory=True)
+
+            with patch.object(rp, "ROOT", str(root)), patch.object(rp, "PHOTO_DIR", str(photo_link)):
+                self.assertFalse(rp._remove_generated_photo("assets/photos/" + generated_name))
+            self.assertTrue(protected_file.is_file())
 
 
 if __name__ == "__main__":

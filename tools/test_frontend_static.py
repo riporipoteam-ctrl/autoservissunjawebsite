@@ -21,9 +21,15 @@ class FrontendStaticTests(unittest.TestCase):
         )
         self.assertEqual(6, len(images), "Every service must keep exactly one real image")
         self.assertEqual(6, len(set(images)), "Service images must never repeat")
-        self.assertIn("assets/gallery/radionica-dijagnostika.webp", images)
-        self.assertIn("assets/gallery/kljucevi-programiranje.webp", images)
-        self.assertIn("assets/photos/tt-20261023-72158e75.webp", images)
+        self.assertEqual({
+            "assets/services/autodijagnostika.webp",
+            "assets/services/peugeot-servis.webp",
+            "assets/services/mali-servis.webp",
+            "assets/services/veliki-servis.webp",
+            "assets/services/autoelektrika.webp",
+            "assets/services/kljucevi-daljinski.webp",
+        }, set(images))
+        self.assertTrue(all(src.startswith("assets/services/") for src in images))
         for src in images:
             self.assertTrue((ROOT / src).is_file(), f"Missing service photo: {src}")
         self.assertNotIn("data-svc-cat=", INDEX)
@@ -373,7 +379,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("height: auto !important;", CSS)
         self.assertIn("--hero-photo:", INDEX)
         self.assertIn("var(--hero-photo)", CSS)
-        for source in ("radionica-dijagnostika.webp", "kljucevi-programiranje.webp"):
+        for source in ("assets/slides/slide-02.webp", "assets/slides/slide-03.webp"):
             self.assertIn(source, INDEX)
         self.assertNotIn("heroImg.src = pick", INDEX)
 
@@ -390,9 +396,19 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("'url(\"' + safeSrc + '\")'", INDEX)
 
     def test_v214_hero_backdrops_resolve_from_site_root(self):
-        self.assertIn("--hero-photo:url('/assets/photos/", INDEX)
-        self.assertIn("--hero-photo-mobile:url('/assets/photos/", INDEX)
-        self.assertIn("--hero-photo:url('/assets/gallery/", INDEX)
+        fixed_slides = (
+            "assets/slides/slide-01-wide.webp",
+            "assets/slides/slide-01-mobile.webp",
+            "assets/slides/slide-02.webp",
+            "assets/slides/slide-03.webp",
+        )
+        for src in fixed_slides:
+            self.assertIn(src, INDEX)
+            self.assertTrue((ROOT / src).is_file(), f"Missing fixed slide photo: {src}")
+        self.assertIn("--hero-photo:url('/assets/slides/slide-01-wide.webp')", INDEX)
+        self.assertIn("--hero-photo-mobile:url('/assets/slides/slide-01-mobile.webp')", INDEX)
+        self.assertIn("--hero-photo:url('/assets/slides/slide-02.webp')", INDEX)
+        self.assertIn("--hero-photo:url('/assets/slides/slide-03.webp')", INDEX)
         self.assertNotIn("--hero-photo:url('assets/", INDEX)
 
     def test_v214_section_links_activate_on_first_completed_touch(self):
@@ -559,6 +575,29 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('data-gallery-link', INDEX)
         self.assertIn('.gallery-tile-link', CSS)
 
+    def test_gallery_has_committed_fallbacks_and_recovers_failed_refresh_images(self):
+        tags = re.findall(r'<img\b[^>]*\bdata-gallery-img\b[^>]*>', INDEX)
+        self.assertEqual(5, len(tags), "The gallery must start with five local images")
+        fallbacks = []
+        for tag in tags:
+            src_match = re.search(r'\bsrc="([^"]+)"', tag)
+            fallback_match = re.search(r'\bdata-fallback-src="([^"]+)"', tag)
+            self.assertIsNotNone(src_match, "Every gallery tile needs an initial image")
+            self.assertIsNotNone(fallback_match, "Every gallery tile needs a local fallback")
+            src = src_match.group(1)
+            fallback = fallback_match.group(1)
+            self.assertEqual(fallback, src, "Each gallery tile must be populated before photos.json loads")
+            fallbacks.append(fallback)
+            self.assertTrue((ROOT / fallback).is_file(), f"Missing gallery fallback: {fallback}")
+        self.assertEqual(5, len(set(fallbacks)), "Gallery fallback images must be distinct")
+        self.assertTrue(all(src.startswith("assets/gallery/tiktok-fallback-") for src in fallbacks))
+        self.assertIn("img.addEventListener('error'", INDEX)
+        self.assertIn("img.src = fallback;", INDEX)
+        self.assertIn("img.alt = img.getAttribute('data-fallback-alt')", INDEX)
+        self.assertIn("if (!seq.length) seq = pool;", INDEX)
+        self.assertIn("the TikTok gallery below is allowed to rotate from photos.json.", INDEX)
+        self.assertNotIn("heroMainImg.src = pick", INDEX)
+
     def test_type_and_buttons_are_compact(self):
         self.assertIn('/* v20.0: instant, compact and loader-free */', CSS)
         self.assertIn('#o-nama h1', CSS)
@@ -651,7 +690,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("tt-20261110-5ab64c5a", INDEX)
         self.assertNotIn("tt-wide-01.webp", INDEX)
         self.assertNotIn("tt-01.webp", INDEX)
-        self.assertIn("tt-20260919-d3b7439d.webp", INDEX)
+        self.assertIn("assets/slides/slide-01-wide.webp", INDEX)
         self.assertNotIn("aboutPhoto.src = aboutSrc", INDEX)
 
     def test_images_are_not_presented_with_blur_effects(self):
@@ -667,9 +706,17 @@ class FrontendStaticTests(unittest.TestCase):
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
-        self.assertIn("assets/photos/tt-wide-20260919-d3b7439d.webp", INDEX)
-        self.assertIn("assets/gallery/radionica-dijagnostika.webp", INDEX)
-        self.assertIn("assets/gallery/kljucevi-programiranje.webp", INDEX)
+        fixed_slides = (
+            "assets/slides/slide-01-wide.webp",
+            "assets/slides/slide-01-mobile.webp",
+            "assets/slides/slide-02.webp",
+            "assets/slides/slide-03.webp",
+        )
+        carousel = INDEX.split("<!-- Carousel Start -->", 1)[1].split("<!-- Carousel End -->", 1)[0]
+        for src in fixed_slides:
+            self.assertIn(src, carousel)
+            self.assertTrue((ROOT / src).is_file(), f"Missing permanent slide photo: {src}")
+        self.assertNotIn("assets/photos/", carousel)
         self.assertNotIn("var heroPool =", INDEX)
         self.assertNotIn("heroImg.src = pick", INDEX)
 
@@ -731,11 +778,9 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("if (!loaded) fallback('greška karte:", INDEX)
         self.assertIn("if (fellBack) return;", INDEX)
 
-    def test_testing_page_is_unlisted_and_does_not_replace_home(self):
-        page = (ROOT / "testing" / "index.html").read_text(encoding="utf-8")
-        self.assertIn('content="noindex, nofollow"', page)
-        self.assertIn('id="stage"', page)
-        self.assertIn("Auto Servis Šunja", page)
+    def test_testing_route_is_deleted_and_home_remains_the_default(self):
+        self.assertFalse((ROOT / "testing" / "index.html").exists())
+        self.assertIn('id="header-carousel"', INDEX)
         self.assertNotIn('href="/testing"', INDEX)
         self.assertNotIn("autosunja.com/testing", INDEX)
         self.assertNotIn("testing/testing.css", INDEX)
