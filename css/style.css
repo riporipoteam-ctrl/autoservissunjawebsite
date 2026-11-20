@@ -4681,7 +4681,7 @@ html:not(.sunja-intro-active) #recenzije h1,
 html:not(.sunja-intro-active) #lokacija h1,
 html:not(.sunja-intro-active) #kontakt h1 {
     color: var(--sunja-v47-ink);
-    font-size: clamp(1.95rem, 3vw, 2.35rem) !important;
+    font-size: clamp(2rem, 3vw, 2.35rem) !important;
     font-weight: 800 !important;
     letter-spacing: -.04em !important;
 }
