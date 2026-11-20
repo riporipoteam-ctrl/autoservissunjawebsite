@@ -273,8 +273,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=46.0", INDEX)
-        self.assertIn("js/main.js?v=38.0", INDEX)
+        self.assertIn("css/style.css?v=47.0", INDEX)
+        self.assertIn("js/main.js?v=39.0", INDEX)
 
     def test_v36_intro_has_no_native_player_controls_or_interaction(self):
         self.assertIn('id="sunjaIntro"', INDEX)
@@ -464,8 +464,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=46.0", INDEX)
-        self.assertIn("js/main.js?v=38.0", INDEX)
+        self.assertIn("css/style.css?v=47.0", INDEX)
+        self.assertIn("js/main.js?v=39.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -492,8 +492,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=46.0", INDEX)
-        self.assertIn("js/main.js?v=38.0", INDEX)
+        self.assertIn("css/style.css?v=47.0", INDEX)
+        self.assertIn("js/main.js?v=39.0", INDEX)
         self.assertIn("/* v42 — full post-intro review redesign.", CSS)
         self.assertIn("html:not(.sunja-intro-active) #header-carousel", CSS)
         self.assertIn("#usluge .service-nav-grid", CSS)
@@ -701,8 +701,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=46.0", INDEX)
-        self.assertIn("js/main.js?v=38.0", INDEX)
+        self.assertIn("css/style.css?v=47.0", INDEX)
+        self.assertIn("js/main.js?v=39.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
@@ -769,7 +769,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("color: #8ed8ff !important;", CSS)
         self.assertIn("color: #f8fbff !important;", CSS)
         self.assertIn("color: #e4edf7 !important;", CSS)
-        self.assertIn("css/style.css?v=46.0", INDEX)
+        self.assertIn("css/style.css?v=47.0", INDEX)
 
     def test_v45_map_waits_for_first_render_and_tolerates_retryable_errors(self):
         self.assertIn("fallback(sawPreloadError ? 'karta nije odgovorila nakon ponovnog pokušaja' : 'isteklo vrijeme učitavanja');", INDEX)
@@ -786,8 +786,6 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("testing/testing.css", INDEX)
 
 
-if __name__ == "__main__":
-    unittest.main()
     def test_v47_first_hero_uses_the_original_workshop_photo_not_the_old_exterior(self):
         self.assertIn('src="assets/gallery/sunja-tiktok-7627945643490692373.webp"', INDEX)
         self.assertIn('srcset="assets/gallery/sunja-tiktok-7627945643490692373.webp"', INDEX)
@@ -806,7 +804,7 @@ if __name__ == "__main__":
             ["assets/gallery/sunja-tiktok-7627945643490692373.webp"], slides
         )
         service_images = re.findall(
-            r'<img[^>]*class="[^"]*\\bservice-image\\b[^"]*"[^>]*src="([^"]+)"[^>]*data-fallback-src="([^"]+)"',
+            r'<img[^>]*class="[^"]*\bservice-image\b[^"]*"[^>]*src="([^"]+)"[^>]*data-fallback-src="([^"]+)"',
             INDEX
         )
         self.assertEqual(6, len(service_images))
@@ -837,3 +835,5 @@ if __name__ == "__main__":
         self.assertIn("prefers-reduced-motion: reduce", CSS)
         self.assertIn("html.perf-lite", CSS)
 
+if __name__ == "__main__":
+    unittest.main()
