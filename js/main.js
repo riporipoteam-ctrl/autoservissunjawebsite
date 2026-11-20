@@ -45,14 +45,12 @@
                 frame.classList.remove("image-failed");
             }
         }
-        img.addEventListener("load", markReady);
-        img.addEventListener("error", function () {
+        function recoverImage() {
             var fallback = img.getAttribute("data-fallback-src");
             if (fallback && img.dataset.fallbackApplied !== "1" &&
                 fallback !== img.getAttribute("src")) {
                 img.dataset.fallbackApplied = "1";
                 img.loading = "eager";
-                img.src = fallback;
                 var picture = img.closest("picture");
                 var source = picture && picture.querySelector("source");
                 if (source) source.srcset = fallback;
@@ -63,12 +61,19 @@
                     backdrop.style.setProperty("--hero-photo", localUrl);
                     backdrop.style.setProperty("--hero-photo-mobile", localUrl);
                 }
+                img.src = fallback;
                 return;
             }
             img.classList.add("image-failed");
             if (frame) frame.classList.add("image-failed");
-        });
-        if (img.complete && img.naturalWidth > 0) markReady();
+        }
+        img.addEventListener("load", markReady);
+        img.addEventListener("error", recoverImage);
+        // The first hero image may finish (or fail) before this script runs.
+        if (img.complete) {
+            if (img.naturalWidth > 0) markReady();
+            else recoverImage();
+        }
     }
 
     var stableImages = Array.prototype.slice.call(document.querySelectorAll(
