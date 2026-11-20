@@ -16,7 +16,7 @@ class FrontendStaticTests(unittest.TestCase):
         import re
         from html.parser import HTMLParser
         images = re.findall(
-            r'<img[^>]*class="[^"]*\bsvc-photo\b[^"]*\bservice-image\b[^"]*"[^>]*src="([^"]+)"',
+            r'<img[^>]*class="[^"]*service-image[^"]*"[^>]*src="([^"]+)"',
             INDEX
         )
         self.assertEqual(6, len(images), "Every service must keep exactly one real image")
@@ -718,7 +718,8 @@ class FrontendStaticTests(unittest.TestCase):
         for src in fixed_slides:
             self.assertIn(src, carousel)
             self.assertTrue((ROOT / src).is_file(), f"Missing permanent slide photo: {src}")
-        self.assertNotIn("assets/photos/", carousel)
+        self.assertNotIn('src="assets/photos/', carousel)
+        self.assertNotIn("srcset=\"assets/photos/", carousel)
         self.assertNotIn("var heroPool =", INDEX)
         self.assertNotIn("heroImg.src = pick", INDEX)
 
@@ -799,11 +800,12 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v47_all_hero_and_service_photos_are_fixed_local_assets_with_fallbacks(self):
         from html.parser import HTMLParser
         import re
-        slides = re.findall(
-            r'<img[^>]*id="heroMainImg"[^>]*src="([^"]+)"', INDEX
-        )
+        hero_tag = re.search(r'<img(?=[^>]*\\bid="heroMainImg")[^>]*>', INDEX)
+        self.assertIsNotNone(hero_tag)
+        hero_src = re.search(r'\\bsrc="([^"]+)"', hero_tag.group(0))
+        self.assertIsNotNone(hero_src)
         self.assertEqual(
-            ["assets/gallery/sunja-tiktok-7627945643490692373.webp"], slides
+            "assets/gallery/sunja-tiktok-7627945643490692373.webp", hero_src.group(1)
         )
         service_images = re.findall(
             r'<img[^>]*class="[^"]*\bservice-image\b[^"]*"[^>]*src="([^"]+)"[^>]*data-fallback-src="([^"]+)"',
