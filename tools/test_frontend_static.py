@@ -15,10 +15,15 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v41_service_photos_are_curated_unique_and_not_randomized(self):
         import re
         from html.parser import HTMLParser
-        images = re.findall(
-            r'<img[^>]*class="[^"]*service-image[^"]*"[^>]*src="([^"]+)"',
-            INDEX
-        )
+        service_tags = [
+            tag for tag in re.findall(r'<img[^>]+>', INDEX)
+            if re.search(r'\bservice-image\b', tag)
+        ]
+        images = [
+            re.search(r'(?<!fallback-)\bsrc="([^"]+)"', tag).group(1)
+            for tag in service_tags
+            if re.search(r'(?<!fallback-)\bsrc="([^"]+)"', tag)
+        ]
         self.assertEqual(6, len(images), "Every service must keep exactly one real image")
         self.assertEqual(6, len(set(images)), "Service images must never repeat")
         self.assertEqual({
@@ -718,8 +723,17 @@ class FrontendStaticTests(unittest.TestCase):
         for src in fixed_slides:
             self.assertIn(src, carousel)
             self.assertTrue((ROOT / src).is_file(), f"Missing permanent slide photo: {src}")
-        self.assertNotIn('src="assets/photos/', carousel)
-        self.assertNotIn("srcset=\"assets/photos/", carousel)
+        slide_tags = re.findall(r'<img[^>]+>', carousel)
+        slide_sources = [
+            re.search(r'(?<!fallback-)\bsrc="([^"]+)"', tag).group(1)
+            for tag in slide_tags
+            if re.search(r'(?<!fallback-)\bsrc="([^"]+)"', tag)
+        ]
+        self.assertEqual([
+            "assets/gallery/sunja-tiktok-7627945643490692373.webp",
+            "assets/slides/slide-02.webp",
+            "assets/slides/slide-03.webp",
+        ], slide_sources)
         self.assertNotIn("var heroPool =", INDEX)
         self.assertNotIn("heroImg.src = pick", INDEX)
 
@@ -800,19 +814,22 @@ class FrontendStaticTests(unittest.TestCase):
     def test_v47_all_hero_and_service_photos_are_fixed_local_assets_with_fallbacks(self):
         from html.parser import HTMLParser
         import re
-        hero_src = re.search(
-            r'<img class="w-100" id="heroMainImg" src="([^"]+)"', INDEX
+        hero_tag = next(
+            tag for tag in re.findall(r'<img[^>]+>', INDEX)
+            if 'id="heroMainImg"' in tag
         )
+        hero_src = re.search(r'(?<!fallback-)\bsrc="([^"]+)"', hero_tag)
         self.assertIsNotNone(hero_src)
         self.assertEqual(
             "assets/gallery/sunja-tiktok-7627945643490692373.webp", hero_src.group(1)
         )
-        service_tags = re.findall(
-            r'<img[^>]*class="[^"]*service-image[^"]*"[^>]*>', INDEX
-        )
+        service_tags = [
+            tag for tag in re.findall(r'<img[^>]+>', INDEX)
+            if re.search(r'\bservice-image\b', tag)
+        ]
         service_images = []
         for tag in service_tags:
-            source = re.search(r'\bsrc="([^"]+)"', tag)
+            source = re.search(r'(?<!fallback-)\bsrc="([^"]+)"', tag)
             fallback = re.search(r'\bdata-fallback-src="([^"]+)"', tag)
             if source and fallback:
                 service_images.append((source.group(1), fallback.group(1)))
