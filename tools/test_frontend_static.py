@@ -279,7 +279,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
         self.assertIn("css/style.css?v=47.0", INDEX)
-        self.assertIn("js/main.js?v=39.0", INDEX)
+        self.assertIn("js/main.js?v=40.0", INDEX)
 
     def test_v36_intro_has_no_native_player_controls_or_interaction(self):
         self.assertIn('id="sunjaIntro"', INDEX)
@@ -470,7 +470,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
         self.assertIn("css/style.css?v=47.0", INDEX)
-        self.assertIn("js/main.js?v=39.0", INDEX)
+        self.assertIn("js/main.js?v=40.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -498,7 +498,7 @@ class FrontendStaticTests(unittest.TestCase):
 
     def test_cache_versions_are_bumped(self):
         self.assertIn("css/style.css?v=47.0", INDEX)
-        self.assertIn("js/main.js?v=39.0", INDEX)
+        self.assertIn("js/main.js?v=40.0", INDEX)
         self.assertIn("/* v42 — full post-intro review redesign.", CSS)
         self.assertIn("html:not(.sunja-intro-active) #header-carousel", CSS)
         self.assertIn("#usluge .service-nav-grid", CSS)
@@ -710,7 +710,7 @@ class FrontendStaticTests(unittest.TestCase):
 
         self.assertIn("data-about-photo", INDEX)
         self.assertIn("css/style.css?v=47.0", INDEX)
-        self.assertIn("js/main.js?v=39.0", INDEX)
+        self.assertIn("js/main.js?v=40.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
@@ -845,6 +845,14 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('img.loading = "eager"', JS)
         self.assertIn("service-image", JS)
 
+    def test_v47_inline_image_recovery_is_available_before_main_bundle(self):
+        self.assertIn("window.sunjaRecoverImage = function (image)", INDEX)
+        self.assertIn('onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)"', INDEX)
+        self.assertLess(INDEX.index("window.sunjaRecoverImage = function (image)"),
+                        INDEX.index('<script src="js/main.js?v=40.0"></script>'))
+        self.assertIn("fallbackApplied", JS)
+        self.assertIn('js/main.js?v=40.0', INDEX)
+
     def test_v47_only_tiktok_gallery_items_can_rotate(self):
         self.assertIn("source === 'tiktok' || href.indexOf('tiktok.com') > -1", INDEX)
         self.assertIn("document.querySelectorAll('[data-gallery-img]')", INDEX)
@@ -855,7 +863,7 @@ class FrontendStaticTests(unittest.TestCase):
 
     def test_v47_cache_versions_and_cinematic_motion_rules_are_present(self):
         self.assertIn('css/style.css?v=47.0', INDEX)
-        self.assertIn('js/main.js?v=39.0', INDEX)
+        self.assertIn('js/main.js?v=40.0', INDEX)
         self.assertIn("@keyframes sunjaV47HeroImage", CSS)
         self.assertIn("@keyframes sunjaV47SectionReveal", CSS)
         self.assertIn("prefers-reduced-motion: reduce", CSS)
