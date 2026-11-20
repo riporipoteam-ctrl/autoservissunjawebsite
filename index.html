@@ -1248,6 +1248,7 @@
             var lastMapProgress = -1;
             var lastMapScrollY = null;
             var lastViewportIsLandscape = window.innerWidth > window.innerHeight;
+            var pendingOrientationSync = false;
             var lastCameraAt = 0;
             var CAMERA_MIN_FRAME_MS = 80;
             var mapFrame = 0, cameraTimer = 0, viewportSyncFrame = 0;
@@ -1413,12 +1414,19 @@
             }
             function syncMapProgressOnViewportChange() {
                 var viewportIsLandscape = window.innerWidth > window.innerHeight;
-                var orientationChanged = viewportIsLandscape !== lastViewportIsLandscape;
+                if (viewportIsLandscape !== lastViewportIsLandscape)
+                    pendingOrientationSync = true;
                 lastViewportIsLandscape = viewportIsLandscape;
                 if (mapCompleted || fellBack || !loaded || !wrap || viewportSyncFrame) return;
                 viewportSyncFrame = requestAnimationFrame(function () {
                     viewportSyncFrame = 0;
                     if (mapCompleted || fellBack || !loaded || !wrap) return;
+                    // Multiple viewport/visualViewport notifications can be
+                    // coalesced into one frame. Keep the orientation signal
+                    // until that frame consumes it, rather than losing it to
+                    // a second resize event while a frame is already queued.
+                    var forceOrientationSync = pendingOrientationSync;
+                    pendingOrientationSync = false;
                     if (mapFrame) { cancelAnimationFrame(mapFrame); mapFrame = 0; }
                     // Responsive reflow can shorten content above the map when
                     // a phone rotates or a tablet crosses a breakpoint. Keep
@@ -1426,7 +1434,7 @@
                     // still scrolling the active runway, never after leaving it.
                     if (lastMapProgress >= 0 && lastMapProgress < .985 &&
                         lastMapScrollY !== null &&
-                        (orientationChanged || Math.abs(window.scrollY - lastMapScrollY) <= 80)) {
+                        (forceOrientationSync || Math.abs(window.scrollY - lastMapScrollY) <= 80)) {
                         var rect = wrap.getBoundingClientRect();
                         var sectionTop = rect.top + window.scrollY;
                         var stickyHeight = stickyEl ? stickyEl.getBoundingClientRect().height : innerHeight;
