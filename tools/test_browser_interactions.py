@@ -1002,6 +1002,93 @@ class SiteInteractionTests(unittest.TestCase):
             hero.locator(".carousel-item").nth(2).locator("img").get_attribute("src"),
         )
 
+    def test_v47_primary_service_image_recovers_when_its_first_request_fails(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="reduce",
+        )
+        try:
+            page = context.new_page()
+            failed_once = {"done": False}
+            def fail_first_service_image(route):
+                if not failed_once["done"]:
+                    failed_once["done"] = True
+                    route.fulfill(status=503, body="temporary network failure")
+                else:
+                    route.continue_()
+            page.route("**/assets/services/autodijagnostika.webp", fail_first_service_image)
+            page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
+            image = page.locator("#tab-pane-1 img.service-image")
+            page.wait_for_function("""() => {
+                const image = document.querySelector('#tab-pane-1 img.service-image');
+                return image && image.dataset.fallbackApplied === '1' &&
+                    image.complete && image.naturalWidth > 0;
+            }""", timeout=10000)
+            self.assertEqual(
+                image.get_attribute("src"),
+                image.get_attribute("data-fallback-src"),
+            )
+            self.assertGreater(image.evaluate("(el) => el.naturalWidth"), 0)
+        finally:
+            context.close()
+
+    def test_v47_social_feed_only_changes_tiktok_gallery_not_hero_or_services(self):
+        context = self.browser.new_context(
+            viewport={"width": 390, "height": 844},
+            is_mobile=True, has_touch=True, reduced_motion="reduce",
+        )
+        try:
+            page = context.new_page()
+            tiktok_sources = [
+                "assets/photos/tt-wide-20261120-3d31739d.webp",
+                "assets/photos/tt-wide-20261119-82d63b9b.webp",
+                "assets/photos/tt-wide-20261108-234cf88c.webp",
+                "assets/photos/tt-wide-20261108-574b96bf.webp",
+                "assets/photos/tt-wide-20261031-a32411f2.webp",
+            ]
+            feed = {"gallery": [
+                {"source": "instagram", "quality_v": 2,
+                 "src": tiktok_sources[0], "href": "https://instagram.com/p/example"},
+                {"source": "facebook", "quality_v": 2,
+                 "src": tiktok_sources[1], "href": "https://facebook.com/example"},
+            ] + [
+                {"source": "tiktok", "quality_v": 2, "src": src,
+                 "href": "https://www.tiktok.com/@autoservissunja/photo/" + str(i + 1),
+                 "title": "TikTok radionica " + str(i + 1),
+                 "date": "2026-11-20"}
+                for i, src in enumerate(tiktok_sources)
+            ]}
+            page.route("**/photos.json", lambda route: route.fulfill(
+                status=200, content_type="application/json", body=json.dumps(feed)
+            ))
+            page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
+            page.wait_for_function("""() => {
+                const images = [...document.querySelectorAll('[data-gallery-img]')];
+                return images.length === 5 && images.every(img =>
+                    img.src.includes('/assets/photos/tt-wide-'));
+            }""", timeout=8000)
+            self.assertEqual(
+                page.locator("#heroMainImg").get_attribute("src"),
+                "assets/gallery/sunja-tiktok-7627945643490692373.webp"
+            )
+            hero_sources = page.locator("#header-carousel picture img").evaluate_all(
+                "(items) => items.map(img => img.getAttribute('src'))"
+            )
+            self.assertEqual(3, len(hero_sources))
+            service_sources = page.locator("#usluge img.service-image").evaluate_all(
+                "(items) => items.map(img => img.getAttribute('src'))"
+            )
+            self.assertEqual(6, len(set(service_sources)))
+            self.assertTrue(all(src.startswith("assets/services/") for src in service_sources))
+            gallery_sources = page.locator("[data-gallery-img]").evaluate_all(
+                "(items) => items.map(img => img.getAttribute('src'))"
+            )
+            self.assertEqual(5, len(gallery_sources))
+            self.assertTrue(all(src in tiktok_sources for src in gallery_sources))
+            self.assertFalse(any("instagram" in src or "facebook" in src for src in gallery_sources))
+        finally:
+            context.close()
+
     def test_v39_hero_slides_have_no_booking_buttons(self):
         self.assertEqual(self.page.locator(
             "#header-carousel a[href='#termin'], #header-carousel a[data-service]"
