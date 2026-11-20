@@ -953,8 +953,8 @@ class SiteInteractionTests(unittest.TestCase):
         self.assertEqual(images.count(), 6)
         sources = [images.nth(i).get_attribute("src") for i in range(6)]
         self.assertEqual(6, len(set(sources)))
-        self.assertIn("assets/gallery/radionica-dijagnostika.webp", sources)
-        self.assertIn("assets/gallery/kljucevi-programiranje.webp", sources)
+        self.assertIn("assets/services/autodijagnostika.webp", sources)
+        self.assertIn("assets/services/kljucevi-daljinski.webp", sources)
 
         # Exercise older phones, current phones, tablets and laptop/desktop widths.
         for width, height in ((320, 568), (375, 667), (390, 844),
@@ -994,11 +994,11 @@ class SiteInteractionTests(unittest.TestCase):
         expect(hero).to_have_class(re.compile(r"\bcarousel-fade\b"))
         self.assertEqual(hero.locator(".carousel-item").count(), 3)
         self.assertIn(
-            "assets/gallery/radionica-dijagnostika.webp",
+            "assets/slides/slide-02.webp",
             hero.locator(".carousel-item").nth(1).locator("img").get_attribute("src"),
         )
         self.assertIn(
-            "assets/gallery/kljucevi-programiranje.webp",
+            "assets/slides/slide-03.webp",
             hero.locator(".carousel-item").nth(2).locator("img").get_attribute("src"),
         )
 
