@@ -47,6 +47,17 @@
         }
         function recoverImage() {
             var fallback = img.getAttribute("data-fallback-src");
+            // The inline handler in <head> may already have switched src
+            // before this bundle attached its own error listener.
+            if (img.dataset.fallbackApplied === "1" && fallback === img.getAttribute("src")) {
+                window.setTimeout(function () {
+                    if (img.complete && img.naturalWidth === 0) {
+                        img.classList.add("image-failed");
+                        if (frame) frame.classList.add("image-failed");
+                    }
+                }, 0);
+                return;
+            }
             if (fallback && img.dataset.fallbackApplied !== "1" &&
                 fallback !== img.getAttribute("src")) {
                 img.dataset.fallbackApplied = "1";
