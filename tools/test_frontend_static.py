@@ -594,8 +594,11 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("img.addEventListener('error'", INDEX)
         self.assertIn("img.src = fallback;", INDEX)
         self.assertIn("img.alt = img.getAttribute('data-fallback-alt')", INDEX)
-        self.assertIn("if (!seq.length) seq = pool;", INDEX)
-        self.assertIn("the TikTok gallery below is allowed to rotate from photos.json.", INDEX)
+        self.assertIn("var item = seq[idx];", INDEX)
+        self.assertIn("if (!item) return;", INDEX)
+        self.assertNotIn("seq[idx % seq.length]", INDEX)
+        self.assertIn("Only genuine TikTok posts may rotate the five gallery tiles.", INDEX)
+        self.assertIn("var isTikTok = source === 'tiktok'", INDEX)
         self.assertNotIn("heroMainImg.src = pick", INDEX)
 
     def test_type_and_buttons_are_compact(self):
