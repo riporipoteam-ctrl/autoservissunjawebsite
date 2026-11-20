@@ -1023,11 +1023,35 @@ class SiteInteractionTests(unittest.TestCase):
             # also triggers Safari's lazy/eager image scheduler deterministically.
             page.locator("#usluge").scroll_into_view_if_needed()
             image.scroll_into_view_if_needed()
-            page.wait_for_function("""() => {
-                const image = document.querySelector('#tab-pane-1 img.service-image');
-                return image && image.dataset.fallbackApplied === '1' &&
-                    image.complete && image.naturalWidth > 0;
-            }""", timeout=10000)
+            failed_requests = []
+            page.on("requestfailed", lambda request: failed_requests.append({
+                "url": request.url, "failure": request.failure
+            }))
+            try:
+                page.wait_for_function("""() => {
+                    const image = document.querySelector('#tab-pane-1 img.service-image');
+                    return image && image.dataset.fallbackApplied === '1' &&
+                        image.complete && image.naturalWidth > 0;
+                }""", timeout=10000)
+            except Exception as error:
+                state = image.evaluate("""el => ({
+                    src: el.getAttribute('src'),
+                    currentSrc: el.currentSrc,
+                    fallback: el.getAttribute('data-fallback-src'),
+                    fallbackApplied: el.dataset.fallbackApplied || null,
+                    complete: el.complete,
+                    naturalWidth: el.naturalWidth,
+                    loading: el.loading,
+                    onerror: el.getAttribute('onerror'),
+                    rect: (() => { const r = el.getBoundingClientRect(); return {
+                        top: r.top, bottom: r.bottom, width: r.width, height: r.height
+                    }; })()
+                })""")
+                raise AssertionError(
+                    "Safari image recovery timed out: "
+                    + json.dumps({"state": state, "failedRequests": failed_requests,
+                                  "initialRequestIntercepted": failed_once["done"]})
+                ) from error
             self.assertTrue(failed_once["done"], "The simulated initial image request was not attempted")
             self.assertEqual(
                 image.get_attribute("src"),
