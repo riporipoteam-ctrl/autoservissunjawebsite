@@ -1019,11 +1019,16 @@ class SiteInteractionTests(unittest.TestCase):
             page.route("**/assets/services/autodijagnostika.webp", fail_first_service_image)
             page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
             image = page.locator("#tab-pane-1 img.service-image")
+            # Bring the service panel into view as a real visitor would. This
+            # also triggers Safari's lazy/eager image scheduler deterministically.
+            page.locator("#usluge").scroll_into_view_if_needed()
+            image.scroll_into_view_if_needed()
             page.wait_for_function("""() => {
                 const image = document.querySelector('#tab-pane-1 img.service-image');
                 return image && image.dataset.fallbackApplied === '1' &&
                     image.complete && image.naturalWidth > 0;
             }""", timeout=10000)
+            self.assertTrue(failed_once["done"], "The simulated initial image request was not attempted")
             self.assertEqual(
                 image.get_attribute("src"),
                 image.get_attribute("data-fallback-src"),
