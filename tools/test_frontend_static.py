@@ -788,3 +788,52 @@ class FrontendStaticTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+    def test_v47_first_hero_uses_the_original_workshop_photo_not_the_old_exterior(self):
+        self.assertIn('src="assets/gallery/sunja-tiktok-7627945643490692373.webp"', INDEX)
+        self.assertIn('srcset="assets/gallery/sunja-tiktok-7627945643490692373.webp"', INDEX)
+        self.assertIn("--hero-photo:url('/assets/gallery/sunja-tiktok-7627945643490692373.webp')", INDEX)
+        self.assertIn('alt="Unutrašnjost radionice Auto Servis Šunja"', INDEX)
+        self.assertNotIn('src="assets/slides/slide-01-wide.webp"', INDEX)
+        self.assertTrue((ROOT / "assets/gallery/sunja-tiktok-7627945643490692373.webp").is_file())
+
+    def test_v47_all_hero_and_service_photos_are_fixed_local_assets_with_fallbacks(self):
+        from html.parser import HTMLParser
+        import re
+        slides = re.findall(
+            r'<img[^>]*id="heroMainImg"[^>]*src="([^"]+)"', INDEX
+        )
+        self.assertEqual(
+            ["assets/gallery/sunja-tiktok-7627945643490692373.webp"], slides
+        )
+        service_images = re.findall(
+            r'<img[^>]*class="[^"]*\\bservice-image\\b[^"]*"[^>]*src="([^"]+)"[^>]*data-fallback-src="([^"]+)"',
+            INDEX
+        )
+        self.assertEqual(6, len(service_images))
+        sources = [src for src, fallback in service_images]
+        fallbacks = [fallback for src, fallback in service_images]
+        self.assertEqual(6, len(set(sources)))
+        self.assertEqual(6, len(set(fallbacks)))
+        self.assertTrue(all((ROOT / src).is_file() for src in sources))
+        self.assertTrue(all((ROOT / src).is_file() for src in fallbacks))
+        self.assertIn("function wireReliableImage", JS)
+        self.assertIn('img.dataset.fallbackApplied = "1"', JS)
+        self.assertIn('img.loading = "eager"', JS)
+        self.assertIn("service-image", JS)
+
+    def test_v47_only_tiktok_gallery_items_can_rotate(self):
+        self.assertIn("source === 'tiktok' || href.indexOf('tiktok.com') > -1", INDEX)
+        self.assertIn("document.querySelectorAll('[data-gallery-img]')", INDEX)
+        self.assertNotIn("heroMainImg.src =", INDEX)
+        self.assertNotIn("service-image.src =", INDEX)
+        self.assertIn("data-gallery-img", INDEX)
+        self.assertIn("function wireReliableImage", JS)
+
+    def test_v47_cache_versions_and_cinematic_motion_rules_are_present(self):
+        self.assertIn('css/style.css?v=47.0', INDEX)
+        self.assertIn('js/main.js?v=39.0', INDEX)
+        self.assertIn("@keyframes sunjaV47HeroImage", CSS)
+        self.assertIn("@keyframes sunjaV47SectionReveal", CSS)
+        self.assertIn("prefers-reduced-motion: reduce", CSS)
+        self.assertIn("html.perf-lite", CSS)
+
