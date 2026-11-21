@@ -1,200 +1,215 @@
-/* Šunja / workshop editorial system. The base sheet owns the untouched intro,
-   map and interaction mechanics; this sheet owns the page's visual direction. */
+/* Šunja workshop system — visual layer only. Intro, map and interactions live in the base files. */
 :root {
-  --ink: #102e49;
-  --navy: #09263d;
-  --blue: #075f9e;
-  --blue-hover: #064a79;
-  --sky: #d9ecf7;
-  --paper: #f4f6f5;
-  --line: #cad7df;
-  --muted: #455f70;
-  --ease: cubic-bezier(.4,0,.2,1);
+  --ink:#102538;
+  --navy:#0b1e2c;
+  --navy-2:#132d40;
+  --blue:#005d9c;
+  --blue-hover:#004878;
+  --paper:#f2f1ec;
+  --line:#cbd3d4;
+  --muted:#425667;
+  --ease:cubic-bezier(.22,1,.36,1);
 }
-html:not(.sunja-intro-active) body { background:#fff; color:var(--ink); }
-html:not(.sunja-intro-active) .container { max-width:1280px; }
-html:not(.sunja-intro-active) .container-xxl { max-width:none; }
-html:not(.sunja-intro-active) :is(a,button):focus-visible { outline:3px solid #1585c9!important; outline-offset:3px; }
-html:not(.sunja-intro-active) .btn { border-radius:0!important; box-shadow:none!important; transition:background-color 160ms var(--ease),color 160ms var(--ease),border-color 160ms var(--ease)!important; }
-html:not(.sunja-intro-active) .btn-primary { background:var(--blue); border-color:var(--blue); color:#fff; }
-html:not(.sunja-intro-active) .btn-primary:hover { background:var(--blue-hover); border-color:var(--blue-hover); }
+html:not(.sunja-intro-active) body {background:var(--paper);color:var(--ink)}
+html:not(.sunja-intro-active) .container {max-width:1320px}
+html:not(.sunja-intro-active) .container-xxl {max-width:none}
+html:not(.sunja-intro-active) :is(a,button):focus-visible {outline:3px solid #edb850!important;outline-offset:3px}
+html:not(.sunja-intro-active) .btn {border-radius:0!important;box-shadow:none!important;transition:background-color .2s,color .2s,border-color .2s,transform .25s var(--ease)!important}
+html:not(.sunja-intro-active) .btn:hover {transform:translateY(-3px)}
+html:not(.sunja-intro-active) .btn-primary {background:var(--blue);border-color:var(--blue);color:#fff}
+html:not(.sunja-intro-active) .btn-primary:hover {background:var(--blue-hover);border-color:var(--blue-hover)}
 
-/* Utility rail and navigation: the original unmodified logo stays on white. */
-html:not(.sunja-intro-active) body > .container-fluid.bg-light.p-0.workshop-topbar { background:var(--navy)!important; color:#d8e6ee; }
-html:not(.sunja-intro-active) .workshop-topbar .row { max-width:1440px; min-height:48px; margin:auto; align-items:center; }
-html:not(.sunja-intro-active) .workshop-topbar .row > div { display:flex; align-items:center; gap:16px; }
-html:not(.sunja-intro-active) .workshop-topbar .row > div:first-child { flex:0 0 42%; max-width:42%; }
-html:not(.sunja-intro-active) .workshop-topbar .row > div:last-child { flex:0 0 58%; max-width:58%; justify-content:flex-end; }
-html:not(.sunja-intro-active) .workshop-topbar .row > div > div { height:auto!important; margin:0!important; }
-html:not(.sunja-intro-active) .workshop-topbar .row > div { padding-inline:clamp(24px,3vw,48px)!important; }
-html:not(.sunja-intro-active) .workshop-topbar .py-3 { padding-block:.55rem!important; }
-html:not(.sunja-intro-active) .workshop-topbar :is(small,a.text-dark) { color:#d8e6ee!important; }
-html:not(.sunja-intro-active) .workshop-topbar .status-pill { box-shadow:none!important; }
-html:not(.sunja-intro-active) .nav-bar { min-height:82px; background:#fff!important; border-bottom:1px solid var(--line); box-shadow:none!important; }
-html:not(.sunja-intro-active) .nav-bar .navbar-brand { min-height:82px; padding:0 clamp(24px,3vw,48px)!important; border-right:1px solid var(--line); }
-html:not(.sunja-intro-active) .nav-bar .navbar-brand img { width:auto!important; height:54px!important; max-width:none!important; transform:none!important; }
-html:not(.sunja-intro-active) .nav-bar .navbar-toggler { min-width:48px; min-height:48px; border:1px solid var(--line); border-radius:0; }
-html:not(.sunja-intro-active) .nav-bar .nav-link { min-height:50px; margin:0!important; padding:0 clamp(8px,1vw,16px)!important; color:var(--ink)!important; font-size:.75rem; font-weight:700; letter-spacing:.055em; text-transform:uppercase; }
-html:not(.sunja-intro-active) .nav-bar .nav-link:hover, html:not(.sunja-intro-active) .nav-bar .nav-link.active { color:var(--blue)!important; background:transparent; }
-html:not(.sunja-intro-active) .nav-bar .navbar-collapse > .btn { min-height:82px; display:flex!important; align-items:center; padding-inline:32px!important; background:var(--blue)!important; color:#fff!important; }
+/* Utility and navigation */
+html:not(.sunja-intro-active) body > .container-fluid.bg-light.p-0.workshop-topbar {background:#071722!important;color:#e0ebef}
+html:not(.sunja-intro-active) .workshop-topbar .row {max-width:1500px;min-height:42px;margin:auto;align-items:center}
+html:not(.sunja-intro-active) .workshop-topbar .row > div {display:flex;align-items:center;gap:12px;padding-inline:clamp(20px,3vw,48px)!important}
+html:not(.sunja-intro-active) .workshop-topbar .row > div:first-child {flex:0 0 42%;max-width:42%}
+html:not(.sunja-intro-active) .workshop-topbar .row > div:last-child {flex:0 0 58%;max-width:58%;justify-content:flex-end}
+html:not(.sunja-intro-active) .workshop-topbar .row > div > div {height:auto!important;margin:0!important}
+html:not(.sunja-intro-active) .workshop-topbar .py-3 {padding-block:.4rem!important}
+html:not(.sunja-intro-active) .workshop-topbar :is(small,a.text-dark) {color:#e0ebef!important}
+html:not(.sunja-intro-active) .nav-bar {min-height:78px;background:#fff!important;border-bottom:1px solid #d5dcdd;box-shadow:none!important}
+html:not(.sunja-intro-active) .nav-bar .navbar-brand {min-height:78px;padding:0 clamp(24px,3vw,48px)!important;border-right:1px solid #d5dcdd}
+html:not(.sunja-intro-active) .nav-bar .navbar-brand img {width:auto!important;height:52px!important;max-width:none!important;transform:none!important}
+html:not(.sunja-intro-active) .nav-bar .navbar-toggler {min-width:48px;min-height:48px;border:1px solid #a7b7c0;border-radius:0}
+html:not(.sunja-intro-active) .nav-bar .nav-link {min-height:48px;margin:0!important;padding:0 clamp(8px,1vw,16px)!important;color:var(--ink)!important;font-size:.76rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+html:not(.sunja-intro-active) .nav-bar .nav-link:hover,html:not(.sunja-intro-active) .nav-bar .nav-link.active {color:var(--blue)!important}
+html:not(.sunja-intro-active) .nav-bar .navbar-collapse > .btn {display:flex!important;align-items:center;min-height:78px;padding-inline:32px!important;background:var(--blue)!important;color:#fff!important}
 
-/* A light, typographic split hero, with the real shop photograph as the anchor. */
-html:not(.sunja-intro-active) #pocetna { padding:0!important; margin:0!important; background:var(--paper); }
-html:not(.sunja-intro-active) #header-carousel .carousel-inner { overflow:hidden; border-radius:0!important; box-shadow:none!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-item { height:auto!important; min-height:clamp(580px,69svh,730px); background:var(--paper)!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-item .hero-bg { display:none!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-item::after { display:none!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-item picture { position:absolute!important; inset:0 0 0 52%!important; width:auto!important; height:auto!important; opacity:1!important; border:0!important; border-radius:0!important; box-shadow:none!important; transform:none!important; animation:none!important; background:#dbe5e8!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-item picture::after { display:none!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-item picture img { position:absolute!important; inset:0!important; width:100%!important; height:100%!important; max-height:none!important; object-fit:cover!important; object-position:center 50%!important; filter:none!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-caption { position:relative!important; inset:auto!important; z-index:2; min-height:clamp(580px,69svh,730px); width:52%; padding:80px clamp(28px,5vw,90px) 110px!important; align-items:center!important; background:var(--paper)!important; text-align:left; }
-html:not(.sunja-intro-active) #header-carousel .carousel-caption .container { width:100%; max-width:620px; margin:0 0 0 auto; padding:0!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-caption .row { margin:0; }
-html:not(.sunja-intro-active) #header-carousel .carousel-caption .col-lg-8 { width:100%; max-width:none; flex:0 0 100%; padding:0!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-caption h6 { display:block; padding:0; border:0; background:none; color:var(--blue)!important; font-size:.78rem!important; font-weight:700; letter-spacing:.14em; }
-html:not(.sunja-intro-active) #header-carousel .carousel-caption h6::before { display:none!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 { max-width:9ch; margin:0 0 24px!important; padding:0!important; color:var(--ink)!important; font-size:clamp(3.5rem,6vw,6.6rem)!important; font-weight:700; line-height:.94!important; letter-spacing:-.055em!important; overflow-wrap:normal; }
-html:not(.sunja-intro-active) #header-carousel .carousel-item:nth-child(2) .carousel-caption h1 { max-width:none; font-size:clamp(1.75rem, 3.8vw, 3.7rem)!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-caption p { max-width:39ch; margin-bottom:24px!important; color:var(--muted)!important; font-size:1.05rem!important; line-height:1.65!important; }
-html:not(.sunja-intro-active) #header-carousel .carousel-caption .status-pill { border:1px solid var(--line); border-radius:0; background:#fff!important; color:var(--ink)!important; box-shadow:none; }
-html:not(.sunja-intro-active) #header-carousel .carousel-caption .btn { min-height:54px; margin-left:0!important; padding:15px 24px!important; border:1px solid var(--blue)!important; background:var(--blue)!important; color:#fff!important; }
-html:not(.sunja-intro-active) #header-carousel .hero-indicators { left:clamp(28px,5vw,90px); right:auto; bottom:25px; margin:0; }
-html:not(.sunja-intro-active) #header-carousel .hero-indicators button span { background:#9fb8c7; }
-html:not(.sunja-intro-active) #header-carousel .hero-indicators button.active span { background:var(--blue); }
-html:not(.sunja-intro-active) #header-carousel .hero-nav { top:auto; bottom:24px; width:48px; height:48px; border:1px solid rgba(255,255,255,.8); background:var(--navy); color:#fff; }
-html:not(.sunja-intro-active) #header-carousel .hero-nav.carousel-control-prev { left:auto; right:88px; }
-html:not(.sunja-intro-active) #header-carousel .hero-nav.carousel-control-next { right:32px; }
+/* Full-bleed workshop image, cinematic contrast scrim and large left-aligned type. */
+html:not(.sunja-intro-active) #pocetna {padding:0!important;margin:0!important;background:var(--navy)}
+html:not(.sunja-intro-active) #header-carousel .carousel-inner {overflow:hidden;border:0;border-radius:0!important;box-shadow:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-item {height:auto!important;min-height:clamp(620px,77svh,850px);background:var(--navy)!important}
+html:not(.sunja-intro-active) #header-carousel .hero-bg {display:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-item picture {position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:1!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:var(--navy)!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-item picture img {position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-height:none!important;object-fit:cover!important;object-position:center 52%!important;filter:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-item picture::after {content:"";display:block!important;position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,19,29,.96) 0%,rgba(5,19,29,.84) 39%,rgba(5,19,29,.18) 100%)}
+html:not(.sunja-intro-active) #header-carousel .carousel-item::after {display:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption {position:relative!important;inset:auto!important;z-index:2;width:100%;min-height:clamp(620px,77svh,850px);padding:90px clamp(24px,6vw,100px) 130px!important;align-items:center!important;background:transparent!important;text-align:left}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .container {width:100%;max-width:1320px;margin:auto;padding:0!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .row {margin:0}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .col-lg-8 {width:100%;max-width:760px;flex:0 0 100%;padding:0!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h6 {display:block;padding:0;border:0;background:none;color:#b4deef!important;font-size:.8rem!important;font-weight:700;letter-spacing:.18em}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h6::before {display:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 {max-width:10ch;margin:0 0 24px!important;padding:0!important;color:#fff!important;font-size:clamp(4rem,7.3vw,8rem)!important;font-weight:800;line-height:.94!important;letter-spacing:-.055em!important;overflow-wrap:normal;text-shadow:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-item:nth-child(2) .carousel-caption h1 {max-width:none;font-size:clamp(2rem,5.1vw,5.2rem)!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption p {max-width:47ch;margin-bottom:22px!important;color:#edf4f6!important;font-size:1.1rem!important;line-height:1.65!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .status-pill {border:1px solid #a7c6d3;border-radius:0;background:#0b2637!important;color:#fff!important;box-shadow:none}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .btn {min-height:54px;margin-left:0!important;padding:15px 26px!important;border:1px solid #fff!important;background:#fff!important;color:var(--navy)!important}
+html:not(.sunja-intro-active) #header-carousel .hero-indicators {left:clamp(24px,6vw,100px);right:auto;bottom:35px;margin:0}
+html:not(.sunja-intro-active) #header-carousel .hero-indicators button span {background:#8ba6b2}
+html:not(.sunja-intro-active) #header-carousel .hero-indicators button.active span {background:#fff}
+html:not(.sunja-intro-active) #header-carousel .hero-nav {top:auto;bottom:28px;width:50px;height:50px;border:1px solid #fff;background:var(--navy);color:#fff}
+html:not(.sunja-intro-active) #header-carousel .hero-nav.carousel-control-prev {left:auto;right:90px}
+html:not(.sunja-intro-active) #header-carousel .hero-nav.carousel-control-next {right:30px}
 
-/* The social strip is an understated index, not three competing cards. */
-html:not(.sunja-intro-active) .social-rail { padding:0!important; background:var(--navy); }
-html:not(.sunja-intro-active) .social-rail .row { --bs-gutter-x:0; --bs-gutter-y:0; }
-html:not(.sunja-intro-active) .social-tile { min-height:78px; padding:16px 24px!important; border:0; border-right:1px solid #39546a; border-radius:0; background:var(--navy)!important; box-shadow:none; }
-html:not(.sunja-intro-active) .social-tile:hover { background:#123a57!important; transform:none; }
-html:not(.sunja-intro-active) .social-tile .text-white-50 { color:#c7d9e5!important; }
+/* Social links as a light utility bar, not standalone cards. */
+html:not(.sunja-intro-active) .social-rail {padding:0!important;background:#fff;border-bottom:1px solid var(--line)}
+html:not(.sunja-intro-active) .social-rail .row {--bs-gutter-x:0;--bs-gutter-y:0}
+html:not(.sunja-intro-active) .social-tile {min-height:78px;padding:16px 24px!important;border:0;border-right:1px solid var(--line);border-radius:0;background:#fff!important;box-shadow:none;transition:background .2s!important}
+html:not(.sunja-intro-active) .social-tile:hover {background:#e8eff2!important;transform:none}
+html:not(.sunja-intro-active) .social-tile :is(.text-white,.text-white-50) {color:var(--ink)!important}
 
-/* Shared typography and spacious, left-aligned section headings. */
-html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#kontakt) { padding-block:clamp(80px,8vw,128px)!important; }
-html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h1 { margin-bottom:32px!important; color:var(--ink)!important; font-size:clamp(2.4rem,4.1vw,4.3rem)!important; line-height:1.02!important; letter-spacing:-.045em!important; }
-html:not(.sunja-intro-active) :is(#usluge,#galerija,#recenzije,#lokacija,#kontakt) > .container > .text-center { text-align:left!important; }
-html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h6.text-primary { color:var(--blue)!important; font-size:.75rem; letter-spacing:.15em; }
-html:not(.sunja-intro-active) :is(#o-nama,#galerija,#lokacija,#kontakt) p { color:var(--muted); line-height:1.7; }
-html:not(.sunja-intro-active) :is(#usluge,#galerija,#recenzije,#lokacija,#kontakt) > .container > .text-center h6::before { display:none; }
+/* Editorial type and shared section spacing */
+html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#kontakt) {padding-block:clamp(80px,9vw,140px)!important}
+html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h1 {margin-bottom:32px!important;color:var(--ink)!important;font-size:clamp(2.7rem,5vw,5rem)!important;line-height:1!important;letter-spacing:-.05em!important}
+html:not(.sunja-intro-active) :is(#usluge,#galerija,#recenzije,#lokacija,#kontakt) > .container > .text-center {text-align:left!important}
+html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h6.text-primary {color:var(--blue)!important;font-size:.78rem;letter-spacing:.16em}
+html:not(.sunja-intro-active) :is(#o-nama,#galerija,#lokacija,#kontakt) p {color:var(--muted);line-height:1.7}
+html:not(.sunja-intro-active) :is(#usluge,#galerija,#recenzije,#lokacija,#kontakt) > .container > .text-center h6::before {display:none}
 
-/* About: editorial copy on the left, a real workshop portrait on the right. */
-html:not(.sunja-intro-active) #o-nama { background:#fff!important; }
-html:not(.sunja-intro-active) #o-nama > .container > .row { align-items:center; }
-html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:first-child { order:2; padding-top:0!important; }
-html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:last-child { order:1; }
-html:not(.sunja-intro-active) #o-nama h1 .text-primary { color:var(--ink)!important; }
-html:not(.sunja-intro-active) #o-nama .position-relative.h-100 { height:auto!important; aspect-ratio:5/6; overflow:hidden; border:0; border-radius:0; box-shadow:none; background:var(--paper); }
-html:not(.sunja-intro-active) #o-nama .svc-photo { width:100%; height:100%!important; max-height:none!important; object-fit:cover!important; border-radius:0; box-shadow:none; }
-html:not(.sunja-intro-active) #o-nama .position-absolute.top-0.end-0 { inset:auto 0 0 auto!important; margin:0!important; border:0; border-radius:0; background:var(--navy)!important; }
-html:not(.sunja-intro-active) #o-nama .experience-feature { background:var(--navy); border:0; border-radius:0; box-shadow:none; }
-html:not(.sunja-intro-active) #o-nama .row.g-4.mb-3.pb-3 > div { border-bottom:1px solid #dbe4e9; padding-bottom:15px; }
-html:not(.sunja-intro-active) #o-nama .row.g-4.mb-3.pb-3 .bg-light { background:transparent!important; border:0; border-radius:0; }
+/* About: real workshop photo, large proof point and numbered service facts. */
+html:not(.sunja-intro-active) #o-nama {background:var(--paper)!important}
+html:not(.sunja-intro-active) #o-nama > .container > .row {align-items:center;margin-inline:0;--bs-gutter-x:clamp(32px,7vw,100px)}
+html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:first-child {order:1;padding-top:0!important}
+html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:last-child {order:2}
+html:not(.sunja-intro-active) #o-nama h1 .text-primary {color:var(--blue)!important}
+html:not(.sunja-intro-active) #o-nama .position-relative.h-100 {height:auto!important;aspect-ratio:4/5;overflow:hidden;border:0;border-radius:0;box-shadow:none;background:#d9e1e2}
+html:not(.sunja-intro-active) #o-nama .svc-photo {width:100%;height:100%!important;max-height:none!important;object-fit:cover!important;border-radius:0;box-shadow:none}
+html:not(.sunja-intro-active) #o-nama .position-absolute.top-0.end-0 {inset:auto 0 0 auto!important;margin:0!important;border:0;border-radius:0;background:var(--navy)!important}
+html:not(.sunja-intro-active) #o-nama .experience-feature {background:var(--navy);border:0;border-radius:0;box-shadow:none}
+html:not(.sunja-intro-active) #o-nama .row.g-4.mb-3.pb-3 > div {border-bottom:1px solid #cbd5d8;padding-bottom:15px}
+html:not(.sunja-intro-active) #o-nama .row.g-4.mb-3.pb-3 .bg-light {background:transparent!important;border:0;border-radius:0}
 
-/* The service index is a proper vertical list next to the selected service. */
-html:not(.sunja-intro-active) #usluge { border:0; background:var(--navy)!important; color:#fff; }
-html:not(.sunja-intro-active) #usluge h1 { color:#fff!important; }
-html:not(.sunja-intro-active) #usluge h6.text-primary { color:#a9d8ef!important; }
-html:not(.sunja-intro-active) #usluge > .container > .row.g-4.wow { display:grid; grid-template-columns:minmax(250px, .8fr) minmax(0,2fr); gap:0; margin:0; }
-html:not(.sunja-intro-active) #usluge > .container > .row.g-4.wow > :is(.col-lg-4,.col-lg-8) { width:auto; max-width:none; min-width:0; padding:0; }
-html:not(.sunja-intro-active) #usluge .service-nav-grid { display:flex!important; flex-direction:column; gap:0!important; margin:0!important; padding:0; background:transparent; }
-html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link { min-height:75px; margin:0!important; padding:14px 20px!important; border:0!important; border-bottom:1px solid #3b566b!important; border-radius:0!important; background:transparent!important; color:#dceaf3!important; box-shadow:none; }
-html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link i { flex:0 0 32px; width:32px; height:32px; margin-right:12px!important; border:0; background:transparent!important; color:#a7cee3!important; }
-html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link h4 { color:inherit!important; font-size:1rem!important; }
-html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:hover, html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link.active { background:#fff!important; color:var(--ink)!important; transform:none!important; }
-html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link.active i { color:var(--blue)!important; }
-html:not(.sunja-intro-active) #usluge .tab-content { height:100%; padding:clamp(24px,3vw,40px)!important; border:0; border-radius:0; background:#fff; box-shadow:none; }
-html:not(.sunja-intro-active) #usluge .tab-pane .row { align-items:center; }
-html:not(.sunja-intro-active) #usluge .service-media-frame { min-height:380px; border:0; border-radius:0; background:#e9eff2; }
-html:not(.sunja-intro-active) #usluge .service-media-frame .service-image { max-height:470px!important; object-fit:contain!important; }
-html:not(.sunja-intro-active) #usluge .tab-pane h3 { color:var(--ink); font-size:clamp(1.8rem,2.6vw,2.8rem)!important; line-height:1.05; letter-spacing:-.035em; }
-html:not(.sunja-intro-active) #usluge .tab-pane p { color:var(--muted); }
+/* Services: full-width horizontal index over a large selected-service panel. */
+html:not(.sunja-intro-active) #usluge {border:0;background:#fff!important;color:var(--ink)}
+html:not(.sunja-intro-active) #usluge > .container > .row.g-4.wow {display:block;margin:0}
+html:not(.sunja-intro-active) #usluge > .container > .row.g-4.wow > :is(.col-lg-4,.col-lg-8) {width:100%;max-width:none;padding:0}
+html:not(.sunja-intro-active) #usluge .service-nav-grid {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px!important;margin:0!important;padding:0;background:#cad6db}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link {min-height:90px;margin:0!important;padding:20px!important;border:0!important;border-radius:0!important;background:#eef2f2!important;color:var(--ink)!important;box-shadow:none;transition:background .2s,color .2s!important}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link i {flex:0 0 36px;width:36px;height:36px;margin-right:12px!important;border:0;background:transparent!important;color:var(--blue)!important}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link h4 {color:inherit!important;font-size:1rem!important}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:hover,html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link.active {background:var(--blue)!important;color:#fff!important;transform:none!important}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link.active i,html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:hover i {color:#fff!important}
+html:not(.sunja-intro-active) #usluge .tab-content {height:100%;padding:clamp(24px,4vw,55px)!important;border:0;border-radius:0;background:var(--paper);box-shadow:none}
+html:not(.sunja-intro-active) #usluge .tab-pane .row {align-items:center;--bs-gutter-x:clamp(24px,5vw,70px)}
+html:not(.sunja-intro-active) #usluge .service-media-frame {min-height:390px;border:0;border-radius:0;background:#dfe5e4}
+html:not(.sunja-intro-active) #usluge .service-media-frame .service-image {max-height:480px!important;object-fit:contain!important}
+html:not(.sunja-intro-active) #usluge .tab-pane h3 {color:var(--ink);font-size:clamp(2rem,3.4vw,3.6rem)!important;line-height:1;letter-spacing:-.04em}
+html:not(.sunja-intro-active) #usluge .tab-pane p {color:var(--muted)}
 
-/* The gallery is a contact sheet of actual local workshop photos. */
-html:not(.sunja-intro-active) #galerija { background:#fff!important; }
-html:not(.sunja-intro-active) #galerija .row.g-4 { gap:16px; }
-html:not(.sunja-intro-active) #galerija .team-item { overflow:hidden; border:0; border-radius:0; background:var(--paper); box-shadow:none; transform:none; }
-html:not(.sunja-intro-active) #galerija .team-item .position-relative { height:auto; aspect-ratio:4/5!important; background:#e9eff2; }
-html:not(.sunja-intro-active) #galerija .gallery-img { position:absolute; inset:0; width:100%; height:100%!important; max-height:none; object-fit:contain!important; transform:none!important; }
-html:not(.sunja-intro-active) #galerija .team-overlay { backdrop-filter:none!important; -webkit-backdrop-filter:none!important; }
-html:not(.sunja-intro-active) #galerija .gallery-source-line { display:flex; align-items:center; min-height:50px; padding:12px 14px!important; border:0; background:#f2f5f6!important; color:var(--muted)!important; }
-html:not(.sunja-intro-active) #galerija .gallery-source-line small { color:var(--muted)!important; }
-html:not(.sunja-intro-active) #galerija .team-item > a { min-height:260px!important; border:0!important; background:var(--blue)!important; }
-html:not(.sunja-intro-active) #galerija .team-item > a p { color:#fff!important; }
-html:not(.sunja-intro-active) #galerija .team-item:hover { transform:none; box-shadow:none; }
+/* Gallery: dark workshop wall, staggered contact sheet, photographs remain uncropped. */
+html:not(.sunja-intro-active) #galerija {background:var(--navy)!important}
+html:not(.sunja-intro-active) #galerija h1 {color:#fff!important}
+html:not(.sunja-intro-active) #galerija h6.text-primary {color:#a9daed!important}
+html:not(.sunja-intro-active) #galerija .row.g-4 {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:0}
+html:not(.sunja-intro-active) #galerija .row.g-4 > div {grid-column:auto!important;width:auto;max-width:none;margin:0;padding:0}
+html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(2),html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(5) {transform:translateY(28px)}
+html:not(.sunja-intro-active) #galerija .team-item {overflow:hidden;border:0;border-radius:0;background:var(--navy-2);box-shadow:none}
+html:not(.sunja-intro-active) #galerija .team-item .position-relative {height:auto;aspect-ratio:4/5!important;background:#172f3f}
+html:not(.sunja-intro-active) #galerija .gallery-img {position:absolute;inset:0;width:100%;height:100%!important;max-height:none;object-fit:contain!important;transition:transform .45s var(--ease)!important}
+html:not(.sunja-intro-active) #galerija .team-item:hover .gallery-img {transform:scale(1.025)!important}
+html:not(.sunja-intro-active) #galerija .team-overlay {backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+html:not(.sunja-intro-active) #galerija .gallery-source-line {display:flex;align-items:center;min-height:50px;padding:12px 14px!important;border:0;background:#183548!important;color:#e6f1f5!important}
+html:not(.sunja-intro-active) #galerija .gallery-source-line small {color:#e6f1f5!important}
+html:not(.sunja-intro-active) #galerija .team-item > a {min-height:300px!important;border:0!important;background:var(--blue)!important}
+html:not(.sunja-intro-active) #galerija .team-item > a p {color:#fff!important}
 
-/* Reviews form a horizontal endorsement, followed by the existing live map. */
-html:not(.sunja-intro-active) #recenzije { background:var(--sky)!important; }
-html:not(.sunja-intro-active) #recenzije .row { justify-content:flex-start!important; }
-html:not(.sunja-intro-active) #recenzije .row > .col-lg-8 { width:100%; }
-html:not(.sunja-intro-active) #recenzije .row > .col-lg-8 > .bg-white { display:grid; grid-template-columns:auto 1fr auto; gap:32px; align-items:center; text-align:left!important; padding:32px!important; border:0; border-left:4px solid var(--blue); border-radius:0; background:#fff!important; box-shadow:none!important; }
-html:not(.sunja-intro-active) #recenzije .stars-big, html:not(.sunja-intro-active) #recenzije p { margin:0!important; }
-html:not(.sunja-intro-active) #recenzije p { color:var(--muted); }
-html:not(.sunja-intro-active) #lokacija { padding-top:80px!important; background:var(--paper)!important; }
-html:not(.sunja-intro-active) #globeScroll { border-top:4px solid var(--blue); }
+/* Review band and map frame */
+html:not(.sunja-intro-active) #recenzije {background:#dce9eb!important}
+html:not(.sunja-intro-active) #recenzije > .container {display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(32px,6vw,100px);align-items:center}
+html:not(.sunja-intro-active) #recenzije .row > .col-lg-8 {width:100%}
+html:not(.sunja-intro-active) #recenzije .row > .col-lg-8 > .bg-white {text-align:left!important;padding:clamp(28px,4vw,55px)!important;border:0;border-left:6px solid var(--blue);border-radius:0;background:#fff!important;box-shadow:none!important}
+html:not(.sunja-intro-active) #recenzije p {color:var(--muted);font-size:1.1rem;line-height:1.7}
+html:not(.sunja-intro-active) #lokacija {padding-top:clamp(80px,8vw,120px)!important;background:var(--paper)!important}
+html:not(.sunja-intro-active) #globeScroll {border-top:5px solid var(--blue)}
 
-/* Contact becomes a high-contrast information board with direct actions. */
-html:not(.sunja-intro-active) #kontakt { background:#fff!important; }
-html:not(.sunja-intro-active) #kontakt .row.gy-4 > div > .bg-light { border:0; border-top:3px solid var(--blue); border-radius:0; background:var(--paper)!important; }
-html:not(.sunja-intro-active) #kontakt .contact-spotlight { border:0; border-radius:0; background:var(--navy); box-shadow:none; }
-html:not(.sunja-intro-active) #kontakt .contact-facts { border:0!important; background:transparent!important; box-shadow:none!important; }
-html:not(.sunja-intro-active) #kontakt .contact-fact { border:0!important; border-bottom:1px solid #48667a!important; border-radius:0!important; background:transparent!important; }
-html:not(.sunja-intro-active) #kontakt .contact-fact-icon { background:transparent!important; border:0!important; color:#a6d7f2!important; }
-html:not(.sunja-intro-active) #kontakt .contact-fact-label { color:#a6d7f2!important; }
-html:not(.sunja-intro-active) #kontakt .contact-fact p, html:not(.sunja-intro-active) #kontakt .contact-fact p a, html:not(.sunja-intro-active) #kontakt .contact-muted { color:#f4f8ff!important; }
-html:not(.sunja-intro-active) #kontakt .contact-spotlight-copy { color:#f4f8ff!important; }
-html:not(.sunja-intro-active) #kontakt .contact-direct-phone { min-height:300px; border:0; border-radius:0; background:var(--blue)!important; box-shadow:none; }
-html:not(.sunja-intro-active) #kontakt .contact-btn-primary { background:var(--blue)!important; color:#fff!important; }
-html:not(.sunja-intro-active) #kontakt .contact-btn-secondary { border-color:#fff!important; color:#fff!important; }
-html:not(.sunja-intro-active) .footer-wave { display:none; }
-html:not(.sunja-intro-active) #siteFooter { margin-top:0!important; border-top:4px solid var(--blue); background-color:var(--navy)!important; background-image:linear-gradient(rgba(9,38,61,.96),rgba(9,38,61,.96)),url('../assets/gallery/sunja-tiktok-7627945643490692373.webp')!important; background-size:cover; background-position:center; }
+/* Contact and footer: a dark action board followed by a clean information index. */
+html:not(.sunja-intro-active) #kontakt {background:var(--navy)!important;color:#fff}
+html:not(.sunja-intro-active) #kontakt h1 {color:#fff!important}
+html:not(.sunja-intro-active) #kontakt h6.text-primary {color:#a9daed!important}
+html:not(.sunja-intro-active) #kontakt .row.gy-4 > div > .bg-light {border:0;border-top:3px solid #8fc5dc;border-radius:0;background:#173548!important}
+html:not(.sunja-intro-active) #kontakt .row.gy-4 > div > .bg-light :is(h5,p,a) {color:#fff!important}
+html:not(.sunja-intro-active) #kontakt .contact-spotlight {border:1px solid #496778;border-radius:0;background:#102b3d;box-shadow:none}
+html:not(.sunja-intro-active) #kontakt .contact-facts {border:0!important;background:transparent!important;box-shadow:none!important}
+html:not(.sunja-intro-active) #kontakt .contact-fact {border:0!important;border-bottom:1px solid #48667a!important;border-radius:0!important;background:transparent!important}
+html:not(.sunja-intro-active) #kontakt .contact-fact-icon {background:transparent!important;border:0!important;color:#a6d7f2!important}
+html:not(.sunja-intro-active) #kontakt .contact-fact-label {color:#a6d7f2!important}
+html:not(.sunja-intro-active) #kontakt .contact-fact p,html:not(.sunja-intro-active) #kontakt .contact-fact p a,html:not(.sunja-intro-active) #kontakt .contact-muted,html:not(.sunja-intro-active) #kontakt .contact-spotlight-copy {color:#f4f8ff!important}
+html:not(.sunja-intro-active) #kontakt .contact-direct-phone {min-height:300px;border:0;border-radius:0;background:var(--blue)!important;box-shadow:none}
+html:not(.sunja-intro-active) #kontakt .contact-btn-primary {background:var(--blue)!important;color:#fff!important}
+html:not(.sunja-intro-active) #kontakt .contact-btn-secondary {border-color:#fff!important;color:#fff!important}
+html:not(.sunja-intro-active) .footer-wave {display:none}
+html:not(.sunja-intro-active) #siteFooter {margin-top:0!important;border-top:1px solid #35505f;background:#071722!important;background-image:linear-gradient(rgba(7,23,34,.96),rgba(7,23,34,.96)),url('../assets/gallery/sunja-tiktok-7627945643490692373.webp')!important;background-size:cover;background-position:center}
+html:not(.sunja-intro-active) #siteFooter .footer-brand img {max-width:210px}
 
+/* Purposeful, one-time entrances; never hide content when JS or motion is unavailable. */
+@keyframes workshop-enter {from {opacity:0;transform:translateY(20px)} to {opacity:1;transform:translateY(0)}}
+@keyframes workshop-image {from {transform:scale(1.035)} to {transform:scale(1)}}
+@media (prefers-reduced-motion:no-preference) {
+  html:not(.sunja-intro-active) #header-carousel .carousel-item.active picture {animation:workshop-image 1.2s var(--ease) both!important}
+  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim {animation:workshop-enter .7s var(--ease) both!important}
+  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim:nth-child(2) {animation-delay:.08s!important}
+  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim:nth-child(3) {animation-delay:.15s!important}
+  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim:nth-child(4) {animation-delay:.21s!important}
+  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim:nth-child(5) {animation-delay:.27s!important}
+  html:not(.sunja-intro-active) .wow.is-revealed {animation:workshop-enter .65s var(--ease) both}
+  html:not(.sunja-intro-active) #usluge .tab-pane.active {animation:workshop-enter .4s var(--ease) both}
+}
 @media (max-width:1199.98px) and (min-width:992px) {
-  html:not(.sunja-intro-active) .workshop-topbar .row > div:first-child { flex:0 0 40%; max-width:40%; }
-  html:not(.sunja-intro-active) .workshop-topbar .row > div:last-child { flex:0 0 60%; max-width:60%; }
-  html:not(.sunja-intro-active) .workshop-topbar .row > div { gap:8px; padding-inline:16px!important; }
-  html:not(.sunja-intro-active) .workshop-topbar small { font-size:11px!important; }
-  html:not(.sunja-intro-active) .nav-bar .nav-link { padding-inline:8px!important; }
-  html:not(.sunja-intro-active) .nav-bar .navbar-collapse > .btn { padding-inline:16px!important; }
+  html:not(.sunja-intro-active) .workshop-topbar .row > div {gap:8px;padding-inline:16px!important}
+  html:not(.sunja-intro-active) .workshop-topbar small {font-size:11px!important}
+  html:not(.sunja-intro-active) .nav-bar .nav-link {padding-inline:8px!important}
+  html:not(.sunja-intro-active) .nav-bar .navbar-collapse > .btn {padding-inline:16px!important}
 }
 @media (max-width:991.98px) {
-  html:not(.sunja-intro-active) .nav-bar .navbar-brand { min-height:72px; border:0; }
-  html:not(.sunja-intro-active) .nav-bar { min-height:72px; }
-  html:not(.sunja-intro-active) .nav-bar .navbar-collapse { border-top:1px solid var(--line); background:#fff; }
-  html:not(.sunja-intro-active) .nav-bar .nav-link { min-height:48px; }
-  html:not(.sunja-intro-active) .nav-bar .navbar-collapse > .btn { display:none!important; }
-  html:not(.sunja-intro-active) #usluge > .container > .row.g-4.wow { grid-template-columns:1fr; gap:20px; }
-  html:not(.sunja-intro-active) #usluge .service-nav-grid { display:grid!important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px!important; }
-  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link { min-height:64px; border:1px solid #527087!important; }
-  html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:first-child { order:2; }
+  html:not(.sunja-intro-active) .nav-bar,html:not(.sunja-intro-active) .nav-bar .navbar-brand {min-height:72px}
+  html:not(.sunja-intro-active) .nav-bar .navbar-brand {border:0}
+  html:not(.sunja-intro-active) .nav-bar .navbar-collapse {border-top:1px solid var(--line);background:#fff}
+  html:not(.sunja-intro-active) .nav-bar .nav-link {min-height:48px}
+  html:not(.sunja-intro-active) .nav-bar .navbar-collapse > .btn {display:none!important}
+  html:not(.sunja-intro-active) #usluge .service-nav-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
+  html:not(.sunja-intro-active) #recenzije > .container {grid-template-columns:1fr;gap:20px}
 }
 @media (max-width:767.98px) {
-  html:not(.sunja-intro-active) #header-carousel .carousel-item { min-height:0; padding-top:300px; }
-  html:not(.sunja-intro-active) #header-carousel .carousel-item picture { inset:0 0 auto!important; height:300px!important; }
-  html:not(.sunja-intro-active) #header-carousel .carousel-caption { width:100%; min-height:370px; padding:32px 24px 76px!important; }
-  html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 { max-width:none; font-size:clamp(2.65rem,10vw,3.5rem)!important; line-height:1!important; }
-  html:not(.sunja-intro-active) #header-carousel .carousel-item:nth-child(2) .carousel-caption h1 { font-size:clamp(1.75rem,8vw,2.15rem)!important; }
-  html:not(.sunja-intro-active) #header-carousel .carousel-caption p { font-size:1rem!important; }
-  html:not(.sunja-intro-active) #header-carousel .hero-indicators { left:24px; bottom:12px; }
-  html:not(.sunja-intro-active) #header-carousel .hero-nav { display:none; }
-  html:not(.sunja-intro-active) .social-rail .social-tile { min-height:68px; border-bottom:1px solid #39546a; }
-  html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#kontakt) { padding-block:64px!important; }
-  html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h1 { font-size:2rem!important; }
-  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link { padding:10px!important; }
-  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link h4 { font-size:.86rem!important; overflow-wrap:normal; }
-  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link i { display:none; }
-  html:not(.sunja-intro-active) #usluge .service-media-frame { min-height:240px; }
-  html:not(.sunja-intro-active) #recenzije .row > .col-lg-8 > .bg-white { grid-template-columns:1fr; gap:18px; padding:24px!important; }
-  html:not(.sunja-intro-active) #kontakt .contact-actions { flex-wrap:wrap; }
+  html:not(.sunja-intro-active) #header-carousel .carousel-item {min-height:620px}
+  html:not(.sunja-intro-active) #header-carousel .carousel-item picture::after {background:linear-gradient(0deg,rgba(5,19,29,.96) 0%,rgba(5,19,29,.72) 58%,rgba(5,19,29,.35) 100%)}
+  html:not(.sunja-intro-active) #header-carousel .carousel-caption {min-height:620px;padding:90px 24px 96px!important;align-items:flex-end!important}
+  html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 {max-width:none;font-size:clamp(3.1rem,12vw,4.8rem)!important}
+  html:not(.sunja-intro-active) #header-carousel .carousel-item:nth-child(2) .carousel-caption h1 {font-size:clamp(1.75rem,8vw,2.3rem)!important}
+  html:not(.sunja-intro-active) #header-carousel .carousel-caption p {font-size:1rem!important}
+  html:not(.sunja-intro-active) #header-carousel .hero-indicators {left:24px;bottom:18px}
+  html:not(.sunja-intro-active) #header-carousel .hero-nav {display:none}
+  html:not(.sunja-intro-active) .social-rail .social-tile {min-height:68px;border-bottom:1px solid var(--line)}
+  html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#kontakt) {padding-block:68px!important}
+  html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h1 {font-size:2rem!important}
+  html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:first-child {order:2}
+  html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:last-child {order:1}
+  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link {min-height:68px;padding:10px!important}
+  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link h4 {font-size:.86rem!important;overflow-wrap:normal}
+  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link i {display:none}
+  html:not(.sunja-intro-active) #usluge .service-media-frame {min-height:240px}
+  html:not(.sunja-intro-active) #galerija .row.g-4 {grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(2),html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(5) {transform:none}
+  html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(5),
+  html:not(.sunja-intro-active) #galerija .row.g-4 > div:last-child {grid-column:1 / -1!important}
+  html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(5) .position-relative {aspect-ratio:16/10!important}
+  html:not(.sunja-intro-active) #galerija .team-item > a {min-height:220px!important;padding:20px!important}
+  html:not(.sunja-intro-active) #kontakt .contact-actions {flex-wrap:wrap}
 }
 @media (prefers-reduced-motion:reduce) {
-  html:not(.sunja-intro-active) #header-carousel .carousel-item.active picture,
-  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim,
-  html:not(.sunja-intro-active) #usluge .tab-pane.active,
-  html:not(.sunja-intro-active) .wow.is-revealed { animation:none!important; transform:none!important; }
-  html:not(.sunja-intro-active) .btn { transition:none!important; }
-  .stars.on .stars-fg { transition:none!important; }
-  .stars.on .stars-fg i { animation:none!important; }
+  html:not(.sunja-intro-active) #header-carousel .carousel-item.active picture,html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim,html:not(.sunja-intro-active) #usluge .tab-pane.active,html:not(.sunja-intro-active) .wow.is-revealed {animation:none!important;transform:none!important}
+  html:not(.sunja-intro-active) .btn,html:not(.sunja-intro-active) #galerija .gallery-img {transition:none!important}
+  .stars.on .stars-fg {transition:none!important}
+  .stars.on .stars-fg i {animation:none!important}
 }
