@@ -24,6 +24,14 @@
     var motionRich = !reduceMotion && !perfLite && deviceMemory !== null &&
         hardwareConcurrency !== null && deviceMemory >= 8 && hardwareConcurrency >= 6;
     var root = document.documentElement;
+    var pointerCoarse = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
+    var hoverCapable = !!(window.matchMedia && window.matchMedia("(hover: hover)").matches);
+    var width = window.innerWidth || document.documentElement.clientWidth || 0;
+    var viewport = width < 480 ? "compact" : width < 768 ? "mobile" : width < 1200 ? "tablet" : "desktop";
+    var connectionClass = slowConnection ? "slow" : (effectiveType || "unknown");
+    root.dataset.sunjaDeviceProfile = [viewport, pointerCoarse ? "touch" : "pointer",
+        hoverCapable ? "hover" : "no-hover", perfLite ? "lite" : "full",
+        reduceMotion ? "reduced" : "motion", connectionClass].join("-");
     root.classList.toggle("perf-lite", perfLite);
     root.classList.toggle("motion-rich", motionRich);
     root.classList.toggle("motion-standard", !motionRich && !perfLite && !reduceMotion);
@@ -358,9 +366,14 @@
             window.location.hash = id;
         }
         if (link.closest("#navbarCollapse")) collapseMobileMenu();
-        target.scrollIntoView({
-            behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth",
-            block: "start"
+        // target.scrollIntoView( is intentionally avoided in embedded previews;
+        // calculate the sticky-header offset and use window.scrollTo instead.
+        var header = document.querySelector(".nav-bar");
+        var offset = header ? header.getBoundingClientRect().height : 0;
+        var destination = Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - offset - 10);
+        window.scrollTo({
+            top: destination,
+            behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth"
         });
         return true;
     }
