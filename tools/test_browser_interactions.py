@@ -1212,7 +1212,7 @@ class SiteInteractionTests(unittest.TestCase):
         )
         try:
             page = context.new_page()
-            page.route("**/bootstrap@5.0.0/**", lambda route: route.abort())
+            page.route("**/lib/bootstrap/bootstrap.bundle.min.js", lambda route: route.abort())
             page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
             page.wait_for_function("""() => {
                 const slides = [...document.querySelectorAll('#header-carousel .carousel-item')];
@@ -1444,6 +1444,39 @@ class SiteInteractionTests(unittest.TestCase):
         )
         self.assertEqual(copy_color, "rgb(244, 248, 255)")
 
+    def test_review_gallery_grid_and_no_horizontal_overflow(self):
+        for width, height in ((1920, 1080), (1366, 768), (1024, 768),
+                              (820, 1180), (768, 1024), (390, 844), (360, 800)):
+            with self.subTest(width=width):
+                context = self.browser.new_context(viewport={"width": width, "height": height},
+                                                   reduced_motion="reduce")
+                try:
+                    page = context.new_page()
+                    page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded")
+                    layout = page.evaluate("""() => {
+                        const cards = [...document.querySelectorAll('#galerija .row.g-4 > div')];
+                        return {scrollWidth: document.documentElement.scrollWidth,
+                                xs: cards.slice(0, 3).map(el => Math.round(el.getBoundingClientRect().x)),
+                                frame: getComputedStyle(cards[0].querySelector('.position-relative')).aspectRatio};
+                    }""")
+                    self.assertLessEqual(layout["scrollWidth"], width)
+                    self.assertNotEqual(layout["xs"][0], layout["xs"][1])
+                    if width >= 992:
+                        self.assertEqual(len(set(layout["xs"])), 3)
+                    self.assertEqual(layout["frame"], "4 / 5")
+                finally:
+                    context.close()
+
+    def test_review_gallery_recovers_when_rotating_photos_fail(self):
+        self.page.route("**/assets/photos/**", lambda route: route.abort())
+        self.page.reload(wait_until="domcontentloaded")
+        for image in self.page.locator('[data-gallery-img]').all():
+            image.scroll_into_view_if_needed()
+            self.page.wait_for_function("img => img.dataset.fallbackApplied === '1'", arg=image.element_handle())
+            expect(image).to_have_js_property("complete", True)
+            self.page.wait_for_function("img => img.complete && img.naturalWidth > 0", arg=image.element_handle())
+            self.assertIn("assets/gallery/tiktok-fallback-", image.get_attribute("src"))
+
     def test_v21_gallery_photo_fills_natural_width_without_crop(self):
         img = self.page.locator("[data-gallery-img]").first
         img.scroll_into_view_if_needed()
@@ -1459,7 +1492,9 @@ class SiteInteractionTests(unittest.TestCase):
             };
         }""")
         self.assertGreater(rect["imageWidth"] / rect["parentWidth"], 0.98)
-        self.assertAlmostEqual(rect["imageRatio"], rect["naturalRatio"], delta=0.05)
+        # A bounded frame can differ from the source ratio; contain keeps the
+        # entire original photo visible without stretching or cropping.
+        self.assertAlmostEqual(rect["imageRatio"], 4 / 5, delta=0.05)
         self.assertEqual(rect["fit"], "contain")
 
     def test_v212_dock_hides_when_booking_button_would_be_covered(self):

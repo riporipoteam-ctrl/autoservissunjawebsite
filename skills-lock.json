@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "skills": {
+    "motion-design": {
+      "source": "LottieFiles/motion-design-skill",
+      "commit": "d77a9fc8cb371cab1ba5420df5bfd232cd14c9bb",
+      "sourceType": "github",
+      "skillPath": "skills/motion-design/SKILL.md",
+      "computedHash": "be5bc38a720ec04b0c78ebf33b30e2bc8fde2d0cb3c5d4f37d383059d341802f"
+    }
+  }
+}
