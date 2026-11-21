@@ -4462,3 +4462,482 @@ html.perf-lite #galerija .team-item:hover {
             rgba(5, 19, 37, .94) 100%) !important;
     }
 }
+
+/* v47 — Auto Servis Šunja art direction.
+   A restrained workshop-editorial system: deep service navy, clear blue
+   signals, deliberate framing, and short motion that never hides content. */
+:root {
+    --sunja-v47-ink: #112746;
+    --sunja-v47-navy: #0a1d3e;
+    --sunja-v47-blue: #0b5fa5;
+    --sunja-v47-sky: #83c9ef;
+    --sunja-v47-muted: #62748a;
+    --sunja-v47-line: #dce5ed;
+    --sunja-v47-cloud: #f3f7fa;
+    --sunja-v47-radius: 16px;
+    --sunja-v47-ease: cubic-bezier(.2,.72,.22,1);
+}
+html:not(.sunja-intro-active) body {
+    color: var(--sunja-v47-ink);
+    background: #fff;
+}
+html:not(.sunja-intro-active) .container-xxl {
+    position: relative;
+}
+html:not(.sunja-intro-active) h1,
+html:not(.sunja-intro-active) h2,
+html:not(.sunja-intro-active) h3,
+html:not(.sunja-intro-active) h4 {
+    color: var(--sunja-v47-ink);
+    text-wrap: balance;
+}
+html:not(.sunja-intro-active) h6.text-primary.text-uppercase {
+    color: var(--sunja-v47-blue) !important;
+    font-size: .76rem !important;
+    font-weight: 800 !important;
+    letter-spacing: .16em !important;
+    text-transform: uppercase !important;
+}
+html:not(.sunja-intro-active) h6.text-primary.text-uppercase::before {
+    width: 27px;
+    height: 2px;
+    margin-right: 8px;
+    background: var(--sunja-v47-sky);
+}
+
+/* Hero: the actual Šunja workshop is the fixed first-slide image.
+   The photo frame receives its motion; image pixels remain crisp and whole. */
+html:not(.sunja-intro-active) #header-carousel .carousel-inner {
+    border-bottom: 0 !important;
+    border-radius: 0 0 20px 20px;
+    box-shadow: 0 20px 54px rgba(7,25,52,.12);
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-item {
+    background-color: var(--sunja-v47-navy) !important;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-item picture {
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,.7);
+    border-radius: 12px;
+    background: #eaf0f5;
+    box-shadow: 0 22px 54px rgba(5,20,43,.2);
+    will-change: transform, opacity;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-item picture img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 48%;
+    background: #eaf0f5;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-item.active picture {
+    animation: sunjaV47HeroImage .82s var(--sunja-v47-ease) both;
+}
+@keyframes sunjaV47HeroImage {
+    from { opacity: .45; transform: translateY(12px) scale(.985); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption {
+    background: none !important;
+    text-align: left;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .container {
+    max-width: 1320px;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .row {
+    align-items: center;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h6 {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 8px 12px;
+    border: 1px solid rgba(11,95,165,.18);
+    border-radius: 5px;
+    background: rgba(11,95,165,.075);
+    color: var(--sunja-v47-blue) !important;
+    font-size: .72rem !important;
+    font-weight: 800;
+    letter-spacing: .14em;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h6::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 2px;
+    margin: 0;
+    border-radius: 1px;
+    background: var(--sunja-v47-blue);
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 {
+    max-width: 11ch;
+    margin-bottom: 20px !important;
+    color: #102747 !important;
+    font-size: clamp(2.5rem, 4.6vw, 4.55rem) !important;
+    font-weight: 800 !important;
+    letter-spacing: -.055em !important;
+    line-height: .99 !important;
+    text-shadow: none !important;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption p {
+    max-width: 48ch;
+    margin-bottom: 23px !important;
+    color: #4e6075 !important;
+    font-size: clamp(.97rem, 1.22vw, 1.1rem) !important;
+    line-height: 1.65 !important;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .status-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 39px;
+    padding: 8px 12px;
+    border: 1px solid #d9e4ee;
+    border-radius: 6px;
+    background: #fff;
+    color: #344b63;
+    font-size: .8rem;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(11,33,84,.035);
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .status-pill .dot {
+    width: 8px;
+    height: 8px;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .btn {
+    min-height: 52px;
+    padding: 13px 22px !important;
+    border: 1px solid var(--sunja-v47-blue) !important;
+    border-radius: 6px !important;
+    background: var(--sunja-v47-blue) !important;
+    color: #fff !important;
+    font-size: .94rem;
+    font-weight: 800;
+    letter-spacing: .025em;
+    box-shadow: 0 9px 22px rgba(11,95,165,.16);
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .btn:hover {
+    background: var(--sunja-v47-navy) !important;
+    border-color: var(--sunja-v47-navy) !important;
+    box-shadow: 0 12px 26px rgba(11,33,84,.19);
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim {
+    animation: sunjaV47HeroCopy .62s var(--sunja-v47-ease) both;
+}
+html:not(.sunja-intro-active) #header-carousel .carousel-item.active h6.h-anim { animation-delay: 50ms; }
+html:not(.sunja-intro-active) #header-carousel .carousel-item.active h1.h-anim { animation-delay: 130ms; }
+html:not(.sunja-intro-active) #header-carousel .carousel-item.active p.h-anim { animation-delay: 210ms; }
+html:not(.sunja-intro-active) #header-carousel .carousel-item.active .status-pill.h-anim { animation-delay: 280ms; }
+html:not(.sunja-intro-active) #header-carousel .carousel-item.active .btn.h-anim { animation-delay: 350ms; }
+@keyframes sunjaV47HeroCopy {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+html:not(.sunja-intro-active) #header-carousel .hero-indicators {
+    gap: 7px;
+    bottom: 27px;
+}
+html:not(.sunja-intro-active) #header-carousel .hero-indicators button {
+    width: 50px;
+    height: 36px;
+}
+html:not(.sunja-intro-active) #header-carousel .hero-indicators button span {
+    width: 42px;
+    height: 3px;
+    border-radius: 4px;
+    background: rgba(11,33,84,.24);
+}
+html:not(.sunja-intro-active) #header-carousel .hero-indicators button.active span {
+    background: var(--sunja-v47-blue);
+}
+html:not(.sunja-intro-active) #header-carousel .hero-nav {
+    border-radius: 6px;
+    border-color: var(--sunja-v47-line);
+    box-shadow: 0 5px 16px rgba(11,33,84,.06);
+}
+html:not(.sunja-intro-active) #header-carousel .hero-nav:hover {
+    background: #eaf4fb;
+}
+
+/* Site-wide section rhythm: consistent eyebrow, headline, and vertical cadence. */
+html:not(.sunja-intro-active) .container-xxl.py-5 {
+    padding-top: clamp(3.5rem, 6vw, 5.4rem) !important;
+    padding-bottom: clamp(3.5rem, 6vw, 5.4rem) !important;
+}
+html:not(.sunja-intro-active) #o-nama,
+html:not(.sunja-intro-active) #galerija,
+html:not(.sunja-intro-active) #recenzije,
+html:not(.sunja-intro-active) #kontakt {
+    background: #fff;
+}
+html:not(.sunja-intro-active) #usluge,
+html:not(.sunja-intro-active) #lokacija {
+    background: var(--sunja-v47-cloud);
+}
+html:not(.sunja-intro-active) #o-nama h1,
+html:not(.sunja-intro-active) #usluge h1,
+html:not(.sunja-intro-active) #galerija h1,
+html:not(.sunja-intro-active) #recenzije h1,
+html:not(.sunja-intro-active) #lokacija h1,
+html:not(.sunja-intro-active) #kontakt h1 {
+    color: var(--sunja-v47-ink);
+    font-size: clamp(2rem, 3vw, 2.35rem) !important;
+    font-weight: 800 !important;
+    letter-spacing: -.04em !important;
+}
+html:not(.sunja-intro-active) .wow.is-revealed {
+    animation: sunjaV47SectionReveal .64s var(--sunja-v47-ease) both !important;
+}
+@keyframes sunjaV47SectionReveal {
+    from { opacity: .25; transform: translateY(17px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Services: tactile switcher, calm active state and a stable image-stage while
+   each hidden tab's local photo is fetched on first selection. */
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link {
+    min-height: 70px;
+    border: 1px solid #dfe7ef !important;
+    border-radius: 9px !important;
+    background: #fff !important;
+    color: var(--sunja-v47-ink) !important;
+    box-shadow: 0 4px 13px rgba(11,33,84,.035);
+    transition: border-color 220ms var(--sunja-v47-ease),
+                background-color 220ms var(--sunja-v47-ease),
+                box-shadow 220ms var(--sunja-v47-ease),
+                transform 220ms var(--sunja-v47-ease);
+}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link i {
+    background: #edf5fb !important;
+    color: var(--sunja-v47-blue) !important;
+    transition: color 220ms ease, background-color 220ms ease, transform 220ms ease;
+}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link.active {
+    border-color: var(--sunja-v47-blue) !important;
+    background: var(--sunja-v47-navy) !important;
+    color: #fff !important;
+    box-shadow: 0 9px 22px rgba(11,33,84,.15);
+}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link.active i {
+    background: rgba(255,255,255,.12) !important;
+    color: #a7dcff !important;
+}
+@media (hover:hover) and (pointer:fine) {
+    html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:not(.active):hover {
+        border-color: #a9c9e1 !important;
+        background: #f8fbfe !important;
+        transform: translateX(3px);
+        box-shadow: 0 8px 18px rgba(11,33,84,.07);
+    }
+    html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:not(.active):hover i {
+        transform: translateY(-1px);
+    }
+}
+html:not(.sunja-intro-active) #usluge .tab-content {
+    border: 1px solid #dfe7ef;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 16px 40px rgba(11,33,84,.065);
+}
+html:not(.sunja-intro-active) #usluge .tab-pane.active {
+    animation: sunjaV47ServiceReveal .38s var(--sunja-v47-ease) both;
+}
+@keyframes sunjaV47ServiceReveal {
+    from { opacity: .4; transform: translateY(9px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+html:not(.sunja-intro-active) #usluge .service-media-frame {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: clamp(260px, 30vw, 440px);
+    overflow: hidden;
+    border: 1px solid #e0e8f0;
+    border-radius: 10px;
+    background: linear-gradient(145deg, #edf3f8, #f8fafc);
+}
+html:not(.sunja-intro-active) #usluge .service-media-frame::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(135deg, rgba(11,95,165,.045), transparent 55%);
+}
+html:not(.sunja-intro-active) #usluge .service-media-frame .service-image {
+    position: relative;
+    display: block;
+    width: 100%;
+    max-height: 540px;
+    height: auto;
+    object-fit: contain !important;
+    opacity: .72;
+    transition: opacity 240ms ease;
+}
+html:not(.sunja-intro-active) #usluge .service-media-frame.image-ready .service-image {
+    opacity: 1;
+}
+html:not(.sunja-intro-active) #usluge .service-media-frame.image-failed {
+    background: linear-gradient(145deg, #eaf2f8, #f7f9fb);
+}
+html:not(.sunja-intro-active) #usluge .tab-pane h3 {
+    color: var(--sunja-v47-navy);
+    font-size: clamp(1.35rem, 2.1vw, 1.75rem) !important;
+    font-weight: 800;
+    letter-spacing: -.035em;
+}
+html:not(.sunja-intro-active) #usluge .tab-pane p {
+    color: #50637a;
+    line-height: 1.7 !important;
+}
+html:not(.sunja-intro-active) #usluge .tab-pane .btn {
+    min-height: 48px;
+    border-radius: 6px !important;
+}
+
+/* Gallery keeps its own static fallback photos; the TikTok feed may replace
+   them only after a valid local original has been selected. */
+html:not(.sunja-intro-active) #galerija .team-item {
+    overflow: hidden;
+    border: 1px solid #dfe7ef;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 8px 23px rgba(11,33,84,.055);
+    transition: transform 300ms var(--sunja-v47-ease),
+                box-shadow 300ms var(--sunja-v47-ease);
+}
+html:not(.sunja-intro-active) #galerija .team-item .position-relative {
+    overflow: hidden;
+    background-color: #eaf0f5;
+}
+html:not(.sunja-intro-active) #galerija .gallery-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    transition: transform 520ms var(--sunja-v47-ease), opacity 220ms ease;
+}
+@media (hover:hover) and (pointer:fine) {
+    html:not(.sunja-intro-active) #galerija .team-item:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 18px 36px rgba(11,33,84,.11);
+    }
+    html:not(.sunja-intro-active) #galerija .team-item:hover .gallery-img {
+        transform: scale(1.035);
+    }
+}
+
+/* Predictable image stages: no collapsing boxes while lazy/eager images decode. */
+#header-carousel .carousel-item picture,
+#usluge .service-media-frame,
+#galerija .team-item .position-relative {
+    background-color: #eaf0f5;
+}
+#header-carousel .carousel-item picture.image-failed::after {
+    content: "Auto Servis Šunja";
+    position: absolute;
+    inset: auto 12px 12px;
+    z-index: 2;
+    padding: 10px 12px;
+    border-radius: 5px;
+    background: rgba(10,29,62,.88);
+    color: #fff;
+    font-weight: 700;
+    text-align: center;
+}
+
+/* Contact/map/footer are part of the same visual system, not separate widgets. */
+html:not(.sunja-intro-active) #kontakt .contact-spotlight,
+html:not(.sunja-intro-active) #kontakt .contact-facts,
+html:not(.sunja-intro-active) #lokacija .map-panel {
+    border: 1px solid #dfe7ef;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(11,33,84,.06);
+}
+html:not(.sunja-intro-active) #siteFooter {
+    border-top: 4px solid var(--sunja-v47-blue);
+}
+html:not(.sunja-intro-active) .mobile-callbar {
+    box-shadow: 0 -8px 26px rgba(7,25,52,.14);
+}
+
+/* Compact screens keep the same art direction, but never pay for decorative
+   movement that competes with scrolling or consumes an older GPU. */
+@media (max-width: 767.98px) {
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption {
+        background: linear-gradient(180deg,
+            rgba(5,19,37,.02) 0%,
+            rgba(5,19,37,.10) 35%,
+            rgba(5,19,37,.58) 60%,
+            rgba(5,19,37,.94) 100%) !important;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 {
+        font-size: clamp(2rem, 8.1vw, 2.7rem) !important;
+        line-height: 1.02 !important;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption p {
+        font-size: .93rem !important;
+        line-height: 1.58 !important;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item picture {
+        border: 0;
+        border-radius: 0;
+        box-shadow: none;
+        animation-duration: .55s;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item picture img {
+        object-fit: cover !important;
+        object-position: center 44%;
+    }
+    html:not(.sunja-intro-active) #usluge .service-media-frame {
+        min-height: 230px;
+    }
+    html:not(.sunja-intro-active) #usluge .service-media-frame .service-image {
+        max-height: 470px;
+    }
+    html:not(.sunja-intro-active) #galerija .team-item {
+        border-radius: 10px;
+    }
+    html:not(.sunja-intro-active) .container-xxl.py-5 {
+        padding-top: 2.7rem !important;
+        padding-bottom: 2.7rem !important;
+    }
+}
+@media (max-width: 360px) {
+    html:not(.sunja-intro-active) #header-carousel .carousel-caption .container {
+        padding-inline: 20px;
+    }
+    html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link {
+        padding-inline: 8px !important;
+        gap: 6px;
+    }
+}
+html.perf-lite:not(.sunja-intro-active) #header-carousel .carousel-item.active picture,
+html.perf-lite:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim,
+html.perf-lite:not(.sunja-intro-active) #usluge .tab-pane.active,
+html.perf-lite:not(.sunja-intro-active) .wow.is-revealed {
+    animation: none !important;
+    transform: none !important;
+    filter: none !important;
+}
+html.perf-lite:not(.sunja-intro-active) #galerija .team-item,
+html.perf-lite:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link {
+    transition: none !important;
+}
+@media (prefers-reduced-motion: reduce) {
+    html:not(.sunja-intro-active) #header-carousel .carousel-item.active picture,
+    html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim,
+    html:not(.sunja-intro-active) #usluge .tab-pane.active,
+    html:not(.sunja-intro-active) .wow.is-revealed {
+        animation: none !important;
+        transform: none !important;
+        filter: none !important;
+    }
+    html:not(.sunja-intro-active) #header-carousel .carousel-item picture,
+    html:not(.sunja-intro-active) #header-carousel .carousel-item picture img,
+    html:not(.sunja-intro-active) #galerija .team-item,
+    html:not(.sunja-intro-active) #galerija .gallery-img {
+        transition: none !important;
+    }
+}
