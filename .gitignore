@@ -1,3 +1,8 @@
 __pycache__/
 *.py[cod]
 .pytest_cache/
+
+# Local development and review artifacts
+.venv/
+.cache/
+review-screenshots/
