@@ -1,0 +1,167 @@
+/* Auto Servis Šunja v49 — blue workshop interface.
+   Intentional replacement of the v48 polish layer: stronger structure,
+   blue-only palette, original logo sizing, and a visibly different UI. */
+:root {
+  --s49-blue:#0878c9;
+  --s49-blue-dark:#045493;
+  --s49-blue-deep:#061f3f;
+  --s49-blue-ink:#0a2d52;
+  --s49-blue-pale:#eaf5fc;
+  --s49-paper:#f6f9fc;
+  --s49-white:#fff;
+  --s49-line:#c9dceb;
+  --s49-muted:#587087;
+  --s49-shadow:0 18px 48px rgba(6,31,63,.12);
+  --s49-radius:6px;
+}
+
+html:not(.sunja-intro-active) body { background:var(--s49-paper); color:var(--s49-blue-ink); }
+html:not(.sunja-intro-active) .container { max-width:1240px; }
+html:not(.sunja-intro-active) .container-xxl { max-width:1440px; }
+html:not(.sunja-intro-active) .nav-bar { min-height:68px; background:var(--s49-white)!important; border-top:4px solid var(--s49-blue); border-bottom:1px solid var(--s49-line); box-shadow:0 8px 25px rgba(6,31,63,.08)!important; }
+html:not(.sunja-intro-active) .nav-bar .navbar-brand { min-height:64px; padding:0 1.4rem 0 clamp(1rem,3vw,3rem)!important; border-right:1px solid var(--s49-line); }
+html:not(.sunja-intro-active) .nav-bar .navbar-brand img { width:auto!important; height:52px!important; max-width:none!important; transform:none!important; }
+html:not(.sunja-intro-active) .nav-bar .navbar-nav { gap:.15rem; }
+html:not(.sunja-intro-active) .nav-bar .nav-link { min-height:46px; padding:0 13px!important; color:var(--s49-blue-ink)!important; font-size:.74rem; font-weight:800; letter-spacing:.08em; text-transform:uppercase; }
+html:not(.sunja-intro-active) .nav-bar .nav-link::after { display:none; }
+html:not(.sunja-intro-active) .nav-bar .nav-link:hover,
+html:not(.sunja-intro-active) .nav-bar .nav-link.active { background:var(--s49-blue-pale); color:var(--s49-blue)!important; }
+html:not(.sunja-intro-active) .nav-bar>.btn { border-radius:3px!important; background:var(--s49-blue)!important; box-shadow:none!important; font-weight:800; }
+html:not(.sunja-intro-active) .nav-bar>.btn:hover { background:var(--s49-blue-dark)!important; transform:none; }
+html:not(.sunja-intro-active) .btn:focus-visible,
+html:not(.sunja-intro-active) button:focus-visible,
+html:not(.sunja-intro-active) a:focus-visible { outline:3px solid rgba(8,120,201,.55)!important; outline-offset:3px; }
+
+/* Split hero: text and workshop image become two deliberate columns. */
+html:not(.sunja-intro-active) #pocetna { margin-bottom:0!important; padding:0 0 1.5rem; background:var(--s49-blue-deep); }
+html:not(.sunja-intro-active) #header-carousel { background:var(--s49-blue-deep); }
+html:not(.sunja-intro-active) #header-carousel .carousel-inner { overflow:hidden; border-radius:0!important; box-shadow:none!important; }
+html:not(.sunja-intro-active) #header-carousel .carousel-item { min-height:clamp(560px,72svh,760px); background:var(--s49-blue-deep)!important; }
+html:not(.sunja-intro-active) #header-carousel .carousel-item picture { position:absolute; inset:0 0 0 42%; opacity:1; border:0!important; border-radius:0!important; box-shadow:none!important; clip-path:polygon(10% 0,100% 0,100% 100%,0 100%); }
+html:not(.sunja-intro-active) #header-carousel .carousel-item picture::after { content:""; position:absolute; inset:0; background:linear-gradient(90deg,var(--s49-blue-deep) 0%,rgba(6,31,63,.8) 18%,rgba(6,31,63,.12) 70%,rgba(6,31,63,.28)); }
+html:not(.sunja-intro-active) #header-carousel .carousel-caption { min-height:clamp(560px,72svh,760px); padding:clamp(4rem,9vw,7rem) 0 5rem; background:transparent!important; align-items:center!important; }
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .container { max-width:1240px; }
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .col-lg-8 { max-width:650px; padding-left:clamp(1rem,4vw,4.2rem); }
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h6 { display:inline-flex; padding:.45rem .7rem; border:1px solid rgba(148,215,251,.55); border-radius:3px; background:rgba(8,120,201,.2); color:#bfe8ff!important; font-size:.67rem!important; letter-spacing:.16em; }
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h6::before { display:none; }
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 { max-width:8ch; color:#fff!important; font-size:clamp(3.2rem,7vw,6.7rem)!important; line-height:.88!important; letter-spacing:-.075em!important; }
+html:not(.sunja-intro-active) #header-carousel .carousel-caption p { max-width:39ch; color:#c9e5f7!important; font-size:clamp(1rem,1.4vw,1.15rem)!important; line-height:1.7!important; }
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .status-pill { border:1px solid rgba(148,215,251,.4); background:rgba(8,120,201,.2); color:#dff3ff; box-shadow:none; }
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .btn { border-radius:3px!important; background:var(--s49-blue)!important; color:#fff!important; box-shadow:0 12px 26px rgba(0,0,0,.2); }
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .btn:hover { background:#1596ed!important; }
+html:not(.sunja-intro-active) #header-carousel .hero-indicators { left:clamp(1rem,4vw,4.2rem); right:auto; justify-content:flex-start; bottom:25px; margin:0; }
+html:not(.sunja-intro-active) #header-carousel .hero-indicators button span { background:rgba(191,232,255,.45); }
+html:not(.sunja-intro-active) #header-carousel .hero-indicators button.active span { background:#8dd3f8; }
+html:not(.sunja-intro-active) #header-carousel .hero-nav { width:44px; height:44px; top:auto; bottom:20px; border:1px solid rgba(191,232,255,.5); background:rgba(6,31,63,.55); color:#fff; }
+html:not(.sunja-intro-active) #header-carousel .hero-nav.carousel-control-prev { right:78px; left:auto; }
+html:not(.sunja-intro-active) #header-carousel .hero-nav.carousel-control-next { right:22px; }
+
+/* Every major section receives a different structural treatment. */
+html:not(.sunja-intro-active) .container-xxl.py-5 { padding-top:clamp(4rem,8vw,7rem)!important; padding-bottom:clamp(4rem,8vw,7rem)!important; }
+html:not(.sunja-intro-active) #o-nama { background:#fff; border-bottom:1px solid var(--s49-line); }
+html:not(.sunja-intro-active) #usluge { background:var(--s49-blue-pale)!important; }
+html:not(.sunja-intro-active) #galerija { background:#fff; }
+html:not(.sunja-intro-active) #recenzije { background:var(--s49-blue-deep)!important; }
+html:not(.sunja-intro-active) #lokacija { background:var(--s49-paper)!important; }
+html:not(.sunja-intro-active) #kontakt { background:#fff; }
+html:not(.sunja-intro-active) #o-nama h1,
+html:not(.sunja-intro-active) #usluge h1,
+html:not(.sunja-intro-active) #galerija h1,
+html:not(.sunja-intro-active) #recenzije h1,
+html:not(.sunja-intro-active) #lokacija h1,
+html:not(.sunja-intro-active) #kontakt h1 { margin-bottom:1.8rem!important; color:var(--s49-blue-ink)!important; font-size:clamp(2.25rem,4vw,4.2rem)!important; line-height:.95; letter-spacing:-.07em!important; }
+html:not(.sunja-intro-active) #recenzije h1 { color:#fff!important; }
+html:not(.sunja-intro-active) #o-nama p,
+html:not(.sunja-intro-active) #galerija p,
+html:not(.sunja-intro-active) #lokacija p,
+html:not(.sunja-intro-active) #kontakt p { color:var(--s49-muted); line-height:1.75; }
+html:not(.sunja-intro-active) .experience-feature { border-left:4px solid var(--s49-blue); background:var(--s49-blue-pale); }
+html:not(.sunja-intro-active) #o-nama .svc-photo { border-radius:3px; box-shadow:var(--s49-shadow); }
+
+/* Services become a control console instead of stacked template cards. */
+html:not(.sunja-intro-active) #usluge .service-nav-grid { padding:10px; background:var(--s49-blue-deep); border-radius:4px; }
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link { min-height:68px; margin-bottom:6px!important; border:1px solid rgba(191,232,255,.2)!important; border-radius:2px!important; background:transparent!important; color:#d5ecfa!important; box-shadow:none; text-align:left; }
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:last-child { margin-bottom:0!important; }
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:hover,
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link.active { border-color:#8dd3f8!important; background:var(--s49-blue)!important; color:#fff!important; }
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link h4 { font-size:.92rem!important; letter-spacing:.01em; }
+html:not(.sunja-intro-active) #usluge .tab-content { border:1px solid var(--s49-line); border-radius:4px; background:#fff; box-shadow:var(--s49-shadow); }
+html:not(.sunja-intro-active) #usluge .tab-pane { padding:clamp(1.2rem,3vw,2.4rem); }
+html:not(.sunja-intro-active) #usluge .service-media-frame { min-height:clamp(290px,35vw,480px); border:0; border-radius:2px; }
+html:not(.sunja-intro-active) #usluge .tab-pane h3 { color:var(--s49-blue-ink); font-size:clamp(1.7rem,3vw,2.8rem)!important; letter-spacing:-.06em; }
+html:not(.sunja-intro-active) #usluge .tab-pane .btn { border-radius:2px!important; }
+
+/* Gallery becomes a blue-framed editorial mosaic. */
+html:not(.sunja-intro-active) #galerija .row.g-4 { --bs-gutter-x:1rem; --bs-gutter-y:1rem; }
+html:not(.sunja-intro-active) #galerija .team-item { overflow:hidden; border:0; border-radius:3px; background:var(--s49-blue-deep); box-shadow:none; }
+html:not(.sunja-intro-active) #galerija .team-item .position-relative { aspect-ratio:1.15/1; }
+html:not(.sunja-intro-active) #galerija .team-overlay { background:linear-gradient(180deg,transparent 40%,rgba(6,31,63,.82)); }
+html:not(.sunja-intro-active) #galerija .gallery-source-line { min-height:50px; padding:0 1rem!important; background:var(--s49-blue-deep)!important; color:#c9e5f7; text-align:left!important; }
+html:not(.sunja-intro-active) #galerija .gallery-action-icon { width:42px; height:42px; border:1px solid #bfe8ff; border-radius:2px; background:var(--s49-blue); }
+html:not(.sunja-intro-active) #galerija .team-item:hover .gallery-img { transform:scale(1.05); }
+
+/* Reviews are intentionally high-contrast and quieter than the old cards. */
+html:not(.sunja-intro-active) #recenzije .bg-white { border:1px solid rgba(191,232,255,.25); border-radius:3px; background:transparent!important; box-shadow:none!important; }
+html:not(.sunja-intro-active) #recenzije .bg-white * { color:#dff3ff; }
+html:not(.sunja-intro-active) #recenzije .bg-white .text-primary { color:#8dd3f8!important; }
+html:not(.sunja-intro-active) #recenzije .bg-white .text-dark { color:#fff!important; }
+
+/* Location and contact become directional utility blocks. */
+html:not(.sunja-intro-active) #lokacija .map-panel { border:1px solid var(--s49-line); border-radius:3px; box-shadow:var(--s49-shadow); }
+html:not(.sunja-intro-active) #kontakt .bg-light { background:var(--s49-blue-pale)!important; }
+html:not(.sunja-intro-active) #kontakt .contact-spotlight { border:0; border-radius:3px; background:var(--s49-blue-deep); }
+html:not(.sunja-intro-active) #kontakt .contact-direct-phone { border:0; border-radius:3px; background:var(--s49-blue)!important; }
+html:not(.sunja-intro-active) #kontakt .contact-btn-primary { border-radius:2px!important; background:var(--s49-blue)!important; }
+html:not(.sunja-intro-active) #kontakt .contact-btn-secondary { border-radius:2px!important; border-color:var(--s49-blue)!important; color:var(--s49-blue)!important; }
+html:not(.sunja-intro-active) #kontakt .contact-btn-secondary:hover { background:var(--s49-blue)!important; color:#fff!important; }
+html:not(.sunja-intro-active) #siteFooter { border-top:0; background-color:#061f3f!important; background-image:linear-gradient(90deg,rgba(6,31,63,.94),rgba(6,31,63,.75)),url("../assets/gallery/sunja-tiktok-7627945643490692373.webp")!important; background-position:center 42%!important; background-size:cover!important; background-repeat:no-repeat!important; background-attachment:scroll!important; }
+
+/* Device-aware delivery remains compatible with the existing JS profile. */
+html[data-sunja-device-profile*="lite"] .hero-nav,
+html[data-sunja-device-profile*="lite"] .gallery-action-icon { transition:none!important; }
+html[data-sunja-device-profile*="lite"] #globeScroll { min-height:68vh!important; }
+html[data-sunja-device-profile*="slow"] #globeScroll { min-height:62vh!important; }
+html[data-sunja-device-profile*="reduced"] *,
+html[data-sunja-device-profile*="lite"] * { scroll-behavior:auto!important; }
+
+@media (max-width:991.98px) {
+  html:not(.sunja-intro-active) .nav-bar .navbar-brand { border-right:0; }
+  html:not(.sunja-intro-active) .nav-bar .navbar-collapse { border-top:1px solid var(--s49-line); background:#fff; }
+  html:not(.sunja-intro-active) .nav-bar .nav-link { min-height:48px; }
+}
+@media (max-width:767.98px) {
+  html:not(.sunja-intro-active) #pocetna { padding-bottom:0; }
+  html:not(.sunja-intro-active) #header-carousel .carousel-item,
+  html:not(.sunja-intro-active) #header-carousel .carousel-caption { min-height:650px; }
+  html:not(.sunja-intro-active) #header-carousel .carousel-item picture { inset:0; clip-path:none; opacity:.6; }
+  html:not(.sunja-intro-active) #header-carousel .carousel-item picture::after { background:linear-gradient(180deg,rgba(6,31,63,.2),rgba(6,31,63,.96) 72%); }
+  html:not(.sunja-intro-active) #header-carousel .carousel-caption { padding:5.7rem 0 6.5rem; align-items:flex-end!important; }
+  html:not(.sunja-intro-active) #header-carousel .carousel-caption .col-lg-8 { padding-inline:1.25rem; }
+  html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 { max-width:10ch; font-size:clamp(2.7rem,12vw,4.2rem)!important; }
+  html:not(.sunja-intro-active) #header-carousel .carousel-caption .btn { width:100%; margin-left:0!important; }
+  html:not(.sunja-intro-active) #header-carousel .hero-indicators { left:1.25rem; bottom:22px; }
+  html:not(.sunja-intro-active) #header-carousel .hero-nav { display:none; }
+  html:not(.sunja-intro-active) .container-xxl.py-5 { padding-block:3.8rem!important; }
+  html:not(.sunja-intro-active) #o-nama h1,
+  html:not(.sunja-intro-active) #usluge h1,
+  html:not(.sunja-intro-active) #galerija h1,
+  html:not(.sunja-intro-active) #recenzije h1,
+  html:not(.sunja-intro-active) #lokacija h1,
+  html:not(.sunja-intro-active) #kontakt h1 { font-size:32px!important; }
+  html:not(.sunja-intro-active) #o-nama > .container p { font-size:16px!important; }
+  html:not(.sunja-intro-active) #usluge .service-nav-grid { margin-bottom:1rem; }
+  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link { min-height:60px; padding:.7rem!important; }
+  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link h4 { font-size:.82rem!important; }
+  html:not(.sunja-intro-active) #usluge .service-media-frame { min-height:245px; }
+  html:not(.sunja-intro-active) #galerija .team-item .position-relative { aspect-ratio:1/1.05; }
+  html:not(.sunja-intro-active) #kontakt .contact-actions { flex-direction:column; }
+}
+@media (max-width:380px) {
+  html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 { font-size:2.55rem!important; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html:not(.sunja-intro-active) #header-carousel .carousel-item.active picture,
+  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim,
+  html:not(.sunja-intro-active) #usluge .tab-pane.active,
+  html:not(.sunja-intro-active) .wow.is-revealed { animation:none!important; transform:none!important; }
+}
