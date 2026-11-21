@@ -1444,6 +1444,24 @@ class SiteInteractionTests(unittest.TestCase):
         )
         self.assertEqual(copy_color, "rgb(244, 248, 255)")
 
+    def test_redesign_hero_headlines_fit_all_requested_viewports(self):
+        for width, height in ((1920, 1080), (1366, 768), (1024, 768),
+                              (820, 1180), (768, 1024), (390, 844), (360, 800)):
+            with self.subTest(width=width):
+                context = self.browser.new_context(viewport={"width": width, "height": height},
+                                                   reduced_motion="reduce")
+                try:
+                    page = context.new_page()
+                    page.goto(self.url + "?skipIntro=1", wait_until="load")
+                    for index in range(3):
+                        page.locator(f'[data-bs-slide-to="{index}"]').click(force=True)
+                        page.wait_for_timeout(300)
+                        heading = page.locator('#header-carousel .carousel-item.active h1')
+                        dimensions = heading.evaluate('(el) => [el.scrollWidth, el.clientWidth]')
+                        self.assertLessEqual(dimensions[0], dimensions[1] + 1)
+                finally:
+                    context.close()
+
     def test_review_gallery_grid_and_no_horizontal_overflow(self):
         for width, height in ((1920, 1080), (1366, 768), (1024, 768),
                               (820, 1180), (768, 1024), (390, 844), (360, 800)):
