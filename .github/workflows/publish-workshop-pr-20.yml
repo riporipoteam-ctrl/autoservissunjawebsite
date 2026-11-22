@@ -1,0 +1,59 @@
+name: Publish Workshop Blueprint PR 20
+
+on:
+  push:
+    branches: [ops/publish-workshop-pr-20]
+    paths: ['.github/workflows/publish-workshop-pr-20.yml']
+
+permissions: {}
+
+jobs:
+  merge:
+    if: github.repository == 'riporipoteam-ctrl/autoservissunjawebsite' && github.ref == 'refs/heads/ops/publish-workshop-pr-20'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check the target and merge through GitHub
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENDPOINT: repos/riporipoteam-ctrl/autoservissunjawebsite/pulls/20
+          EXPECTED_HEAD: 52527fc70397ef1258ad39216c9854407225c62d
+          EXPECTED_BASE: ceea9a85ecc4bfdedb81a699a2c7c9d07a7813ae
+        run: |
+          set -euo pipefail
+          pr=$(gh api "$ENDPOINT")
+          jq -e --arg head "$EXPECTED_HEAD" --arg base "$EXPECTED_BASE" \
+            '.state == "open" and .draft == false and .head.ref == "redesign/workshop-blueprint" and .head.sha == $head and .base.ref == "main" and .base.sha == $base' <<< "$pr" > /dev/null
+          result=$(gh api --method PUT "$ENDPOINT/merge" -f sha="$EXPECTED_HEAD" -f merge_method=merge)
+          echo "$result" | jq .
+          echo "$result" | jq -e '.merged == true' > /dev/null
+  pages:
+    needs: merge
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      pages: write
+    steps:
+      - name: Request Pages build and verify the public stylesheet
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_CSS: 62a8bf0f3157e94d5fbdfc33d024480509b3b8ae
+        run: |
+          set -euo pipefail
+          if ! gh api --method POST repos/riporipoteam-ctrl/autoservissunjawebsite/pages/builds; then
+            echo 'Pages did not accept a build request. Checking the public URL in case a build was triggered independently.'
+          fi
+          css=$(mktemp)
+          trap 'rm -f "$css"' EXIT
+          for attempt in {1..18}; do
+            if curl -fsSL --max-time 8 -H 'Cache-Control: no-cache' 'https://autosunja.com/css/overhaul-v49.css?v=52.0' -o "$css" && [ "$(git hash-object "$css")" = "$EXPECTED_CSS" ]; then
+              echo 'Verified the exact redesign stylesheet on autosunja.com.'
+              exit 0
+            fi
+            sleep 10
+          done
+          echo 'The redesign stylesheet could not yet be verified on autosunja.com.'
+          exit 1
