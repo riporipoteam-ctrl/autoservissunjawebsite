@@ -81,6 +81,7 @@
                 var fill = button.querySelector("span");
                 if (!fill) return;
                 fill.style.animation = "none";
+                fill.style.animationDuration = interval + "ms";
                 void fill.offsetWidth;
                 fill.style.animation = "";
             });
