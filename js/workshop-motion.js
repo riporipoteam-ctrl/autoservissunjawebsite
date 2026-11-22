@@ -119,14 +119,21 @@
   }
   toggle?.addEventListener('click', () => {
     // Preserve the reader's place when changing the opening scene's height.
-    const anchor = hero.getBoundingClientRect().bottom <= window.innerHeight * .28 ? story.querySelector('#usluge') : null;
+    const y = window.scrollY;
+    const navHeight = document.getElementById('wmHeader')?.offsetHeight || 0;
+    const heroRect = hero.getBoundingClientRect();
+    const anchor = heroRect.bottom <= window.innerHeight * .55 ? story.querySelector('#usluge') : null;
     const anchorTop = anchor?.getBoundingClientRect().top;
+    const wasFull = mode === 'full';
+    const previousAnchor = root.style.overflowAnchor;
+    root.style.overflowAnchor = 'none';
     paused = !paused;
     readMode();
-    if (anchor) {
-      const shift = anchor.getBoundingClientRect().top - anchorTop;
-      if (Math.abs(shift) > 1) window.scrollBy({top:shift,behavior:'instant'});
-    }
+    const below = anchor ? anchor.getBoundingClientRect().top + window.scrollY - anchorTop : y;
+    const inOpening = wasFull && paused && !anchor && y > 0 && heroRect.bottom > navHeight;
+    const destination = Math.max(0, inOpening ? heroRect.top + y - navHeight : below);
+    if (Math.abs(window.scrollY - destination) > 1) window.scrollTo({top:destination,behavior:'instant'});
+    requestAnimationFrame(() => { root.style.overflowAnchor = previousAnchor; });
   });
   const imageDeck = (event) => {
     if (!carousel.contains(event.target)) return;

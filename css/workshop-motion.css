@@ -3,6 +3,8 @@
 html:not(.sunja-intro-active) body{color:var(--wm-ink);background:var(--wm-paper)}
 .wm-wrap{width:min(calc(100% - 2*var(--wm-edge)),var(--wm-max));margin-inline:auto;min-width:0}
 #workshopStory{min-width:0}
+/* Section targets own their offsets. Native focus on the sticky toolbar must not scroll the page. */
+html[data-wm-ready='1']{scroll-padding-top:0}
 #workshopStory :is(h1,h2,h3,p,dd,figure){margin:0}
 #workshopStory :is(h1,h2,h3){font-family:Barlow,system-ui,sans-serif;letter-spacing:-.042em;line-height:.98;font-weight:700;color:inherit}
 #workshopStory h2{font-size:clamp(2.5rem,6.6vw,7.2rem);text-wrap:balance}
@@ -151,7 +153,8 @@ html[data-workshop-motion=full] #wmHeader::after,html[data-workshop-motion=light
 #backTop.wm-icon.is-visible{display:inline-flex!important}
 /* Motion is opt-in by browser preference. Portrait phones get no pinning. */
 @media (min-width:1024px) and (min-height:690px){
- html[data-workshop-motion=full] #workshopStory #pocetna{padding-bottom:clamp(240px,51svh,575px)}
+ /* A sticky child travels inside the section's content box, not its padding. */
+ html[data-workshop-motion=full] #workshopStory #pocetna::after{content:'';display:block;height:clamp(240px,51svh,575px)}
  html[data-workshop-motion=full] .wm-pin{position:sticky;top:var(--wm-nav);min-height:calc(100svh - var(--wm-nav))}
  html[data-workshop-motion=full] .wm-hero-copy{transform:translate3d(0,calc(var(--wm-hero,0)*-44px),0)}
 }
