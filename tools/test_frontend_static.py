@@ -67,6 +67,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn('data-bs-interval=', INDEX)
         self.assertIn('function setupHeroCarousel()', JS)
         self.assertIn('function scheduleNextSlide()', JS)
+        self.assertIn("if (currentIndex() === before && !cycleTimer)", JS)
+        self.assertIn("transitionPending = false;\\n                            rotateBy(1);", JS)
         self.assertIn('interval: false', JS)
         self.assertIn('slide.bs.carousel', JS)
         self.assertIn('slid.bs.carousel', JS)
