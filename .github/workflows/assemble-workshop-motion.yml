@@ -22,12 +22,12 @@ jobs:
           ref: redesign/blue-service-desk
           fetch-depth: 0
       - id: assemble
-        name: Preserve the intro and fast first-tap navigation
+        name: Keep the original intro and give the opening scene room to stay in view
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = 'dce783be056673abdfa39aab08dcfc798f8a459b'
-          git show '5aae16e0d911f9fd72be4eee047ea17ae0969288:tools/finish_workshop_motion.py' > /tmp/finish_workshop.py
-          python3 /tmp/finish_workshop.py site
+          test "$(git rev-parse HEAD)" = '1ca848aba81c103c9dd5118d8ba607b50b4843e6'
+          git show 'e5ae36cc319cfdc72e0e8321d90f9963242a507d:tools/settle_workshop_motion.py' > /tmp/settle_workshop.py
+          python3 /tmp/settle_workshop.py site
           node --check js/workshop-motion.js
           node --check js/main.js
           git diff --check
@@ -35,6 +35,7 @@ jobs:
           git show 807bccbea68ae62270235c9d2ba3240422a42417:index.html > /tmp/site-production.html
           python3 - <<'PY'
           from pathlib import Path
+          import re
           a,b=[Path(x).read_bytes() for x in ('/tmp/site-production.html','index.html')]
           def intro(s):
               i=s.index(b'<body>')
@@ -46,10 +47,13 @@ jobs:
               return s[i:j].strip()
           assert intro(a)==intro(b), 'intro differs from main'
           assert map_runtime(a)==map_runtime(b), 'map runtime differs from main'
-          print('Exact production intro bytes, map code and asset references preserved')
+          for pattern in [rb'<meta name="google-site-verification"[^>]+>',rb'<link rel="canonical"[^>]+>',rb'<script type="application/ld\+json">.*?</script>']:
+              matches=re.findall(pattern,a,re.S)
+              assert matches and matches==re.findall(pattern,b,re.S), 'search metadata differs from main'
+          print('Exact production intro bytes, map runtime, search metadata and protected assets preserved')
           PY
-          git add -- index.html css/workshop-motion.css js/main.js
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Keep the menu closing on the first tap and the opening gauge inside its column'
+          git add -- index.html css/workshop-motion.css js/workshop-motion.js
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Pin the dial through its scroll sequence and anchor visitors when they pause'
           git push origin HEAD:refs/heads/redesign/blue-service-desk
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
@@ -108,8 +112,14 @@ jobs:
           set -euo pipefail
           git show '2b849cf18ad9395217b018e17b233689d4b6811e:tools/check_workshop_motion.py' > /tmp/check_workshop_motion.py
           git show '5aae16e0d911f9fd72be4eee047ea17ae0969288:tools/finish_workshop_motion.py' > /tmp/finish_workshop.py
+          git show 'e5ae36cc319cfdc72e0e8321d90f9963242a507d:tools/settle_workshop_motion.py' > /tmp/settle_workshop.py
           python /tmp/finish_workshop.py reviewer /tmp/check_workshop_motion.py
+          python /tmp/settle_workshop.py test /tmp/check_workshop_motion.py
           python /tmp/check_workshop_motion.py
+          for size in 1920x1080 1366x768 1024x768 820x1180 768x1024 390x844 360x800; do
+            test -s "captures/$size/14-full-page.png"
+            test "$(find "captures/$size" -name '*.png' -type f | wc -l)" -ge 12
+          done
       - name: Save screenshots, intro and observations
         if: always()
         uses: actions/upload-artifact@v4
@@ -120,6 +130,7 @@ jobs:
           retention-days: 30
 
   review-media:
+    if: always() && needs.assemble.result == 'success'
     needs: [assemble, browser]
     runs-on: ubuntu-24.04
     timeout-minutes: 6
@@ -133,17 +144,21 @@ jobs:
         with:
           name: workshop-motion-chromium
           path: /tmp/workshop-media
-      - name: Save a watchable review apart from the site
+      - name: Save the review recording and any complete contact sheets apart from the site
         env:
           DRAFT_SHA: ${{ needs.assemble.outputs.sha }}
+          BROWSER_RESULT: ${{ needs.browser.result }}
         run: |
           set -euo pipefail
           out="review/workshop-motion/$DRAFT_SHA"
           mkdir -p "$out"
-          cp /tmp/workshop-media/{desktop-review.jpg,phone-review.jpg,workshop-scroll.mp4,observations.json} "$out/"
+          cp /tmp/workshop-media/{workshop-scroll.mp4,observations.json} "$out/"
+          for f in desktop-review.jpg phone-review.jpg; do
+            if [[ "$BROWSER_RESULT" == 'success' || -s "/tmp/workshop-media/$f" ]]; then cp "/tmp/workshop-media/$f" "$out/"; fi
+          done
           for f in "$out"/*; do test -s "$f"; done
           git add -- "$out"
           git diff --cached --check
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Attach the tested motion draft review in images and video'
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Attach review video, stills and browser observations for the draft'
           git push origin HEAD:refs/heads/ops/assemble-workshop-motion
           printf 'Review files for %s: %s\n' "$DRAFT_SHA" "$out"
