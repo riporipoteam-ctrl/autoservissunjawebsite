@@ -30,22 +30,22 @@
         });
     }
 
-    // The hero has only three curated photographs. Warm the two following
-    // slides at low fetch priority so a transition never lands on an undecoded
-    // image, including on mobile and lower-powered devices.
-    window.addEventListener("DOMContentLoaded", function () {
-        var heroImages = document.querySelectorAll("#header-carousel .carousel-item:not(.active) picture img");
-        heroImages.forEach(function (slideImg) {
-            slideImg.decoding = "async";
-            slideImg.loading = "eager";
-            if ("fetchPriority" in slideImg) slideImg.fetchPriority = "low";
-        });
-    }, { once: true });
+    // The first hero photo retains fetchpriority=high. Once the page is loaded,
+    // fetch the other two permanent slides on capable connections so Bootstrap
+    // does not reveal an empty lazy image during the automatic transition.
+    if (!saveData && !perfLite) {
+        window.addEventListener("load", function () {
+            var slides = document.querySelectorAll(".carousel-item:not(.active) picture img");
+            slides.forEach(function (slideImg) {
+                slideImg.decoding = "async";
+                slideImg.loading = "eager";
+            });
+        }, { once: true });
+    }
 
-    // v40: one clock owns both the slide rotation and the progress indicator.
-    // Bootstrap still performs the actual transition, but its own interval is
-    // disabled so a busy transition can never drop an automatic next-slide call.
-    // A small no-dependency controller remains available when the CDN is blocked.
+    // v37: deterministic hero auto-rotation. Bootstrap may fail to arrive
+    // on restrictive mobile networks; keep a tiny no-dependency fallback.
+    // Do not spend carousel cycles underneath the full-screen brand intro.
     function setupHeroCarousel() {
         var hero = document.getElementById("header-carousel");
         if (!hero) return;
