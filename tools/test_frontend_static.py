@@ -61,13 +61,21 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn('sms:+387', INDEX)
         self.assertNotIn('Pošalji SMS', INDEX)
 
-    def test_v37_carousel_continues_autoplay_and_has_no_hover_pause(self):
+    def test_v40_carousel_uses_one_clock_for_rotation_and_progress(self):
         self.assertIn('data-bs-pause="false"', INDEX)
-        self.assertIn('data-bs-interval="6500"', INDEX)
+        self.assertIn('data-hero-interval="6500"', INDEX)
+        self.assertNotIn('data-bs-interval=', INDEX)
         self.assertIn('function setupHeroCarousel()', JS)
+        self.assertIn('function scheduleNextSlide()', JS)
+        self.assertIn('interval: false', JS)
+        self.assertIn('slide.bs.carousel', JS)
+        self.assertIn('slid.bs.carousel', JS)
         self.assertIn('document.addEventListener("visibilitychange"', JS)
         self.assertIn('bootstrap.Carousel', JS)
-        self.assertIn('window.setInterval', JS)
+
+    def test_v40_hero_redesign_stylesheet_is_loaded_after_base_css(self):
+        self.assertIn('css/hero-v40.css?v=40.0', INDEX)
+        self.assertTrue((ROOT / "css" / "hero-v40.css").is_file())
 
     def test_v37_mobile_status_badge_wraps_inside_viewport(self):
         self.assertIn('/* v37 mobile status overflow fix */', CSS)
@@ -299,8 +307,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("'url(\"' + safeSrc + '\")'", INDEX)
 
     def test_v214_hero_backdrops_resolve_from_site_root(self):
-        self.assertIn("--hero-photo:url('/assets/photos/", INDEX)
-        self.assertIn("--hero-photo-mobile:url('/assets/photos/", INDEX)
+        self.assertIn("--hero-photo:url('/assets/gallery/", INDEX)
+        self.assertIn("--hero-photo-mobile:url('/assets/gallery/", INDEX)
         self.assertIn("--hero-photo:url('/assets/gallery/", INDEX)
         self.assertNotIn("--hero-photo:url('assets/", INDEX)
 
@@ -570,9 +578,10 @@ class FrontendStaticTests(unittest.TestCase):
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
-        self.assertIn("assets/photos/tt-wide-20260919-d3b7439d.webp", INDEX)
+        self.assertIn("assets/gallery/sunja-tiktok-7627945643490692373.webp", INDEX)
         self.assertIn("assets/gallery/radionica-dijagnostika.webp", INDEX)
         self.assertIn("assets/gallery/kljucevi-programiranje.webp", INDEX)
+        self.assertNotIn("tt-wide-20260919-d3b7439d.webp", INDEX)
         self.assertNotIn("var heroPool =", INDEX)
         self.assertNotIn("heroImg.src = pick", INDEX)
 
