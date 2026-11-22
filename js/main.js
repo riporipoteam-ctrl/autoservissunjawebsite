@@ -140,8 +140,12 @@
                     // Bootstrap instance became busy, never leave the timer dead.
                     window.setTimeout(function () {
                         if (!canRotate()) return;
-                        if (currentIndex() === before && !transitionPending && !cycleTimer) {
-                            scheduleNextSlide();
+                        if (currentIndex() === before && !cycleTimer) {
+                            // Bootstrap can occasionally accept next() but never
+                            // complete its transition. Recover instead of leaving
+                            // the carousel stuck on a full progress bar.
+                            transitionPending = false;
+                            rotateBy(1);
                         }
                     }, 1100);
                     return;
