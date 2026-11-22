@@ -1,0 +1,325 @@
+{
+  "draft": "049b692719c02e00498a10d307f1c2444636f366",
+  "engine": "chromium",
+  "photosCheckedAtEachSize": 5,
+  "minimumPaintedFraction": 0.08,
+  "results": [
+    {
+      "size": "1920x1080",
+      "engine": "chromium",
+      "normal": null,
+      "nativeSection": [
+        0.706,
+        0.531,
+        0.366,
+        0.499,
+        0.367
+      ],
+      "finalSection": [
+        0.706,
+        0.531,
+        0.366,
+        0.499,
+        0.367
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.706,
+        0.531,
+        0.366,
+        0.499,
+        0.367
+      ],
+      "finalFull": [
+        0.706,
+        0.531,
+        0.366,
+        0.499,
+        0.367
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20261108-574b96bf.webp",
+        "assets/photos/tt-20261023-10c0b05f.webp",
+        "assets/photos/tt-20261004-f4d7f335.webp",
+        "assets/photos/tt-20260929-895ecce5.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "1366x768",
+      "engine": "chromium",
+      "normal": null,
+      "nativeSection": [
+        0.793,
+        0.566,
+        0.422,
+        0.593,
+        0.423
+      ],
+      "finalSection": [
+        0.793,
+        0.566,
+        0.422,
+        0.593,
+        0.423
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.793,
+        0.566,
+        0.422,
+        0.593,
+        0.423
+      ],
+      "finalFull": [
+        0.793,
+        0.566,
+        0.422,
+        0.593,
+        0.423
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20261017-8d087753.webp",
+        "assets/photos/tt-20260929-895ecce5.webp",
+        "assets/photos/tt-20261108-234cf88c.webp",
+        "assets/photos/tt-20261023-10c0b05f.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "1024x768",
+      "engine": "chromium",
+      "normal": null,
+      "nativeSection": [
+        0.844,
+        0.583,
+        0.43,
+        0.587,
+        0.428
+      ],
+      "finalSection": [
+        0.844,
+        0.583,
+        0.43,
+        0.587,
+        0.428
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.844,
+        0.583,
+        0.43,
+        0.587,
+        0.428
+      ],
+      "finalFull": [
+        0.844,
+        0.583,
+        0.43,
+        0.587,
+        0.428
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20261017-1d25139f.webp",
+        "assets/photos/tt-20261004-2d828014.webp",
+        "assets/photos/tt-20260929-895ecce5.webp",
+        "assets/photos/tt-20261027-cce4aa19.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "820x1180",
+      "engine": "chromium",
+      "normal": null,
+      "nativeSection": [
+        0.927,
+        0.617,
+        0.485,
+        0.0,
+        0.0
+      ],
+      "finalSection": [
+        0.927,
+        0.617,
+        0.485,
+        0.619,
+        0.485
+      ],
+      "sectionMethod": "stitched from real viewport captures",
+      "nativeFull": [
+        0.927,
+        0.617,
+        0.485,
+        0.619,
+        0.485
+      ],
+      "finalFull": [
+        0.927,
+        0.617,
+        0.485,
+        0.619,
+        0.485
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20261017-1d25139f.webp",
+        "assets/photos/tt-20261108-234cf88c.webp",
+        "assets/photos/tt-20261023-72158e75.webp",
+        "assets/photos/tt-20260924-1ec050e9.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "768x1024",
+      "engine": "chromium",
+      "normal": null,
+      "nativeSection": [
+        0.985,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "finalSection": [
+        0.985,
+        0.709,
+        0.491,
+        0.667,
+        0.489
+      ],
+      "sectionMethod": "stitched from real viewport captures",
+      "nativeFull": [
+        0.985,
+        0.709,
+        0.491,
+        0.667,
+        0.489
+      ],
+      "finalFull": [
+        0.985,
+        0.709,
+        0.491,
+        0.667,
+        0.489
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20260929-08b1947c.webp",
+        "assets/photos/tt-20261031-a32411f2.webp",
+        "assets/photos/tt-20261017-8d087753.webp",
+        "assets/photos/tt-20261017-1d25139f.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "390x844",
+      "engine": "chromium",
+      "normal": [
+        0.729,
+        0.0,
+        0.702,
+        0.698,
+        0.727
+      ],
+      "nativeSection": [
+        0.729,
+        0.749,
+        0.417,
+        0.415,
+        0.726
+      ],
+      "finalSection": [
+        0.729,
+        0.749,
+        0.417,
+        0.415,
+        0.726
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.729,
+        0.749,
+        0.702,
+        0.699,
+        0.727
+      ],
+      "finalFull": [
+        0.729,
+        0.749,
+        0.702,
+        0.699,
+        0.727
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20260924-d643c1cd.webp",
+        "assets/photos/tt-20261023-72158e75.webp",
+        "assets/photos/tt-20261023-10c0b05f.webp",
+        "assets/photos/tt-20261108-574b96bf.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "360x800",
+      "engine": "chromium",
+      "normal": [
+        0.0,
+        0.695,
+        0.69,
+        0.696,
+        0.69
+      ],
+      "nativeSection": [
+        0.734,
+        0.691,
+        0.591,
+        0.597,
+        0.689
+      ],
+      "finalSection": [
+        0.734,
+        0.691,
+        0.591,
+        0.597,
+        0.689
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.734,
+        0.694,
+        0.69,
+        0.696,
+        0.689
+      ],
+      "finalFull": [
+        0.734,
+        0.694,
+        0.69,
+        0.696,
+        0.689
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20261027-cce4aa19.webp",
+        "assets/photos/tt-20261004-f4d7f335.webp",
+        "assets/photos/tt-20261031-a32411f2.webp",
+        "assets/photos/tt-20261023-180d1783.webp"
+      ],
+      "errors": []
+    }
+  ],
+  "failures": [
+    "390x844: gallery pixels or browser errors",
+    "360x800: gallery pixels or browser errors"
+  ]
+}
