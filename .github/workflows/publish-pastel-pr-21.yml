@@ -1,0 +1,100 @@
+name: Publish pastel redesign PR 21
+
+on:
+  push:
+    branches: [ops/publish-pastel-pr-21]
+    paths: ['.github/workflows/publish-pastel-pr-21.yml']
+
+permissions: {}
+
+jobs:
+  merge:
+    if: github.repository == 'riporipoteam-ctrl/autoservissunjawebsite' && github.ref == 'refs/heads/ops/publish-pastel-pr-21'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      stylesheet: ${{ steps.publish.outputs.stylesheet }}
+      art: ${{ steps.publish.outputs.art }}
+      merge_sha: ${{ steps.publish.outputs.merge_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: redesign/pastel-workshop
+      - id: publish
+        name: Version the stylesheet and merge the exact reviewed change
+        env:
+          GH_TOKEN: ${{ github.token }}
+          ENDPOINT: repos/riporipoteam-ctrl/autoservissunjawebsite/pulls/21
+          EXPECTED_HEAD: dc3d92e02bd4b428c87516d27e5e47a7c304bfe0
+          EXPECTED_BASE: c30cb6a1e26b18d213fba5c02b736e2b99b06c39
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+          pr=$(gh api "$ENDPOINT")
+          jq -e --arg head "$EXPECTED_HEAD" --arg base "$EXPECTED_BASE" \
+            '.state == "open" and .head.ref == "redesign/pastel-workshop" and .head.sha == $head and .base.ref == "main" and .base.sha == $base' <<< "$pr" > /dev/null
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          data = p.read_bytes()
+          old = b'href="css/overhaul-v49.css?v=52.0"'
+          new = b'href="css/overhaul-v49.css?v=53.0"'
+          assert data.count(old) == 1 and new not in data
+          p.write_bytes(data.replace(old, new, 1))
+          PY
+          git diff --check
+          git add -- index.html
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Version the pastel stylesheet so returning visitors see the redesign'
+          head=$(git rev-parse HEAD)
+          git push origin HEAD:refs/heads/redesign/pastel-workshop
+          if [ "$(jq -r '.draft' <<< "$pr")" = 'true' ]; then
+            gh pr ready 21 --repo "$GITHUB_REPOSITORY"
+          fi
+          for attempt in 1 2 3 4 5; do
+            pr=$(gh api "$ENDPOINT")
+            if jq -e --arg head "$head" --arg base "$EXPECTED_BASE" '.state == "open" and .draft == false and .head.sha == $head and .base.ref == "main" and .base.sha == $base and .mergeable == true' <<< "$pr" > /dev/null; then
+              break
+            fi
+            sleep 3
+          done
+          jq -e --arg head "$head" --arg base "$EXPECTED_BASE" '.state == "open" and .draft == false and .head.sha == $head and .base.ref == "main" and .base.sha == $base and .mergeable == true' <<< "$pr" > /dev/null
+          result=$(gh api --method PUT "$ENDPOINT/merge" -f sha="$head" -f merge_method=merge)
+          echo "$result" | jq .
+          echo "$result" | jq -e '.merged == true' > /dev/null
+          echo "stylesheet=$(git hash-object css/overhaul-v49.css)" >> "$GITHUB_OUTPUT"
+          echo "art=$(git hash-object assets/workshop-orbit.svg)" >> "$GITHUB_OUTPUT"
+          echo "merge_sha=$(jq -r '.sha' <<< "$result")" >> "$GITHUB_OUTPUT"
+
+  pages:
+    needs: merge
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      pages: write
+    steps:
+      - name: Verify the new page, stylesheet and artwork on autosunja.com
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_CSS: ${{ needs.merge.outputs.stylesheet }}
+          EXPECTED_ART: ${{ needs.merge.outputs.art }}
+          MERGE_SHA: ${{ needs.merge.outputs.merge_sha }}
+        run: |
+          set -euo pipefail
+          base=https://autosunja.com
+          temp=$(mktemp -d)
+          trap 'rm -rf "$temp"' EXIT
+          for attempt in {1..20}; do
+            if curl -fsSL --max-time 8 -H 'Cache-Control: no-cache' "$base/?release=$MERGE_SHA" -o "$temp/home" && grep -Fq 'href="css/overhaul-v49.css?v=53.0"' "$temp/home" && curl -fsSL --max-time 8 "$base/css/overhaul-v49.css?v=53.0" -o "$temp/style" && [ "$(git hash-object "$temp/style")" = "$EXPECTED_CSS" ] && curl -fsSL --max-time 8 "$base/assets/workshop-orbit.svg" -o "$temp/art" && [ "$(git hash-object "$temp/art")" = "$EXPECTED_ART" ]; then
+              echo 'Verified the redesigned homepage, exact stylesheet and artwork on https://autosunja.com/.'
+              exit 0
+            fi
+            if [ "$attempt" = 5 ]; then
+              gh api --method POST repos/riporipoteam-ctrl/autoservissunjawebsite/pages/builds || echo 'Pages build request not accepted; continuing to check the public deployment.'
+            fi
+            sleep 10
+          done
+          echo 'The redesign was merged but the public site could not yet be verified.'
+          exit 1
