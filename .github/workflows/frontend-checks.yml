@@ -4,7 +4,7 @@ on:
   push:
     paths:
       - 'index.html'
-      - 'css/style.css'
+      - 'css/**'
       - 'js/main.js'
       - 'tools/test_frontend_static.py'
       - '.github/workflows/frontend-checks.yml'
