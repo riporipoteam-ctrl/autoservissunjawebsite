@@ -73,9 +73,12 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('document.addEventListener("visibilitychange"', JS)
         self.assertIn('bootstrap.Carousel', JS)
 
-    def test_v40_hero_redesign_stylesheet_is_loaded_after_base_css(self):
-        self.assertIn('css/hero-v40.css?v=40.0', INDEX)
-        self.assertTrue((ROOT / "css" / "hero-v40.css").is_file())
+    def test_v40_redesign_is_reverted_and_original_slide_markup_is_kept(self):
+        self.assertNotIn('css/hero-v40.css', INDEX)
+        self.assertFalse((ROOT / "css" / "hero-v40.css").exists())
+        self.assertNotIn('hero-carousel-v40', INDEX)
+        self.assertNotIn('hero-photo-frame', INDEX)
+        self.assertIn('class="carousel slide"', INDEX)
 
     def test_v37_mobile_status_badge_wraps_inside_viewport(self):
         self.assertIn('/* v37 mobile status overflow fix */', CSS)
