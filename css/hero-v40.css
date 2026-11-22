@@ -367,7 +367,7 @@
     outline: 3px solid #9ddcff !important;
     outline-offset: 3px !important;
 }
-#header-carousel.hero-carousel-v40 .hero-carousel-paused .hero-indicators button.active span {
+#header-carousel.hero-carousel-v40.hero-carousel-paused .hero-indicators button.active span {
     animation-play-state: paused;
 }
 
