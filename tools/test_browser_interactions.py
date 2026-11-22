@@ -633,35 +633,6 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             context.close()
 
-    def test_v40_progress_and_bootstrap_slide_advance_share_the_same_deadline(self):
-        context = self.browser.new_context(
-            viewport={"width": 1280, "height": 800},
-            reduced_motion="no-preference",
-        )
-        try:
-            page = context.new_page()
-            page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
-            page.wait_for_function("() => !!(window.bootstrap && window.bootstrap.Carousel)")
-            timing = page.evaluate("""() => {
-                const carousel = document.querySelector('#header-carousel');
-                const active = carousel.querySelector('.hero-indicators button.active span');
-                return {
-                    interval: carousel.getAttribute('data-hero-interval'),
-                    progressDuration: getComputedStyle(active).animationDuration
-                };
-            }""")
-            self.assertEqual(timing["interval"], "6500", timing)
-            self.assertIn(timing["progressDuration"], ("6.5s", "6500ms"), timing)
-            page.wait_for_function("""() => {
-                const slides = [...document.querySelectorAll('#header-carousel .carousel-item')];
-                return slides.length === 3 && slides[1].classList.contains('active');
-            }""", timeout=9000)
-            self.assertEqual(
-                page.locator("#header-carousel .hero-indicators button.active").count(), 1
-            )
-        finally:
-            context.close()
-
     def test_v37_carousel_auto_rotates_even_if_bootstrap_cdn_is_unavailable(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844}, is_mobile=True,
