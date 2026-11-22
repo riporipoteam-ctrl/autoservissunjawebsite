@@ -263,11 +263,11 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("var(--hero-photo-mobile)", CSS)
         self.assertIn('id="heroMainSrc"', INDEX)
 
-    def test_v21_preloads_fixed_following_slides_after_first_load(self):
-        self.assertIn('window.addEventListener("load", function ()', JS)
-        self.assertIn('querySelectorAll(".carousel-item:not(.active) picture img")', JS)
+    def test_v40_preloads_following_slides_before_first_transition(self):
+        self.assertIn('window.addEventListener("DOMContentLoaded", function ()', JS)
+        self.assertIn('querySelectorAll("#header-carousel .carousel-item:not(.active) picture img")', JS)
         self.assertIn('slideImg.loading = "eager"', JS)
-        self.assertIn('if (!saveData && !perfLite)', JS)
+        self.assertIn('slideImg.fetchPriority = "low"', JS)
 
     def test_v21_glass_is_only_on_three_requested_controls(self):
         self.assertNotIn("sunja-liquid-", INDEX + CSS + JS)
