@@ -9,129 +9,11 @@
 
     var connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
     var saveData = !!(connection && connection.saveData);
-    var effectiveType = connection && typeof connection.effectiveType === "string"
-        ? connection.effectiveType.toLowerCase() : "";
-    var slowConnection = /^(slow-2g|2g|3g)$/.test(effectiveType);
-    var deviceMemory = typeof navigator.deviceMemory === "number"
-        ? navigator.deviceMemory : null;
-    var hardwareConcurrency = typeof navigator.hardwareConcurrency === "number"
-        ? navigator.hardwareConcurrency : null;
-    var lowMemory = deviceMemory !== null && deviceMemory <= 2;
-    var lowCpu = hardwareConcurrency !== null && hardwareConcurrency <= 2;
+    var lowMemory = typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 2;
+    var lowCpu = typeof navigator.hardwareConcurrency === "number" && navigator.hardwareConcurrency <= 2;
     var perfLite = saveData || lowMemory || lowCpu;
-    // Device age/model is not reliably exposed (and guessing it is brittle).
-    // Upgrade motion only when both reported capability hints are strong.
-    var motionRich = !reduceMotion && !perfLite && deviceMemory !== null &&
-        hardwareConcurrency !== null && deviceMemory >= 8 && hardwareConcurrency >= 6;
-    var root = document.documentElement;
-    var pointerCoarse = !!(window.matchMedia && window.matchMedia("(pointer: coarse)").matches);
-    var hoverCapable = !!(window.matchMedia && window.matchMedia("(hover: hover)").matches);
-    var width = window.innerWidth || document.documentElement.clientWidth || 0;
-    var viewport = width < 480 ? "compact" : width < 768 ? "mobile" : width < 1200 ? "tablet" : "desktop";
-    var connectionClass = slowConnection ? "slow" : (effectiveType || "unknown");
-    root.dataset.sunjaDeviceProfile = [viewport, pointerCoarse ? "touch" : "pointer",
-        hoverCapable ? "hover" : "no-hover", perfLite ? "lite" : "full",
-        reduceMotion ? "reduced" : "motion", connectionClass].join("-");
-    root.classList.toggle("perf-lite", perfLite);
-    root.classList.toggle("motion-rich", motionRich);
-    root.classList.toggle("motion-standard", !motionRich && !perfLite && !reduceMotion);
-    root.classList.toggle("motion-reduced", reduceMotion);
 
-    // Stable media loading: every important image has a committed local
-    // fallback. Hidden Bootstrap service tabs are made eager immediately
-    // before activation so Safari does not keep a lazy image blank in a
-    // previously display:none panel.
-    function wireReliableImage(img) {
-        if (!img || img.dataset.reliableImageWired === "1") return;
-        img.dataset.reliableImageWired = "1";
-        var frame = img.closest(".service-media-frame");
-        function markReady() {
-            img.classList.add("image-ready");
-            img.classList.remove("image-failed");
-            if (frame) {
-                frame.classList.add("image-ready");
-                frame.classList.remove("image-failed");
-            }
-        }
-        function recoverImage() {
-            var fallback = img.getAttribute("data-fallback-src");
-            // The inline handler in <head> may already have switched src
-            // before this bundle attached its own error listener.
-            if (img.dataset.fallbackApplied === "1" && fallback === img.getAttribute("src")) {
-                window.setTimeout(function () {
-                    if (img.complete && img.naturalWidth === 0) {
-                        img.classList.add("image-failed");
-                        if (frame) frame.classList.add("image-failed");
-                    }
-                }, 0);
-                return;
-            }
-            if (fallback && img.dataset.fallbackApplied !== "1" &&
-                fallback !== img.getAttribute("src")) {
-                img.dataset.fallbackApplied = "1";
-                img.loading = "eager";
-                var picture = img.closest("picture");
-                var source = picture && picture.querySelector("source");
-                if (source) source.srcset = fallback;
-                var slide = img.closest(".carousel-item");
-                var backdrop = slide && slide.querySelector(".hero-bg");
-                if (backdrop) {
-                    var localUrl = "url('/" + fallback + "')";
-                    backdrop.style.setProperty("--hero-photo", localUrl);
-                    backdrop.style.setProperty("--hero-photo-mobile", localUrl);
-                }
-                img.src = fallback;
-                return;
-            }
-            img.classList.add("image-failed");
-            if (frame) frame.classList.add("image-failed");
-        }
-        img.addEventListener("load", markReady);
-        img.addEventListener("error", recoverImage);
-        // The first hero image may finish (or fail) before this script runs.
-        if (img.complete) {
-            if (img.naturalWidth > 0) markReady();
-            else recoverImage();
-        }
-    }
-
-    var stableImages = Array.prototype.slice.call(document.querySelectorAll(
-        "#header-carousel picture img[data-fallback-src], #usluge img.service-image"
-    ));
-    stableImages.forEach(wireReliableImage);
-
-    var heroPrimary = document.getElementById("heroMainImg");
-    if (heroPrimary) {
-        heroPrimary.loading = "eager";
-        heroPrimary.fetchPriority = "high";
-    }
-    // Prepare only the selected service. The remaining five stay lazy to
-    // avoid downloading every large portrait image on older/limited devices.
-    function prepareServiceImage(button) {
-        var selector = button && button.getAttribute("data-bs-target");
-        var panel = selector && document.querySelector(selector);
-        var image = panel && panel.querySelector("img.service-image");
-        if (!image) return;
-        wireReliableImage(image);
-        image.loading = "eager";
-        image.fetchPriority = "high";
-        if (image.complete && image.naturalWidth > 0) {
-            if (typeof image.decode === "function") image.decode().catch(function () {});
-            image.classList.add("image-ready");
-        }
-    }
-    var serviceButtons = document.querySelectorAll(
-        "#usluge .service-nav-grid [data-bs-toggle='pill']"
-    );
-    serviceButtons.forEach(function (button) {
-        button.addEventListener("click", function () {
-            prepareServiceImage(button);
-        }, true);
-    });
-    var activeServiceButton = document.querySelector(
-        "#usluge .service-nav-grid .nav-link.active"
-    );
-    if (activeServiceButton) prepareServiceImage(activeServiceButton);
+    if (perfLite) document.documentElement.classList.add("perf-lite");
 
     // Reveal only when useful. All content is visible and clickable before
     // this runs; nothing is blocked behind an animation or a loading screen.
@@ -151,7 +33,7 @@
     // The first hero photo retains fetchpriority=high. Once the page is loaded,
     // fetch the other two permanent slides on capable connections so Bootstrap
     // does not reveal an empty lazy image during the automatic transition.
-    if (!saveData && !slowConnection && !perfLite) {
+    if (!saveData && !perfLite) {
         window.addEventListener("load", function () {
             var slides = document.querySelectorAll(".carousel-item:not(.active) picture img");
             slides.forEach(function (slideImg) {
@@ -366,14 +248,9 @@
             window.location.hash = id;
         }
         if (link.closest("#navbarCollapse")) collapseMobileMenu();
-        // target.scrollIntoView( is intentionally avoided in embedded previews;
-        // calculate the sticky-header offset and use window.scrollTo instead.
-        var header = document.querySelector(".nav-bar");
-        var offset = header ? header.getBoundingClientRect().height : 0;
-        var destination = Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - offset - 10);
-        window.scrollTo({
-            top: destination,
-            behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth"
+        target.scrollIntoView({
+            behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth",
+            block: "start"
         });
         return true;
     }

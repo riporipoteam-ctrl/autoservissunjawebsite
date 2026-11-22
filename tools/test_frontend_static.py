@@ -12,108 +12,6 @@ JS = (ROOT / "js" / "main.js").read_text(encoding="utf-8")
 
 
 class FrontendStaticTests(unittest.TestCase):
-    def test_v41_service_photos_are_curated_unique_and_not_randomized(self):
-        import re
-        from html.parser import HTMLParser
-        service_tags = [
-            tag for tag in re.findall(r'<img[^>]+>', INDEX)
-            if re.search(r'\bservice-image\b', tag)
-        ]
-        images = [
-            re.search(r'(?<!fallback-)\bsrc="([^"]+)"', tag).group(1)
-            for tag in service_tags
-            if re.search(r'(?<!fallback-)\bsrc="([^"]+)"', tag)
-        ]
-        self.assertEqual(6, len(images), "Every service must keep exactly one real image")
-        self.assertEqual(6, len(set(images)), "Service images must never repeat")
-        self.assertEqual({
-            "assets/services/autodijagnostika.webp",
-            "assets/services/peugeot-servis.webp",
-            "assets/services/mali-servis.webp",
-            "assets/services/veliki-servis.webp",
-            "assets/services/autoelektrika.webp",
-            "assets/services/kljucevi-daljinski.webp",
-        }, set(images))
-        self.assertTrue(all(src.startswith("assets/services/") for src in images))
-        for src in images:
-            self.assertTrue((ROOT / src).is_file(), f"Missing service photo: {src}")
-        self.assertNotIn("data-svc-cat=", INDEX)
-        self.assertNotIn("querySelectorAll('[data-svc-cat]')", INDEX)
-        self.assertIn("service-nav-grid", INDEX)
-
-    def test_v41_mobile_service_grid_and_panel_are_responsive(self):
-        self.assertIn("#usluge .service-nav-grid", CSS)
-        self.assertIn("grid-template-columns: repeat(2, minmax(0, 1fr))", CSS)
-        self.assertIn("service-media-frame", INDEX)
-        self.assertIn("object-fit: contain", CSS)
-        self.assertIn("@media (prefers-reduced-motion: reduce)", CSS)
-        self.assertIn(".service-nav-grid .nav-link", CSS)
-
-    def test_v41_hero_uses_fade_and_timed_progress_that_matches_autoplay(self):
-        self.assertIn('id="header-carousel" class="carousel slide carousel-fade"', INDEX)
-        self.assertIn("animation: heroFill 6.5s linear forwards", CSS)
-        self.assertIn("6500", JS)
-        self.assertIn("#header-carousel .carousel-item.active .hero-bg", CSS)
-        self.assertIn("@keyframes sunjaHeroBackdrop", CSS)
-
-    def test_v41_site_wide_ui_polish_is_scoped_and_accessible(self):
-        for selector in ("#o-nama", "#usluge", "#galerija", "#recenzije",
-                         "#lokacija", "#kontakt", "#siteFooter"):
-            self.assertIn(selector, CSS)
-        self.assertIn("scroll-margin-top", CSS)
-        self.assertIn("prefers-reduced-motion: reduce", CSS)
-        self.assertIn(":focus-visible", CSS)
-        self.assertIn("perf-lite", CSS)
-
-    def test_v42_tablet_nav_fits_and_contact_copy_is_high_contrast(self):
-        self.assertIn("@media (min-width: 992px) and (max-width: 1199.98px)", CSS)
-        self.assertIn(".navbar.nav-bar .navbar-brand { padding-inline: 32px !important; }", CSS)
-        self.assertIn(".navbar.nav-bar .navbar-nav .nav-link { margin-right: 23px; }", CSS)
-        self.assertIn("#kontakt .contact-spotlight-copy { color: #f4f8ff !important; }", CSS)
-
-    def test_v43_readability_palette_and_progressive_motion_profiles(self):
-        self.assertIn("--sunja-review-body: #33465c", CSS)
-        self.assertIn("--sunja-review-muted: #52657c", CSS)
-        self.assertIn("root.classList.toggle(\"motion-rich\", motionRich)", JS)
-        self.assertIn("root.classList.toggle(\"motion-standard\"", JS)
-        self.assertIn("root.classList.toggle(\"motion-reduced\", reduceMotion)", JS)
-        self.assertIn("deviceMemory >= 8 && hardwareConcurrency >= 6", JS)
-        self.assertIn("html.perf-lite:not(.sunja-intro-active)", CSS)
-
-    def test_v40_google_and_browser_favicons_are_square_and_accessible(self):
-        import struct
-        self.assertIn('<link rel="icon" href="/favicon.ico"', INDEX)
-        self.assertIn('href="/favicon-96x96.png"', INDEX)
-        self.assertIn('href="/favicon-48x48.png"', INDEX)
-        self.assertIn('href="/apple-touch-icon.png"', INDEX)
-        self.assertIn('href="/site.webmanifest"', INDEX)
-        self.assertNotIn('<link href="assets/sunja-logo-transparent.png" rel="icon"', INDEX)
-        for size in (48, 96, 192, 512):
-            asset = ROOT / f"favicon-{size}x{size}.png"
-            self.assertTrue(asset.is_file(), f"Missing {asset}")
-            header = asset.read_bytes()[:24]
-            self.assertTrue(header.startswith(bytes.fromhex("89504e470d0a1a0a")))
-            self.assertEqual(struct.unpack(">II", header[16:24]), (size, size))
-        ico = (ROOT / "favicon.ico").read_bytes()
-        self.assertEqual(ico[:4], bytes.fromhex("00000100"))
-        self.assertGreaterEqual(int.from_bytes(ico[4:6], "little"), 3)
-        apple = (ROOT / "apple-touch-icon.png").read_bytes()
-        self.assertEqual(struct.unpack(">II", apple[16:24]), (180, 180))
-        manifest = json.loads((ROOT / "site.webmanifest").read_text(encoding="utf-8"))
-        self.assertEqual(manifest["name"], "Auto Servis Šunja")
-        self.assertIn("/favicon-512x512.png", [item["src"] for item in manifest["icons"]])
-
-    def test_v40_map_library_warms_during_intro_without_starting_globe_early(self):
-        self.assertIn("function primeMapLibrary()", INDEX)
-        self.assertIn("sunja:intro-experience-start", INDEX)
-        self.assertIn("window.addEventListener('sunja:intro-experience-start', primeMapLibrary", INDEX)
-        self.assertIn("window.setTimeout(startGlobe, 90)", INDEX)
-        self.assertIn("if (globeStarted && !fellBack) initGlobe()", INDEX)
-        self.assertIn("window.addEventListener('sunja:intro-finished'", INDEX)
-        self.assertIn("function settleMapScroll()", INDEX)
-        self.assertIn("wrap.classList.add('globe-complete')", INDEX)
-
-
     def test_v38_logo_restarts_from_a_fresh_animation_decoder(self):
         # The v37 preload was free-running before the visible intro, which
         # left Safari showing the WebP's final frame instead of the drawing.
@@ -278,8 +176,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("theme-color", INDEX)
         self.assertNotIn("footer-theme-observer", JS)
         self.assertIn("background-color:#0b2154", CSS)
-        self.assertIn("css/style.css?v=47.0", INDEX)
-        self.assertIn("js/main.js?v=40.0", INDEX)
+        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v36_intro_has_no_native_player_controls_or_interaction(self):
         self.assertIn('id="sunjaIntro"', INDEX)
@@ -361,7 +259,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('window.addEventListener("load", function ()', JS)
         self.assertIn('querySelectorAll(".carousel-item:not(.active) picture img")', JS)
         self.assertIn('slideImg.loading = "eager"', JS)
-        self.assertIn('if (!saveData && !slowConnection && !perfLite)', JS)
+        self.assertIn('if (!saveData && !perfLite)', JS)
 
     def test_v21_glass_is_only_on_three_requested_controls(self):
         self.assertNotIn("sunja-liquid-", INDEX + CSS + JS)
@@ -384,7 +282,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("height: auto !important;", CSS)
         self.assertIn("--hero-photo:", INDEX)
         self.assertIn("var(--hero-photo)", CSS)
-        for source in ("assets/slides/slide-02.webp", "assets/slides/slide-03.webp"):
+        for source in ("radionica-dijagnostika.webp", "kljucevi-programiranje.webp"):
             self.assertIn(source, INDEX)
         self.assertNotIn("heroImg.src = pick", INDEX)
 
@@ -401,19 +299,9 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("'url(\"' + safeSrc + '\")'", INDEX)
 
     def test_v214_hero_backdrops_resolve_from_site_root(self):
-        fixed_slides = (
-            "assets/gallery/sunja-tiktok-7627945643490692373.webp",
-            "assets/slides/slide-02.webp",
-            "assets/slides/slide-03.webp",
-        )
-        for src in fixed_slides:
-            self.assertIn(src, INDEX)
-            self.assertTrue((ROOT / src).is_file(), f"Missing fixed slide photo: {src}")
-        workshop = "assets/gallery/sunja-tiktok-7627945643490692373.webp"
-        self.assertIn("--hero-photo:url('/" + workshop + "')", INDEX)
-        self.assertIn("--hero-photo-mobile:url('/" + workshop + "')", INDEX)
-        self.assertIn("--hero-photo:url('/assets/slides/slide-02.webp')", INDEX)
-        self.assertIn("--hero-photo:url('/assets/slides/slide-03.webp')", INDEX)
+        self.assertIn("--hero-photo:url('/assets/photos/", INDEX)
+        self.assertIn("--hero-photo-mobile:url('/assets/photos/", INDEX)
+        self.assertIn("--hero-photo:url('/assets/gallery/", INDEX)
         self.assertNotIn("--hero-photo:url('assets/", INDEX)
 
     def test_v214_section_links_activate_on_first_completed_touch(self):
@@ -469,8 +357,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("#o-nama p.mb-4", CSS)
         self.assertIn(".container-xxl.py-5", CSS)
         self.assertIn("min-height: 44px", CSS)
-        self.assertIn("css/style.css?v=47.0", INDEX)
-        self.assertIn("js/main.js?v=40.0", INDEX)
+        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v212_glass_optical_rims_are_scoped(self):
         self.assertNotIn("sunja-liquid-", CSS + INDEX)
@@ -497,12 +385,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("min-height: calc(96px", CSS)
 
     def test_cache_versions_are_bumped(self):
-        self.assertIn("css/style.css?v=47.0", INDEX)
-        self.assertIn("js/main.js?v=40.0", INDEX)
-        self.assertIn("/* v42 — full post-intro review redesign.", CSS)
-        self.assertIn("html:not(.sunja-intro-active) #header-carousel", CSS)
-        self.assertIn("#usluge .service-nav-grid", CSS)
-        self.assertIn("font-size: 16px !important;", CSS)
+        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("js/main.js?v=37.0", INDEX)
 
     def test_v231_service_descriptions_are_short_without_filler(self):
         self.assertNotIn("Upalila se lampica na instrument tabli?", INDEX)
@@ -580,32 +464,6 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('data-gallery-link', INDEX)
         self.assertIn('.gallery-tile-link', CSS)
 
-    def test_gallery_has_committed_fallbacks_and_recovers_failed_refresh_images(self):
-        tags = re.findall(r'<img\b[^>]*\bdata-gallery-img\b[^>]*>', INDEX)
-        self.assertEqual(5, len(tags), "The gallery must start with five local images")
-        fallbacks = []
-        for tag in tags:
-            src_match = re.search(r'\bsrc="([^"]+)"', tag)
-            fallback_match = re.search(r'\bdata-fallback-src="([^"]+)"', tag)
-            self.assertIsNotNone(src_match, "Every gallery tile needs an initial image")
-            self.assertIsNotNone(fallback_match, "Every gallery tile needs a local fallback")
-            src = src_match.group(1)
-            fallback = fallback_match.group(1)
-            self.assertEqual(fallback, src, "Each gallery tile must be populated before photos.json loads")
-            fallbacks.append(fallback)
-            self.assertTrue((ROOT / fallback).is_file(), f"Missing gallery fallback: {fallback}")
-        self.assertEqual(5, len(set(fallbacks)), "Gallery fallback images must be distinct")
-        self.assertTrue(all(src.startswith("assets/gallery/tiktok-fallback-") for src in fallbacks))
-        self.assertIn("img.addEventListener('error'", INDEX)
-        self.assertIn("img.src = fallback;", INDEX)
-        self.assertIn("img.alt = img.getAttribute('data-fallback-alt')", INDEX)
-        self.assertIn("var item = seq[idx];", INDEX)
-        self.assertIn("if (!item) return;", INDEX)
-        self.assertNotIn("seq[idx % seq.length]", INDEX)
-        self.assertIn("Only genuine TikTok posts may rotate the five gallery tiles.", INDEX)
-        self.assertIn("var isTikTok = source === 'tiktok'", INDEX)
-        self.assertNotIn("heroMainImg.src = pick", INDEX)
-
     def test_type_and_buttons_are_compact(self):
         self.assertIn('/* v20.0: instant, compact and loader-free */', CSS)
         self.assertIn('#o-nama h1', CSS)
@@ -620,12 +478,10 @@ class FrontendStaticTests(unittest.TestCase):
 
     def test_v30_map_settle_restores_normal_flow_and_smooths_camera(self):
         self.assertIn("function settleMapScroll()", INDEX)
-        self.assertNotIn("window.scrollBy(0, shift)", INDEX)
-        self.assertIn("window.scrollTo({ top: Math.max(0, beforeScrollY + shift), behavior: 'instant' });", INDEX)
-        self.assertIn("window.requestAnimationFrame(function () {", INDEX)
+        self.assertIn("window.scrollBy(0, shift)", INDEX)
         self.assertIn("contactSection.getBoundingClientRect().top", INDEX)
         self.assertIn("map.easeTo({", INDEX)
-        self.assertIn("duration: 180", INDEX)
+        self.assertIn("duration: 320", INDEX)
         self.assertIn("/* v30: settled map takes one screen, not a second swipe */", CSS)
         self.assertIn("#globeScroll.globe-complete {", CSS)
         self.assertIn("height: 100svh !important", CSS)
@@ -640,7 +496,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("globe-complete", INDEX)
 
     def test_v29_map_avoids_scroll_frame_render_flood_and_starts_early(self):
-        self.assertIn("var CAMERA_MIN_FRAME_MS = 80;", INDEX)
+        self.assertIn("var CAMERA_MIN_FRAME_MS = 140;", INDEX)
         self.assertIn("lastCameraAt", INDEX)
         self.assertIn("progress - lastMapProgress", INDEX)
         self.assertIn("rootMargin: '850px 0px'", INDEX)
@@ -666,8 +522,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("scheduleEarlyGlobeStart()", INDEX)
         self.assertIn("window.addEventListener('load', scheduleEarlyGlobeStart", INDEX)
         self.assertIn("cancelPendingTileRequestsWhileZooming: false", INDEX)
-        self.assertIn("var CAMERA_MIN_FRAME_MS = 80;", INDEX)
-        self.assertIn("duration: 180", INDEX)
+        self.assertIn("var CAMERA_MIN_FRAME_MS = 140;", INDEX)
+        self.assertIn("duration: 320", INDEX)
         self.assertIn("rootMargin: '850px 0px'", INDEX)
         self.assertIn("setShopMarker(true)", INDEX)
         self.assertIn("function settleMapScroll()", INDEX)
@@ -698,8 +554,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("tt-20261110-5ab64c5a", INDEX)
         self.assertNotIn("tt-wide-01.webp", INDEX)
         self.assertNotIn("tt-01.webp", INDEX)
-        self.assertIn("assets/gallery/sunja-tiktok-7627945643490692373.webp", INDEX)
-        self.assertNotIn("assets/slides/slide-01-wide.webp", INDEX)
+        self.assertIn("tt-20260919-d3b7439d.webp", INDEX)
         self.assertNotIn("aboutPhoto.src = aboutSrc", INDEX)
 
     def test_images_are_not_presented_with_blur_effects(self):
@@ -710,31 +565,14 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("display: none !important;", CSS)
 
         self.assertIn("data-about-photo", INDEX)
-        self.assertIn("css/style.css?v=47.0", INDEX)
-        self.assertIn("js/main.js?v=40.0", INDEX)
+        self.assertIn("css/style.css?v=39.0", INDEX)
+        self.assertIn("js/main.js?v=37.0", INDEX)
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
-        fixed_slides = (
-            "assets/gallery/sunja-tiktok-7627945643490692373.webp",
-            "assets/slides/slide-02.webp",
-            "assets/slides/slide-03.webp",
-        )
-        carousel = INDEX.split("<!-- Carousel Start -->", 1)[1].split("<!-- Carousel End -->", 1)[0]
-        for src in fixed_slides:
-            self.assertIn(src, carousel)
-            self.assertTrue((ROOT / src).is_file(), f"Missing permanent slide photo: {src}")
-        slide_tags = re.findall(r'<img[^>]+>', carousel)
-        slide_sources = [
-            re.search(r'(?<!fallback-)\bsrc="([^"]+)"', tag).group(1)
-            for tag in slide_tags
-            if re.search(r'(?<!fallback-)\bsrc="([^"]+)"', tag)
-        ]
-        self.assertEqual([
-            "assets/gallery/sunja-tiktok-7627945643490692373.webp",
-            "assets/slides/slide-02.webp",
-            "assets/slides/slide-03.webp",
-        ], slide_sources)
+        self.assertIn("assets/photos/tt-wide-20260919-d3b7439d.webp", INDEX)
+        self.assertIn("assets/gallery/radionica-dijagnostika.webp", INDEX)
+        self.assertIn("assets/gallery/kljucevi-programiranje.webp", INDEX)
         self.assertNotIn("var heroPool =", INDEX)
         self.assertNotIn("heroImg.src = pick", INDEX)
 
@@ -778,97 +616,6 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("globe-complete", INDEX)
         self.assertNotIn("sunjaV19Scanner", CSS)
 
-    def test_v45_hero_uses_one_large_photo_layer_with_contrast(self):
-        self.assertIn("/* v45 — make the original workshop photos the hero", CSS)
-        self.assertIn("width: 52%;", CSS)
-        self.assertIn("background: linear-gradient(90deg,", CSS)
-        self.assertIn("object-fit: cover !important;", CSS)
-        self.assertIn("display: none !important;", CSS)
-        self.assertIn("color: #8ed8ff !important;", CSS)
-        self.assertIn("color: #f8fbff !important;", CSS)
-        self.assertIn("color: #e4edf7 !important;", CSS)
-        self.assertIn("css/style.css?v=47.0", INDEX)
-
-    def test_v45_map_waits_for_first_render_and_tolerates_retryable_errors(self):
-        self.assertIn("fallback(sawPreloadError ? 'karta nije odgovorila nakon ponovnog pokušaja' : 'isteklo vrijeme učitavanja');", INDEX)
-        self.assertIn("}, 45000);", INDEX)
-        self.assertIn("map.on('error', function (e) { if (!loaded && e && e.error) sawPreloadError = true; });", INDEX)
-        self.assertNotIn("if (!loaded) fallback('greška karte:", INDEX)
-        self.assertIn("if (fellBack) return;", INDEX)
-
-    def test_testing_route_is_deleted_and_home_remains_the_default(self):
-        self.assertFalse((ROOT / "testing" / "index.html").exists())
-        self.assertIn('id="header-carousel"', INDEX)
-        self.assertNotIn('href="/testing"', INDEX)
-        self.assertNotIn("autosunja.com/testing", INDEX)
-        self.assertNotIn("testing/testing.css", INDEX)
-
-
-    def test_v47_first_hero_uses_the_original_workshop_photo_not_the_old_exterior(self):
-        self.assertIn('src="assets/gallery/sunja-tiktok-7627945643490692373.webp"', INDEX)
-        self.assertIn('srcset="assets/gallery/sunja-tiktok-7627945643490692373.webp"', INDEX)
-        self.assertIn("--hero-photo:url('/assets/gallery/sunja-tiktok-7627945643490692373.webp')", INDEX)
-        self.assertIn('alt="Unutrašnjost radionice Auto Servis Šunja"', INDEX)
-        self.assertNotIn('src="assets/slides/slide-01-wide.webp"', INDEX)
-        self.assertTrue((ROOT / "assets/gallery/sunja-tiktok-7627945643490692373.webp").is_file())
-
-    def test_v47_all_hero_and_service_photos_are_fixed_local_assets_with_fallbacks(self):
-        from html.parser import HTMLParser
-        import re
-        hero_tag = next(
-            tag for tag in re.findall(r'<img[^>]+>', INDEX)
-            if 'id="heroMainImg"' in tag
-        )
-        hero_src = re.search(r'(?<!fallback-)\bsrc="([^"]+)"', hero_tag)
-        self.assertIsNotNone(hero_src)
-        self.assertEqual(
-            "assets/gallery/sunja-tiktok-7627945643490692373.webp", hero_src.group(1)
-        )
-        service_tags = [
-            tag for tag in re.findall(r'<img[^>]+>', INDEX)
-            if re.search(r'\bservice-image\b', tag)
-        ]
-        service_images = []
-        for tag in service_tags:
-            source = re.search(r'(?<!fallback-)\bsrc="([^"]+)"', tag)
-            fallback = re.search(r'\bdata-fallback-src="([^"]+)"', tag)
-            if source and fallback:
-                service_images.append((source.group(1), fallback.group(1)))
-        self.assertEqual(6, len(service_images))
-        sources = [src for src, fallback in service_images]
-        fallbacks = [fallback for src, fallback in service_images]
-        self.assertEqual(6, len(set(sources)))
-        self.assertEqual(6, len(set(fallbacks)))
-        self.assertTrue(all((ROOT / src).is_file() for src in sources))
-        self.assertTrue(all((ROOT / src).is_file() for src in fallbacks))
-        self.assertIn("function wireReliableImage", JS)
-        self.assertIn('img.dataset.fallbackApplied = "1"', JS)
-        self.assertIn('img.loading = "eager"', JS)
-        self.assertIn("service-image", JS)
-
-    def test_v47_inline_image_recovery_is_available_before_main_bundle(self):
-        self.assertIn("window.sunjaRecoverImage = function (image)", INDEX)
-        self.assertIn('onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)"', INDEX)
-        self.assertLess(INDEX.index("window.sunjaRecoverImage = function (image)"),
-                        INDEX.index('<script src="js/main.js?v=40.0"></script>'))
-        self.assertIn("fallbackApplied", JS)
-        self.assertIn('js/main.js?v=40.0', INDEX)
-
-    def test_v47_only_tiktok_gallery_items_can_rotate(self):
-        self.assertIn("source === 'tiktok' || href.indexOf('tiktok.com') > -1", INDEX)
-        self.assertIn("document.querySelectorAll('[data-gallery-img]')", INDEX)
-        self.assertNotIn("heroMainImg.src =", INDEX)
-        self.assertNotIn("service-image.src =", INDEX)
-        self.assertIn("data-gallery-img", INDEX)
-        self.assertIn("function wireReliableImage", JS)
-
-    def test_v47_cache_versions_and_cinematic_motion_rules_are_present(self):
-        self.assertIn('css/style.css?v=47.0', INDEX)
-        self.assertIn('js/main.js?v=40.0', INDEX)
-        self.assertIn("@keyframes sunjaV47HeroImage", CSS)
-        self.assertIn("@keyframes sunjaV47SectionReveal", CSS)
-        self.assertIn("prefers-reduced-motion: reduce", CSS)
-        self.assertIn("html.perf-lite", CSS)
 
 if __name__ == "__main__":
     unittest.main()

@@ -54,7 +54,7 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Auto Servis Šunja Goražde | Dijagnostika, servis i ključevi">
     <meta property="og:description" content="Servis i popravke za sve marke vozila: dijagnostika, mali i veliki servis, autoelektrika, ključevi i daljinski. Hajra Lakovića 38, Goražde, 061 297 847.">
-    <meta property="og:image" content="https://autosunja.com/assets/gallery/sunja-tiktok-7627945643490692373.webp">
+    <meta property="og:image" content="https://autosunja.com/assets/photos/tt-wide-20260919-d3b7439d.webp">
     <meta property="og:url" content="https://autosunja.com/">
     <meta name="twitter:card" content="summary_large_image">
     <!-- Search Console-friendly canonical details for this actual workshop.
@@ -71,7 +71,7 @@
       ],
       "url": "https://autosunja.com/",
       "description": "Auto servis u Goraždu: autodijagnostika, mali i veliki servis, autoelektrika, ključevi i daljinski za automobile.",
-      "image": "https://autosunja.com/assets/gallery/sunja-tiktok-7627945643490692373.webp",
+      "image": "https://autosunja.com/assets/photos/tt-wide-20260919-d3b7439d.webp",
       "logo": "https://autosunja.com/assets/sunja-logo-transparent.png",
       "telephone": "+38761297847",
       "address": {
@@ -110,39 +110,8 @@
     }
     </script>
 
-    <!-- Square original Šunja emblem: Google Search, browser tabs and iOS. 
-         Keep stable public URLs so Google can recrawl the icon. -->
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
-    <link rel="icon" href="/favicon-48x48.png" type="image/png" sizes="48x48">
-    <link rel="icon" href="/favicon-96x96.png" type="image/png" sizes="96x96">
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
-    <link rel="manifest" href="/site.webmanifest">
-    <!-- Inline image recovery is available before the main bundle loads.
-         This prevents an early Safari/WebKit image error from leaving a blank
-         slide or service panel while the page JavaScript is still starting. -->
-    <script>
-    window.sunjaRecoverImage = function (image) {
-        if (!image || image.dataset.fallbackApplied === "1") return;
-        var fallback = image.getAttribute("data-fallback-src");
-        if (!fallback || fallback === image.getAttribute("src")) return;
-        image.dataset.fallbackApplied = "1";
-        if (image.hasAttribute("data-gallery-img")) {
-            image.alt = image.getAttribute("data-fallback-alt") || image.alt;
-        }
-        image.loading = "eager";
-        var picture = image.closest("picture");
-        var source = picture && picture.querySelector("source");
-        if (source) source.srcset = fallback;
-        var slide = image.closest(".carousel-item");
-        var backdrop = slide && slide.querySelector(".hero-bg");
-        if (backdrop) {
-            var localUrl = "url('/" + fallback + "')";
-            backdrop.style.setProperty("--hero-photo", localUrl);
-            backdrop.style.setProperty("--hero-photo-mobile", localUrl);
-        }
-        image.src = fallback;
-    };
-    </script>
+    <!-- Favicon -->
+    <link href="assets/sunja-logo-transparent.png" rel="icon" type="image/png">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -150,7 +119,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700&family=Ubuntu:wght@400;500&display=swap" rel="stylesheet">
 
     <!-- Icon Font Stylesheet -->
-    <link href="lib/fontawesome/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
 
     <!-- Libraries Stylesheet -->
@@ -165,9 +134,7 @@
     <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 
     <!-- Template Stylesheet -->
-    <link href="css/style.css?v=47.0" rel="stylesheet">
-    <!-- Local review design system; intro and interaction mechanics remain in the base sheet. -->
-    <link href="css/overhaul-v49.css?v=53.0" rel="stylesheet">
+    <link href="css/style.css?v=39.0" rel="stylesheet">
 </head>
 
 <body>
@@ -246,9 +213,6 @@
             window.clearTimeout(stillTimer);
             overlay.classList.remove('sunja-intro-is-static');
             overlay.classList.add('sunja-intro-show-experience');
-            // Start downloading the map library while this text animates.
-            // Avoid WebGL initialization until the intro has fully closed.
-            window.dispatchEvent(new Event('sunja:intro-experience-start'));
             experienceTimer = window.setTimeout(function () {
                 experienceDone = true;
                 maybeFinish();
@@ -338,7 +302,7 @@
     })();
     </script>
 <!-- Topbar Start -->
-    <div class="container-fluid bg-light p-0 workshop-topbar">
+    <div class="container-fluid bg-light p-0">
         <div class="row gx-0 d-none d-lg-flex">
             <div class="col-lg-7 px-5 text-start">
                 <div class="h-100 d-inline-flex align-items-center py-3 me-4">
@@ -375,7 +339,7 @@
         <a href="#pocetna" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
             <img src="assets/sunja-logo-transparent.webp" alt="Auto Servis Šunja">
         </a>
-        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-label="Meni" aria-controls="navbarCollapse" aria-expanded="false">
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarCollapse">
@@ -395,11 +359,11 @@
 
     <!-- Carousel Start -->
     <div class="container-fluid p-0 mb-5" id="pocetna">
-        <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true">
+        <div id="header-carousel" class="carousel slide" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true">
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <div class="hero-bg" id="heroMainBg" style="--hero-photo:url('/assets/gallery/sunja-tiktok-7627945643490692373.webp');--hero-photo-mobile:url('/assets/gallery/sunja-tiktok-7627945643490692373.webp')"></div>
-                    <picture><source id="heroMainSrc" media="(max-width: 767.98px)" srcset="assets/gallery/sunja-tiktok-7627945643490692373.webp"><img class="w-100" id="heroMainImg" src="assets/gallery/sunja-tiktok-7627945643490692373.webp" data-fallback-src="assets/photos/tt-wide-20261120-3d31739d.webp" alt="Unutrašnjost radionice Auto Servis Šunja" width="900" height="1600" loading="eager" decoding="async" fetchpriority="high" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)"></picture>
+                    <div class="hero-bg" id="heroMainBg" style="--hero-photo:url('/assets/photos/tt-wide-20260919-d3b7439d.webp');--hero-photo-mobile:url('/assets/photos/tt-20260919-d3b7439d.webp')"></div>
+                    <picture><source id="heroMainSrc" media="(max-width: 767.98px)" srcset="assets/photos/tt-20260919-d3b7439d.webp"><img class="w-100" id="heroMainImg" src="assets/photos/tt-wide-20260919-d3b7439d.webp" alt="Ulaz i natpis AUTOSERVIS, Auto Servis Šunja" fetchpriority="high"></picture>
                     <div class="carousel-caption d-flex align-items-center">
                         <div class="container">
                             <div class="row align-items-center justify-content-center justify-content-lg-start">
@@ -417,8 +381,8 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <div class="hero-bg" style="--hero-photo:url('/assets/slides/slide-02.webp')"></div>
-                    <picture><img class="w-100" src="assets/slides/slide-02.webp" data-fallback-src="assets/photos/tt-wide-20261023-180d1783.webp" loading="eager" decoding="async" fetchpriority="low" alt="Dijagnostički uređaj unutar vozila Auto Servisa Šunja" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)"></picture>
+                    <div class="hero-bg" style="--hero-photo:url('/assets/gallery/radionica-dijagnostika.webp')"></div>
+                    <picture><img class="w-100" src="assets/gallery/radionica-dijagnostika.webp" loading="lazy" decoding="async" alt="Dijagnostički uređaj unutar vozila Auto Servisa Šunja"></picture>
                     <div class="carousel-caption d-flex align-items-center">
                         <div class="container">
                             <div class="row align-items-center justify-content-center justify-content-lg-start">
@@ -433,8 +397,8 @@
                     </div>
                 </div>
                 <div class="carousel-item">
-                    <div class="hero-bg" style="--hero-photo:url('/assets/slides/slide-03.webp')"></div>
-                    <picture><img class="w-100" src="assets/slides/slide-03.webp" data-fallback-src="assets/photos/tt-wide-20261027-cce4aa19.webp" loading="eager" decoding="async" fetchpriority="low" alt="Originalni automobilski ključevi tokom programiranja u servisu Šunja" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)"></picture>
+                    <div class="hero-bg" style="--hero-photo:url('/assets/gallery/kljucevi-programiranje.webp')"></div>
+                    <picture><img class="w-100" src="assets/gallery/kljucevi-programiranje.webp" loading="lazy" decoding="async" alt="Originalni automobilski ključevi tokom programiranja u servisu Šunja"></picture>
                     <div class="carousel-caption d-flex align-items-center">
                         <div class="container">
                             <div class="row align-items-center justify-content-center justify-content-lg-start">
@@ -469,7 +433,7 @@
 
 
     <!-- Social strip Start -->
-    <div class="container-xxl pb-5 social-rail">
+    <div class="container-xxl pb-5">
         <div class="container">
             <div class="row g-4">
                 <div class="col-md-4 wow fadeInUp" data-wow-delay="0.1s">
@@ -579,7 +543,7 @@
             </div>
             <div class="row g-4 wow fadeInUp" data-wow-delay="0.3s">
                 <div class="col-lg-4">
-                    <div class="nav w-100 nav-pills me-4 service-nav-grid">
+                    <div class="nav w-100 nav-pills me-4">
                         <button class="nav-link w-100 d-flex align-items-center text-start p-4 mb-4 active" data-bs-toggle="pill" data-bs-target="#tab-pane-1" type="button">
                             <i class="fa fa-laptop-code fa-2x me-3"></i>
                             <h4 class="m-0">Autodijagnostika</h4>
@@ -610,9 +574,9 @@
                     <div class="tab-content w-100">
                         <div class="tab-pane fade show active" id="tab-pane-1">
                             <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="assets/services/autodijagnostika.webp" data-fallback-src="assets/photos/tt-wide-20261023-180d1783.webp" loading="eager" decoding="async" fetchpriority="high" alt="Autodijagnostika u vozilu" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                                <div class="col-md-6" style="min-height: 350px;">
+                                    <div>
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="dijagnostika" src="assets/photos/tt-20261023-180d1783.webp" loading="lazy" decoding="async" alt="Autodijagnostika">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -627,9 +591,9 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-2">
                             <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="assets/services/peugeot-servis.webp" data-fallback-src="assets/photos/tt-wide-20261108-574b96bf.webp" loading="lazy" decoding="async" alt="Peugeot servis u radionici" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                                <div class="col-md-6" style="min-height: 350px;">
+                                    <div>
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="peugeot" src="assets/photos/tt-20261108-574b96bf.webp" loading="lazy" decoding="async" alt="Peugeot servis">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -643,9 +607,9 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-3">
                             <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="assets/services/mali-servis.webp" data-fallback-src="assets/photos/tt-wide-20261023-72158e75.webp" loading="lazy" decoding="async" alt="Motor pri redovnom održavanju" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                                <div class="col-md-6" style="min-height: 350px;">
+                                    <div>
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="mali" src="assets/photos/tt-20261031-a32411f2.webp" loading="lazy" decoding="async" alt="Mali servis">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -659,9 +623,9 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-4">
                             <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="assets/services/veliki-servis.webp" data-fallback-src="assets/photos/tt-wide-20261004-2d828014.webp" loading="lazy" decoding="async" alt="Dijelovi motora za veliki servis" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                                <div class="col-md-6" style="min-height: 350px;">
+                                    <div>
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="veliki" src="assets/photos/tt-20261004-2d828014.webp" loading="lazy" decoding="async" alt="Veliki servis">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -675,9 +639,9 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-5">
                             <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="assets/services/autoelektrika.webp" data-fallback-src="assets/photos/tt-wide-20261108-234cf88c.webp" loading="lazy" decoding="async" alt="Elektronika i dijagnostika vozila" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                                <div class="col-md-6" style="min-height: 350px;">
+                                    <div>
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="elektrika" src="assets/photos/tt-20261108-234cf88c.webp" loading="lazy" decoding="async" alt="Autoelektrika">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -692,9 +656,9 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-6">
                             <div class="row g-4">
-                                <div class="col-md-6 service-media-column">
-                                    <div class="service-media-frame">
-                                        <img class="img-fluid w-100 svc-photo service-image" src="assets/services/kljucevi-daljinski.webp" data-fallback-src="assets/photos/tt-wide-20261027-cce4aa19.webp" loading="lazy" decoding="async" alt="Programiranje automobilskih ključeva" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                                <div class="col-md-6" style="min-height: 350px;">
+                                    <div>
+                                        <img class="img-fluid w-100 svc-photo" data-svc-cat="kljucevi" src="assets/photos/tt-20261027-cce4aa19.webp" loading="lazy" decoding="async" alt="Ključevi i daljinski">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -726,7 +690,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/gallery/tiktok-fallback-01.webp" data-fallback-src="assets/gallery/tiktok-fallback-01.webp" data-fallback-alt="Renault Clio na dizalici" loading="lazy" decoding="async" alt="Renault Clio na dizalici" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-20261031-a32411f2.webp" loading="lazy" decoding="async" alt="Renault Clio na dizalici">
                             <a class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7702943115132325141" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a>
                         </div>
                         <div class="gallery-source-line bg-light text-center p-3">
@@ -737,7 +701,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.2s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/gallery/tiktok-fallback-02.webp" data-fallback-src="assets/gallery/tiktok-fallback-02.webp" data-fallback-alt="Peugeot na dizalici" loading="lazy" decoding="async" alt="Peugeot na dizalici" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-20261013-235e6ce1.webp" loading="lazy" decoding="async" alt="Peugeot na dizalici">
                             <a class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7696249910995258645" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a>
                         </div>
                         <div class="gallery-source-line bg-light text-center p-3">
@@ -748,7 +712,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/gallery/tiktok-fallback-03.webp" data-fallback-src="assets/gallery/tiktok-fallback-03.webp" data-fallback-alt="Motor pod haubom" loading="lazy" decoding="async" alt="Motor pod haubom" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-20261023-72158e75.webp" loading="lazy" decoding="async" alt="Motor pod haubom">
                             <a class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7699972445880536341" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a>
                         </div>
                         <div class="gallery-source-line bg-light text-center p-3">
@@ -759,7 +723,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.4s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/gallery/tiktok-fallback-04.webp" data-fallback-src="assets/gallery/tiktok-fallback-04.webp" data-fallback-alt="ECU jedinica" loading="lazy" decoding="async" alt="ECU jedinica" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-20261017-8d087753.webp" loading="lazy" decoding="async" alt="ECU jedinica">
                             <a class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7697738557175123220" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a>
                         </div>
                         <div class="gallery-source-line bg-light text-center p-3">
@@ -770,7 +734,7 @@
                 <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
                     <div class="team-item">
                         <div class="position-relative overflow-hidden">
-                            <img class="img-fluid gallery-img" data-gallery-img src="assets/gallery/tiktok-fallback-05.webp" data-fallback-src="assets/gallery/tiktok-fallback-05.webp" data-fallback-alt="Glava motora" loading="lazy" decoding="async" alt="Glava motora" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)">
+                            <img class="img-fluid gallery-img" data-gallery-img src="assets/photos/tt-20261004-2d828014.webp" loading="lazy" decoding="async" alt="Glava motora">
                             <a class="team-overlay position-absolute start-0 top-0 w-100 h-100 gallery-tile-link" data-gallery-link href="https://www.tiktok.com/@autoservissunja/photo/7692814793178107188" target="_blank" rel="noopener" aria-label="Pogledajte objavu"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a>
                         </div>
                         <div class="gallery-source-line bg-light text-center p-3">
@@ -1007,13 +971,13 @@
 
     <!-- JavaScript Libraries -->
 
-    <script src="lib/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
     
     
     
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=40.0"></script>
+    <script src="js/main.js?v=37.0"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
@@ -1087,26 +1051,35 @@
             if (fresh.length >= (min || 1)) return fresh;
             return list.slice().sort(function (a, b) { return (b.date || '') < (a.date || '') ? -1 : 1; });
         }
-        function platformMeta() {
+        function platformMeta(item) {
+            var source = (item && item.source || '').toLowerCase();
+            var href = (item && item.href || '').toLowerCase();
+            if (source === 'instagram' || href.indexOf('instagram.com') > -1) return { icon: 'fab fa-instagram', label: 'Objava s Instagrama' };
+            if (source === 'facebook' || href.indexOf('facebook.com') > -1) return { icon: 'fab fa-facebook-f', label: 'Objava s Facebooka' };
             return { icon: 'fab fa-tiktok', label: 'Objava s TikToka' };
         }
         function localPhotoPath(path) {
             return typeof path === 'string' && /^assets\/photos\/[A-Za-z0-9_.\/-]+$/.test(path) ? path : '';
         }
-        // The carousel and six service photos are immutable, curated local
-        // assets. Only genuine TikTok posts may rotate the five gallery tiles.
-        var seenTikTokPhotos = Object.create(null);
+        // The three main carousel images are permanent, curated originals.
+        // Photo sync updates gallery, services and footer; never the three slides.
         var sharpGallery = (d.gallery || []).filter(function (entry) {
-            var source = String(entry.source || '').toLowerCase();
-            var href = String(entry.href || '').toLowerCase();
-            var isTikTok = source === 'tiktok' || href.indexOf('tiktok.com') > -1;
-            var src = localPhotoPath(entry.src);
-            if (!isTikTok || Number(entry.quality_v || 0) < 2 || !src ||
-                seenTikTokPhotos[src]) return false;
-            seenTikTokPhotos[src] = true;
-            return true;
+            return Number(entry.quality_v || 0) >= 2 && localPhotoPath(entry.src);
         }).sort(function (a, b) {
             return (b.date || '') < (a.date || '') ? -1 : 1;
+        });
+
+        // Every service image gets a full-quality social original. Prefer the
+        // matching category, otherwise use another sharp workshop photo rather
+        // than falling back to an older compressed template asset.
+        document.querySelectorAll('[data-svc-cat]').forEach(function (img, idx) {
+            var service = d.services && d.services[img.getAttribute('data-svc-cat')];
+            var fallback = sharpGallery.length ? sharpGallery[idx % sharpGallery.length] : null;
+            var src = localPhotoPath((service && service.src) || (fallback && fallback.src));
+            if (src && src !== img.getAttribute('src')) {
+                img.src = src;
+                img.decoding = 'async';
+            }
         });
 
         var footer = document.getElementById('siteFooter');
@@ -1120,11 +1093,9 @@
             if (newestFirst) { seq.push(newestFirst); usedTitles[newestFirst.title] = 1; }
             pool.forEach(function (e) { if (seq.length < 5 && !usedTitles[e.title]) { seq.push(e); usedTitles[e.title] = 1; } });
             pool.forEach(function (e) { if (seq.length < 5 && seq.indexOf(e) === -1) seq.push(e); });
+            if (!seq.length) seq = pool;
             document.querySelectorAll('[data-gallery-img]').forEach(function (img, idx) {
-                // If fewer than five unique TikTok originals exist, keep this
-                // tile's committed fallback instead of duplicating another photo.
-                var item = seq[idx];
-                if (!item) return;
+                var item = seq[idx % seq.length];
                 var safeSrc = localPhotoPath(item.src);
                 if (!safeSrc) return;
                 img.src = safeSrc; img.alt = item.title || 'Auto Servis Šunja';
@@ -1144,28 +1115,23 @@
         }
     }).catch(function () {});
 
-    // TikTok gallery items may rotate, but a broken or missing post always
-    // falls back to the corresponding image committed with the website.
-    document.querySelectorAll('[data-gallery-img]').forEach(function (img) {
-        img.addEventListener('error', function () {
-            var fallback = img.getAttribute('data-fallback-src') || '';
-            if (!/^assets\/gallery\/tiktok-fallback-[1-5]\.webp$/.test(fallback) ||
-                img.dataset.galleryFallbackApplied === '1' ||
-                img.getAttribute('src') === fallback) return;
-            img.dataset.galleryFallbackApplied = '1';
-            img.src = fallback;
-            img.alt = img.getAttribute('data-fallback-alt') || img.alt;
-            if (img.parentElement) {
-                img.parentElement.style.setProperty('--gallery-bg', 'url("/' + fallback + '")');
+    // Image self-heal — if any swapped photo fails to paint, retry it once fresh
+    document.querySelectorAll('[data-gallery-img], #heroMainImg').forEach(function (img) {
+        function heal() {
+            if (img.dataset.healed === '1') return;
+            if (img.complete && img.naturalWidth === 0) {
+                img.dataset.healed = '1';
+                img.src = img.src.split('?')[0] + '?r=1';
             }
-        });
+        }
+        img.addEventListener('error', heal);
+        setTimeout(heal, 3000);
     });
 
     // Globe map (MapLibre 3D globe) — scroll flies from space into the shop
     (function () {
         var wrap = document.getElementById('globeScroll');
         var el = document.getElementById('globeMap');
-        var stickyEl = wrap ? wrap.querySelector('.globe-sticky') : null;
         var stageEl = document.getElementById('globeStage');
         var hintEl = document.getElementById('globeHint');
         var fellBack = false;
@@ -1179,16 +1145,10 @@
             el.innerHTML = '<div class="map-fallback-content"><p class="mb-3">Kartu nije moguće učitati. Lokacija servisa je Hajra Lakovića 38, Goražde.</p><a class="btn btn-primary py-3 px-4" href="https://www.google.com/maps/dir/?api=1&destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener">Upute za vožnju</a></div>';
         }
         var globeStarted = false;
-        var globeInitialized = false;
-        var libraryLoading = false;
-        var libraryFailed = false;
-        var libraryWatchdog = 0;
-        function primeMapLibrary() {
-            // Cache the engine and its stylesheet during the 25+ years reveal,
-            // while leaving GPU-intensive MapLibre construction until afterwards.
-            if (libraryLoading || libraryFailed ||
-                typeof maplibregl !== 'undefined') return;
-            libraryLoading = true;
+        function startGlobe() {
+            if (globeStarted) return;
+            globeStarted = true;
+            if (typeof maplibregl !== 'undefined') { initGlobe(); return; }
             var css = document.createElement('link');
             css.rel = 'stylesheet';
             css.href = 'https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.css';
@@ -1196,37 +1156,23 @@
             var sc = document.createElement('script');
             sc.src = 'https://cdn.jsdelivr.net/npm/maplibre-gl@5.6.0/dist/maplibre-gl.js';
             sc.async = true;
+            // A blocked CDN may never fire error; fail open to the address,
+            // rather than trapping the visitor on an empty map.
+            var scriptWatchdog = window.setTimeout(function () {
+                fallback('biblioteka karte nije odgovorila');
+            }, 9000);
             sc.onload = function () {
-                window.clearTimeout(libraryWatchdog);
-                if (globeStarted && !fellBack) initGlobe();
+                window.clearTimeout(scriptWatchdog);
+                if (!fellBack) initGlobe();
             };
             sc.onerror = function () {
-                window.clearTimeout(libraryWatchdog);
-                libraryFailed = true;
-                if (globeStarted) fallback('knjižnica karte nedostupna');
+                window.clearTimeout(scriptWatchdog);
+                fallback('knjižnica karte nedostupna');
             };
             document.head.appendChild(sc);
         }
-        function startGlobe() {
-            if (globeStarted || fellBack) return;
-            globeStarted = true;
-            if (typeof maplibregl !== 'undefined') { initGlobe(); return; }
-            if (libraryFailed) { fallback('knjižnica karte nedostupna'); return; }
-            primeMapLibrary();
-            // Library might be blocked; never leave a blank map indefinitely.
-            libraryWatchdog = window.setTimeout(function () {
-                if (!globeInitialized && !fellBack)
-                    fallback('biblioteka karte nije odgovorila');
-            }, 9000);
-        }
         function initGlobe() {
-        if (globeInitialized || fellBack) return;
-        globeInitialized = true;
-        window.clearTimeout(libraryWatchdog);
-        var sawPreloadError = false;
-        var safetyTimer = setTimeout(function () {
-            fallback(sawPreloadError ? 'karta nije odgovorila nakon ponovnog pokušaja' : 'isteklo vrijeme učitavanja');
-        }, 45000);
+        var safetyTimer = setTimeout(function () { fallback('isteklo vrijeme učitavanja'); }, 9000);
         try {
             if (!wrap || !el) { clearTimeout(safetyTimer); return; }
             if (typeof maplibregl === 'undefined') { fallback('knjižnica karte nedostupna'); clearTimeout(safetyTimer); return; }
@@ -1245,13 +1191,8 @@
                 cancelPendingTileRequestsWhileZooming: false
             });
             var loaded = false;
-            // MapLibre reports transient tile/style fetch failures through this
-            // event and retries them. Do not replace the map while that retry
-            // can still produce the first render; the longer watchdog handles
-            // a permanent failure instead.
-            map.on('error', function (e) { if (!loaded && e && e.error) sawPreloadError = true; });
+            map.on('error', function (e) { if (!loaded) fallback('greška karte: ' + (e && e.error ? String(e.error).slice(0, 80) : 'nepoznata')); });
             map.on('load', function () {
-                if (fellBack) return;
                 loaded = true;
                 clearTimeout(safetyTimer);
                 wrap.classList.add('is-loaded');
@@ -1274,12 +1215,9 @@
             var marker = null;
             var mapCompleted = false;
             var lastMapProgress = -1;
-            var lastMapScrollY = null;
-            var lastViewportIsLandscape = window.innerWidth > window.innerHeight;
-            var pendingOrientationSync = false;
             var lastCameraAt = 0;
-            var CAMERA_MIN_FRAME_MS = 80;
-            var mapFrame = 0, cameraTimer = 0, viewportSyncFrame = 0;
+            var CAMERA_MIN_FRAME_MS = 140;
+            var mapFrame = 0, cameraTimer = 0;
             var reduceMapMotion = !!(window.matchMedia &&
                 window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
@@ -1311,13 +1249,12 @@
             function settleMapScroll() {
                 if (!wrap) return;
                 // Collapse the long sticky flight into a normal one-screen map
-                // exactly once. Preserve Kontakt's viewport coordinate using
-                // an exact scroll target, then correct after Safari's next
-                // layout frames; reverse scrolling never enters the old runway.
+                // exactly once. Compensate for the removed height *before paint*
+                // so Kontakt and every section below stay in the same place on
+                // screen; reverse scrolling never enters the old sticky runway.
                 var contactSection = document.getElementById('kontakt');
                 var before = contactSection ? contactSection.getBoundingClientRect().top :
                     wrap.getBoundingClientRect().bottom;
-                var beforeScrollY = window.scrollY;
                 var rootStyle = document.documentElement.style;
                 var previousAnchor = rootStyle.overflowAnchor;
                 rootStyle.overflowAnchor = 'none';
@@ -1325,21 +1262,8 @@
                 var after = contactSection ? contactSection.getBoundingClientRect().top :
                     wrap.getBoundingClientRect().bottom;
                 var shift = after - before;
-                if (Math.abs(shift) > .5) {
-                    window.scrollTo({ top: Math.max(0, beforeScrollY + shift), behavior: 'instant' });
-                }
-                function correctContactAnchor() {
-                    if (contactSection) {
-                        var remaining = contactSection.getBoundingClientRect().top - before;
-                        if (Math.abs(remaining) > .5) {
-                            window.scrollTo({ top: Math.max(0, window.scrollY + remaining), behavior: 'instant' });
-                        }
-                    }
-                    rootStyle.overflowAnchor = previousAnchor;
-                }
-                window.requestAnimationFrame(function () {
-                    window.requestAnimationFrame(correctContactAnchor);
-                });
+                if (Math.abs(shift) > .5) window.scrollBy(0, shift);
+                rootStyle.overflowAnchor = previousAnchor;
             }
 
             function finishMapOnce() {
@@ -1348,14 +1272,8 @@
                 // This is intentionally one-way. Stop all scroll-driven
                 // camera work and remove the scroll listener permanently.
                 window.removeEventListener('scroll', queueMapProgress);
-                window.removeEventListener('resize', syncMapProgressOnViewportChange);
-                window.removeEventListener('orientationchange', syncMapProgressOnViewportChange);
-                if (window.visualViewport)
-                    window.visualViewport.removeEventListener('resize', syncMapProgressOnViewportChange);
                 if (mapFrame) cancelAnimationFrame(mapFrame);
                 mapFrame = 0;
-                if (viewportSyncFrame) cancelAnimationFrame(viewportSyncFrame);
-                viewportSyncFrame = 0;
                 if (cameraTimer) clearTimeout(cameraTimer);
                 cameraTimer = 0;
                 lastMapProgress = 1;
@@ -1378,14 +1296,9 @@
                 // style loads. In that case finish immediately, don't replay.
                 if (rect.bottom <= 0) { finishMapOnce(); return; }
                 if (rect.top > innerHeight + 300) return;
-                // Progress belongs to the actual sticky runway. innerHeight
-                // can change with mobile browser chrome while 100svh keeps the
-                // rendered map panel at a different height.
-                var stickyHeight = stickyEl ? stickyEl.getBoundingClientRect().height : innerHeight;
-                var distance = Math.max(1, rect.height - stickyHeight);
+                var distance = Math.max(1, rect.height - innerHeight);
                 var progress = Math.max(0, Math.min(1, -rect.top / distance));
                 if (progress >= .985) { finishMapOnce(); return; }
-                lastMapScrollY = window.scrollY;
                 if (Math.abs(progress - lastMapProgress) < .018) return;
                 var now = performance.now();
                 // MapLibre repaints and fetches new tiles with each jumpTo.
@@ -1427,7 +1340,7 @@
                     map.easeTo({
                         center: camera.center, zoom: camera.zoom,
                         pitch: camera.pitch, bearing: camera.bearing,
-                        duration: 180, easing: function (value) {
+                        duration: 320, easing: function (value) {
                             return 1 - Math.pow(1 - value, 2);
                         }
                     });
@@ -1440,51 +1353,7 @@
                 if (mapCompleted || fellBack || mapFrame) return;
                 mapFrame = requestAnimationFrame(updateMapOnScroll);
             }
-            function syncMapProgressOnViewportChange() {
-                var viewportIsLandscape = window.innerWidth > window.innerHeight;
-                if (viewportIsLandscape !== lastViewportIsLandscape)
-                    pendingOrientationSync = true;
-                lastViewportIsLandscape = viewportIsLandscape;
-                if (mapCompleted || fellBack || !loaded || !wrap || viewportSyncFrame) return;
-                viewportSyncFrame = requestAnimationFrame(function () {
-                    viewportSyncFrame = 0;
-                    if (mapCompleted || fellBack || !loaded || !wrap) return;
-                    // Multiple viewport/visualViewport notifications can be
-                    // coalesced into one frame. Keep the orientation signal
-                    // until that frame consumes it, rather than losing it to
-                    // a second resize event while a frame is already queued.
-                    var forceOrientationSync = pendingOrientationSync;
-                    pendingOrientationSync = false;
-                    if (mapFrame) { cancelAnimationFrame(mapFrame); mapFrame = 0; }
-                    // Responsive reflow can shorten content above the map when
-                    // a phone rotates or a tablet crosses a breakpoint. Keep
-                    // the current stage anchored only when the visitor was
-                    // still scrolling the active runway, never after leaving it.
-                    if (lastMapProgress >= 0 && lastMapProgress < .985 &&
-                        lastMapScrollY !== null &&
-                        (forceOrientationSync || Math.abs(window.scrollY - lastMapScrollY) <= 80)) {
-                        var rect = wrap.getBoundingClientRect();
-                        var sectionTop = rect.top + window.scrollY;
-                        var stickyHeight = stickyEl ? stickyEl.getBoundingClientRect().height : innerHeight;
-                        var runway = Math.max(1, rect.height - stickyHeight);
-                        var targetScrollY = sectionTop + runway * lastMapProgress;
-                        if (Math.abs(targetScrollY - window.scrollY) > 1) {
-                            window.scrollTo({ top: Math.max(0, targetScrollY), behavior: 'instant' });
-                        }
-                        lastMapScrollY = window.scrollY;
-                    }
-                    queueMapProgress();
-                });
-            }
             window.addEventListener('scroll', queueMapProgress, { passive: true });
-            // Viewport/orientation changes can change the sticky runway even
-            // when no scroll event follows; preserve the active progress when
-            // responsive content above the map reflows. ResizeObserver below
-            // still owns MapLibre canvas resizing.
-            window.addEventListener('resize', syncMapProgressOnViewportChange, { passive: true });
-            window.addEventListener('orientationchange', syncMapProgressOnViewportChange, { passive: true });
-            if (window.visualViewport)
-                window.visualViewport.addEventListener('resize', syncMapProgressOnViewportChange, { passive: true });
             // Resize when the actual map container changes size, not whenever
             // Safari's browser toolbar changes the visual viewport.
             if (typeof ResizeObserver !== 'undefined') {
@@ -1517,9 +1386,8 @@
             earlyGlobeScheduled = true;
             // MapLibre's globe is GPU-heavy: don't initialise it while the
             // user's high-resolution logo animation is decoding.
-            window.setTimeout(startGlobe, 90);
+            window.setTimeout(startGlobe, 420);
         }
-        window.addEventListener('sunja:intro-experience-start', primeMapLibrary, { once: true });
         window.addEventListener('sunja:intro-finished', scheduleEarlyGlobeStart, { once: true });
         if (document.readyState === 'complete') scheduleEarlyGlobeStart();
         else window.addEventListener('load', scheduleEarlyGlobeStart, { once: true });

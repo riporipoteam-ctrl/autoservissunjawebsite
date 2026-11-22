@@ -6,7 +6,6 @@ Requires: pip install playwright; python -m playwright install chromium
 import functools
 import os
 import http.server
-import json
 import re
 import threading
 import unittest
@@ -199,262 +198,6 @@ class SiteInteractionTests(unittest.TestCase):
             context.close()
 
 
-    def test_v46_mobile_map_completes_on_measured_sticky_runway_after_viewport_height_mismatch(self):
-        context = self.browser.new_context(
-            viewport={"width": 390, "height": 844},
-            is_mobile=True, has_touch=True, reduced_motion="no-preference",
-        )
-        context.add_init_script("""
-            window.__mapCameras = [];
-            class FakeMap {
-                on(name, cb) { if (name === 'load') setTimeout(cb, 20); return this; }
-                resize() {}
-                setProjection() {}
-                jumpTo(camera) { window.__mapCameras.push(camera); return this; }
-                easeTo(camera) { window.__mapCameras.push(camera); return this; }
-                stop() {}
-            }
-            class FakePopup { setHTML(){ return this; } }
-            class FakeMarker {
-                setLngLat(){ return this; } setPopup(){ return this; }
-                addTo(){ return this; } togglePopup(){ return this; }
-            }
-            window.maplibregl = {Map:FakeMap, Popup:FakePopup, Marker:FakeMarker};
-        """)
-        try:
-            page = context.new_page()
-            page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
-            page.wait_for_function(
-                "document.querySelector('#globeScroll').classList.contains('is-loaded')",
-                timeout=10000,
-            )
-            page.evaluate("""() => {
-                const section = document.getElementById('globeScroll');
-                const sticky = section.querySelector('.globe-sticky');
-                const sectionTop = section.getBoundingClientRect().top + scrollY;
-                const sectionHeight = section.getBoundingClientRect().height;
-                const stickyHeight = sticky.getBoundingClientRect().height;
-                const runway = Math.max(1, sectionHeight - stickyHeight);
-                // Simulate mobile browser chrome changing innerHeight while
-                // the CSS-sized sticky panel remains at its measured height.
-                Object.defineProperty(window, 'innerHeight', {
-                    configurable: true, value: Math.max(220, stickyHeight - 260)
-                });
-                window.__mapRunwayTarget = sectionTop + runway;
-                // Coalesce a sequence of rapid scroll positions into the end
-                // of the actual sticky travel, as a strong touch fling can.
-                [0.03, 0.16, 0.39, 0.68, 0.91, 1].forEach(function (part) {
-                    window.scrollTo(0, sectionTop + runway * part);
-                });
-            }""")
-            page.wait_for_function(
-                "document.querySelector('#globeScroll').classList.contains('globe-complete')",
-                timeout=6000,
-            )
-            state = page.evaluate("""() => ({
-                complete: document.getElementById('globeScroll').classList.contains('globe-complete'),
-                lastCamera: window.__mapCameras.at(-1),
-                cameraCount: window.__mapCameras.length,
-                dockPosition: getComputedStyle(document.querySelector('.mobile-callbar')).position
-            })""")
-            self.assertTrue(state["complete"], state)
-            self.assertAlmostEqual(state["lastCamera"]["zoom"], 16.2, delta=.1, msg=str(state))
-            self.assertGreaterEqual(state["cameraCount"], 1)
-            self.assertEqual(state["dockPosition"], "fixed")
-            camera_count = state["cameraCount"]
-            page.evaluate("window.scrollTo(0, 0)")
-            page.wait_for_timeout(180)
-            self.assertEqual(page.evaluate("window.__mapCameras.length"), camera_count)
-        finally:
-            context.close()
-
-    def test_v46_mobile_map_resynchronizes_without_scroll_after_orientation_change(self):
-        context = self.browser.new_context(
-            viewport={"width": 390, "height": 844},
-            is_mobile=True, has_touch=True, reduced_motion="no-preference",
-        )
-        context.add_init_script("""
-            window.__mapCameras = [];
-            class FakeMap {
-                on(name, cb) { if (name === 'load') setTimeout(cb, 20); return this; }
-                resize() {}
-                setProjection() {}
-                jumpTo(camera) { window.__mapCameras.push(camera); return this; }
-                easeTo(camera) { window.__mapCameras.push(camera); return this; }
-                stop() {}
-            }
-            class FakePopup { setHTML(){ return this; } }
-            class FakeMarker {
-                setLngLat(){ return this; } setPopup(){ return this; }
-                addTo(){ return this; } togglePopup(){ return this; }
-            }
-            window.maplibregl = {Map:FakeMap, Popup:FakePopup, Marker:FakeMarker};
-        """)
-        try:
-            page = context.new_page()
-            page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
-            page.wait_for_function(
-                "document.querySelector('#globeScroll').classList.contains('is-loaded')",
-                timeout=10000,
-            )
-            page.evaluate("document.documentElement.style.scrollBehavior = 'auto'")
-            page.evaluate("""() => {
-                const section = document.getElementById('globeScroll');
-                const sticky = section.querySelector('.globe-sticky');
-                const sectionTop = section.getBoundingClientRect().top + scrollY;
-                const runway = Math.max(1,
-                    section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
-                window.scrollTo(0, sectionTop + runway * .4);
-            }""")
-            page.wait_for_function("window.__mapCameras.length > 0", timeout=5000)
-            portrait_pin = page.evaluate("""() => {
-                const section = document.querySelector('#globeScroll');
-                const sticky = section.querySelector('.globe-sticky');
-                const runway = Math.max(1,
-                    section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
-                return {top: sticky.getBoundingClientRect().top,
-                    position: getComputedStyle(sticky).position,
-                    progress: -section.getBoundingClientRect().top / runway,
-                    stage: document.querySelector('#globeStage').textContent,
-                    complete: section.classList.contains('globe-complete')};
-            }""")
-            self.assertEqual(portrait_pin["position"], "sticky", portrait_pin)
-            self.assertAlmostEqual(portrait_pin["top"], 0, delta=1, msg=str(portrait_pin))
-            self.assertAlmostEqual(portrait_pin["progress"], .4, delta=.03, msg=str(portrait_pin))
-            self.assertFalse(portrait_pin["complete"], portrait_pin)
-            page.set_viewport_size({"width": 844, "height": 390})
-            page.wait_for_function(
-                """() => {
-                    const section = document.querySelector('#globeScroll');
-                    const sticky = section.querySelector('.globe-sticky');
-                    const runway = Math.max(1,
-                        section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
-                    return innerWidth === 844 && Math.abs(-section.getBoundingClientRect().top / runway - .4) < .03;
-                }""",
-                timeout=6000,
-            )
-            landscape_pin = page.evaluate("""() => {
-                const section = document.querySelector('#globeScroll');
-                const sticky = section.querySelector('.globe-sticky');
-                const runway = Math.max(1,
-                    section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
-                return {top: sticky.getBoundingClientRect().top,
-                    position: getComputedStyle(sticky).position,
-                    progress: -section.getBoundingClientRect().top / runway,
-                    stage: document.querySelector('#globeStage').textContent,
-                    complete: section.classList.contains('globe-complete')};
-            }""")
-            self.assertEqual(landscape_pin["position"], "sticky", landscape_pin)
-            self.assertAlmostEqual(landscape_pin["top"], 0, delta=1, msg=str(landscape_pin))
-            self.assertAlmostEqual(landscape_pin["progress"], portrait_pin["progress"], delta=.03,
-                msg=str({"portrait": portrait_pin, "landscape": landscape_pin}))
-            self.assertEqual(landscape_pin["stage"], portrait_pin["stage"],
-                msg=str({"portrait": portrait_pin, "landscape": landscape_pin}))
-            self.assertFalse(landscape_pin["complete"], landscape_pin)
-            page.evaluate("""() => {
-                const section = document.getElementById('globeScroll');
-                const sticky = section.querySelector('.globe-sticky');
-                const sectionTop = section.getBoundingClientRect().top + scrollY;
-                const runway = Math.max(1,
-                    section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
-                window.scrollTo(0, sectionTop + runway);
-            }""")
-            page.wait_for_function(
-                "document.querySelector('#globeScroll').classList.contains('globe-complete')",
-                timeout=6000,
-            )
-            final = page.evaluate("window.__mapCameras.at(-1)")
-            self.assertAlmostEqual(final["zoom"], 16.2, delta=.1, msg=str(final))
-        finally:
-            context.close()
-
-    def test_v46_map_stays_pinned_across_phone_tablet_laptop_and_desktop_viewports(self):
-        profiles = [
-            ("phone-narrow", 360, 800, True),
-            ("phone-portrait", 390, 844, True),
-            ("phone-landscape", 844, 390, True),
-            ("tablet-portrait", 768, 1024, True),
-            ("tablet-landscape", 1024, 768, True),
-            ("laptop", 1366, 768, False),
-            ("desktop", 1920, 1080, False),
-        ]
-        fake_map = """
-            window.__mapCameras = [];
-            class FakeMap {
-                on(name, cb) { if (name === 'load') setTimeout(cb, 20); return this; }
-                resize() {}
-                setProjection() {}
-                jumpTo(camera) { window.__mapCameras.push(camera); return this; }
-                easeTo(camera) { window.__mapCameras.push(camera); return this; }
-                stop() {}
-            }
-            class FakePopup { setHTML(){ return this; } }
-            class FakeMarker {
-                setLngLat(){ return this; } setPopup(){ return this; }
-                addTo(){ return this; } togglePopup(){ return this; }
-            }
-            window.maplibregl = {Map:FakeMap, Popup:FakePopup, Marker:FakeMarker};
-        """
-        for label, width, height, touch in profiles:
-            with self.subTest(viewport=label):
-                context = self.browser.new_context(
-                    viewport={"width": width, "height": height},
-                    is_mobile=touch, has_touch=touch, reduced_motion="no-preference",
-                )
-                context.add_init_script(fake_map)
-                try:
-                    page = context.new_page()
-                    page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
-                    page.wait_for_function(
-                        "document.querySelector('#globeScroll').classList.contains('is-loaded')",
-                        timeout=10000,
-                    )
-                    page.evaluate("document.documentElement.style.scrollBehavior = 'auto'")
-                    page.evaluate("""() => {
-                        const section = document.querySelector('#globeScroll');
-                        const sticky = section.querySelector('.globe-sticky');
-                        const sectionTop = section.getBoundingClientRect().top + scrollY;
-                        const runway = Math.max(1,
-                            section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
-                        window.scrollTo(0, sectionTop + runway * .4);
-                    }""")
-                    page.wait_for_function("window.__mapCameras.length > 0", timeout=5000)
-                    page.wait_for_function("""() => {
-                        const section = document.querySelector('#globeScroll');
-                        const sticky = section.querySelector('.globe-sticky');
-                        const runway = Math.max(1,
-                            section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
-                        return Math.abs(-section.getBoundingClientRect().top / runway - .4) < .04;
-                    }""", timeout=5000)
-                    state = page.evaluate("""() => {
-                        const section = document.querySelector('#globeScroll');
-                        const sticky = section.querySelector('.globe-sticky');
-                        const runway = Math.max(1,
-                            section.getBoundingClientRect().height - sticky.getBoundingClientRect().height);
-                        const y = scrollY;
-                        window.scrollTo({left: 100, top: y, behavior: 'instant'});
-                        const horizontalScroll = scrollX;
-                        window.scrollTo({left: 0, top: y, behavior: 'instant'});
-                        return {
-                            top: sticky.getBoundingClientRect().top,
-                            position: getComputedStyle(sticky).position,
-                            progress: -section.getBoundingClientRect().top / runway,
-                            complete: section.classList.contains('globe-complete'),
-                            dockPosition: getComputedStyle(document.querySelector('.mobile-callbar')).position,
-                            horizontalScroll
-                        };
-                    }""")
-                    self.assertEqual(state["position"], "sticky", {"viewport": label, **state})
-                    self.assertAlmostEqual(state["top"], 0, delta=1, msg=str({"viewport": label, **state}))
-                    self.assertAlmostEqual(state["progress"], .4, delta=.04, msg=str({"viewport": label, **state}))
-                    self.assertFalse(state["complete"], {"viewport": label, **state})
-                    self.assertEqual(state["horizontalScroll"], 0, {"viewport": label, **state})
-                    if width <= 991:
-                        self.assertEqual(state["dockPosition"], "fixed", {"viewport": label, **state})
-                finally:
-                    context.close()
-
-
     def test_v30_finished_map_releases_upward_scroll_without_page_jump(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844},
@@ -483,39 +226,16 @@ class SiteInteractionTests(unittest.TestCase):
         try:
             page = context.new_page()
             page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-            page.locator("#globeScroll").scroll_into_view_if_needed()
-            page.wait_for_function(
-                "document.querySelector('#globeScroll').classList.contains('is-loaded')",
-                timeout=10000,
-            )
             page.evaluate("""() => {
                 const map = document.querySelector('#globeScroll');
-                const distance = map.offsetHeight - innerHeight;
-                window.__mapStartTarget = map.offsetTop + distance * .96;
-                window.scrollTo(0, window.__mapStartTarget);
-            }""")
-            page.wait_for_function(
-                "() => Math.abs(window.scrollY - window.__mapStartTarget) <= 2",
-                timeout=5000,
-            )
-            page.evaluate("""() => {
-                const map = document.querySelector('#globeScroll');
+                const target = map.offsetTop + (map.offsetHeight - innerHeight) * .99;
+                window.scrollTo(0, target);
                 window.__contactBeforeFinish =
                     document.querySelector('#kontakt').getBoundingClientRect().top;
-                window.__mapScrollBeforeFinish = window.scrollY;
-                window.__mapFinishTarget = map.offsetTop +
-                    (map.offsetHeight - innerHeight) * .99;
-                window.__expectedContactShift =
-                    -(window.__mapFinishTarget - window.__mapScrollBeforeFinish);
-                window.scrollTo(0, window.__mapFinishTarget);
             }""")
             page.wait_for_function(
                 "() => document.querySelector('#globeScroll').classList.contains('globe-complete')",
                 timeout=10000,
-            )
-            page.wait_for_function(
-                "() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve(true))))",
-                timeout=5000,
             )
             state = page.evaluate("""() => {
                 const w = document.querySelector('#globeScroll');
@@ -525,16 +245,12 @@ class SiteInteractionTests(unittest.TestCase):
                     stickyPosition: getComputedStyle(w.querySelector('.globe-sticky')).position,
                     contactShift: document.querySelector('#kontakt').getBoundingClientRect().top -
                         window.__contactBeforeFinish,
-                    expectedContactShift: window.__expectedContactShift,
                     jumps: window.__mapJumps.length,
                 };
             }""")
             self.assertLessEqual(state["height"], state["viewport"] + 2)
             self.assertEqual(state["stickyPosition"], "relative")
-            self.assertLessEqual(
-                abs(state["contactShift"] - state["expectedContactShift"]), 6,
-                state,
-            )
+            self.assertLessEqual(abs(state["contactShift"]), 6)
             # A native window scroll works on both mobile WebKit and
             # Chromium; Playwright's synthetic mouse wheel is unreliable in
             # mobile emulation (the actual visitor scrolls with touch).
@@ -553,69 +269,6 @@ class SiteInteractionTests(unittest.TestCase):
                 timeout=5000,
             )
             self.assertEqual(page.evaluate("window.__mapJumps.length"), state["jumps"])
-        finally:
-            context.close()
-
-    def test_v45_transient_map_error_waits_for_delayed_successful_load(self):
-        context = self.browser.new_context(
-            viewport={"width": 390, "height": 844},
-            is_mobile=True, has_touch=True, reduced_motion="no-preference",
-        )
-        context.route(
-            "**/maplibre-gl@5.6.0/dist/maplibre-gl.js*",
-            lambda route: route.fulfill(status=200, content_type="text/javascript", body="/* fake map */"),
-        )
-        context.route(
-            "**/maplibre-gl@5.6.0/dist/maplibre-gl.css*",
-            lambda route: route.fulfill(status=200, content_type="text/css", body=""),
-        )
-        context.add_init_script("""
-            window.__mapErrorAt = 0;
-            window.__mapLoadAt = 0;
-            class FakeMap {
-                on(name, cb) {
-                    if (name === 'error') setTimeout(() => {
-                        window.__mapErrorAt = performance.now();
-                        cb({error: new Error('temporary tile fetch failure')});
-                    }, 35);
-                    if (name === 'load') setTimeout(() => {
-                        window.__mapLoadAt = performance.now();
-                        cb();
-                    }, 650);
-                    return this;
-                }
-                resize() {}
-                setProjection() {}
-                jumpTo() {}
-                easeTo() {}
-                stop() {}
-            }
-            class FakePopup { setHTML(){ return this; } }
-            class FakeMarker {
-                setLngLat(){ return this; }
-                setPopup(){ return this; }
-                addTo(){ return this; }
-                togglePopup(){ return this; }
-                remove(){}
-            }
-            window.maplibregl = {Map:FakeMap, Popup:FakePopup, Marker:FakeMarker};
-        """)
-        try:
-            page = context.new_page()
-            page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
-            page.locator("#globeMap").scroll_into_view_if_needed()
-            page.wait_for_function("window.__mapLoadAt > 0", timeout=8000)
-            state = page.locator("#globeScroll").evaluate("""el => ({
-                loaded: el.classList.contains('is-loaded'),
-                fallback: el.classList.contains('is-fallback'),
-                errorAt: window.__mapErrorAt,
-                loadAt: window.__mapLoadAt
-            })""")
-            self.assertGreater(state["errorAt"], 0, state)
-            self.assertGreater(state["loadAt"], state["errorAt"] + 400, state)
-            self.assertTrue(state["loaded"], state)
-            self.assertFalse(state["fallback"], state)
-            self.assertEqual(page.locator(".map-fallback-content").count(), 0)
         finally:
             context.close()
 
@@ -737,42 +390,6 @@ class SiteInteractionTests(unittest.TestCase):
                 ".sunja-experience-number-solid").evaluate(
                     "(el) => getComputedStyle(el).animationName"))
             self.assertEqual(page.locator("#sunjaIntro video").count(), 0)
-        finally:
-            context.close()
-
-    def test_v40_map_engine_preloads_during_experience_without_rendering(self):
-        context = self.browser.new_context(
-            viewport={"width": 390, "height": 844},
-            is_mobile=True, has_touch=True, reduced_motion="no-preference",
-        )
-        try:
-            page = context.new_page()
-            page.route("**/maplibre-gl@5.6.0/dist/maplibre-gl.js",
-                       lambda route: route.fulfill(
-                           status=200, content_type="text/javascript",
-                           body="/* library warmed during intro */"
-                       ))
-            page.route("**/maplibre-gl@5.6.0/dist/maplibre-gl.css",
-                       lambda route: route.fulfill(
-                           status=200, content_type="text/css", body=""
-                       ))
-            page.goto(self.url, wait_until="domcontentloaded", timeout=45000)
-            self.assertTrue(page.evaluate(
-                "() => document.documentElement.classList.contains('sunja-intro-active')"
-            ))
-            page.evaluate(
-                "window.dispatchEvent(new Event('sunja:intro-experience-start'))"
-            )
-            expect(page.locator(
-                'script[src*="maplibre-gl@5.6.0/dist/maplibre-gl.js"]'
-            )).to_have_count(1)
-            expect(page.locator(
-                'link[rel="stylesheet"][href*="maplibre-gl@5.6.0/dist/maplibre-gl.css"]'
-            )).to_have_count(1)
-            self.assertFalse(page.locator("#globeScroll").evaluate(
-                "(el) => el.classList.contains('is-loaded')"
-            ), "Preloading must not activate the map behind the logo intro")
-            page.evaluate("window.__sunjaIntroForceFinish()")
         finally:
             context.close()
 
@@ -931,195 +548,6 @@ class SiteInteractionTests(unittest.TestCase):
             re.compile(r"\bshow\b")
         )
 
-    def test_v41_service_images_ignore_duplicate_feed_and_layout_fits_legacy_devices(self):
-        duplicate_photo_feed = {
-            "gallery": [],
-            "services": {
-                key: {"src": "assets/photos/tt-20261108-234cf88c.webp"}
-                for key in ("dijagnostika", "peugeot", "mali", "veliki", "elektrika", "kljucevi")
-            },
-        }
-        self.page.route(
-            "**/photos.json",
-            lambda route: route.fulfill(
-                status=200,
-                content_type="application/json",
-                body=json.dumps(duplicate_photo_feed),
-            ),
-        )
-        with self.page.expect_response(lambda response: response.url.endswith("/photos.json")):
-            self.page.reload(wait_until="load")
-        images = self.page.locator("#usluge img.svc-photo")
-        self.assertEqual(images.count(), 6)
-        sources = [images.nth(i).get_attribute("src") for i in range(6)]
-        self.assertEqual(6, len(set(sources)))
-        self.assertIn("assets/services/autodijagnostika.webp", sources)
-        self.assertIn("assets/services/kljucevi-daljinski.webp", sources)
-
-        # Exercise older phones, current phones, tablets and laptop/desktop widths.
-        for width, height in ((320, 568), (375, 667), (390, 844),
-                              (768, 1024), (1024, 768), (1440, 900)):
-            self.page.set_viewport_size({"width": width, "height": height})
-            geometry = self.page.locator("#usluge .service-nav-grid").evaluate("""el => ({
-                columns: getComputedStyle(el).gridTemplateColumns,
-                scrollWidth: document.documentElement.scrollWidth,
-                bodyWidth: document.body.scrollWidth,
-                viewport: innerWidth
-            })""")
-            self.assertLessEqual(
-                geometry["scrollWidth"], geometry["viewport"] + 1,
-                f"Horizontal overflow at {width}px: {geometry}"
-            )
-            self.assertLessEqual(
-                geometry["bodyWidth"], geometry["viewport"] + 1,
-                f"Body-level horizontal overflow at {width}px: {geometry}"
-            )
-            if width <= 991:
-                self.assertEqual(
-                    len(geometry["columns"].split()), 2,
-                    f"Services should use two columns at {width}px: {geometry}"
-                )
-        for index in range(1, 7):
-            button = self.page.locator(
-                '.service-nav-grid [data-bs-target="#tab-pane-' + str(index) + '"]'
-            )
-            button.tap()
-            expect(button).to_have_class(re.compile(r"\bactive\b"))
-            expect(self.page.locator("#tab-pane-" + str(index))).to_have_class(
-                re.compile(r"\bactive\b")
-            )
-
-    def test_v41_hero_fades_and_keeps_all_three_real_slides(self):
-        hero = self.page.locator("#header-carousel")
-        expect(hero).to_have_class(re.compile(r"\bcarousel-fade\b"))
-        self.assertEqual(hero.locator(".carousel-item").count(), 3)
-        self.assertIn(
-            "assets/slides/slide-02.webp",
-            hero.locator(".carousel-item").nth(1).locator("img").get_attribute("src"),
-        )
-        self.assertIn(
-            "assets/slides/slide-03.webp",
-            hero.locator(".carousel-item").nth(2).locator("img").get_attribute("src"),
-        )
-
-    def test_v47_primary_service_image_recovers_when_its_first_request_fails(self):
-        context = self.browser.new_context(
-            viewport={"width": 390, "height": 844},
-            is_mobile=True, has_touch=True, reduced_motion="reduce",
-        )
-        try:
-            page = context.new_page()
-            failed_once = {"done": False}
-            def fail_first_service_image(route):
-                if not failed_once["done"]:
-                    failed_once["done"] = True
-                    route.fulfill(status=503, body="temporary network failure")
-                else:
-                    route.continue_()
-            page.route("**/assets/services/autodijagnostika.webp", fail_first_service_image)
-            page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
-            image = page.locator("#tab-pane-1 img.service-image")
-            # Bring the service panel into view as a real visitor would. This
-            # also triggers Safari's lazy/eager image scheduler deterministically.
-            page.locator("#usluge").scroll_into_view_if_needed()
-            image.scroll_into_view_if_needed()
-            failed_requests = []
-            page.on("requestfailed", lambda request: failed_requests.append({
-                "url": request.url, "failure": request.failure
-            }))
-            try:
-                page.wait_for_function("""() => {
-                    const image = document.querySelector('#tab-pane-1 img.service-image');
-                    return image && image.complete && image.naturalWidth > 0 &&
-                        (image.dataset.fallbackApplied === '1' ||
-                         image.getAttribute('src') === 'assets/services/autodijagnostika.webp');
-                }""", timeout=10000)
-            except Exception as error:
-                state = image.evaluate("""el => ({
-                    src: el.getAttribute('src'),
-                    currentSrc: el.currentSrc,
-                    fallback: el.getAttribute('data-fallback-src'),
-                    fallbackApplied: el.dataset.fallbackApplied || null,
-                    complete: el.complete,
-                    naturalWidth: el.naturalWidth,
-                    loading: el.loading,
-                    onerror: el.getAttribute('onerror'),
-                    rect: (() => { const r = el.getBoundingClientRect(); return {
-                        top: r.top, bottom: r.bottom, width: r.width, height: r.height
-                    }; })()
-                })""")
-                raise AssertionError(
-                    "Safari image recovery timed out: "
-                    + json.dumps({"state": state, "failedRequests": failed_requests,
-                                  "initialRequestIntercepted": failed_once["done"]})
-                ) from error
-            self.assertTrue(failed_once["done"], "The simulated initial image request was not attempted")
-            self.assertGreater(image.evaluate("(el) => el.naturalWidth"), 0)
-            self.assertTrue(
-                image.get_attribute("src") == image.get_attribute("data-fallback-src")
-                or image.get_attribute("src") == "assets/services/autodijagnostika.webp",
-                "The service image must show its original or local fallback"
-            )
-        finally:
-            context.close()
-
-    def test_v47_social_feed_only_changes_tiktok_gallery_not_hero_or_services(self):
-        context = self.browser.new_context(
-            viewport={"width": 390, "height": 844},
-            is_mobile=True, has_touch=True, reduced_motion="reduce",
-        )
-        try:
-            page = context.new_page()
-            tiktok_sources = [
-                "assets/photos/tt-wide-20261120-3d31739d.webp",
-                "assets/photos/tt-wide-20261119-82d63b9b.webp",
-                "assets/photos/tt-wide-20261108-234cf88c.webp",
-                "assets/photos/tt-wide-20261108-574b96bf.webp",
-                "assets/photos/tt-wide-20261031-a32411f2.webp",
-            ]
-            feed = {"gallery": [
-                {"source": "instagram", "quality_v": 2,
-                 "src": tiktok_sources[0], "href": "https://instagram.com/p/example"},
-                {"source": "facebook", "quality_v": 2,
-                 "src": tiktok_sources[1], "href": "https://facebook.com/example"},
-            ] + [
-                {"source": "tiktok", "quality_v": 2, "src": src,
-                 "href": "https://www.tiktok.com/@autoservissunja/photo/" + str(i + 1),
-                 "title": "TikTok radionica " + str(i + 1),
-                 "date": "2026-11-20"}
-                for i, src in enumerate(tiktok_sources)
-            ]}
-            page.route("**/photos.json", lambda route: route.fulfill(
-                status=200, content_type="application/json", body=json.dumps(feed)
-            ))
-            page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
-            page.wait_for_function("""() => {
-                const images = [...document.querySelectorAll('[data-gallery-img]')];
-                return images.length === 5 && images.every(img =>
-                    img.src.includes('/assets/photos/tt-wide-'));
-            }""", timeout=8000)
-            self.assertEqual(
-                page.locator("#heroMainImg").get_attribute("src"),
-                "assets/gallery/sunja-tiktok-7627945643490692373.webp"
-            )
-            hero_sources = page.locator("#header-carousel picture img").evaluate_all(
-                "(items) => items.map(img => img.getAttribute('src'))"
-            )
-            self.assertEqual(3, len(hero_sources))
-            service_sources = page.locator("#usluge img.service-image").evaluate_all(
-                "(items) => items.map(img => img.getAttribute('src'))"
-            )
-            self.assertEqual(6, len(set(service_sources)))
-            self.assertTrue(all(src.startswith("assets/services/") for src in service_sources))
-            gallery_sources = page.locator("[data-gallery-img]").evaluate_all(
-                "(items) => items.map(img => img.getAttribute('src'))"
-            )
-            self.assertEqual(5, len(gallery_sources))
-            self.assertTrue(all(src in tiktok_sources for src in gallery_sources))
-            self.assertFalse(any("instagram" in src or "facebook" in src for src in gallery_sources))
-        finally:
-            context.close()
-
     def test_v39_hero_slides_have_no_booking_buttons(self):
         self.assertEqual(self.page.locator(
             "#header-carousel a[href='#termin'], #header-carousel a[data-service]"
@@ -1212,7 +640,7 @@ class SiteInteractionTests(unittest.TestCase):
         )
         try:
             page = context.new_page()
-            page.route("**/lib/bootstrap/bootstrap.bundle.min.js", lambda route: route.abort())
+            page.route("**/bootstrap@5.0.0/**", lambda route: route.abort())
             page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded", timeout=45000)
             page.wait_for_function("""() => {
                 const slides = [...document.querySelectorAll('#header-carousel .carousel-item')];
@@ -1319,11 +747,11 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             desktop.close()
 
-    def test_v42_readable_type_across_narrow_phone_tablet_desktop(self):
+    def test_v213_typography_across_narrow_phone_tablet_desktop(self):
         sizes = (
-            (320, 700, 35, 16.5),
-            (820, 900, 39, 16.5),
-            (1280, 800, 48, 16.5),
+            (320, 700, 20.5, 13.6),
+            (820, 900, 25.5, 15.1),
+            (1280, 800, 32.5, 15.1),
         )
         for width, height, heading_limit, copy_limit in sizes:
             with self.subTest(width=width):
@@ -1343,9 +771,8 @@ class SiteInteractionTests(unittest.TestCase):
                         "(node) => parseFloat(getComputedStyle(node).fontSize)"
                     )
                     self.assertLessEqual(heading, heading_limit)
-                    self.assertGreaterEqual(heading, 31)
                     self.assertLessEqual(copy, copy_limit)
-                    self.assertGreaterEqual(copy, 15.5)
+                    self.assertGreaterEqual(copy, 13)
                 finally:
                     context.close()
 
@@ -1387,26 +814,23 @@ class SiteInteractionTests(unittest.TestCase):
         tile.tap()
         self.assertEqual(self.page.evaluate("window.__oneTapHits"), 1)
 
-    def test_v42_all_mobile_sections_have_readable_typography(self):
+    def test_v213_all_mobile_sections_have_compact_typography(self):
         for section in ("o-nama", "usluge", "galerija", "recenzije",
                         "lokacija", "kontakt"):
             title = self.page.locator("#" + section + " h1").first
             size = title.evaluate("(el) => parseFloat(getComputedStyle(el).fontSize)")
-            self.assertLessEqual(size, 34, section)
-            self.assertGreaterEqual(size, 30, section)
+            self.assertLessEqual(size, 21, section)
 
         about_copy = self.page.locator("#o-nama p.mb-4").first
         size = about_copy.evaluate(
             "(el) => parseFloat(getComputedStyle(el).fontSize)"
         )
-        self.assertLessEqual(size, 16.5)
-        self.assertGreaterEqual(size, 15.5)
+        self.assertLessEqual(size, 13.6)
         feature_copy = self.page.locator("#o-nama .ps-3 > span").first
         feature_size = feature_copy.evaluate(
             "(el) => parseFloat(getComputedStyle(el).fontSize)"
         )
-        self.assertLessEqual(feature_size, 16)
-        self.assertGreaterEqual(feature_size, 15)
+        self.assertLessEqual(feature_size, 13.6)
 
     def test_v39_text_keeps_call_and_dock_tap_areas(self):
         for selector in ("#o-nama a[href='tel:+38761297847']",
@@ -1432,97 +856,13 @@ class SiteInteractionTests(unittest.TestCase):
                 self.assertIn(text, description)
                 self.assertLess(len(description), 105)
 
-    def test_v42_mobile_type_uses_readable_redesign_scale(self):
+    def test_v21_mobile_type_is_genuinely_smaller(self):
         title = self.page.locator("#o-nama h1")
         para = self.page.locator("#o-nama > .container p").first
         title_size = title.evaluate("(node) => parseFloat(getComputedStyle(node).fontSize)")
         para_size = para.evaluate("(node) => parseFloat(getComputedStyle(node).fontSize)")
-        self.assertEqual(title_size, 32)
-        self.assertEqual(para_size, 16)
-        copy_color = self.page.locator(".contact-spotlight-copy").evaluate(
-            "(node) => getComputedStyle(node).color"
-        )
-        self.assertEqual(copy_color, "rgb(244, 248, 255)")
-
-    def test_workshop_motion_and_reduced_motion(self):
-        for motion in ("no-preference", "reduce"):
-            with self.subTest(motion=motion):
-                context = self.browser.new_context(
-                    viewport={"width": 1366, "height": 768}, reduced_motion=motion
-                )
-                context.add_init_script(
-                    "Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 8})"
-                )
-                try:
-                    page = context.new_page()
-                    page.goto(self.url + "?skipIntro=1", wait_until="load")
-                    title = page.locator('#header-carousel .carousel-item.active h1')
-                    image = page.locator('#header-carousel .carousel-item.active picture')
-                    expected_title = "workshop-enter" if motion == "no-preference" else "none"
-                    expected_image = "workshop-image" if motion == "no-preference" else "none"
-                    self.assertEqual(title.evaluate('(e) => getComputedStyle(e).animationName'), expected_title)
-                    self.assertEqual(image.evaluate('(e) => getComputedStyle(e).animationName'), expected_image)
-                    if motion == "no-preference":
-                        item = page.locator('#o-nama .wow').first
-                        item.scroll_into_view_if_needed()
-                        expect(item).to_have_class(re.compile(r"\bis-revealed\b"))
-                        page.wait_for_timeout(800)
-                        page.evaluate('window.scrollTo(0, 0)')
-                        item.scroll_into_view_if_needed()
-                        self.assertEqual(item.evaluate("(e) => e.getAnimations().filter(a => a.playState === 'running').length"), 0)
-                finally:
-                    context.close()
-
-    def test_redesign_hero_headlines_fit_all_requested_viewports(self):
-        for width, height in ((1920, 1080), (1366, 768), (1024, 768),
-                              (820, 1180), (768, 1024), (390, 844), (360, 800)):
-            with self.subTest(width=width):
-                context = self.browser.new_context(viewport={"width": width, "height": height},
-                                                   reduced_motion="reduce")
-                try:
-                    page = context.new_page()
-                    page.goto(self.url + "?skipIntro=1", wait_until="load")
-                    for index in range(3):
-                        page.locator(f'[data-bs-slide-to="{index}"]').click(force=True)
-                        page.wait_for_timeout(300)
-                        heading = page.locator('#header-carousel .carousel-item.active h1')
-                        dimensions = heading.evaluate('(el) => [el.scrollWidth, el.clientWidth]')
-                        self.assertLessEqual(dimensions[0], dimensions[1] + 1)
-                finally:
-                    context.close()
-
-    def test_review_gallery_grid_and_no_horizontal_overflow(self):
-        for width, height in ((1920, 1080), (1366, 768), (1024, 768),
-                              (820, 1180), (768, 1024), (390, 844), (360, 800)):
-            with self.subTest(width=width):
-                context = self.browser.new_context(viewport={"width": width, "height": height},
-                                                   reduced_motion="reduce")
-                try:
-                    page = context.new_page()
-                    page.goto(self.url + "?skipIntro=1", wait_until="domcontentloaded")
-                    layout = page.evaluate("""() => {
-                        const cards = [...document.querySelectorAll('#galerija .row.g-4 > div')];
-                        return {scrollWidth: document.documentElement.scrollWidth,
-                                xs: cards.slice(0, 3).map(el => Math.round(el.getBoundingClientRect().x)),
-                                frame: getComputedStyle(cards[0].querySelector('.position-relative')).aspectRatio};
-                    }""")
-                    self.assertLessEqual(layout["scrollWidth"], width)
-                    self.assertNotEqual(layout["xs"][0], layout["xs"][1])
-                    if width >= 992:
-                        self.assertEqual(len(set(layout["xs"])), 3)
-                    self.assertEqual(layout["frame"], "4 / 5")
-                finally:
-                    context.close()
-
-    def test_review_gallery_recovers_when_rotating_photos_fail(self):
-        self.page.route("**/assets/photos/**", lambda route: route.abort())
-        self.page.reload(wait_until="domcontentloaded")
-        for image in self.page.locator('[data-gallery-img]').all():
-            image.scroll_into_view_if_needed()
-            self.page.wait_for_function("img => img.dataset.fallbackApplied === '1'", arg=image.element_handle())
-            expect(image).to_have_js_property("complete", True)
-            self.page.wait_for_function("img => img.complete && img.naturalWidth > 0", arg=image.element_handle())
-            self.assertIn("assets/gallery/tiktok-fallback-", image.get_attribute("src"))
+        self.assertLessEqual(title_size, 26)
+        self.assertLessEqual(para_size, 15)
 
     def test_v21_gallery_photo_fills_natural_width_without_crop(self):
         img = self.page.locator("[data-gallery-img]").first
@@ -1539,9 +879,7 @@ class SiteInteractionTests(unittest.TestCase):
             };
         }""")
         self.assertGreater(rect["imageWidth"] / rect["parentWidth"], 0.98)
-        # A bounded frame can differ from the source ratio; contain keeps the
-        # entire original photo visible without stretching or cropping.
-        self.assertAlmostEqual(rect["imageRatio"], 4 / 5, delta=0.05)
+        self.assertAlmostEqual(rect["imageRatio"], rect["naturalRatio"], delta=0.05)
         self.assertEqual(rect["fit"], "contain")
 
     def test_v212_dock_hides_when_booking_button_would_be_covered(self):
@@ -1617,64 +955,6 @@ class SiteInteractionTests(unittest.TestCase):
             expect(page).to_have_url(re.compile(r"#usluge$"))
         finally:
             desktop.close()
-
-    def test_v43_device_profiles_and_text_contrast(self):
-        profiles = (
-            ("rich", 8, 8, "no-preference", "motion-rich", "sunjaReviewHeroBackdrop"),
-            ("light", 2, 2, "no-preference", "perf-lite", "none"),
-            ("reduced", 8, 8, "reduce", "motion-reduced", "none"),
-        )
-        for name, memory, cores, motion, expected_class, expected_animation in profiles:
-            with self.subTest(profile=name):
-                context = self.browser.new_context(
-                    viewport={"width": 1440, "height": 1000},
-                    reduced_motion=motion,
-                )
-                context.add_init_script(
-                    "Object.defineProperty(navigator, 'deviceMemory', "
-                    "{configurable:true, get:() => " + str(memory) + "});"
-                    "Object.defineProperty(navigator, 'hardwareConcurrency', "
-                    "{configurable:true, get:() => " + str(cores) + "});"
-                )
-                try:
-                    page = context.new_page()
-                    page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
-                    page.wait_for_function(
-                        "(className) => document.documentElement.classList.contains(className)",
-                        arg=expected_class,
-                        timeout=5000,
-                    )
-                    state = page.locator("#header-carousel .carousel-item.active .hero-bg").evaluate(
-                        "(el) => getComputedStyle(el).animationName"
-                    )
-                    self.assertEqual(state, expected_animation)
-                    if name == "light":
-                        self.assertFalse(page.locator("html").evaluate(
-                            "el => el.classList.contains('motion-rich')"
-                        ))
-                finally:
-                    context.close()
-
-        readings = self.page.locator("#o-nama p.mb-4").first.evaluate("""(el) => {
-            const parse = value => (value.match(/[\\d.]+/g) || []).slice(0, 3).map(Number);
-            const lum = value => {
-                const rgb = parse(value).map(channel => channel / 255).map(channel =>
-                    channel <= .04045 ? channel / 12.92 : Math.pow((channel + .055) / 1.055, 2.4));
-                return .2126 * rgb[0] + .7152 * rgb[1] + .0722 * rgb[2];
-            };
-            const background = node => {
-                while (node) {
-                    const color = getComputedStyle(node).backgroundColor;
-                    if (color && color !== 'rgba(0, 0, 0, 0)') return color;
-                    node = node.parentElement;
-                }
-                return 'rgb(255, 255, 255)';
-            };
-            const fg = getComputedStyle(el).color, bg = background(el);
-            const a = lum(fg), b = lum(bg);
-            return { fg, bg, ratio: (Math.max(a, b) + .05) / (Math.min(a, b) + .05) };
-        }""")
-        self.assertGreaterEqual(readings["ratio"], 4.5, readings)
 
 
 if __name__ == "__main__":
