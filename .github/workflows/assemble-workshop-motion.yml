@@ -22,12 +22,12 @@ jobs:
           ref: redesign/blue-service-desk
           fetch-depth: 0
       - id: assemble
-        name: Keep the current carousel compatible on the exact draft
+        name: Preserve the intro and fast first-tap navigation
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = '558db842d0305b46c6bac9346b5ae25d5be2be66'
-          git show 'cb6f1795c2464348a9c3c4873184872967a6cbad:tools/polish_workshop_motion.py' > /tmp/polish_workshop.py
-          python3 /tmp/polish_workshop.py
+          test "$(git rev-parse HEAD)" = 'dce783be056673abdfa39aab08dcfc798f8a459b'
+          git show '5aae16e0d911f9fd72be4eee047ea17ae0969288:tools/finish_workshop_motion.py' > /tmp/finish_workshop.py
+          python3 /tmp/finish_workshop.py site
           node --check js/workshop-motion.js
           node --check js/main.js
           git diff --check
@@ -48,8 +48,8 @@ jobs:
           assert map_runtime(a)==map_runtime(b), 'map runtime differs from main'
           print('Exact production intro bytes, map code and asset references preserved')
           PY
-          git add -- index.html css/workshop-motion.css js/workshop-motion.js js/main.js
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve photo playback, full gallery targets and no-script navigation'
+          git add -- index.html css/workshop-motion.css js/main.js
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Keep the menu closing on the first tap and the opening gauge inside its column'
           git push origin HEAD:refs/heads/redesign/blue-service-desk
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
@@ -65,7 +65,7 @@ jobs:
           ref: ${{ needs.assemble.outputs.sha }}
           fetch-depth: 0
           persist-credentials: false
-      - name: Report old source checks without altering them
+      - name: Record unchanged legacy suite results for comparison
         run: |
           set -euo pipefail
           git worktree add --detach /tmp/sunja-main 807bccbea68ae62270235c9d2ba3240422a42417
@@ -99,22 +99,16 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Prepare the browser
+      - name: Prepare the browser and video encoder
         run: |
-          python -m pip install --disable-pip-version-check playwright==1.56.0 pillow==11.3.0
+          python -m pip install --disable-pip-version-check playwright==1.56.0 pillow==11.3.0 imageio-ffmpeg==0.6.0
           python -m playwright install --with-deps "$BROWSER_ENGINE"
-      - name: Check motion, controls and each requested size
+      - name: Verify native scrolling, controls and each requested size
         run: |
           set -euo pipefail
           git show '2b849cf18ad9395217b018e17b233689d4b6811e:tools/check_workshop_motion.py' > /tmp/check_workshop_motion.py
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('/tmp/check_workshop_motion.py')
-          s=p.read_text().replace("        check_images(p,p.locator('#header-carousel .carousel-item.active img'))", "        expect(p.locator('#header-carousel .carousel-item').nth(n)).to_have_class(re.compile(r'\\bactive\\b'))\n        check_images(p,p.locator('#header-carousel .carousel-item.active img'))",1)
-          s=s.replace("    p.locator('#header-carousel .carousel-control-prev').click()", "    expect(p.locator('#header-carousel .carousel-item').first).to_have_class(re.compile(r'\\bactive\\b'))\n    p.locator('#header-carousel .carousel-control-prev').click()",1)
-          s=s.replace("    p.locator('#header-carousel [data-bs-slide-to=\"0\"]').click()", "    expect(p.locator('#header-carousel .carousel-item').nth(2)).to_have_class(re.compile(r'\\bactive\\b'))\n    p.locator('#header-carousel [data-bs-slide-to=\"0\"]').click()",1)
-          p.write_text(s)
-          PY
+          git show '5aae16e0d911f9fd72be4eee047ea17ae0969288:tools/finish_workshop_motion.py' > /tmp/finish_workshop.py
+          python /tmp/finish_workshop.py reviewer /tmp/check_workshop_motion.py
           python /tmp/check_workshop_motion.py
       - name: Save screenshots, intro and observations
         if: always()
@@ -147,6 +141,7 @@ jobs:
           out="review/workshop-motion/$DRAFT_SHA"
           mkdir -p "$out"
           cp /tmp/workshop-media/{desktop-review.jpg,phone-review.jpg,workshop-scroll.mp4,observations.json} "$out/"
+          for f in "$out"/*; do test -s "$f"; done
           git add -- "$out"
           git diff --cached --check
           git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Attach the tested motion draft review in images and video'
