@@ -1,0 +1,46 @@
+name: Package verified workshop review
+
+on:
+  push:
+    branches: [ops/assemble-workshop-motion]
+    paths: [.github/workflows/package-workshop-review.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preserve the exact recorded media for a text-only transfer
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import base64
+          import hashlib
+          import json
+          from pathlib import Path
+
+          root = Path('review/workshop-motion/049b692719c02e00498a10d307f1c2444636f366')
+          expected = {
+              'workshop-scroll.mp4': '36793caa4cd35128e118ac08616fae5945685d2b',
+              'desktop-review.jpg': 'bdf85fce805630f0cd49af703e1138a0d443580c',
+              'phone-review.jpg': '972522b8f19e91785881393c202c4643fdd2aa34',
+          }
+          parts = []
+          for name, blob_id in expected.items():
+              payload = (root / name).read_bytes()
+              assert hashlib.sha1(f'blob {len(payload)}\0'.encode() + payload).hexdigest() == blob_id
+              parts.append({'name': name, 'sha256': hashlib.sha256(payload).hexdigest(),
+                            'data': base64.b64encode(payload).decode('ascii')})
+              print(f'{name}: verified {len(payload):,} bytes')
+          # Plain ASCII, read in full below the existing transfer size limit.
+          (root / 'review-media.b64').write_text(json.dumps(parts, separators=(',', ':')) + '\n', encoding='ascii')
+          PY
+          git add -- review/workshop-motion/049b692719c02e00498a10d307f1c2444636f366/review-media.b64
+          if git diff --cached --quiet; then exit 0; fi
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Save a lossless transport copy of the verified review'
+          git push origin HEAD:refs/heads/ops/assemble-workshop-motion
