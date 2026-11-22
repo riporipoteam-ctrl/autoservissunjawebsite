@@ -662,6 +662,27 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             context.close()
 
+    def test_v40_carousel_recovers_if_bootstrap_drops_next_transition(self):
+        context = self.browser.new_context(
+            viewport={"width": 1280, "height": 800},
+            reduced_motion="no-preference",
+        )
+        try:
+            page = context.new_page()
+            page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
+            page.wait_for_function("() => !!(window.bootstrap && window.bootstrap.Carousel)")
+            page.evaluate("""() => {
+                const carousel = document.querySelector('#header-carousel');
+                const instance = window.bootstrap.Carousel.getOrCreateInstance(carousel);
+                instance.next = function () {};
+            }""")
+            page.wait_for_function("""() => {
+                const slides = [...document.querySelectorAll('#header-carousel .carousel-item')];
+                return slides.length === 3 && slides[1].classList.contains('active');
+            }""", timeout=9000)
+        finally:
+            context.close()
+
     def test_v37_carousel_auto_rotates_even_if_bootstrap_cdn_is_unavailable(self):
         context = self.browser.new_context(
             viewport={"width": 390, "height": 844}, is_mobile=True,
