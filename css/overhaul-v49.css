@@ -131,6 +131,8 @@ html:not(.sunja-intro-active) #siteFooter .footer-brand img{max-width:100%;width
 html:not(.sunja-intro-active) #siteFooter .footer-menu{display:flex;flex-wrap:wrap;gap:0 12px}
 html:not(.sunja-intro-active) #siteFooter .footer-menu a{display:inline-flex;align-items:center;margin:0;padding:0;border:0}
 html:not(.sunja-intro-active) #siteFooter .row>div{min-width:0;overflow-wrap:anywhere}
+/* Bootstrap g-5 uses a 24px negative half-gutter; the phone inset is 18px. */
+@media(max-width:767.98px){html:not(.sunja-intro-active) #siteFooter>.container>.row.g-5{--bs-gutter-x:1.75rem}}
 html:not(.sunja-intro-active) :is(#siteFooter,.mobile-callbar) :is(a,button):focus-visible{outline-color:#fbe2a9!important;outline-offset:-4px}
 html:not(.sunja-intro-active) .mobile-callbar{box-shadow:0 -4px 16px #38245b22}
 html:not(.sunja-intro-active) .mobile-callbar a.call{background:var(--violet)!important}
