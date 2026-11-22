@@ -1,0 +1,173 @@
+name: Assemble and verify workshop motion
+on:
+  push:
+    branches: [ops/assemble-workshop-motion]
+    paths: ['.github/workflows/assemble-workshop-motion.yml']
+permissions: {}
+concurrency:
+  group: workshop-motion-draft
+  cancel-in-progress: false
+jobs:
+  assemble:
+    if: github.repository == 'riporipoteam-ctrl/autoservissunjawebsite' && github.ref == 'refs/heads/ops/assemble-workshop-motion'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.assemble.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: redesign/blue-service-desk
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - id: assemble
+        name: Wire the motion scenes into the exact draft
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 'e3de53cca4c4e3a55efea22f2600604dfb3f30a6'
+          test "$(git hash-object index.html)" = '16a870342efa267b781a8964494553ba4fba7ef9'
+          python -m pip install --disable-pip-version-check beautifulsoup4==4.13.4
+          git show 'c90b24f9251a656d46084fa5793984e22083fc1a:tools/assemble_workshop_motion.py' > /tmp/assemble_workshop.py
+          git show 'f2e9ec338c102bbf12fb5885ab90e6fecfbbdac3:tools/refine_workshop_motion.py' > /tmp/refine_workshop.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/assemble_workshop.py')
+          src=p.read_text()
+          i=src.index('nav_links = ')
+          j=src.index('\n',i)
+          line=src[i:j].split('.replace(')[0].replace('{" aria-current=\\"location\\"" if i == 1 else ""}', '{current if i == 1 else ""}')
+          src=src[:i]+'current = \' aria-current="location"\'\n'+line+' for i, (slug,label) in enumerate(menus,1))'+src[j:]
+          src=src.replace("{get('[data-about-photo]')}", "{str(get('[data-about-photo]')).replace('desk-profile-image','wm-about-photo')}")
+          src=src.replace("n['src'] for n in ","n.get('src') for n in ")
+          src=src.replace("after.replace('</body>'", "after.replace('js/main.js?v=40.0', 'js/main.js?v=40.1').replace('</body>'")
+          src=src.replace(".replace(f'    {RUNTIME}\\n','',1) == after", ".replace(f'    {RUNTIME}\\n','',1).replace('js/main.js?v=40.1', 'js/main.js?v=40.0') == after")
+          p.write_text(src)
+          PY
+          python /tmp/assemble_workshop.py
+          python /tmp/refine_workshop.py
+          python - <<'PY'
+          from pathlib import Path
+          main=Path('js/main.js')
+          s=main.read_text()
+          i=s.index('            var shouldPlay = ')
+          j=s.index('            if (window.bootstrap',i)
+          s=s[:i]+'''            var currentMode = root.dataset.workshopMotion;
+                      var shouldPlay = currentMode ? currentMode !== "off" :
+                          !document.getElementById("workshopStory") || !(reduceMotion || perfLite);
+          '''+s[j:]
+          main.write_text(s)
+          p=Path('js/workshop-motion.js')
+          s=p.read_text()
+          old="  document.addEventListener('shown.bs.tab', () => schedule(true));"
+          assert s.count(old)==1
+          s=s.replace(old,"""  const tablist = document.querySelector('#usluge [role=tablist]');
+            const tabs = [...(tablist?.querySelectorAll('[role=tab]') || [])];
+            tablist?.addEventListener('keydown', event => {
+              const index = tabs.indexOf(event.target);
+              if (index < 0 || !['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
+              event.preventDefault();
+              event.stopPropagation();
+              const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 :
+                (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
+              tabs[next].focus({preventScroll:true});
+              tabs[next].click();
+            }, true);
+            document.addEventListener('shown.bs.tab', event => {
+              if (tabs.includes(event.target)) tabs.forEach(tab => tab.tabIndex = tab === event.target ? 0 : -1);
+              schedule(true);
+            });""")
+          p.write_text(s)
+          p=Path('css/workshop-motion.css')
+          s=p.read_text().replace('html[data-workshop-motion=full] #pocetna{background:linear-gradient','html[data-workshop-motion=full] #workshopStory #pocetna{background:linear-gradient')
+          p.write_text(s)
+          PY
+          node --check js/workshop-motion.js
+          node --check js/main.js
+          git rm -- css/blue-service-desk.css
+          git diff --check
+          git diff --quiet -- CNAME .nojekyll robots.txt sitemap.xml css/style.css assets
+          git add -- index.html css/workshop-motion.css js/workshop-motion.js js/main.js
+          git diff --cached --check
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Replace the draft with the complete Workshop in Motion experience'
+          git push origin HEAD:refs/heads/redesign/blue-service-desk
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  browser:
+    needs: assemble
+    runs-on: ubuntu-24.04
+    timeout-minutes: 14
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    env:
+      BROWSER_ENGINE: ${{ matrix.browser }}
+      DRAFT_SHA: ${{ needs.assemble.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.assemble.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare the browser
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0 pillow==11.3.0
+          python -m playwright install --with-deps "$BROWSER_ENGINE"
+      - name: Check motion, controls and each requested size
+        run: |
+          set -euo pipefail
+          git show '2b849cf18ad9395217b018e17b233689d4b6811e:tools/check_workshop_motion.py' > /tmp/check_workshop_motion.py
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('/tmp/check_workshop_motion.py')
+          s=p.read_text().replace("        check_images(p,p.locator('#header-carousel .carousel-item.active img'))", "        expect(p.locator('#header-carousel .carousel-item').nth(n)).to_have_class(re.compile(r'\\bactive\\b'))\n        check_images(p,p.locator('#header-carousel .carousel-item.active img'))",1)
+          s=s.replace("    p.locator('#header-carousel .carousel-control-prev').click()", "    expect(p.locator('#header-carousel .carousel-item').first).to_have_class(re.compile(r'\\bactive\\b'))\n    p.locator('#header-carousel .carousel-control-prev').click()",1)
+          s=s.replace("    p.locator('#header-carousel [data-bs-slide-to=\"0\"]').click()", "    expect(p.locator('#header-carousel .carousel-item').nth(2)).to_have_class(re.compile(r'\\bactive\\b'))\n    p.locator('#header-carousel [data-bs-slide-to=\"0\"]').click()",1)
+          p.write_text(s)
+          PY
+          python /tmp/check_workshop_motion.py
+      - name: Save screenshots, intro and observations
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: workshop-motion-${{ matrix.browser }}
+          path: captures/
+          if-no-files-found: warn
+          retention-days: 30
+
+  review-media:
+    needs: [assemble, browser]
+    runs-on: ubuntu-24.04
+    timeout-minutes: 6
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: workshop-motion-chromium
+          path: /tmp/workshop-media
+      - name: Save a watchable review apart from the site
+        env:
+          DRAFT_SHA: ${{ needs.assemble.outputs.sha }}
+        run: |
+          set -euo pipefail
+          out="review/workshop-motion/$DRAFT_SHA"
+          mkdir -p "$out"
+          cp /tmp/workshop-media/{desktop-review.jpg,phone-review.jpg,workshop-scroll.mp4,observations.json} "$out/"
+          git add -- "$out"
+          git diff --cached --check
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Attach the tested motion draft review in images and video'
+          git push origin HEAD:refs/heads/ops/assemble-workshop-motion
+          printf 'Review files for %s: %s\n' "$DRAFT_SHA" "$out"
