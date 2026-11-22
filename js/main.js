@@ -30,18 +30,16 @@
         });
     }
 
-    // The first hero photo retains fetchpriority=high. Once the page is loaded,
-    // fetch the other two permanent slides on capable connections so Bootstrap
-    // does not reveal an empty lazy image during the automatic transition.
-    if (!saveData && !perfLite) {
-        window.addEventListener("load", function () {
-            var slides = document.querySelectorAll(".carousel-item:not(.active) picture img");
-            slides.forEach(function (slideImg) {
-                slideImg.decoding = "async";
-                slideImg.loading = "eager";
-            });
-        }, { once: true });
-    }
+    // Preload the two following workshop photos before the first transition.
+    // This avoids a blank frame while the next slide decodes on mobile.
+    window.addEventListener("DOMContentLoaded", function () {
+        var heroImages = document.querySelectorAll("#header-carousel .carousel-item:not(.active) picture img");
+        heroImages.forEach(function (slideImg) {
+            slideImg.decoding = "async";
+            slideImg.loading = "eager";
+            if ("fetchPriority" in slideImg) slideImg.fetchPriority = "low";
+        });
+    }, { once: true });
 
     // v37: deterministic hero auto-rotation. Bootstrap may fail to arrive
     // on restrictive mobile networks; keep a tiny no-dependency fallback.
