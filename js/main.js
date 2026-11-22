@@ -30,82 +30,223 @@
         });
     }
 
-    // The first hero photo retains fetchpriority=high. Once the page is loaded,
-    // fetch the other two permanent slides on capable connections so Bootstrap
-    // does not reveal an empty lazy image during the automatic transition.
-    if (!saveData && !perfLite) {
-        window.addEventListener("load", function () {
-            var slides = document.querySelectorAll(".carousel-item:not(.active) picture img");
-            slides.forEach(function (slideImg) {
-                slideImg.decoding = "async";
-                slideImg.loading = "eager";
-            });
-        }, { once: true });
-    }
+    // The hero has only three curated photographs. Warm the two following
+    // slides at low fetch priority so a transition never lands on an undecoded
+    // image, including on mobile and lower-powered devices.
+    window.addEventListener("DOMContentLoaded", function () {
+        var heroImages = document.querySelectorAll("#header-carousel .carousel-item:not(.active) picture img");
+        heroImages.forEach(function (slideImg) {
+            slideImg.decoding = "async";
+            slideImg.loading = "eager";
+            if ("fetchPriority" in slideImg) slideImg.fetchPriority = "low";
+        });
+    }, { once: true });
 
-    // v37: deterministic hero auto-rotation. Bootstrap may fail to arrive
-    // on restrictive mobile networks; keep a tiny no-dependency fallback.
-    // Do not spend carousel cycles underneath the full-screen brand intro.
+    // v40: one clock owns both the slide rotation and the progress indicator.
+    // Bootstrap still performs the actual transition, but its own interval is
+    // disabled so a busy transition can never drop an automatic next-slide call.
+    // A small no-dependency controller remains available when the CDN is blocked.
     function setupHeroCarousel() {
         var hero = document.getElementById("header-carousel");
         if (!hero) return;
+
         var slides = Array.prototype.slice.call(hero.querySelectorAll(".carousel-item"));
         var indicators = Array.prototype.slice.call(hero.querySelectorAll(".hero-indicators button"));
         if (slides.length < 2) return;
-        var instance = null, fallbackTimer = 0, wiredFallback = false;
 
-        function rotateBy(delta) {
-            var active = slides.findIndex(function (slide) { return slide.classList.contains("active"); });
-            var next = (active + delta + slides.length) % slides.length;
+        var interval = Number(hero.getAttribute("data-hero-interval")) || 6500;
+        var instance = null;
+        var cycleTimer = 0;
+        var wiredFallback = false;
+        var transitionPending = false;
+
+        function currentIndex() {
+            return slides.findIndex(function (slide) {
+                return slide.classList.contains("active");
+            });
+        }
+
+        function canRotate() {
+            return !document.hidden &&
+                !document.documentElement.classList.contains("sunja-intro-active");
+        }
+
+        function clearCycle() {
+            if (cycleTimer) window.clearTimeout(cycleTimer);
+            cycleTimer = 0;
+        }
+
+        function resetProgress() {
+            indicators.forEach(function (button) {
+                var fill = button.querySelector("span");
+                if (!fill) return;
+                fill.style.animation = "none";
+                void fill.offsetWidth;
+                fill.style.animation = "";
+            });
+        }
+
+        function syncAccessibility() {
+            slides.forEach(function (slide, index) {
+                slide.setAttribute("aria-hidden", slide.classList.contains("active") ? "false" : "true");
+                if (slide.classList.contains("active")) {
+                    slide.setAttribute("aria-label", (index + 1) + " od " + slides.length);
+                }
+            });
+            indicators.forEach(function (button, index) {
+                var active = index === currentIndex();
+                if (active) {
+                    button.setAttribute("aria-current", "true");
+                    button.setAttribute("aria-label", "Prikaži slajd " + (index + 1) + " od " + slides.length);
+                } else {
+                    button.removeAttribute("aria-current");
+                    button.setAttribute("aria-label", "Prikaži slajd " + (index + 1) + " od " + slides.length);
+                }
+            });
+        }
+
+        function scheduleNextSlide() {
+            clearCycle();
+            if (!canRotate()) return;
+            cycleTimer = window.setTimeout(advanceNextSlide, interval);
+        }
+
+        function rotateTo(index) {
+            var next = (index + slides.length) % slides.length;
             slides.forEach(function (slide, i) {
                 slide.classList.toggle("active", i === next);
             });
             indicators.forEach(function (button, i) {
                 button.classList.toggle("active", i === next);
-                if (i === next) button.setAttribute("aria-current", "true");
-                else button.removeAttribute("aria-current");
             });
+            syncAccessibility();
+            resetProgress();
+            scheduleNextSlide();
         }
-        function stop() {
-            if (fallbackTimer) window.clearInterval(fallbackTimer);
-            fallbackTimer = 0;
-            if (instance && typeof instance.pause === "function") instance.pause();
+
+        function rotateBy(delta) {
+            var active = currentIndex();
+            rotateTo((active < 0 ? 0 : active) + delta);
         }
-        function startCycle() {
-            if (document.hidden || document.documentElement.classList.contains("sunja-intro-active")) return;
-            stop();
-            if (window.bootstrap && window.bootstrap.Carousel) {
+
+        function advanceNextSlide() {
+            cycleTimer = 0;
+            if (!canRotate()) return;
+
+            if (instance && typeof instance.next === "function") {
+                var before = currentIndex();
                 try {
-                    instance = window.bootstrap.Carousel.getOrCreateInstance(hero, {
-                        interval: 6500, ride: false, pause: false, wrap: true, touch: true
-                    });
-                    instance.cycle();
+                    instance.next();
+                    // Defensive recovery: if a transition was prevented or the
+                    // Bootstrap instance became busy, never leave the timer dead.
+                    window.setTimeout(function () {
+                        if (!canRotate()) return;
+                        if (currentIndex() === before && !transitionPending && !cycleTimer) {
+                            scheduleNextSlide();
+                        }
+                    }, 1100);
                     return;
                 } catch (error) {
                     instance = null;
                 }
             }
-            if (!wiredFallback) {
-                wiredFallback = true;
-                indicators.forEach(function (button, i) {
-                    button.addEventListener("click", function () {
-                        var current = slides.findIndex(function (slide) { return slide.classList.contains("active"); });
-                        rotateBy(i - current);
-                        startCycle();
-                    });
-                });
-                hero.querySelectorAll("[data-bs-slide]").forEach(function (button) {
-                    button.addEventListener("click", function () {
-                        rotateBy(button.getAttribute("data-bs-slide") === "prev" ? -1 : 1);
-                        startCycle();
-                    });
-                });
-            }
-            fallbackTimer = window.setInterval(function () { rotateBy(1); }, 6500);
+
+            wireFallbackControls();
+            rotateBy(1);
         }
+
+        function handleSlideStart() {
+            transitionPending = true;
+            // Bootstrap sets the active indicator as the transition begins.
+            // Start the same 6.5s deadline from that exact moment.
+            scheduleNextSlide();
+        }
+
+        function handleSlideEnd() {
+            transitionPending = false;
+            syncAccessibility();
+            if (!cycleTimer) scheduleNextSlide();
+        }
+
+        function wireFallbackControls() {
+            if (wiredFallback) return;
+            wiredFallback = true;
+
+            indicators.forEach(function (button, index) {
+                button.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    rotateTo(index);
+                });
+            });
+            hero.querySelectorAll("[data-bs-slide]").forEach(function (button) {
+                button.addEventListener("click", function (event) {
+                    event.preventDefault();
+                    rotateBy(button.getAttribute("data-bs-slide") === "prev" ? -1 : 1);
+                });
+            });
+
+            // Preserve swipe navigation even if the Bootstrap bundle is blocked.
+            var touchStart = null;
+            hero.addEventListener("touchstart", function (event) {
+                if (event.touches.length !== 1 ||
+                    (event.target.closest && event.target.closest("a,button"))) {
+                    touchStart = null;
+                    return;
+                }
+                var point = event.touches[0];
+                touchStart = { x: point.clientX, y: point.clientY };
+            }, { passive: true });
+            hero.addEventListener("touchend", function (event) {
+                if (!touchStart || event.changedTouches.length !== 1) return;
+                var point = event.changedTouches[0];
+                var dx = point.clientX - touchStart.x;
+                var dy = point.clientY - touchStart.y;
+                touchStart = null;
+                if (Math.abs(dx) < 44 || Math.abs(dy) > 60) return;
+                rotateBy(dx < 0 ? 1 : -1);
+            }, { passive: true });
+        }
+
+        function startCycle() {
+            if (!canRotate()) {
+                clearCycle();
+                return;
+            }
+
+            if (!instance && window.bootstrap && window.bootstrap.Carousel) {
+                try {
+                    hero.addEventListener("slide.bs.carousel", handleSlideStart);
+                    hero.addEventListener("slid.bs.carousel", handleSlideEnd);
+                    instance = window.bootstrap.Carousel.getOrCreateInstance(hero, {
+                        interval: false,
+                        ride: false,
+                        pause: false,
+                        wrap: true,
+                        touch: true
+                    });
+                    if (typeof instance.pause === "function") instance.pause();
+                } catch (error) {
+                    instance = null;
+                    wireFallbackControls();
+                }
+            } else if (!instance) {
+                wireFallbackControls();
+            }
+
+            transitionPending = false;
+            syncAccessibility();
+            resetProgress();
+            scheduleNextSlide();
+        }
+
         document.addEventListener("visibilitychange", function () {
-            if (document.hidden) stop();
-            else startCycle();
+            if (document.hidden) {
+                clearCycle();
+                hero.classList.add("hero-carousel-paused");
+            } else {
+                hero.classList.remove("hero-carousel-paused");
+                startCycle();
+            }
         });
         window.addEventListener("pageshow", startCycle);
         window.addEventListener("sunja:intro-finished", startCycle);
