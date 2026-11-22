@@ -1,6 +1,34 @@
 {
  "hero": [
   {
+   "href": "https://www.tiktok.com/@autoservissunja/photo/7710350720762957077",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-20",
+   "cat": "opcenito",
+   "source": "tiktok",
+   "post_id": "7710350720762957077",
+   "media_id": "tiktok:7710350720762957077:0",
+   "media_index": 0,
+   "quality_v": 2,
+   "src": "assets/photos/tt-wide-20261120-3d31739d.webp",
+   "cat_checked": true,
+   "cat_v": true
+  },
+  {
+   "href": "https://www.tiktok.com/@autoservissunja/video/7709988484613803265",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-19",
+   "cat": "opcenito",
+   "source": "tiktok",
+   "post_id": "7709988484613803265",
+   "media_id": "tiktok:7709988484613803265:0",
+   "media_index": 0,
+   "quality_v": 2,
+   "src": "assets/photos/tt-wide-20261119-82d63b9b.webp",
+   "cat_checked": true,
+   "cat_v": true
+  },
+  {
    "src": "assets/photos/tt-wide-20261108-234cf88c.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7705911264454675764",
    "title": "Elektronika vozila (ECU)",
@@ -237,52 +265,38 @@
    "media_id": "tiktok:7689224789633797397:0",
    "media_index": 0,
    "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-wide-20260919-fb00b175.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7687352589242944788",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-19",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7687352589242944788",
-   "media_id": "tiktok:7687352589242944788:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-wide-20260919-d3b7439d.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7687352746068184341",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-19",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7687352746068184341",
-   "media_id": "tiktok:7687352746068184341:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-wide-20260918-a3df3979.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7686981816414113044",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-18",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7686981816414113044",
-   "media_id": "tiktok:7686981816414113044:0",
-   "media_index": 0,
-   "quality_v": 2
   }
  ],
  "gallery": [
   {
+   "href": "https://www.tiktok.com/@autoservissunja/photo/7710350720762957077",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-20",
+   "cat": "opcenito",
+   "source": "tiktok",
+   "post_id": "7710350720762957077",
+   "media_id": "tiktok:7710350720762957077:0",
+   "media_index": 0,
+   "quality_v": 2,
+   "src": "assets/photos/tt-20261120-3d31739d.webp",
+   "cat_checked": true,
+   "cat_v": true
+  },
+  {
+   "href": "https://www.tiktok.com/@autoservissunja/video/7709988484613803265",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-19",
+   "cat": "opcenito",
+   "source": "tiktok",
+   "post_id": "7709988484613803265",
+   "media_id": "tiktok:7709988484613803265:0",
+   "media_index": 0,
+   "quality_v": 2,
+   "src": "assets/photos/tt-20261119-82d63b9b.webp",
+   "cat_checked": true,
+   "cat_v": true
+  },
+  {
    "src": "assets/photos/tt-20261108-234cf88c.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7705911264454675764",
    "title": "Elektronika vozila (ECU)",
@@ -519,65 +533,38 @@
    "media_id": "tiktok:7689224789633797397:0",
    "media_index": 0,
    "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20260919-fb00b175.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7687352589242944788",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-19",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7687352589242944788",
-   "media_id": "tiktok:7687352589242944788:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20260919-d3b7439d.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7687352746068184341",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-19",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7687352746068184341",
-   "media_id": "tiktok:7687352746068184341:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20260918-a3df3979.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7686981816414113044",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-18",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7686981816414113044",
-   "media_id": "tiktok:7686981816414113044:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20260917-052437.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7686581783609052437",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-17",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7686581783609052437",
-   "media_id": "tiktok:7686581783609052437:0",
-   "media_index": 0
   }
  ],
  "heroMobile": [
   {
+   "href": "https://www.tiktok.com/@autoservissunja/photo/7710350720762957077",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-20",
+   "cat": "opcenito",
+   "source": "tiktok",
+   "post_id": "7710350720762957077",
+   "media_id": "tiktok:7710350720762957077:0",
+   "media_index": 0,
+   "quality_v": 2,
+   "src": "assets/photos/tt-20261120-3d31739d.webp",
+   "cat_checked": true,
+   "cat_v": true
+  },
+  {
+   "href": "https://www.tiktok.com/@autoservissunja/video/7709988484613803265",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-19",
+   "cat": "opcenito",
+   "source": "tiktok",
+   "post_id": "7709988484613803265",
+   "media_id": "tiktok:7709988484613803265:0",
+   "media_index": 0,
+   "quality_v": 2,
+   "src": "assets/photos/tt-20261119-82d63b9b.webp",
+   "cat_checked": true,
+   "cat_v": true
+  },
+  {
    "src": "assets/photos/tt-20261108-234cf88c.webp",
    "href": "https://www.tiktok.com/@autoservissunja/photo/7705911264454675764",
    "title": "Elektronika vozila (ECU)",
@@ -812,48 +799,6 @@
    "source": "tiktok",
    "post_id": "7689224789633797397",
    "media_id": "tiktok:7689224789633797397:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20260919-fb00b175.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7687352589242944788",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-19",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7687352589242944788",
-   "media_id": "tiktok:7687352589242944788:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20260919-d3b7439d.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7687352746068184341",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-19",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7687352746068184341",
-   "media_id": "tiktok:7687352746068184341:0",
-   "media_index": 0,
-   "quality_v": 2
-  },
-  {
-   "src": "assets/photos/tt-20260918-a3df3979.webp",
-   "href": "https://www.tiktok.com/@autoservissunja/photo/7686981816414113044",
-   "title": "Radionica, septembar 2026",
-   "date": "2026-09-18",
-   "cat": "opcenito",
-   "cat_checked": true,
-   "cat_v": true,
-   "source": "tiktok",
-   "post_id": "7686981816414113044",
-   "media_id": "tiktok:7686981816414113044:0",
    "media_index": 0,
    "quality_v": 2
   }
@@ -885,15 +830,15 @@
   }
  },
  "latest": {
-  "src": "assets/photos/tt-20261108-234cf88c.webp",
-  "wide": "assets/photos/tt-wide-20261108-234cf88c.webp",
-  "href": "https://www.tiktok.com/@autoservissunja/photo/7705911264454675764",
-  "title": "Elektronika vozila (ECU)",
-  "date": "2026-11-08",
-  "cat": "elektrika",
+  "src": "assets/photos/tt-20261120-3d31739d.webp",
+  "wide": "assets/photos/tt-wide-20261120-3d31739d.webp",
+  "href": "https://www.tiktok.com/@autoservissunja/photo/7710350720762957077",
+  "title": "Radionica, novembar 2026",
+  "date": "2026-11-20",
+  "cat": "opcenito",
   "source": "tiktok",
-  "post_id": "7705911264454675764",
-  "media_id": "tiktok:7705911264454675764:0"
+  "post_id": "7710350720762957077",
+  "media_id": "tiktok:7710350720762957077:0"
  },
  "_missing": {},
  "_carousel_probe": {
@@ -1022,6 +967,18 @@
    "count": 1,
    "attempts": 1,
    "last": 1794426394
+  },
+  "7710350720762957077": {
+   "status": "photo",
+   "count": 1,
+   "attempts": 1,
+   "last": 1795381202
+  },
+  "7709988484613803265": {
+   "status": "not-photo",
+   "count": 0,
+   "attempts": 1,
+   "last": 1795381202
   }
  }
 }
