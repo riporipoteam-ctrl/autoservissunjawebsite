@@ -218,7 +218,7 @@ html[data-workshop-motion=off] #workshopStory .carousel-item,html[data-workshop-
 #wmHeader .nav-link.active:not([aria-current=location]):not(:hover){background:none!important;color:var(--wm-ink)!important}
 #pocetna .wm-pin{isolation:isolate}
 .wm-hero-copy h1{width:fit-content}
-.wm-gauge{width:118%;inset:-16% -2% auto auto;opacity:.86;transform:translate3d(0,calc(-23px*var(--wm-hero)*var(--wm-amplitude,1)),0)}
+.wm-gauge{width:118%;inset:-16% 0 auto auto;opacity:.86;transform:translate3d(0,calc(-23px*var(--wm-hero)*var(--wm-amplitude,1)),0)}
 .wm-gauge .wm-needle{transform-box:view-box}
 #workshopStory #header-carousel .carousel-inner{border:0!important}
 #workshopStory #header-carousel .wm-film .hero-bg{width:100%!important;filter:none!important}

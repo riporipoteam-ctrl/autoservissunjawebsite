@@ -321,7 +321,14 @@
     function collapseMobileMenu() {
         if (window.innerWidth >= 992) return;
         var el = document.getElementById("navbarCollapse");
-        if (!el || !el.classList.contains("show")) return;
+        if (!el) return;
+        var toggle = document.querySelector(".navbar-toggler");
+        // Bootstrap ignores hide() while an opening transition is in progress.
+        // Complete that transition now so this same tap can close the menu.
+        if (el.classList.contains("collapsing") && toggle && toggle.getAttribute("aria-expanded") === "true") {
+            el.dispatchEvent(new Event("transitionend"));
+        }
+        if (!el.classList.contains("show")) return;
         try {
             if (typeof bootstrap !== "undefined" && bootstrap.Collapse) {
                 (bootstrap.Collapse.getInstance(el) || new bootstrap.Collapse(el, { toggle: false })).hide();
@@ -334,7 +341,6 @@
             el.classList.add("collapse");
             el.style.height = "";
         }
-        var toggle = document.querySelector(".navbar-toggler");
         if (toggle) {
             toggle.setAttribute("aria-expanded", "false");
             toggle.classList.add("collapsed");
