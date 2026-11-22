@@ -1,0 +1,105 @@
+name: Verify and recapture workshop pages
+on:
+  push:
+    branches: [ops/assemble-workshop-motion]
+    paths: ['.github/workflows/verify-workshop-paint.yml', 'tools/verify_workshop_paint.py']
+permissions: {}
+concurrency:
+  group: workshop-paint-review
+  cancel-in-progress: false
+env:
+  DRAFT_SHA: '049b692719c02e00498a10d307f1c2444636f366'
+jobs:
+  screenshots:
+    if: github.repository == 'riporipoteam-ctrl/autoservissunjawebsite' && github.ref == 'refs/heads/ops/assemble-workshop-motion'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    env:
+      BROWSER_ENGINE: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          path: review-tools
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.DRAFT_SHA }}
+          path: reviewed-site
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Set up the screenshot browser
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0 pillow==11.3.0
+          python -m playwright install --with-deps "$BROWSER_ENGINE"
+      - name: Check painted gallery pixels and render the requested views
+        working-directory: reviewed-site
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$DRAFT_SHA"
+          export CAPTURE_DIR="$GITHUB_WORKSPACE/captures"
+          python ../review-tools/tools/verify_workshop_paint.py
+          test -z "$(git status --porcelain)"
+          for size in 1920x1080 1366x768 1024x768 820x1180 768x1024 390x844 360x800; do
+            test -s "$CAPTURE_DIR/$size/14-full-page.png"
+            test "$(find "$CAPTURE_DIR/$size" -type f -name '*.png' | wc -l)" -ge 12
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: workshop-page-captures-${{ matrix.browser }}
+          path: captures/
+          if-no-files-found: warn
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: unverified-screenshot-diagnostics-${{ matrix.browser }}
+          path: capture-diagnostics/
+          if-no-files-found: ignore
+          retention-days: 7
+  review-media:
+    if: always() && !cancelled() && needs.screenshots.result != 'skipped'
+    needs: screenshots
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ops/assemble-workshop-motion
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: workshop-page-captures-*
+          path: /tmp/review-captures
+      - name: Share verified phone still and per-browser paint report on the review branch
+        shell: bash
+        env:
+          CHECKS: ${{ needs.screenshots.result }}
+        run: |
+          set -euo pipefail
+          out="review/workshop-stills/$DRAFT_SHA/$GITHUB_RUN_ID"
+          mkdir -p "$out"
+          for engine in chromium webkit; do
+            report="/tmp/review-captures/workshop-page-captures-$engine/photo-paint-report.json"
+            if [ -e "$report" ]; then cp "$report" "$out/$engine.json"; fi
+          done
+          if [ "$CHECKS" = success ]; then
+            src=/tmp/review-captures/workshop-page-captures-chromium/phone-review.jpg
+            base64 -w 0 "$src" > "$out/phone-review.b64"
+            sha256sum "$src" | cut -d' ' -f1 > "$out/phone-review.sha256"
+            cat "$out/phone-review.sha256"
+          fi
+          git add -- "$out"
+          git diff --cached --check
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Save workshop photo verification and any approved phone still for draft review'
+          git push origin HEAD:refs/heads/ops/assemble-workshop-motion
