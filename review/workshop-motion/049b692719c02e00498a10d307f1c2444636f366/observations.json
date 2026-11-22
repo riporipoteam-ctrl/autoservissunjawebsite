@@ -1,0 +1,380 @@
+{
+  "engine": "chromium",
+  "build": "049b692719c02e00498a10d307f1c2444636f366",
+  "viewports": [
+    {
+      "size": "1920x1080",
+      "mode": "full",
+      "before": {
+        "y": 0,
+        "pin": 65,
+        "position": "sticky",
+        "runway": 551,
+        "progress": 0,
+        "dial": 0,
+        "transform": "matrix(0.438371, -0.898794, 0.898794, 0.438371, 0, 0)",
+        "photo": "matrix(1, 0, 0, 1, 0, 0)",
+        "current": "#pocetna",
+        "width": 1920,
+        "document": 1920
+      },
+      "mid": {
+        "y": 281,
+        "pin": 65,
+        "position": "sticky",
+        "runway": 551,
+        "progress": 0.0551,
+        "dial": 0.51,
+        "transform": "matrix(0.99975, 0.0223384, -0.0223384, 0.99975, 0, 0)",
+        "photo": "matrix(1.0969, 0, 0, 1.0969, 0, -13.77)",
+        "current": "#pocetna",
+        "width": 1920,
+        "document": 1920
+      },
+      "after": {
+        "y": 651,
+        "pin": -35.203125,
+        "position": "sticky",
+        "runway": 551,
+        "progress": 0.1277,
+        "dial": 1,
+        "transform": "matrix(0.438371, 0.898794, -0.898794, 0.438371, 0, 0)",
+        "photo": "matrix(1.19, 0, 0, 1.19, 0, -27)",
+        "current": "#pocetna",
+        "width": 1920,
+        "document": 1920
+      },
+      "gallery": [
+        [
+          "12px",
+          "matrix(1, 0, 0, 1, 0, -15.1906)"
+        ],
+        [
+          "22px",
+          "matrix(1, 0, 0, 1, 0, -5.69007)"
+        ]
+      ]
+    },
+    {
+      "size": "1366x768",
+      "mode": "full",
+      "before": {
+        "y": 0,
+        "pin": 65,
+        "position": "sticky",
+        "runway": 392,
+        "progress": 0,
+        "dial": 0,
+        "transform": "matrix(0.438371, -0.898794, 0.898794, 0.438371, 0, 0)",
+        "photo": "matrix(1, 0, 0, 1, 0, 0)",
+        "current": "#pocetna",
+        "width": 1366,
+        "document": 1366
+      },
+      "mid": {
+        "y": 199,
+        "pin": 65,
+        "position": "sticky",
+        "runway": 392,
+        "progress": 0.0423,
+        "dial": 0.5077,
+        "transform": "matrix(0.999852, 0.0172011, -0.0172011, 0.999852, 0, 0)",
+        "photo": "matrix(1.09646, 0, 0, 1.09646, 0, -13.7079)",
+        "current": "#pocetna",
+        "width": 1366,
+        "document": 1366
+      },
+      "after": {
+        "y": 492,
+        "pin": -35.328125,
+        "position": "sticky",
+        "runway": 392,
+        "progress": 0.1045,
+        "dial": 1,
+        "transform": "matrix(0.438371, 0.898794, -0.898794, 0.438371, 0, 0)",
+        "photo": "matrix(1.19, 0, 0, 1.19, 0, -27)",
+        "current": "#pocetna",
+        "width": 1366,
+        "document": 1366
+      },
+      "gallery": [
+        [
+          "6px",
+          "matrix(1, 0, 0, 1, 0, -16.5063)"
+        ],
+        [
+          "20px",
+          "matrix(1, 0, 0, 1, 0, -7.26531)"
+        ]
+      ]
+    },
+    {
+      "size": "1024x768",
+      "mode": "full",
+      "before": {
+        "y": 0,
+        "pin": 65,
+        "position": "sticky",
+        "runway": 392,
+        "progress": 0,
+        "dial": 0,
+        "transform": "matrix(0.438371, -0.898794, 0.898794, 0.438371, 0, 0)",
+        "photo": "matrix(1, 0, 0, 1, 0, 0)",
+        "current": "#pocetna",
+        "width": 1024,
+        "document": 1024
+      },
+      "mid": {
+        "y": 199,
+        "pin": 65,
+        "position": "sticky",
+        "runway": 392,
+        "progress": 0.0497,
+        "dial": 0.5077,
+        "transform": "matrix(0.999852, 0.0172011, -0.0172011, 0.999852, 0, 0)",
+        "photo": "matrix(1.09646, 0, 0, 1.09646, 0, -13.7079)",
+        "current": "#pocetna",
+        "width": 1024,
+        "document": 1024
+      },
+      "after": {
+        "y": 492,
+        "pin": -35.328125,
+        "position": "sticky",
+        "runway": 392,
+        "progress": 0.123,
+        "dial": 1,
+        "transform": "matrix(0.438371, 0.898794, -0.898794, 0.438371, 0, 0)",
+        "photo": "matrix(1.19, 0, 0, 1.19, 0, -27)",
+        "current": "#pocetna",
+        "width": 1024,
+        "document": 1024
+      },
+      "gallery": [
+        [
+          "7px",
+          "matrix(1, 0, 0, 1, 0, -16.3025)"
+        ],
+        [
+          "22px",
+          "matrix(1, 0, 0, 1, 0, -6.76994)"
+        ]
+      ]
+    },
+    {
+      "size": "820x1180",
+      "mode": "light",
+      "before": {
+        "y": 0,
+        "pin": 65,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0,
+        "dial": 0,
+        "transform": "matrix(0.438371, -0.898794, 0.898794, 0.438371, 0, 0)",
+        "photo": "matrix(1, 0, 0, 1, 0, 0)",
+        "current": "#pocetna",
+        "width": 820,
+        "document": 820
+      },
+      "mid": {
+        "y": 120,
+        "pin": -55,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0.0422,
+        "dial": 0.1919,
+        "transform": "matrix(0.772326, -0.635227, 0.635227, 0.772326, 0, 0)",
+        "photo": "matrix(1.0124, 0, 0, 1.0124, 0, -1.76164)",
+        "current": "#pocetna",
+        "width": 820,
+        "document": 820
+      },
+      "after": {
+        "y": 120,
+        "pin": -55,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0.0422,
+        "dial": 0.1919,
+        "transform": "matrix(0.772326, -0.635227, 0.635227, 0.772326, 0, 0)",
+        "photo": "matrix(1.0124, 0, 0, 1.0124, 0, -1.76164)",
+        "current": "#pocetna",
+        "width": 820,
+        "document": 820
+      },
+      "gallery": [
+        [
+          "7px",
+          "matrix(1, 0, 0, 1, 0, -2.14259)"
+        ],
+        [
+          "9px",
+          "matrix(1, 0, 0, 1, 0, 0.462303)"
+        ]
+      ]
+    },
+    {
+      "size": "768x1024",
+      "mode": "light",
+      "before": {
+        "y": 0,
+        "pin": 65,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0,
+        "dial": 0,
+        "transform": "matrix(0.438371, -0.898794, 0.898794, 0.438371, 0, 0)",
+        "photo": "matrix(1, 0, 0, 1, 0, 0)",
+        "current": "#pocetna",
+        "width": 768,
+        "document": 768
+      },
+      "mid": {
+        "y": 120,
+        "pin": -55,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0.0404,
+        "dial": 0.2211,
+        "transform": "matrix(0.812092, -0.58353, 0.58353, 0.812092, 0, 0)",
+        "photo": "matrix(1.01428, 0, 0, 1.01428, 0, -2.0297)",
+        "current": "#pocetna",
+        "width": 768,
+        "document": 768
+      },
+      "after": {
+        "y": 120,
+        "pin": -55,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0.0404,
+        "dial": 0.2211,
+        "transform": "matrix(0.812092, -0.58353, 0.58353, 0.812092, 0, 0)",
+        "photo": "matrix(1.01428, 0, 0, 1.01428, 0, -2.0297)",
+        "current": "#pocetna",
+        "width": 768,
+        "document": 768
+      },
+      "gallery": [
+        [
+          "5px",
+          "matrix(1, 0, 0, 1, 0, -1.35427)"
+        ],
+        [
+          "8px",
+          "matrix(1, 0, 0, 1, 0, 0.668262)"
+        ]
+      ]
+    },
+    {
+      "size": "390x844",
+      "mode": "light",
+      "before": {
+        "y": 0,
+        "pin": 65,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0,
+        "dial": 0,
+        "transform": "matrix(0.438371, -0.898794, 0.898794, 0.438371, 0, 0)",
+        "photo": "matrix(1, 0, 0, 1, 0, 0)",
+        "current": "#pocetna",
+        "width": 390,
+        "document": 390
+      },
+      "mid": {
+        "y": 120,
+        "pin": -55,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0.0258,
+        "dial": 0.2055,
+        "transform": "matrix(0.791266, -0.611472, 0.611472, 0.791266, 0, 0)",
+        "photo": "matrix(1.01328, 0, 0, 1.01328, 0, -1.88649)",
+        "current": "#pocetna",
+        "width": 390,
+        "document": 390
+      },
+      "after": {
+        "y": 120,
+        "pin": -55,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0.0258,
+        "dial": 0.2055,
+        "transform": "matrix(0.791266, -0.611472, 0.611472, 0.791266, 0, 0)",
+        "photo": "matrix(1.01328, 0, 0, 1.01328, 0, -1.88649)",
+        "current": "#pocetna",
+        "width": 390,
+        "document": 390
+      },
+      "gallery": [
+        [
+          "1px",
+          "matrix(1, 0, 0, 1, 0, -3.42526)"
+        ],
+        [
+          "4px",
+          "matrix(1, 0, 0, 1, 0, -1.5517)"
+        ]
+      ]
+    },
+    {
+      "size": "360x800",
+      "mode": "light",
+      "before": {
+        "y": 0,
+        "pin": 65,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0,
+        "dial": 0,
+        "transform": "matrix(0.438371, -0.898794, 0.898794, 0.438371, 0, 0)",
+        "photo": "matrix(1, 0, 0, 1, 0, 0)",
+        "current": "#pocetna",
+        "width": 360,
+        "document": 360
+      },
+      "mid": {
+        "y": 120,
+        "pin": -55,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0.0253,
+        "dial": 0.2092,
+        "transform": "matrix(0.796293, -0.60491, 0.60491, 0.796293, 0, 0)",
+        "photo": "matrix(1.01351, 0, 0, 1.01351, 0, -1.92046)",
+        "current": "#pocetna",
+        "width": 360,
+        "document": 360
+      },
+      "after": {
+        "y": 120,
+        "pin": -55,
+        "position": "relative",
+        "runway": 0,
+        "progress": 0.0253,
+        "dial": 0.2092,
+        "transform": "matrix(0.796293, -0.60491, 0.60491, 0.796293, 0, 0)",
+        "photo": "matrix(1.01351, 0, 0, 1.01351, 0, -1.92046)",
+        "current": "#pocetna",
+        "width": 360,
+        "document": 360
+      },
+      "gallery": [
+        [
+          "1px",
+          "matrix(1, 0, 0, 1, 0, -3.42616)"
+        ],
+        [
+          "4px",
+          "matrix(1, 0, 0, 1, 0, -1.54894)"
+        ]
+      ]
+    }
+  ],
+  "failures": [],
+  "pageErrors": [],
+  "map": "Image captures deliberately render the existing fallback, not remote tiles."
+}
