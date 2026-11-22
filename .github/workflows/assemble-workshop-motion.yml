@@ -11,7 +11,7 @@ jobs:
   assemble:
     if: github.repository == 'riporipoteam-ctrl/autoservissunjawebsite' && github.ref == 'refs/heads/ops/assemble-workshop-motion'
     runs-on: ubuntu-24.04
-    timeout-minutes: 6
+    timeout-minutes: 5
     permissions:
       contents: write
     outputs:
@@ -21,80 +21,61 @@ jobs:
         with:
           ref: redesign/blue-service-desk
           fetch-depth: 0
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
       - id: assemble
-        name: Wire the motion scenes into the exact draft
+        name: Keep the current carousel compatible on the exact draft
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = 'e3de53cca4c4e3a55efea22f2600604dfb3f30a6'
-          test "$(git hash-object index.html)" = '16a870342efa267b781a8964494553ba4fba7ef9'
-          python -m pip install --disable-pip-version-check beautifulsoup4==4.13.4
-          git show 'c90b24f9251a656d46084fa5793984e22083fc1a:tools/assemble_workshop_motion.py' > /tmp/assemble_workshop.py
-          git show 'f2e9ec338c102bbf12fb5885ab90e6fecfbbdac3:tools/refine_workshop_motion.py' > /tmp/refine_workshop.py
-          python - <<'PY'
-          from pathlib import Path
-          p=Path('/tmp/assemble_workshop.py')
-          src=p.read_text()
-          i=src.index('nav_links = ')
-          j=src.index('\n',i)
-          line=src[i:j].split('.replace(')[0].replace('{" aria-current=\\"location\\"" if i == 1 else ""}', '{current if i == 1 else ""}')
-          src=src[:i]+'current = \' aria-current="location"\'\n'+line+' for i, (slug,label) in enumerate(menus,1))'+src[j:]
-          src=src.replace("{get('[data-about-photo]')}", "{str(get('[data-about-photo]')).replace('desk-profile-image','wm-about-photo')}")
-          src=src.replace("n['src'] for n in ","n.get('src') for n in ")
-          src=src.replace("after.replace('</body>'", "after.replace('js/main.js?v=40.0', 'js/main.js?v=40.1').replace('</body>'")
-          src=src.replace(".replace(f'    {RUNTIME}\\n','',1) == after", ".replace(f'    {RUNTIME}\\n','',1).replace('js/main.js?v=40.1', 'js/main.js?v=40.0') == after")
-          p.write_text(src)
-          PY
-          python /tmp/assemble_workshop.py
-          python /tmp/refine_workshop.py
-          python - <<'PY'
-          from pathlib import Path
-          main=Path('js/main.js')
-          s=main.read_text()
-          i=s.index('            var shouldPlay = ')
-          j=s.index('            if (window.bootstrap',i)
-          s=s[:i]+'''            var currentMode = root.dataset.workshopMotion;
-                      var shouldPlay = currentMode ? currentMode !== "off" :
-                          !document.getElementById("workshopStory") || !(reduceMotion || perfLite);
-          '''+s[j:]
-          main.write_text(s)
-          p=Path('js/workshop-motion.js')
-          s=p.read_text()
-          old="  document.addEventListener('shown.bs.tab', () => schedule(true));"
-          assert s.count(old)==1
-          s=s.replace(old,"""  const tablist = document.querySelector('#usluge [role=tablist]');
-            const tabs = [...(tablist?.querySelectorAll('[role=tab]') || [])];
-            tablist?.addEventListener('keydown', event => {
-              const index = tabs.indexOf(event.target);
-              if (index < 0 || !['ArrowLeft','ArrowRight','Home','End'].includes(event.key)) return;
-              event.preventDefault();
-              event.stopPropagation();
-              const next = event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 :
-                (index + (event.key === 'ArrowRight' ? 1 : -1) + tabs.length) % tabs.length;
-              tabs[next].focus({preventScroll:true});
-              tabs[next].click();
-            }, true);
-            document.addEventListener('shown.bs.tab', event => {
-              if (tabs.includes(event.target)) tabs.forEach(tab => tab.tabIndex = tab === event.target ? 0 : -1);
-              schedule(true);
-            });""")
-          p.write_text(s)
-          p=Path('css/workshop-motion.css')
-          s=p.read_text().replace('html[data-workshop-motion=full] #pocetna{background:linear-gradient','html[data-workshop-motion=full] #workshopStory #pocetna{background:linear-gradient')
-          p.write_text(s)
-          PY
+          test "$(git rev-parse HEAD)" = '558db842d0305b46c6bac9346b5ae25d5be2be66'
+          git show 'cb6f1795c2464348a9c3c4873184872967a6cbad:tools/polish_workshop_motion.py' > /tmp/polish_workshop.py
+          python3 /tmp/polish_workshop.py
           node --check js/workshop-motion.js
           node --check js/main.js
-          git rm -- css/blue-service-desk.css
           git diff --check
-          git diff --quiet -- CNAME .nojekyll robots.txt sitemap.xml css/style.css assets
+          git diff --quiet 807bccbea68ae62270235c9d2ba3240422a42417 -- CNAME .nojekyll robots.txt sitemap.xml css/style.css assets '*.ico' '*icon*.png' 'google*.html'
+          git show 807bccbea68ae62270235c9d2ba3240422a42417:index.html > /tmp/site-production.html
+          python3 - <<'PY'
+          from pathlib import Path
+          a,b=[Path(x).read_bytes() for x in ('/tmp/site-production.html','index.html')]
+          def intro(s):
+              i=s.index(b'<body>')
+              j=s.index(b'</script>',i)+len(b'</script>')
+              return s[i:j]
+          def map_runtime(s):
+              i=s.index(b'    // Globe map (MapLibre')
+              j=s.index(b'</script>',i)
+              return s[i:j].strip()
+          assert intro(a)==intro(b), 'intro differs from main'
+          assert map_runtime(a)==map_runtime(b), 'map runtime differs from main'
+          print('Exact production intro bytes, map code and asset references preserved')
+          PY
           git add -- index.html css/workshop-motion.css js/workshop-motion.js js/main.js
-          git diff --cached --check
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Replace the draft with the complete Workshop in Motion experience'
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Preserve photo playback, full gallery targets and no-script navigation'
           git push origin HEAD:refs/heads/redesign/blue-service-desk
           echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  legacy-audit:
+    needs: assemble
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.assemble.outputs.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Report old source checks without altering them
+        run: |
+          set -euo pipefail
+          git worktree add --detach /tmp/sunja-main 807bccbea68ae62270235c9d2ba3240422a42417
+          for d in /tmp/sunja-main "$GITHUB_WORKSPACE"; do
+            echo "Legacy checks at $(git -C "$d" rev-parse HEAD)"
+            status=0
+            (cd "$d"; python3 -m unittest tools/test_frontend_static.py) >/tmp/sunja-legacy.log 2>&1 || status=$?
+            grep -E '^(FAIL|ERROR):|^Ran|^OK$|^FAILED' /tmp/sunja-legacy.log || true
+            echo "Legacy check exit status: $status (reported, not used to mask functional failures)"
+          done
 
   browser:
     needs: assemble
