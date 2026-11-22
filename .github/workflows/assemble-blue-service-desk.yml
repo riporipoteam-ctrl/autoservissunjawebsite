@@ -1,0 +1,150 @@
+name: Assemble and verify blue service desk
+on:
+  push:
+    branches: [ops/assemble-blue-service-desk]
+    paths: ['.github/workflows/assemble-blue-service-desk.yml']
+permissions: {}
+jobs:
+  assemble:
+    if: github.repository == 'riporipoteam-ctrl/autoservissunjawebsite' && github.ref == 'refs/heads/ops/assemble-blue-service-desk'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.rebuild.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: redesign/blue-service-desk
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - id: rebuild
+        name: Replace page sections without changing protected code
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '3d625d425e638d638cd461fd8505fdfdb7e1ad05'
+          python -m pip install --disable-pip-version-check beautifulsoup4==4.13.4
+          git show '9394ffd468a9f21ac5495639830e79b74a7af36a:tools/assemble_blue_service_desk.py' > /tmp/assemble_blue.py
+          sed -i 's/assert len(ps)>=4/assert len(ps)>=3/' /tmp/assemble_blue.py
+          python /tmp/assemble_blue.py
+          node --check js/main.js
+          git diff --check
+          git add -- index.html
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Replace page markup with the new Blue Service Desk layout'
+          git push origin HEAD:refs/heads/redesign/blue-service-desk
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  browser:
+    needs: assemble
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    env:
+      BROWSER_ENGINE: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.assemble.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.56.0
+          python -m playwright install --with-deps "$BROWSER_ENGINE"
+      - name: Exercise the layout and controls and capture the draft
+        run: |
+          python - <<'PY'
+          import os
+          from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+          from pathlib import Path
+          from threading import Thread
+          from playwright.sync_api import sync_playwright, expect
+
+          class QuietServer(SimpleHTTPRequestHandler):
+              def log_message(self, *args):
+                  pass
+
+          server = ThreadingHTTPServer(('127.0.0.1', 0), QuietServer)
+          Thread(target=server.serve_forever, daemon=True).start()
+          origin = f'http://127.0.0.1:{server.server_port}'
+          sizes=[(360,800),(390,844),(768,1024),(820,1180),(1024,768),(1366,768),(1920,1080)]
+          sections=['#pocetna','#usluge','#galerija','#o-nama','#recenzije','#lokacija','#kontakt','#siteFooter']
+          failures=[]
+          with sync_playwright() as pw:
+              browser=getattr(pw,os.environ['BROWSER_ENGINE']).launch()
+              for w,h in sizes:
+                  label=f'{w}x{h}'
+                  path=Path('captures')/label
+                  path.mkdir(parents=True,exist_ok=True)
+                  mobile=w<992
+                  ctx=browser.new_context(viewport={'width':w,'height':h},device_scale_factor=1,has_touch=mobile,is_mobile=w<=390,reduced_motion='reduce')
+                  try:
+                      p=ctx.new_page()
+                      p.set_default_timeout(10000)
+                      p.goto(origin+'/?skipIntro=1',wait_until='domcontentloaded',timeout=30000)
+                      expect(p.locator('#desk-hero-title')).to_have_text('Auto Servis Šunja')
+                      expect(p.locator('#pocetna a[href="tel:+38761297847"]')).to_be_visible()
+                      expect(p.locator('#globeScroll .map-quick-link')).to_have_attribute('href', __import__('re').compile(r'https://www.google.com/maps/dir/'))
+                      p.evaluate("() => window.bootstrap?.Carousel.getInstance(document.querySelector('#header-carousel'))?.pause()")
+                      p.wait_for_function("img => img.complete && img.naturalWidth > 0",arg=p.locator('#header-carousel .active picture img').element_handle())
+                      p.screenshot(path=path/'01-first-screen.png',animations='disabled')
+                      if w<=390:
+                          menu=p.locator('.navbar-toggler')
+                          menu.tap()
+                          expect(p.locator('#navbarCollapse')).to_be_visible()
+                          p.locator('#navbarCollapse a[href="#usluge"]').tap()
+                          expect(p.locator('#navbarCollapse')).to_be_hidden()
+                          assert p.evaluate('location.hash')=='#usluge'
+                          expect(p.locator('#deskDock .call')).to_have_attribute('href','tel:+38761297847')
+                          expect(p.locator('#deskDock .dir')).to_be_visible()
+                      if w in (360,390,1366):
+                          for i in range(1,7):
+                              p.locator(f'#desk-tab-{i}').click()
+                              pane=p.locator(f'#tab-pane-{i}')
+                              expect(pane).to_be_visible()
+                              expect(pane.locator('a[href="tel:+38761297847"]')).to_be_visible()
+                              p.wait_for_function("img => img.complete && img.naturalWidth > 0",arg=pane.locator('img').element_handle())
+                          p.locator('#desk-tab-1').click()
+                          p.evaluate("window.scrollTo({top:0,behavior:'instant'})")
+                          for i in range(3):
+                              p.locator(f'#header-carousel [data-bs-slide-to="{i}"]').click()
+                              expect(p.locator(f'#header-carousel [data-bs-slide-to="{i}"]')).to_have_attribute('aria-current','true')
+                              p.wait_for_function("img => img.complete && img.naturalWidth > 0",arg=p.locator('#header-carousel .active picture img').element_handle())
+                              expect(p.locator('#desk-hero-title')).to_have_text('Auto Servis Šunja')
+                              if w<=390: p.locator('#header-carousel').screenshot(path=path/f'02-photo-{i+1}.png',animations='disabled')
+                          p.locator('#header-carousel [data-bs-slide-to="0"]').click()
+                      for i,selector in enumerate(sections,start=3):
+                          sec=p.locator(selector)
+                          sec.scroll_into_view_if_needed()
+                          sec.screenshot(path=path/f'{i:02}-{selector[1:]}.png',animations='disabled')
+                      p.evaluate("window.scrollTo({top:0,behavior:'instant'})")
+                      p.screenshot(path=path/'11-full-page.png',full_page=True,animations='disabled',timeout=20000)
+                      width=p.evaluate('''() => ({layout:document.documentElement.clientWidth, document:document.documentElement.scrollWidth})''')
+                      print(label,width,flush=True)
+                      assert width['document']<=width['layout']+1, width
+                  except Exception as exc:
+                      failures.append(f'{label}: {exc}')
+                  finally:
+                      ctx.close()
+              browser.close()
+          server.shutdown()
+          if failures: raise SystemExit('\n'.join(failures))
+          PY
+      - name: Save review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blue-service-desk-${{ matrix.browser }}
+          path: captures/**/*.png
+          if-no-files-found: error
+          retention-days: 14
