@@ -273,3 +273,10 @@ html[data-workshop-motion=off] #workshopStory .stars.on :is(.stars-fg,.stars-fg 
 @media (prefers-reduced-motion:reduce){
  #pocetna .wm-hero-copy h1,#workshopStory .wm-arrived,#workshopStory #usluge .tab-pane.active .service-media-frame,#workshopStory .stars.on :is(.stars-fg,.stars-fg i){animation:none!important;transition:none!important}
 }
+
+/* Clicking a photograph still opens its original gallery post. */
+#workshopStory #galerija .wm-frame .gallery-tile-link{position:static}
+#workshopStory #galerija .wm-frame .gallery-tile-link::after{content:'';position:absolute;inset:0;z-index:1}
+#workshopStory #galerija .wm-frame:focus-within{outline:2px solid #ffdc94;outline-offset:3px}
+#workshopStory #galerija .wm-frame:hover .wm-frame-foot{background:#1b4777}
+#wmHeader .wm-motion-switch:hover,#wmHeader .wm-motion-switch[aria-pressed=true]{background:#cfe5ff}

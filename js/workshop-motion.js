@@ -19,7 +19,7 @@
   let paused = false, raf = 0, pendingMeasure = true, activeId = '', mode = '', bounds = [], heroSpan = 0, view = 1, total = 1;
 
   function syncCarousel() {
-    const instance = window.bootstrap?.Carousel.getInstance(carousel);
+    const instance = window.bootstrap?.Carousel?.getInstance(carousel);
     if (!instance) return;
     if (mode === 'off' || document.hidden || root.classList.contains('sunja-intro-active')) instance.pause();
   }
@@ -133,6 +133,8 @@
     if (mode === 'off') syncCarousel();
   };
   carousel.addEventListener('slid.bs.carousel', imageDeck);
+  // Bootstrap 5.0 restarts automatic playback when the selected indicator is clicked.
+  carousel.addEventListener('click', () => { if (mode === 'off') setTimeout(syncCarousel, 0); });
   document.querySelector('.wm-skip')?.addEventListener('click', () => story.focus({preventScroll:true}));
   const tablist = document.querySelector('#usluge [role=tablist]');
   const tabs = [...(tablist?.querySelectorAll('[role=tab]') || [])];

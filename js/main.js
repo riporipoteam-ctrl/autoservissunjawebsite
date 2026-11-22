@@ -198,7 +198,8 @@
                 !document.getElementById("workshopStory") || !(reduceMotion || perfLite);
             if (window.bootstrap && window.bootstrap.Carousel) {
                 try {
-                    instance = window.bootstrap.Carousel.getOrCreateInstance(hero, {
+                    var Carousel = window.bootstrap.Carousel;
+                    instance = Carousel.getInstance(hero) || new Carousel(hero, {
                         interval: 6500, ride: false, pause: false, wrap: true, touch: true
                     });
                     if (shouldPlay) instance.cycle();
@@ -323,7 +324,7 @@
         if (!el || !el.classList.contains("show")) return;
         try {
             if (typeof bootstrap !== "undefined" && bootstrap.Collapse) {
-                bootstrap.Collapse.getOrCreateInstance(el, { toggle: false }).hide();
+                (bootstrap.Collapse.getInstance(el) || new bootstrap.Collapse(el, { toggle: false })).hide();
             }
         } catch (e) {
             // A failed Bootstrap transition must never cancel the tap.
