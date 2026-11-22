@@ -1444,6 +1444,35 @@ class SiteInteractionTests(unittest.TestCase):
         )
         self.assertEqual(copy_color, "rgb(244, 248, 255)")
 
+    def test_workshop_motion_and_reduced_motion(self):
+        for motion in ("no-preference", "reduce"):
+            with self.subTest(motion=motion):
+                context = self.browser.new_context(
+                    viewport={"width": 1366, "height": 768}, reduced_motion=motion
+                )
+                context.add_init_script(
+                    "Object.defineProperty(navigator, 'hardwareConcurrency', {get: () => 8})"
+                )
+                try:
+                    page = context.new_page()
+                    page.goto(self.url + "?skipIntro=1", wait_until="load")
+                    title = page.locator('#header-carousel .carousel-item.active h1')
+                    image = page.locator('#header-carousel .carousel-item.active picture')
+                    expected_title = "workshop-enter" if motion == "no-preference" else "none"
+                    expected_image = "workshop-image" if motion == "no-preference" else "none"
+                    self.assertEqual(title.evaluate('(e) => getComputedStyle(e).animationName'), expected_title)
+                    self.assertEqual(image.evaluate('(e) => getComputedStyle(e).animationName'), expected_image)
+                    if motion == "no-preference":
+                        item = page.locator('#o-nama .wow').first
+                        item.scroll_into_view_if_needed()
+                        expect(item).to_have_class(re.compile(r"\bis-revealed\b"))
+                        page.wait_for_timeout(800)
+                        page.evaluate('window.scrollTo(0, 0)')
+                        item.scroll_into_view_if_needed()
+                        self.assertEqual(item.evaluate("(e) => e.getAnimations().filter(a => a.playState === 'running').length"), 0)
+                finally:
+                    context.close()
+
     def test_redesign_hero_headlines_fit_all_requested_viewports(self):
         for width, height in ((1920, 1080), (1366, 768), (1024, 768),
                               (820, 1180), (768, 1024), (390, 844), (360, 800)):
