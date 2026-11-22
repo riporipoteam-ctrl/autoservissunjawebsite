@@ -167,7 +167,7 @@
     <!-- Template Stylesheet -->
     <link href="css/style.css?v=47.0" rel="stylesheet">
     <!-- Local review design system; intro and interaction mechanics remain in the base sheet. -->
-    <link href="css/blue-service-desk.css?v=1.0" rel="stylesheet">
+    <link href="css/workshop-motion.css?v=2.0" rel="stylesheet">
 </head>
 
 <body>
@@ -337,92 +337,121 @@
         startFreshLogoPlayback();
     })();
     </script>
-<a href="#blueDesk" class="desk-jump">Preskoči na sadržaj</a>
-<header id="deskHeader">
-  <nav class="navbar navbar-expand-lg nav-bar desk-nav" aria-label="Glavni meni">
-    <div class="desk-wrap">
-      <a href="#pocetna" class="navbar-brand"><img alt="Auto Servis Šunja" src="assets/sunja-logo-transparent.webp"/></a>
-      <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Meni"><i class="fa fa-bars" aria-hidden="true"></i> Meni</button>
+<a href="#workshopStory" class="wm-skip">Preskoči na sadržaj</a>
+<header id="wmHeader">
+  <nav class="navbar navbar-expand-lg nav-bar wm-nav" aria-label="Glavni meni">
+    <div class="wm-wrap">
+      <a href="#pocetna" class="navbar-brand"><img alt="Auto Servis Šunja" src="assets/sunja-logo-transparent.webp"></a>
+      <div class="wm-header-tools">
+        <button type="button" class="wm-motion-switch" data-wm-control aria-pressed="false" title="Pauziraj animacije stranice" hidden><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="wm-pause-icon" d="M9 5v14m6-14v14"/><path class="wm-play-icon" d="m9 5 10 7-10 7z"/></svg><span class="visually-hidden">Pauziraj animacije stranice</span></button>
+        <button type="button" class="navbar-toggler collapsed" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false"><i class="fa fa-bars" aria-hidden="true"></i> Meni</button>
+      </div>
       <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav"><a href="#pocetna" class="nav-link active">Početna</a><a href="#usluge" class="nav-link">Usluge</a><a href="#galerija" class="nav-link">Galerija</a><a href="#o-nama" class="nav-link">O nama</a><a href="#lokacija" class="nav-link">Lokacija</a><a href="#kontakt" class="nav-link">Kontakt</a></div>
-        <a class="desk-button desk-nav-call" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a>
+        <div class="navbar-nav" id="motionChapters">
+        <a class="nav-link active" href="#pocetna" aria-current="location"><span class="wm-nav-num" aria-hidden="true">01</span>Početna</a>
+        <a class="nav-link" href="#usluge"><span class="wm-nav-num" aria-hidden="true">02</span>Usluge</a>
+        <a class="nav-link" href="#galerija"><span class="wm-nav-num" aria-hidden="true">03</span>Galerija</a>
+        <a class="nav-link" href="#o-nama"><span class="wm-nav-num" aria-hidden="true">04</span>O nama</a>
+        <a class="nav-link" href="#lokacija"><span class="wm-nav-num" aria-hidden="true">05</span>Lokacija</a>
+        <a class="nav-link" href="#kontakt"><span class="wm-nav-num" aria-hidden="true">06</span>Kontakt</a>
+        </div>
+        <a class="wm-button wm-nav-call" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a>
       </div>
     </div>
   </nav>
 </header>
-<main id="blueDesk" tabindex="-1">
-<section id="pocetna" aria-labelledby="desk-hero-title">
- <div class="desk-wrap">
-  <div class="desk-home-lead">
-    <div><span class="desk-eyebrow">Goražde, Hajra Lakovića 38</span><h1 id="desk-hero-title">Auto Servis Šunja</h1><p class="desk-lead">Servis i popravke za sve marke vozila, uz posebno iskustvo s Peugeotom. Dijagnostika, servis, autoelektrika i ključevi, sve na jednom mjestu.</p></div>
-    <div class="desk-actions"><a class="desk-button desk-button--light" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> 061 297 847</a>
-    <a class="desk-button desk-button--clear" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener"><i class="fa fa-location-arrow" aria-hidden="true"></i> Upute</a></div>
-  </div>
-  <div class="desk-home-grid">
-    <div id="header-carousel" class="carousel slide carousel-fade" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true" aria-label="Fotografije iz radionice">
+<main id="workshopStory" tabindex="-1">
+<section id="pocetna" data-wm-chapter aria-labelledby="wm-hero-title">
+ <div class="wm-pin">
+  <div class="wm-wrap">
+   <div class="wm-hero-grid">
+    <div class="wm-hero-copy">
+      <span class="wm-kicker"><b aria-hidden="true">01</b>Radionica u Goraždu</span>
+      <h1 id="wm-hero-title"><span>Auto Servis</span> Šunja</h1>
+      <p>Servis i popravke za sve marke vozila, uz posebno iskustvo s Peugeotom. Dijagnostika, servis, autoelektrika i ključevi, sve na jednom mjestu.</p>
+      <div class="wm-actions"><a class="wm-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> 061 297 847</a><a class="wm-button wm-button--paper" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" rel="noopener" target="_blank"><i class="fa fa-location-arrow" aria-hidden="true"></i> Upute</a></div>
+    </div>
+    <div class="wm-hero-visual">
+      <svg class="wm-gauge" viewBox="0 0 800 346" aria-hidden="true" focusable="false">
+  <g fill="none" stroke="#628dbb"><path d="M138 225 A275 275 0 0 1 662 225" opacity=".55"/><path d="M173.6 236.5L149.9 228.7" stroke-width="3"/><path d="M172.0 212.5L158.2 206.6" stroke-width="1"/><path d="M181.6 192.5L168.4 185.4" stroke-width="1"/><path d="M193.0 173.4L180.5 165.1" stroke-width="1"/><path d="M213.9 161.6L194.4 146.0" stroke-width="3"/><path d="M220.7 138.6L209.9 128.3" stroke-width="1"/><path d="M236.8 123.2L227.0 111.9" stroke-width="1"/><path d="M254.2 109.4L245.4 97.2" stroke-width="1"/><path d="M277.9 105.7L265.1 84.2" stroke-width="3"/><path d="M292.4 86.6L285.9 73.0" stroke-width="1"/><path d="M312.9 77.8L307.6 63.8" stroke-width="1"/><path d="M334.0 70.9L330.0 56.5" stroke-width="1"/><path d="M357.5 75.8L353.0 51.2" stroke-width="3"/><path d="M377.8 63.0L376.4 48.1" stroke-width="1"/><path d="M400.0 62.0L400.0 47.0" stroke-width="1"/><path d="M422.2 63.0L423.6 48.1" stroke-width="1"/><path d="M442.5 75.8L447.0 51.2" stroke-width="3"/><path d="M466.0 70.9L470.0 56.5" stroke-width="1"/><path d="M487.1 77.8L492.4 63.8" stroke-width="1"/><path d="M507.6 86.6L514.1 73.0" stroke-width="1"/><path d="M522.1 105.7L534.9 84.2" stroke-width="3"/><path d="M545.8 109.4L554.6 97.2" stroke-width="1"/><path d="M563.2 123.2L573.0 111.9" stroke-width="1"/><path d="M579.3 138.6L590.1 128.3" stroke-width="1"/><path d="M586.1 161.6L605.6 146.0" stroke-width="3"/><path d="M607.0 173.4L619.5 165.1" stroke-width="1"/><path d="M618.4 192.5L631.6 185.4" stroke-width="1"/><path d="M628.0 212.5L641.8 206.6" stroke-width="1"/><path d="M626.4 236.5L650.1 228.7" stroke-width="3"/></g>
+  <path class="wm-gauge-arc" d="M165 234 A247 247 0 0 1 635 234" pathLength="100" fill="none" stroke="#155ee4" stroke-width="6" stroke-linecap="round"/>
+  <g class="wm-needle"><path d="M397 311 400 48 403 311z" fill="#084ac1"/><circle cx="400" cy="310" r="11" fill="#084ac1"/></g>
+</svg>
+      <div class="wm-odometer"><span>Hajra Lakovića 38</span><span class="wm-odometer-track" aria-hidden="true"></span><span>73000 Goražde</span></div>
+      <div id="header-carousel" class="carousel slide carousel-fade" aria-roledescription="karusel" data-bs-ride="false" data-bs-interval="6500" data-bs-pause="false" data-bs-touch="true" aria-label="Fotografije iz radionice">
       <div class="carousel-inner"><div class="carousel-item active">
-      <div class="desk-shot"><div class="hero-bg" id="heroMainBg" style="--hero-photo:url('/assets/gallery/sunja-tiktok-7627945643490692373.webp');--hero-photo-mobile:url('/assets/gallery/sunja-tiktok-7627945643490692373.webp')"></div><picture><source id="heroMainSrc" media="(max-width: 767.98px)" srcset="assets/gallery/sunja-tiktok-7627945643490692373.webp"/><img alt="Unutrašnjost radionice Auto Servis Šunja" class="w-100" data-fallback-src="assets/photos/tt-wide-20261120-3d31739d.webp" decoding="async" fetchpriority="high" height="1600" id="heroMainImg" loading="eager" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/sunja-tiktok-7627945643490692373.webp" width="900"/></picture></div>
-      <div class="desk-shot-text"><span class="desk-shot-number">01 / 03</span><strong>Radionica Auto Servis Šunja</strong><a href="#galerija">Galerija ↗</a></div>
+      <div class="wm-film"><div class="hero-bg" id="heroMainBg" style="--hero-photo:url('/assets/gallery/sunja-tiktok-7627945643490692373.webp');--hero-photo-mobile:url('/assets/gallery/sunja-tiktok-7627945643490692373.webp')"></div><picture><source id="heroMainSrc" media="(max-width: 767.98px)" srcset="assets/gallery/sunja-tiktok-7627945643490692373.webp"/><img alt="Unutrašnjost radionice Auto Servis Šunja" class="w-100" data-fallback-src="assets/photos/tt-wide-20261120-3d31739d.webp" decoding="async" fetchpriority="high" height="1600" id="heroMainImg" loading="eager" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/sunja-tiktok-7627945643490692373.webp" width="900"/></picture></div>
+      <div class="wm-shot-bar"><span class="wm-shot-index">01 / 03</span><strong>Radionica Auto Servis Šunja</strong><a href="#galerija">Galerija ↗</a></div>
     </div><div class="carousel-item">
-      <div class="desk-shot"><div class="hero-bg" style="--hero-photo:url('/assets/slides/slide-02.webp')"></div><picture><img alt="Dijagnostički uređaj unutar vozila Auto Servisa Šunja" class="w-100" data-fallback-src="assets/photos/tt-wide-20261023-180d1783.webp" decoding="async" fetchpriority="low" loading="eager" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/slides/slide-02.webp"/></picture></div>
-      <div class="desk-shot-text"><span class="desk-shot-number">02 / 03</span><strong>Autodijagnostika</strong><a href="#usluge" data-svc-link="1">Sve usluge ↗</a></div>
+      <div class="wm-film"><div class="hero-bg" style="--hero-photo:url('/assets/slides/slide-02.webp')"></div><picture><img alt="Dijagnostički uređaj unutar vozila Auto Servisa Šunja" class="w-100" data-fallback-src="assets/photos/tt-wide-20261023-180d1783.webp" decoding="async" fetchpriority="low" loading="eager" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/slides/slide-02.webp"/></picture></div>
+      <div class="wm-shot-bar"><span class="wm-shot-index">02 / 03</span><strong>Autodijagnostika</strong><a href="#usluge" data-svc-link="1">Sve usluge ↗</a></div>
     </div><div class="carousel-item">
-      <div class="desk-shot"><div class="hero-bg" style="--hero-photo:url('/assets/slides/slide-03.webp')"></div><picture><img alt="Originalni automobilski ključevi tokom programiranja u servisu Šunja" class="w-100" data-fallback-src="assets/photos/tt-wide-20261027-cce4aa19.webp" decoding="async" fetchpriority="low" loading="eager" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/slides/slide-03.webp"/></picture></div>
-      <div class="desk-shot-text"><span class="desk-shot-number">03 / 03</span><strong>Ključevi i daljinski</strong><a href="#usluge" data-svc-link="6">Sve usluge ↗</a></div>
+      <div class="wm-film"><div class="hero-bg" style="--hero-photo:url('/assets/slides/slide-03.webp')"></div><picture><img alt="Originalni automobilski ključevi tokom programiranja u servisu Šunja" class="w-100" data-fallback-src="assets/photos/tt-wide-20261027-cce4aa19.webp" decoding="async" fetchpriority="low" loading="eager" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/slides/slide-03.webp"/></picture></div>
+      <div class="wm-shot-bar"><span class="wm-shot-index">03 / 03</span><strong>Ključevi i daljinski</strong><a href="#usluge" data-svc-link="6">Sve usluge ↗</a></div>
     </div></div>
-      <div class="desk-deck-controls">
+      <div class="wm-media-nav">
         <div class="carousel-indicators hero-indicators"><button type="button" data-bs-target="#header-carousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slajd 1: Radionica">Radionica</button><button type="button" data-bs-target="#header-carousel" data-bs-slide-to="1" aria-label="Slajd 2: Dijagnostika">Dijagnostika</button><button type="button" data-bs-target="#header-carousel" data-bs-slide-to="2" aria-label="Slajd 3: Ključevi">Ključevi</button></div>
-        <button type="button" class="desk-ico hero-nav carousel-control-prev" data-bs-target="#header-carousel" data-bs-slide="prev" aria-label="Prethodno"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
-        <button type="button" class="desk-ico hero-nav carousel-control-next" data-bs-target="#header-carousel" data-bs-slide="next" aria-label="Sljedeće"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
+        <button type="button" class="wm-icon hero-nav carousel-control-prev" data-bs-target="#header-carousel" data-bs-slide="prev" aria-label="Prethodno"><i class="fa fa-chevron-left" aria-hidden="true"></i></button>
+        <button type="button" class="wm-icon hero-nav carousel-control-next" data-bs-target="#header-carousel" data-bs-slide="next" aria-label="Sljedeće"><i class="fa fa-chevron-right" aria-hidden="true"></i></button>
       </div>
     </div>
-    <dl class="desk-shop-facts">
-      <div><dt>Radno vrijeme</dt><dd>Pon – Sub · 10:00 – 18:00</dd></div>
-      <div><dt>Adresa</dt><dd>Hajra Lakovića 38<br>73000 Goražde</dd></div>
-      <div><dt>Danas</dt><dd><span class="status-pill" data-status=""><span class="dot"></span><span data-status-text="">Provjera radnog vremena…</span></span></dd></div>
-    </dl>
+    </div>
+   </div>
+   <div class="wm-workstrip"><span><strong>Radno vrijeme</strong> · Pon – Sub, 10:00 – 18:00</span><span class="status-pill" data-status=""><span class="dot"></span><span data-status-text="">Provjera radnog vremena…</span></span><a class="wm-scroll-link" href="#usluge">Naše usluge <i class="fa fa-arrow-down" aria-hidden="true"></i></a></div>
   </div>
+  <div class="wm-hero-handoff" aria-hidden="true"></div>
  </div>
 </section>
-<section id="usluge" class="desk-section" aria-labelledby="desk-services-title"><div class="desk-wrap">
-  <div class="desk-section-head"><div><span class="desk-eyebrow">Naše usluge</span><h2 id="desk-services-title">Šta radimo</h2></div></div>
-  <div class="nav nav-pills service-nav-grid" role="tablist" aria-label="Naše usluge"><button id="desk-tab-1" type="button" class="nav-link desk-service-key active" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-1" aria-controls="tab-pane-1" aria-selected="true"><i class="fa fa-laptop-code" aria-hidden="true"></i><span>Autodijagnostika</span><span class="desk-service-no" aria-hidden="true">01</span></button><button id="desk-tab-2" type="button" class="nav-link desk-service-key" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-2" aria-controls="tab-pane-2" aria-selected="false"><i class="fa fa-car" aria-hidden="true"></i><span>Peugeot servis</span><span class="desk-service-no" aria-hidden="true">02</span></button><button id="desk-tab-3" type="button" class="nav-link desk-service-key" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-3" aria-controls="tab-pane-3" aria-selected="false"><i class="fa fa-oil-can" aria-hidden="true"></i><span>Mali servis</span><span class="desk-service-no" aria-hidden="true">03</span></button><button id="desk-tab-4" type="button" class="nav-link desk-service-key" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-4" aria-controls="tab-pane-4" aria-selected="false"><i class="fa fa-cog" aria-hidden="true"></i><span>Veliki servis</span><span class="desk-service-no" aria-hidden="true">04</span></button><button id="desk-tab-5" type="button" class="nav-link desk-service-key" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-5" aria-controls="tab-pane-5" aria-selected="false"><i class="fa fa-bolt" aria-hidden="true"></i><span>Autoelektrika</span><span class="desk-service-no" aria-hidden="true">05</span></button><button id="desk-tab-6" type="button" class="nav-link desk-service-key" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-6" aria-controls="tab-pane-6" aria-selected="false"><i class="fa fa-key" aria-hidden="true"></i><span>Ključevi i daljinski</span><span class="desk-service-no" aria-hidden="true">06</span></button></div>
-  <div class="tab-content"><section class="tab-pane fade show active" id="tab-pane-1" role="tabpanel" aria-labelledby="desk-tab-1">
-      <div class="desk-service-panel"><div><h3>Autodijagnostika</h3><p class="mb-4">Dijagnostika i otkrivanje kvarova na vozilu.</p><ul><li>Čitanje i brisanje grešaka</li><li>Provjera svih sistema vozila</li><li>Jasan nalaz prije popravke</li></ul>
-        <a class="desk-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Autodijagnostika u vozilu" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261023-180d1783.webp" decoding="async" fetchpriority="high" loading="eager" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/autodijagnostika.webp"/></div></div></section><section class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="desk-tab-2">
-      <div class="desk-service-panel"><div><h3>Peugeot servis</h3><p class="mb-4">Održavanje i popravke Peugeot vozila.</p><ul><li>Poznavanje Peugeot sistema</li><li>Savjet za daljnje održavanje</li></ul>
-        <a class="desk-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Peugeot servis u radionici" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261108-574b96bf.webp" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/peugeot-servis.webp"/></div></div></section><section class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="desk-tab-3">
-      <div class="desk-service-panel"><div><h3>Mali servis</h3><p class="mb-4">Zamjena motornog ulja i filtera.</p><ul><li>Ulje i filteri po specifikaciji</li><li>Pregled kočnica i ovjesa</li></ul>
-        <a class="desk-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Motor pri redovnom održavanju" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261023-72158e75.webp" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/mali-servis.webp"/></div></div></section><section class="tab-pane fade" id="tab-pane-4" role="tabpanel" aria-labelledby="desk-tab-4">
-      <div class="desk-service-panel"><div><h3>Veliki servis</h3><p class="mb-4">Zamjena zupčastog remena i dijelova prema servisnom intervalu.</p><ul><li>Zupčasti remen i roleri</li><li>Svjećice, filteri i tekućine</li></ul>
-        <a class="desk-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Dijelovi motora za veliki servis" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261004-2d828014.webp" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/veliki-servis.webp"/></div></div></section><section class="tab-pane fade" id="tab-pane-5" role="tabpanel" aria-labelledby="desk-tab-5">
-      <div class="desk-service-panel"><div><h3>Autoelektrika</h3><p class="mb-4">Dijagnostika i popravka električnih sistema vozila.</p><ul><li>Akumulator, alternator, elektropokretač</li><li>Instalacije i osigurači</li><li>Senzori i elektronika vozila</li></ul>
-        <a class="desk-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Elektronika i dijagnostika vozila" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261108-234cf88c.webp" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/autoelektrika.webp"/></div></div></section><section class="tab-pane fade" id="tab-pane-6" role="tabpanel" aria-labelledby="desk-tab-6">
-      <div class="desk-service-panel"><div><h3>Ključevi i daljinski</h3><p class="mb-4">Izrada i programiranje auto ključeva i daljinskih upravljača.</p><ul><li>Rezervni i izgubljeni ključevi</li><li>Kodiranje i programiranje</li><li>Popravka daljinskih upravljača</li></ul>
-        <a class="desk-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Programiranje automobilskih ključeva" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261027-cce4aa19.webp" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/kljucevi-daljinski.webp"/></div></div></section></div>
+<section id="usluge" data-wm-chapter class="wm-section " aria-labelledby="wm-services-title"><div class="wm-wrap">
+  <div class="wm-titleline" data-wm-reveal><div><span class="wm-kicker"><b aria-hidden="true">02</b>Naše usluge</span><h2 id="wm-services-title">Šta radimo</h2></div></div>
+  <div class="nav nav-pills service-nav-grid" role="tablist" aria-label="Naše usluge"><button id="wm-tab-1" type="button" class="nav-link wm-tab active" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-1" aria-controls="tab-pane-1" aria-selected="true" tabindex="0"><b aria-hidden="true">01</b><span>Autodijagnostika</span></button>
+<button id="wm-tab-2" type="button" class="nav-link wm-tab" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-2" aria-controls="tab-pane-2" aria-selected="false" tabindex="-1"><b aria-hidden="true">02</b><span>Peugeot servis</span></button>
+<button id="wm-tab-3" type="button" class="nav-link wm-tab" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-3" aria-controls="tab-pane-3" aria-selected="false" tabindex="-1"><b aria-hidden="true">03</b><span>Mali servis</span></button>
+<button id="wm-tab-4" type="button" class="nav-link wm-tab" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-4" aria-controls="tab-pane-4" aria-selected="false" tabindex="-1"><b aria-hidden="true">04</b><span>Veliki servis</span></button>
+<button id="wm-tab-5" type="button" class="nav-link wm-tab" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-5" aria-controls="tab-pane-5" aria-selected="false" tabindex="-1"><b aria-hidden="true">05</b><span>Autoelektrika</span></button>
+<button id="wm-tab-6" type="button" class="nav-link wm-tab" role="tab" data-bs-toggle="pill" data-bs-target="#tab-pane-6" aria-controls="tab-pane-6" aria-selected="false" tabindex="-1"><b aria-hidden="true">06</b><span>Ključevi i daljinski</span></button></div>
+  <div class="tab-content"><section class="tab-pane fade show active" id="tab-pane-1" role="tabpanel" aria-labelledby="wm-tab-1" tabindex="0">
+      <div class="wm-service-scene"><div class="wm-service-copy"><span class="wm-kicker"><b aria-hidden="true">01</b>Servisni program</span><h3>Autodijagnostika</h3><p class="mb-4">Dijagnostika i otkrivanje kvarova na vozilu.</p><ul><li>Čitanje i brisanje grešaka</li><li>Provjera svih sistema vozila</li><li>Jasan nalaz prije popravke</li></ul><a class="wm-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Autodijagnostika u vozilu" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261023-180d1783.webp" decoding="async" fetchpriority="high" loading="eager" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/autodijagnostika.webp"/></div></div>
+    </section>
+<section class="tab-pane fade" id="tab-pane-2" role="tabpanel" aria-labelledby="wm-tab-2" tabindex="0">
+      <div class="wm-service-scene"><div class="wm-service-copy"><span class="wm-kicker"><b aria-hidden="true">02</b>Servisni program</span><h3>Peugeot servis</h3><p class="mb-4">Održavanje i popravke Peugeot vozila.</p><ul><li>Poznavanje Peugeot sistema</li><li>Savjet za daljnje održavanje</li></ul><a class="wm-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Peugeot servis u radionici" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261108-574b96bf.webp" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/peugeot-servis.webp"/></div></div>
+    </section>
+<section class="tab-pane fade" id="tab-pane-3" role="tabpanel" aria-labelledby="wm-tab-3" tabindex="0">
+      <div class="wm-service-scene"><div class="wm-service-copy"><span class="wm-kicker"><b aria-hidden="true">03</b>Servisni program</span><h3>Mali servis</h3><p class="mb-4">Zamjena motornog ulja i filtera.</p><ul><li>Ulje i filteri po specifikaciji</li><li>Pregled kočnica i ovjesa</li></ul><a class="wm-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Motor pri redovnom održavanju" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261023-72158e75.webp" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/mali-servis.webp"/></div></div>
+    </section>
+<section class="tab-pane fade" id="tab-pane-4" role="tabpanel" aria-labelledby="wm-tab-4" tabindex="0">
+      <div class="wm-service-scene"><div class="wm-service-copy"><span class="wm-kicker"><b aria-hidden="true">04</b>Servisni program</span><h3>Veliki servis</h3><p class="mb-4">Zamjena zupčastog remena i dijelova prema servisnom intervalu.</p><ul><li>Zupčasti remen i roleri</li><li>Svjećice, filteri i tekućine</li></ul><a class="wm-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Dijelovi motora za veliki servis" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261004-2d828014.webp" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/veliki-servis.webp"/></div></div>
+    </section>
+<section class="tab-pane fade" id="tab-pane-5" role="tabpanel" aria-labelledby="wm-tab-5" tabindex="0">
+      <div class="wm-service-scene"><div class="wm-service-copy"><span class="wm-kicker"><b aria-hidden="true">05</b>Servisni program</span><h3>Autoelektrika</h3><p class="mb-4">Dijagnostika i popravka električnih sistema vozila.</p><ul><li>Akumulator, alternator, elektropokretač</li><li>Instalacije i osigurači</li><li>Senzori i elektronika vozila</li></ul><a class="wm-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Elektronika i dijagnostika vozila" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261108-234cf88c.webp" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/autoelektrika.webp"/></div></div>
+    </section>
+<section class="tab-pane fade" id="tab-pane-6" role="tabpanel" aria-labelledby="wm-tab-6" tabindex="0">
+      <div class="wm-service-scene"><div class="wm-service-copy"><span class="wm-kicker"><b aria-hidden="true">06</b>Servisni program</span><h3>Ključevi i daljinski</h3><p class="mb-4">Izrada i programiranje auto ključeva i daljinskih upravljača.</p><ul><li>Rezervni i izgubljeni ključevi</li><li>Kodiranje i programiranje</li><li>Popravka daljinskih upravljača</li></ul><a class="wm-button" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a></div><div class="service-media-frame"><img alt="Programiranje automobilskih ključeva" class="img-fluid w-100 svc-photo service-image" data-fallback-src="assets/photos/tt-wide-20261027-cce4aa19.webp" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/services/kljucevi-daljinski.webp"/></div></div>
+    </section></div>
 </div></section>
-<section id="galerija" class="desk-section" aria-labelledby="desk-gallery-title"><div class="desk-wrap">
-  <div class="desk-section-head"><div><span class="desk-eyebrow">Galerija</span><h2 id="desk-gallery-title">Iz naše radionice</h2></div>
-      <a class="desk-button desk-button--outline" href="https://www.tiktok.com/@autoservissunja" target="_blank" rel="noopener">@autoservissunja ↗</a></div>
-  <div class="desk-reel" tabindex="0" role="region" aria-label="Galerija fotografija"><figure class="desk-frame team-item"><div class="desk-frame-media"><img alt="Renault Clio na dizalici" class="img-fluid gallery-img" data-fallback-alt="Renault Clio na dizalici" data-fallback-src="assets/gallery/tiktok-fallback-01.webp" data-gallery-img="" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/tiktok-fallback-01.webp"/></div><figcaption class="desk-frame-foot"><small data-gallery-sub="">Objava s TikToka</small><a aria-label="Pogledajte objavu" class="desk-ico gallery-tile-link" data-gallery-link="" href="https://www.tiktok.com/@autoservissunja/photo/7702943115132325141" rel="noopener" target="_blank"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a></figcaption></figure><figure class="desk-frame team-item"><div class="desk-frame-media"><img alt="Peugeot na dizalici" class="img-fluid gallery-img" data-fallback-alt="Peugeot na dizalici" data-fallback-src="assets/gallery/tiktok-fallback-02.webp" data-gallery-img="" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/tiktok-fallback-02.webp"/></div><figcaption class="desk-frame-foot"><small data-gallery-sub="">Objava s TikToka</small><a aria-label="Pogledajte objavu" class="desk-ico gallery-tile-link" data-gallery-link="" href="https://www.tiktok.com/@autoservissunja/photo/7696249910995258645" rel="noopener" target="_blank"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a></figcaption></figure><figure class="desk-frame team-item"><div class="desk-frame-media"><img alt="Motor pod haubom" class="img-fluid gallery-img" data-fallback-alt="Motor pod haubom" data-fallback-src="assets/gallery/tiktok-fallback-03.webp" data-gallery-img="" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/tiktok-fallback-03.webp"/></div><figcaption class="desk-frame-foot"><small data-gallery-sub="">Objava s TikToka</small><a aria-label="Pogledajte objavu" class="desk-ico gallery-tile-link" data-gallery-link="" href="https://www.tiktok.com/@autoservissunja/photo/7699972445880536341" rel="noopener" target="_blank"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a></figcaption></figure><figure class="desk-frame team-item"><div class="desk-frame-media"><img alt="ECU jedinica" class="img-fluid gallery-img" data-fallback-alt="ECU jedinica" data-fallback-src="assets/gallery/tiktok-fallback-04.webp" data-gallery-img="" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/tiktok-fallback-04.webp"/></div><figcaption class="desk-frame-foot"><small data-gallery-sub="">Objava s TikToka</small><a aria-label="Pogledajte objavu" class="desk-ico gallery-tile-link" data-gallery-link="" href="https://www.tiktok.com/@autoservissunja/photo/7697738557175123220" rel="noopener" target="_blank"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a></figcaption></figure><figure class="desk-frame team-item"><div class="desk-frame-media"><img alt="Glava motora" class="img-fluid gallery-img" data-fallback-alt="Glava motora" data-fallback-src="assets/gallery/tiktok-fallback-05.webp" data-gallery-img="" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/tiktok-fallback-05.webp"/></div><figcaption class="desk-frame-foot"><small data-gallery-sub="">Objava s TikToka</small><a aria-label="Pogledajte objavu" class="desk-ico gallery-tile-link" data-gallery-link="" href="https://www.tiktok.com/@autoservissunja/photo/7692814793178107188" rel="noopener" target="_blank"><span class="gallery-action-icon"><i class="fab fa-tiktok"></i></span></a></figcaption></figure></div>
+<section id="galerija" data-wm-chapter class="wm-section " aria-labelledby="wm-gallery-title"><div class="wm-wrap">
+  <div class="wm-titleline" data-wm-reveal><div><span class="wm-kicker"><b aria-hidden="true">03</b>Galerija</span><h2 id="wm-gallery-title">Iz naše radionice</h2></div><a class="wm-button wm-button--glass" href="https://www.tiktok.com/@autoservissunja" rel="noopener" target="_blank">@autoservissunja ↗</a></div>
+  <div class="wm-film-grid"><figure class="wm-frame team-item"><div class="wm-frame-photo"><img alt="Renault Clio na dizalici" class="img-fluid gallery-img" data-fallback-alt="Renault Clio na dizalici" data-fallback-src="assets/gallery/tiktok-fallback-01.webp" data-gallery-img="" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/tiktok-fallback-01.webp"/></div><figcaption class="wm-frame-foot"><b aria-hidden="true">01/05</b><small data-gallery-sub="">Objava s TikToka</small><a aria-label="Pogledajte objavu" class="wm-icon gallery-tile-link" data-gallery-link="" href="https://www.tiktok.com/@autoservissunja/photo/7702943115132325141" rel="noopener" target="_blank"><span class="gallery-action-icon"><i aria-hidden="true" class="fab fa-tiktok"></i></span></a></figcaption></figure>
+<figure class="wm-frame team-item"><div class="wm-frame-photo"><img alt="Peugeot na dizalici" class="img-fluid gallery-img" data-fallback-alt="Peugeot na dizalici" data-fallback-src="assets/gallery/tiktok-fallback-02.webp" data-gallery-img="" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/tiktok-fallback-02.webp"/></div><figcaption class="wm-frame-foot"><b aria-hidden="true">02/05</b><small data-gallery-sub="">Objava s TikToka</small><a aria-label="Pogledajte objavu" class="wm-icon gallery-tile-link" data-gallery-link="" href="https://www.tiktok.com/@autoservissunja/photo/7696249910995258645" rel="noopener" target="_blank"><span class="gallery-action-icon"><i aria-hidden="true" class="fab fa-tiktok"></i></span></a></figcaption></figure>
+<figure class="wm-frame team-item"><div class="wm-frame-photo"><img alt="Motor pod haubom" class="img-fluid gallery-img" data-fallback-alt="Motor pod haubom" data-fallback-src="assets/gallery/tiktok-fallback-03.webp" data-gallery-img="" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/tiktok-fallback-03.webp"/></div><figcaption class="wm-frame-foot"><b aria-hidden="true">03/05</b><small data-gallery-sub="">Objava s TikToka</small><a aria-label="Pogledajte objavu" class="wm-icon gallery-tile-link" data-gallery-link="" href="https://www.tiktok.com/@autoservissunja/photo/7699972445880536341" rel="noopener" target="_blank"><span class="gallery-action-icon"><i aria-hidden="true" class="fab fa-tiktok"></i></span></a></figcaption></figure>
+<figure class="wm-frame team-item"><div class="wm-frame-photo"><img alt="ECU jedinica" class="img-fluid gallery-img" data-fallback-alt="ECU jedinica" data-fallback-src="assets/gallery/tiktok-fallback-04.webp" data-gallery-img="" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/tiktok-fallback-04.webp"/></div><figcaption class="wm-frame-foot"><b aria-hidden="true">04/05</b><small data-gallery-sub="">Objava s TikToka</small><a aria-label="Pogledajte objavu" class="wm-icon gallery-tile-link" data-gallery-link="" href="https://www.tiktok.com/@autoservissunja/photo/7697738557175123220" rel="noopener" target="_blank"><span class="gallery-action-icon"><i aria-hidden="true" class="fab fa-tiktok"></i></span></a></figcaption></figure>
+<figure class="wm-frame team-item"><div class="wm-frame-photo"><img alt="Glava motora" class="img-fluid gallery-img" data-fallback-alt="Glava motora" data-fallback-src="assets/gallery/tiktok-fallback-05.webp" data-gallery-img="" decoding="async" loading="lazy" onerror="if(window.sunjaRecoverImage)window.sunjaRecoverImage(this)" src="assets/gallery/tiktok-fallback-05.webp"/></div><figcaption class="wm-frame-foot"><b aria-hidden="true">05/05</b><small data-gallery-sub="">Objava s TikToka</small><a aria-label="Pogledajte objavu" class="wm-icon gallery-tile-link" data-gallery-link="" href="https://www.tiktok.com/@autoservissunja/photo/7692814793178107188" rel="noopener" target="_blank"><span class="gallery-action-icon"><i aria-hidden="true" class="fab fa-tiktok"></i></span></a></figcaption></figure></div>
 </div></section>
-<div class="desk-profile-band desk-section"><div class="desk-wrap desk-profile-grid">
-  <section id="o-nama" class="desk-profile" aria-labelledby="desk-about-title">
-    <span class="desk-eyebrow">O nama</span><h2 id="desk-about-title">Auto Servis Šunja u Goraždu</h2>
-    <div class="desk-profile-body"><img alt="Radionica Auto Servis Šunja, fotografija iz originalne TikTok objave" class="desk-profile-image svc-photo" data-about-photo="" decoding="async" loading="lazy" src="assets/gallery/sunja-tiktok-7627945643490692373.webp"/><div><p>Auto Servis Šunja se nalazi na adresi Hajra Lakovića 38, 73000 Goražde. Bavimo se autodijagnostikom, malim i velikim servisima, autoelektrikom te izradom i programiranjem ključeva i daljinskih upravljača.</p><div class="desk-experience"><strong>25+</strong> godina iskustva</div></div></div>
-  </section>
-  <section id="recenzije" class="desk-review" aria-labelledby="desk-reviews-title">
-    <span class="desk-eyebrow">Recenzije</span><h2 id="desk-reviews-title">Ocjena na Google kartama</h2>
-    <span class="stars" data-stars="" style="--fillw:92%">
+<section id="o-nama" data-wm-chapter class="wm-section " aria-labelledby="wm-about-title"><div class="wm-wrap wm-workshop-grid">
+  <figure class="wm-workshop-visual"><img alt="Radionica Auto Servis Šunja, fotografija iz originalne TikTok objave" class="wm-about-photo svc-photo" data-about-photo="" decoding="async" loading="lazy" src="assets/gallery/sunja-tiktok-7627945643490692373.webp"/><figcaption class="wm-stamp"><strong>25+</strong> godina iskustva</figcaption></figure>
+  <div class="wm-workshop-copy" data-wm-reveal><span class="wm-kicker"><b aria-hidden="true">04</b>O nama</span><h2 id="wm-about-title">Auto Servis Šunja u Goraždu</h2><p>Auto Servis Šunja se nalazi na adresi Hajra Lakovića 38, 73000 Goražde. Bavimo se autodijagnostikom, malim i velikim servisima, autoelektrikom te izradom i programiranjem ključeva i daljinskih upravljača.</p>
+  <div class="wm-actions"><a class="wm-button wm-button--paper" href="#recenzije">Recenzije <i class="fa fa-arrow-down" aria-hidden="true"></i></a></div></div>
+</div></section>
+<section id="recenzije" class="wm-section" aria-labelledby="wm-reviews-title"><div class="wm-wrap wm-review-row" data-wm-reveal>
+  <div><span class="wm-kicker">Recenzije</span><h2 id="wm-reviews-title">Ocjena na Google kartama</h2></div>
+  <div class="wm-review-note"><span aria-hidden="true" class="stars" data-stars="" style="--fillw:92%">
 <span class="stars-row stars-bg"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span>
 <span class="stars-fg"><span class="stars-row"><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span></span>
-</span><p>Prosječna ocjena servisa na Google kartama, na osnovu <strong><span data-reviews="">33</span> recenzija</strong> naših mušterija. Hvala vam na povjerenju!</p>
-    <a class="desk-button desk-button--outline" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+%C5%A0unja+Gora%C5%BEde" target="_blank" rel="noopener">Pogledajte na Google kartama ↗</a>
-  </section>
-</div></div>
-<section id="lokacija" class="desk-loc" aria-labelledby="desk-location-title"><div class="desk-wrap">
-  <div class="desk-section-head"><div><span class="desk-eyebrow">Lokacija</span><h2 id="desk-location-title">Lokacija servisa</h2><p>Hajra Lakovića 38, 73000 Goražde, Bosna i Hercegovina.</p></div>
-      <a class="desk-button" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener"><i class="fa fa-location-arrow" aria-hidden="true"></i> Upute za vožnju</a></div>
+</span><p>Prosječna ocjena servisa na Google kartama, na osnovu <strong><span data-reviews="">33</span> recenzija</strong> naših mušterija. Hvala vam na povjerenju!</p><a class="wm-button wm-button--paper" href="https://www.google.com/maps/search/?api=1&amp;query=Auto+Servis+%C5%A0unja+Gora%C5%BEde" rel="noopener" target="_blank">Pogledajte na Google kartama ↗</a></div>
+</div></section>
+<section id="lokacija" data-wm-chapter class="wm-section " aria-labelledby="wm-location-title"><div class="wm-wrap">
+ <div class="wm-titleline" data-wm-reveal><div><span class="wm-kicker"><b aria-hidden="true">05</b>Lokacija</span><h2 id="wm-location-title">Lokacija servisa</h2><p>Hajra Lakovića 38, 73000 Goražde, Bosna i Hercegovina.</p></div><a class="wm-button" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" rel="noopener" target="_blank"><i class="fa fa-location-arrow" aria-hidden="true"></i> Upute za vožnju</a></div>
+ <div class="wm-coordinate" aria-hidden="true"><span>43.6651456° N</span><i></i><span>18.982064° E</span></div>
 </div></section>
 <div class="globe-scroll" id="globeScroll">
         <div class="globe-sticky">
@@ -433,16 +462,18 @@
         </div>
     </div>
 
-<section id="kontakt" class="desk-section" aria-labelledby="desk-contact-title"><div class="desk-wrap">
-  <span class="desk-eyebrow">Kontakt</span><h2 id="desk-contact-title">Kontaktirajte Auto Servis Šunja</h2>
-  <div class="desk-contact"><div class="desk-contact-call"><span class="desk-eyebrow">Telefon</span><a class="desk-number" href="tel:+38761297847">061 297 847</a>
-    <div class="desk-actions"><a class="desk-button desk-button--light" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a><a class="desk-button desk-button--clear" href="https://wa.me/38761297847" target="_blank" rel="noopener">WhatsApp ↗</a></div>
-  </div><div class="desk-contact-info"><p><strong>Adresa</strong>Hajra Lakovića 38, 73000 Goražde, Bosna i Hercegovina.</p><p><strong>Radno vrijeme</strong>Pon – Sub: 10:00 – 18:00 · Nedjelja: zatvoreno</p></div></div>
+
+<section id="kontakt" data-wm-chapter class="wm-section " aria-labelledby="wm-contact-title"><div class="wm-wrap">
+  <span class="wm-kicker"><b aria-hidden="true">06</b>Kontakt</span>
+  <div class="wm-contact-row" data-wm-reveal><div><h2 id="wm-contact-title">Kontaktirajte Auto Servis Šunja</h2>
+    <a class="wm-number" href="tel:+38761297847">061 297 847</a>
+    <div class="wm-actions"><a class="wm-button wm-button--paper" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> Pozovite</a><a class="wm-button wm-button--glass" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" rel="noopener" target="_blank"><i class="fa fa-location-arrow" aria-hidden="true"></i> Upute</a><a class="wm-button wm-button--glass" href="https://wa.me/38761297847" target="_blank" rel="noopener">WhatsApp ↗</a></div>
+  </div><div class="wm-contact-info"><p><strong>Adresa</strong>Hajra Lakovića 38, 73000 Goražde, Bosna i Hercegovina.</p><p><strong>Radno vrijeme</strong>Pon – Sub: 10:00 – 18:00 · Nedjelja: zatvoreno</p></div></div>
 </div></section>
 </main>
-<footer id="siteFooter"><div class="desk-wrap">
-  <div class="desk-footer-grid">
-    <div class="desk-foot-brand"><img alt="Auto Servis Šunja" src="assets/sunja-logo-light.webp"/><p>Auto Servis Šunja · Goražde</p><div class="desk-socials"><a href="https://www.tiktok.com/@autoservissunja" class="desk-ico" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok" aria-hidden="true"></i></a><a href="https://www.facebook.com/share/1MTp82REEF/?mibextid=wwXIfr" class="desk-ico" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a><a href="https://www.instagram.com/sunja_servis_peugeot/" class="desk-ico" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></div></div>
+<footer id="siteFooter"><div class="wm-wrap">
+  <div class="wm-footer-grid">
+    <div class="wm-foot-brand"><img alt="Auto Servis Šunja" src="assets/sunja-logo-light.webp"/><p>Auto Servis Šunja · Goražde</p><div class="wm-actions"><a href="https://www.tiktok.com/@autoservissunja" class="wm-icon" target="_blank" rel="noopener" aria-label="TikTok"><i class="fab fa-tiktok" aria-hidden="true"></i></a><a href="https://www.facebook.com/share/1MTp82REEF/?mibextid=wwXIfr" class="wm-icon" target="_blank" rel="noopener" aria-label="Facebook"><i class="fab fa-facebook-f" aria-hidden="true"></i></a><a href="https://www.instagram.com/sunja_servis_peugeot/" class="wm-icon" target="_blank" rel="noopener" aria-label="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a></div></div>
     <div><h2>Radno vrijeme</h2><div class="hours-list">
 <p data-day="1"><span>Ponedjeljak</span><span>10:00 – 18:00</span></p>
 <p data-day="2"><span>Utorak</span><span>10:00 – 18:00</span></p>
@@ -452,13 +483,20 @@
 <p data-day="6"><span>Subota</span><span>10:00 – 18:00</span></p>
 <p data-day="0"><span>Nedjelja</span><span>Zatvoreno</span></p>
 </div></div>
-    <div><h2>Usluge</h2><div class="desk-footer-links"><a href="#usluge" data-svc-link="1">Autodijagnostika</a><a href="#usluge" data-svc-link="2">Peugeot servis</a><a href="#usluge" data-svc-link="3">Mali servis</a><a href="#usluge" data-svc-link="4">Veliki servis</a><a href="#usluge" data-svc-link="5">Autoelektrika</a><a href="#usluge" data-svc-link="6">Ključevi i daljinski</a></div></div>
+    <div><h2>Usluge</h2><div class="wm-footer-links"><a href="#usluge" data-svc-link="1">Autodijagnostika</a><a href="#usluge" data-svc-link="2">Peugeot servis</a><a href="#usluge" data-svc-link="3">Mali servis</a><a href="#usluge" data-svc-link="4">Veliki servis</a><a href="#usluge" data-svc-link="5">Autoelektrika</a><a href="#usluge" data-svc-link="6">Ključevi i daljinski</a></div></div>
   </div>
-  <div class="desk-foot-credit">© Auto Servis Šunja, sva prava zadržana. · Designed by <a href="https://www.facebook.com/share/18raYJEbQj/?mibextid=wwXIfr" target="_blank" rel="noopener">Armin Šunja</a> · <a href="https://vm.tiktok.com/ZN85hsoY9/" target="_blank" rel="noopener">Fotografija naše radionice</a></div>
+  <div class="wm-foot-end"><span>© Auto Servis Šunja, sva prava zadržana. · Dizajn: <a href="https://www.facebook.com/share/18raYJEbQj/?mibextid=wwXIfr" target="_blank" rel="noopener">Armin Šunja</a> · <a href="https://vm.tiktok.com/ZN85hsoY9/" target="_blank" rel="noopener">Fotografija naše radionice</a></span><a href="#pocetna">Na vrh ↑</a></div>
 </div></footer>
-<div id="deskDock" class="mobile-callbar" aria-label="Brzi kontakt"><a class="call" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> 061 297 847</a>
+
+<div id="wmDock" class="mobile-callbar" aria-label="Brzi kontakt"><a class="call" href="tel:+38761297847"><i class="fa fa-phone-alt" aria-hidden="true"></i> 061 297 847</a>
  <a class="dir" href="https://www.google.com/maps/dir/?api=1&amp;destination=Auto+Servis+%C5%A0unja,+Hajra+Lakovi%C4%87a+38,+73000+Gora%C5%BEde" target="_blank" rel="noopener"><i class="fa fa-location-arrow" aria-hidden="true"></i> Upute</a></div>
-<button type="button" id="backTop" class="desk-ico back-to-top" aria-label="Nazad na vrh" title="Nazad na vrh"><i class="fa fa-arrow-up" aria-hidden="true"></i></button>
+<button type="button" id="backTop" class="wm-icon back-to-top" aria-label="Nazad na vrh" title="Nazad na vrh"><i class="fa fa-arrow-up" aria-hidden="true"></i></button>
+
+<noscript><style>
+#wmHeader{position:relative}#wmHeader .navbar-toggler,#workshopStory .service-nav-grid,#header-carousel .wm-media-nav{display:none!important}
+#wmHeader #navbarCollapse{display:block!important}#wmHeader .navbar-nav{display:flex;flex-flow:row wrap}
+#workshopStory #usluge .tab-pane{display:block!important;opacity:1!important;transform:none!important;animation:none!important;margin-bottom:12px}
+</style></noscript>
     <!-- JavaScript Libraries -->
 
     <script src="lib/bootstrap/bootstrap.bundle.min.js"></script>
@@ -467,7 +505,7 @@
     
 
     <!-- Template Javascript -->
-    <script src="js/main.js?v=40.0"></script>
+    <script src="js/main.js?v=40.1"></script>
 
     <!-- Auto Servis Šunja custom scripts -->
     <script>
@@ -991,6 +1029,7 @@
         }
     })();
     </script>
+    <script src="js/workshop-motion.js?v=2.0"></script>
 </body>
 
 </html>

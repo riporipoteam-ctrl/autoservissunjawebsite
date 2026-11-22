@@ -192,12 +192,16 @@
         function startCycle() {
             if (document.hidden || document.documentElement.classList.contains("sunja-intro-active")) return;
             stop();
+            // Workshop in Motion owns its playback state, including the no-Bootstrap timer.
+            var currentMode = root.dataset.workshopMotion;
+            var shouldPlay = currentMode ? currentMode !== "off" :
+                !document.getElementById("workshopStory") || !(reduceMotion || perfLite);
             if (window.bootstrap && window.bootstrap.Carousel) {
                 try {
                     instance = window.bootstrap.Carousel.getOrCreateInstance(hero, {
                         interval: 6500, ride: false, pause: false, wrap: true, touch: true
                     });
-                    instance.cycle();
+                    if (shouldPlay) instance.cycle();
                     return;
                 } catch (error) {
                     instance = null;
@@ -219,7 +223,7 @@
                     });
                 });
             }
-            fallbackTimer = window.setInterval(function () { rotateBy(1); }, 6500);
+            if (shouldPlay) fallbackTimer = window.setInterval(function () { rotateBy(1); }, 6500);
         }
         document.addEventListener("visibilitychange", function () {
             if (document.hidden) stop();
@@ -227,6 +231,7 @@
         });
         window.addEventListener("pageshow", startCycle);
         window.addEventListener("sunja:intro-finished", startCycle);
+        window.addEventListener("sunja:workshop-motion-change", startCycle);
         startCycle();
     }
     setupHeroCarousel();
@@ -255,7 +260,7 @@
 
     // One tap initiates one native scroll. No custom 1.9s animation loop.
     function scrollToTopSmoothly() {
-        window.scrollTo({ top: 0, behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth" });
+        window.scrollTo({ top: 0, behavior: (reduceMotion || fastTouchNavigation || document.documentElement.dataset.workshopMotion === "off") ? "auto" : "smooth" });
     }
     if (backTop) {
         backTop.addEventListener("click", function (event) {
@@ -373,7 +378,7 @@
         var destination = Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - offset - 10);
         window.scrollTo({
             top: destination,
-            behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth"
+            behavior: (reduceMotion || fastTouchNavigation || document.documentElement.dataset.workshopMotion === "off") ? "auto" : "smooth"
         });
         return true;
     }
