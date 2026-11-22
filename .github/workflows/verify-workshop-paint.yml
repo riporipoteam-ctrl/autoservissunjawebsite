@@ -40,18 +40,87 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check playwright==1.56.0 pillow==11.3.0
           python -m playwright install --with-deps "$BROWSER_ENGINE"
-      - name: Check settled pixels during normal phone scrolling and render the requested views
+      - name: Check settled pixels and render true viewports and clean stills
         working-directory: reviewed-site
         run: |
           set -euo pipefail
           test "$(git rev-parse HEAD)" = "$DRAFT_SHA"
           export CAPTURE_DIR="$GITHUB_WORKSPACE/captures"
-          python ../review-tools/tools/recheck_workshop_viewport.py ../review-tools/tools/verify_workshop_paint.py
+          # Apply the review-only options to a temporary copy of the capture harness.
+          # The normal viewport checks run before either overlay override is applied.
+          python - ../review-tools/tools/verify_workshop_paint.py "$RUNNER_TEMP/verify_workshop_paint.py" <<'PY'
+          import ast
+          import sys
+          from pathlib import Path
+
+          src, out = map(Path, sys.argv[1:])
+          text = src.read_text()
+
+          def replace(before, after, count=1):
+              global text
+              assert text.count(before) == count, before
+              text = text.replace(before, after)
+
+          replace("CLEAN = '#wmDock,#backTop{visibility:hidden!important}'", "CLEAN = 'html body #wmDock.mobile-callbar,html body #backTop.wm-icon.back-to-top{display:none!important}'")
+          replace("NO_CHROME = CLEAN + '#wmHeader{visibility:hidden!important}'", "NO_CHROME = 'html body #wmHeader{opacity:0!important;transition:none!important}'")
+          replace("        shot(p).save(path/'01-first-screen.png')", "        assert p.locator('#wmDock').is_visible() == (w < 992)\n        shot(p).save(path/'01-first-screen.png')")
+          replace("        for name,sel in CHAPTERS:", """        if normal is not None:
+                      assert p.locator('#wmDock').is_visible() and p.locator('#backTop').is_visible()
+                  p.add_style_tag(content=CLEAN)
+                  header_style = p.add_style_tag(content=NO_CHROME)
+                  raf(p, 9)
+                  controls = p.locator('#wmDock,#backTop')
+                  hidden_control = 'els=>els.length===2 && els.every(e=>getComputedStyle(e).display==="none" && e.getClientRects().length===0)'
+                  assert controls.evaluate_all(hidden_control)
+                  for name,sel in CHAPTERS:""")
+          replace(',style=NO_CHROME,timeout=', ',timeout=')
+          replace('style=NO_CHROME,timeout=', 'timeout=')
+          replace('shot(p, style=NO_CHROME)', 'shot(p)')
+          replace('style=NO_CHROME+HIDE_IMAGES', 'style=HIDE_IMAGES', 2)
+          replace("        rendered.save(path/'06-gallery.png')", "        rendered.save(path/'06-gallery.png')\n        header_style.evaluate('el=>el.remove()')")
+          replace('        full = shot(p,full_page=True,style=CLEAN)', '        assert controls.evaluate_all(hidden_control)\n        full = shot(p,full_page=True)')
+          replace('style=CLEAN+HIDE_IMAGES', 'style=HIDE_IMAGES')
+          replace("'engine':ENGINE,'normal':normal", "'engine':ENGINE,'fixedControlsHiddenInStills':True,'normal':normal")
+          ast.parse(text)
+          out.write_text(text)
+          PY
+          python ../review-tools/tools/recheck_workshop_viewport.py "$RUNNER_TEMP/verify_workshop_paint.py"
           test -z "$(git status --porcelain)"
           for size in 1920x1080 1366x768 1024x768 820x1180 768x1024 390x844 360x800; do
             test -s "$CAPTURE_DIR/$size/14-full-page.png"
             test "$(find "$CAPTURE_DIR/$size" -type f -name '*.png' | wc -l)" -ge 12
           done
+      - name: Assemble the desktop review sheet
+        if: matrix.browser == 'chromium'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from PIL import Image, ImageDraw, ImageFont
+
+          out = Path('captures')
+          folder = out / '1920x1080'
+          items = [
+              ('01-first-screen', '01  Početna'), ('02-dial-mid-scroll', '01  Kazaljka pri pomicanju'),
+              ('05-services', '02  Usluge'), ('06-gallery', '03  Galerija'),
+              ('07-workshop', '04  Radionica'), ('08-reviews', '04  Recenzije'),
+              ('09-location', '05  Lokacija'), ('11-contact', '06  Kontakt'),
+          ]
+          sheet = Image.new('RGB', (1260, 1520), '#101f37')
+          draw = ImageDraw.Draw(sheet)
+          font = '/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf'
+          title = 'AUTO SERVIS ŠUNJA  /  DESKTOP PREGLED  /  1920 × 1080'
+          draw.text((22, 20), title, fill='#dbedff', font=ImageFont.truetype(font, 23))
+          label_font = ImageFont.truetype(font, 18)
+          for i, (name, label) in enumerate(items):
+              x, y = 22 + 623 * (i % 2), 63 + 360 * (i // 2)
+              draw.text((x, y), label, fill='#dbedff', font=label_font)
+              with Image.open(folder / f'{name}.png') as capture:
+                  image = capture.convert('RGB')
+                  image.thumbnail((593, 321), Image.Resampling.LANCZOS)
+                  sheet.paste(image, (x, y + 26))
+          sheet.save(out / 'desktop-review.jpg', quality=91, optimize=True, subsampling=0)
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -86,7 +155,7 @@ jobs:
         with:
           pattern: unverified-screenshot-diagnostics-*
           path: /tmp/gallery-diagnostics
-      - name: Share verified phone still and per-browser paint report on the review branch
+      - name: Save review sheets and per-browser paint reports on the review branch
         shell: bash
         env:
           CHECKS: ${{ needs.screenshots.result }}
@@ -99,10 +168,13 @@ jobs:
             if [ -e "$report" ]; then cp "$report" "$out/$engine.json"; fi
           done
           if [ "$CHECKS" = success ]; then
-            src=/tmp/review-captures/workshop-page-captures-chromium/phone-review.jpg
-            base64 -w 0 "$src" > "$out/phone-review.b64"
-            sha256sum "$src" | cut -d' ' -f1 > "$out/phone-review.sha256"
-            cat "$out/phone-review.sha256"
+            for view in phone desktop; do
+              src="/tmp/review-captures/workshop-page-captures-chromium/$view-review.jpg"
+              test -s "$src"
+              base64 -w 0 "$src" > "$out/$view-review.b64"
+              sha256sum "$src" | cut -d' ' -f1 > "$out/$view-review.sha256"
+              printf '%s: %s\n' "$view" "$(cat "$out/$view-review.sha256")"
+            done
           else
             if [ -d /tmp/gallery-diagnostics ] && find /tmp/gallery-diagnostics -type f -name 'view-*.png' | grep -q .; then
               tar -C /tmp/gallery-diagnostics -czf /tmp/workshop-view-diagnostics.tgz .
@@ -112,5 +184,5 @@ jobs:
           fi
           git add -- "$out"
           git diff --cached --check
-          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Save workshop photo verification and any approved phone still for draft review'
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Save workshop review stills and browser verification'
           git push origin HEAD:refs/heads/ops/assemble-workshop-motion
