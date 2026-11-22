@@ -1,215 +1,184 @@
-/* Šunja workshop system — visual layer only. Intro, map and interactions live in the base files. */
-:root {
-  --ink:#102538;
-  --navy:#0b1e2c;
-  --navy-2:#132d40;
-  --blue:#005d9c;
-  --blue-hover:#004878;
-  --paper:#f2f1ec;
-  --line:#cbd3d4;
-  --muted:#425667;
-  --ease:cubic-bezier(.22,1,.36,1);
+/* Workshop Blueprint: steel, enamel blue, and the real shop photography.
+   No dependencies. Leave the logo sequence and map geometry in the base layer. */
+:root{
+ --shop-ink:#10243b;--shop-night:#0b1c2e;--shop-navy:#122d47;--shop-blue:#0b5fa5;--shop-strong:#084477;--shop-ice:#b8defc;--shop-paper:#f0f5f9;--shop-white:#fff;--shop-line:#bccedc;--shop-copy:#3b536a;--shop-width:1328px;--shop-edge:clamp(18px,4vw,70px);--shop-pad:clamp(52px,7vw,108px);--shop-ease:cubic-bezier(.2,.72,.26,1)
 }
-html:not(.sunja-intro-active) body {background:var(--paper);color:var(--ink)}
-html:not(.sunja-intro-active) .container {max-width:1320px}
-html:not(.sunja-intro-active) .container-xxl {max-width:none}
-html:not(.sunja-intro-active) :is(a,button):focus-visible {outline:3px solid #edb850!important;outline-offset:3px}
-html:not(.sunja-intro-active) .btn {border-radius:0!important;box-shadow:none!important;transition:background-color .2s,color .2s,border-color .2s,transform .25s var(--ease)!important}
-html:not(.sunja-intro-active) .btn:hover {transform:translateY(-3px)}
-html:not(.sunja-intro-active) .btn-primary {background:var(--blue);border-color:var(--blue);color:#fff}
-html:not(.sunja-intro-active) .btn-primary:hover {background:var(--blue-hover);border-color:var(--blue-hover)}
+html:not(.sunja-intro-active) body{color:var(--shop-copy);background:var(--shop-white)}
+html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#kontakt){max-width:none;padding:var(--shop-pad) var(--shop-edge)!important}
+html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt,#siteFooter,.social-rail)>.container{max-width:var(--shop-width);width:100%;padding-inline:0}
+html:not(.sunja-intro-active) :is(#usluge,#galerija,#recenzije,#lokacija,#kontakt)>.container>.text-center{text-align:left!important}
+html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h1{max-width:23ch;margin-bottom:clamp(20px,3vw,42px)!important;font-size:clamp(2rem,4.35vw,4.5rem)!important;letter-spacing:-.043em!important;line-height:1.04!important;color:var(--shop-ink)!important;text-wrap:balance}
+html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h6.text-primary{display:inline-flex;align-items:center;gap:12px;padding:0!important;margin-bottom:14px;color:var(--shop-blue)!important;font-size:.73rem!important;letter-spacing:.16em!important}
+html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h6.text-primary::before{content:''!important;width:24px;height:7px;position:static;transform:none;border-radius:0;background:currentColor;clip-path:polygon(15% 0,100% 0,85% 100%,0 100%)}
+html:not(.sunja-intro-active) :is(#o-nama,#usluge,#recenzije,#lokacija,#kontakt) p{font-size:1rem!important;line-height:1.62!important}
+html:not(.sunja-intro-active) :is(a,button):focus-visible{outline:3px solid #995400!important;outline-offset:3px}
+html:not(.sunja-intro-active) :is(#header-carousel,#usluge,#galerija,#siteFooter,.mobile-callbar,.contact-direct-phone) :is(a,button):focus-visible{outline-color:#ffd186!important}
+html:not(.sunja-intro-active) .btn{border-radius:0!important;box-shadow:none!important;font-weight:700;transition:background-color .16s,color .16s,border-color .16s,translate .16s var(--shop-ease)!important}
+html:not(.sunja-intro-active) .btn-primary{background:var(--shop-blue);border-color:var(--shop-blue);color:var(--shop-white);box-shadow:inset 0 -3px 0 #0003!important}
+html:not(.sunja-intro-active) .btn-primary:is(:hover,:active){background:var(--shop-strong)!important;border-color:var(--shop-strong)!important}
+html:not(.sunja-intro-active) .btn:active{translate:0 1px}
 
-/* Utility and navigation */
-html:not(.sunja-intro-active) body > .container-fluid.bg-light.p-0.workshop-topbar {background:#071722!important;color:#e0ebef}
-html:not(.sunja-intro-active) .workshop-topbar .row {max-width:1500px;min-height:42px;margin:auto;align-items:center}
-html:not(.sunja-intro-active) .workshop-topbar .row > div {display:flex;align-items:center;gap:12px;padding-inline:clamp(20px,3vw,48px)!important}
-html:not(.sunja-intro-active) .workshop-topbar .row > div:first-child {flex:0 0 42%;max-width:42%}
-html:not(.sunja-intro-active) .workshop-topbar .row > div:last-child {flex:0 0 58%;max-width:58%;justify-content:flex-end}
-html:not(.sunja-intro-active) .workshop-topbar .row > div > div {height:auto!important;margin:0!important}
-html:not(.sunja-intro-active) .workshop-topbar .py-3 {padding-block:.4rem!important}
-html:not(.sunja-intro-active) .workshop-topbar :is(small,a.text-dark) {color:#e0ebef!important}
-html:not(.sunja-intro-active) .nav-bar {min-height:78px;background:#fff!important;border-bottom:1px solid #d5dcdd;box-shadow:none!important}
-html:not(.sunja-intro-active) .nav-bar .navbar-brand {min-height:78px;padding:0 clamp(24px,3vw,48px)!important;border-right:1px solid #d5dcdd}
-html:not(.sunja-intro-active) .nav-bar .navbar-brand img {width:auto!important;height:52px!important;max-width:none!important;transform:none!important}
-html:not(.sunja-intro-active) .nav-bar .navbar-toggler {min-width:48px;min-height:48px;border:1px solid #a7b7c0;border-radius:0}
-html:not(.sunja-intro-active) .nav-bar .nav-link {min-height:48px;margin:0!important;padding:0 clamp(8px,1vw,16px)!important;color:var(--ink)!important;font-size:.76rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
-html:not(.sunja-intro-active) .nav-bar .nav-link:hover,html:not(.sunja-intro-active) .nav-bar .nav-link.active {color:var(--blue)!important}
-html:not(.sunja-intro-active) .nav-bar .navbar-collapse > .btn {display:flex!important;align-items:center;min-height:78px;padding-inline:32px!important;background:var(--blue)!important;color:#fff!important}
+/* Utility strip and solid navigation bar. */
+html:not(.sunja-intro-active) body>.workshop-topbar.bg-light{background:var(--shop-night)!important;color:#e3effa}
+html:not(.sunja-intro-active) .workshop-topbar .row{max-width:1440px;margin:auto}
+html:not(.sunja-intro-active) .workshop-topbar .row>div{display:flex;flex-wrap:wrap;align-items:center;gap:3px 12px;padding:4px 16px!important;min-width:0}
+html:not(.sunja-intro-active) .workshop-topbar .row>div:last-child{justify-content:flex-end}
+html:not(.sunja-intro-active) .workshop-topbar .row>div>div{height:auto!important;margin:0!important;padding-block:4px!important}
+html:not(.sunja-intro-active) .workshop-topbar :is(small,a.text-dark){color:#e3effa!important}
+html:not(.sunja-intro-active) .workshop-topbar .status-pill{white-space:normal!important}
+html:not(.sunja-intro-active) .navbar.nav-bar{min-height:68px;background:var(--shop-white)!important;box-shadow:none!important;border-bottom:1px solid var(--shop-line)}
+html:not(.sunja-intro-active) .navbar.nav-bar .navbar-brand{height:68px;padding-inline:var(--shop-edge)!important}
+html:not(.sunja-intro-active) .navbar.nav-bar .navbar-brand img{height:49px!important;width:auto!important;transform:none!important}
+html:not(.sunja-intro-active) .navbar.nav-bar .nav-link{display:flex;align-items:center;min-height:48px;margin:0!important;padding:8px clamp(8px,1vw,17px)!important;font-size:.86rem;font-weight:700;text-transform:none;color:var(--shop-ink)!important;border-radius:0;box-shadow:inset 0 -3px 0 transparent}
+html:not(.sunja-intro-active) .navbar.nav-bar .nav-link:is(:hover,.active){box-shadow:inset 0 -3px 0 var(--shop-blue);background:var(--shop-paper)!important;color:var(--shop-blue)!important}
+html:not(.sunja-intro-active) .navbar.nav-bar .navbar-collapse>.btn{min-height:44px!important;margin-inline:10px 24px;padding-inline:19px!important}
+html:not(.sunja-intro-active) .navbar.nav-bar .navbar-toggler{min-width:46px;min-height:46px;border:1px solid var(--shop-line);border-radius:0}
 
-/* Full-bleed workshop image, cinematic contrast scrim and large left-aligned type. */
-html:not(.sunja-intro-active) #pocetna {padding:0!important;margin:0!important;background:var(--navy)}
-html:not(.sunja-intro-active) #header-carousel .carousel-inner {overflow:hidden;border:0;border-radius:0!important;box-shadow:none!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-item {height:auto!important;min-height:clamp(620px,77svh,850px);background:var(--navy)!important}
-html:not(.sunja-intro-active) #header-carousel .hero-bg {display:none!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-item picture {position:absolute!important;inset:0!important;width:100%!important;height:100%!important;opacity:1!important;border:0!important;border-radius:0!important;box-shadow:none!important;background:var(--navy)!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-item picture img {position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-height:none!important;object-fit:cover!important;object-position:center 52%!important;filter:none!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-item picture::after {content:"";display:block!important;position:absolute;inset:0;background:linear-gradient(90deg,rgba(5,19,29,.96) 0%,rgba(5,19,29,.84) 39%,rgba(5,19,29,.18) 100%)}
-html:not(.sunja-intro-active) #header-carousel .carousel-item::after {display:none!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-caption {position:relative!important;inset:auto!important;z-index:2;width:100%;min-height:clamp(620px,77svh,850px);padding:90px clamp(24px,6vw,100px) 130px!important;align-items:center!important;background:transparent!important;text-align:left}
-html:not(.sunja-intro-active) #header-carousel .carousel-caption .container {width:100%;max-width:1320px;margin:auto;padding:0!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-caption .row {margin:0}
-html:not(.sunja-intro-active) #header-carousel .carousel-caption .col-lg-8 {width:100%;max-width:760px;flex:0 0 100%;padding:0!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-caption h6 {display:block;padding:0;border:0;background:none;color:#b4deef!important;font-size:.8rem!important;font-weight:700;letter-spacing:.18em}
-html:not(.sunja-intro-active) #header-carousel .carousel-caption h6::before {display:none!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 {max-width:10ch;margin:0 0 24px!important;padding:0!important;color:#fff!important;font-size:clamp(4rem,7.3vw,8rem)!important;font-weight:800;line-height:.94!important;letter-spacing:-.055em!important;overflow-wrap:normal;text-shadow:none!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-item:nth-child(2) .carousel-caption h1 {max-width:none;font-size:clamp(2rem,5.1vw,5.2rem)!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-caption p {max-width:47ch;margin-bottom:22px!important;color:#edf4f6!important;font-size:1.1rem!important;line-height:1.65!important}
-html:not(.sunja-intro-active) #header-carousel .carousel-caption .status-pill {border:1px solid #a7c6d3;border-radius:0;background:#0b2637!important;color:#fff!important;box-shadow:none}
-html:not(.sunja-intro-active) #header-carousel .carousel-caption .btn {min-height:54px;margin-left:0!important;padding:15px 26px!important;border:1px solid #fff!important;background:#fff!important;color:var(--navy)!important}
-html:not(.sunja-intro-active) #header-carousel .hero-indicators {left:clamp(24px,6vw,100px);right:auto;bottom:35px;margin:0}
-html:not(.sunja-intro-active) #header-carousel .hero-indicators button span {background:#8ba6b2}
-html:not(.sunja-intro-active) #header-carousel .hero-indicators button.active span {background:#fff}
-html:not(.sunja-intro-active) #header-carousel .hero-nav {top:auto;bottom:28px;width:50px;height:50px;border:1px solid #fff;background:var(--navy);color:#fff}
-html:not(.sunja-intro-active) #header-carousel .hero-nav.carousel-control-prev {left:auto;right:90px}
-html:not(.sunja-intro-active) #header-carousel .hero-nav.carousel-control-next {right:30px}
+/* Photo stage and a solid block of type. Photo pixels never sit behind text. */
+html:not(.sunja-intro-active) #pocetna{margin:0!important;background:var(--shop-night)}
+html:not(.sunja-intro-active) #header-carousel{--stage:clamp(530px,70svh,740px);--rail:max(var(--shop-edge),calc((100% - var(--shop-width))/2));border-radius:0;background:var(--shop-night)}
+html:not(.sunja-intro-active) #header-carousel .carousel-inner{border-radius:0!important;box-shadow:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-item{height:auto!important;min-height:var(--stage)!important;max-height:none!important;background:var(--shop-night)!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-item .hero-bg,html:not(.sunja-intro-active) #header-carousel .carousel-item::after{display:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-item picture{position:absolute!important;inset:0 var(--rail) 61px 43%!important;width:auto!important;height:auto!important;max-width:none!important;max-height:none!important;margin:0!important;opacity:1!important;will-change:auto;box-shadow:none;border:0;border-bottom:3px solid var(--shop-ice);border-radius:0;background:#142b40!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-item picture::after{display:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-item picture img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-height:none!important;object-fit:contain!important;object-position:center!important;background:transparent!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption{position:relative!important;inset:auto!important;width:43%!important;min-height:var(--stage);padding:36px 25px 85px var(--rail)!important;align-items:center!important;text-align:left;background:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .container{max-width:none;padding:0!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .row{margin:0}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .col-lg-8{width:100%;flex:0 0 100%;max-width:none;padding:0!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h6{padding:0!important;border:0;background:none;color:var(--shop-ice)!important;line-height:1.4;letter-spacing:.12em!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h6::before{display:none!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption h1{max-width:12ch;color:#fff!important;font-size:clamp(2.55rem,5.5vw,6.1rem)!important;line-height:.98!important;letter-spacing:-.048em!important;padding:0!important;margin-bottom:18px!important;overflow-wrap:anywhere}
+html:not(.sunja-intro-active) #header-carousel .carousel-item:nth-child(2) .carousel-caption h1{max-width:none;font-size:clamp(1.95rem,3.8vw,4.35rem)!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption p{color:#e7f2fe!important;font-size:1rem!important;line-height:1.6!important;max-width:42ch}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .status-pill{max-width:100%;white-space:normal!important;border:0;border-left:3px solid var(--shop-ice);border-radius:0;background:#19344e!important;color:#eff7ff!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .btn.btn-outline-light{display:inline-flex;align-items:center;justify-content:center;min-height:48px;width:auto;margin-inline:0!important;background:#fff!important;border-color:#fff!important;color:var(--shop-night)!important;border-radius:0!important}
+html:not(.sunja-intro-active) #header-carousel .carousel-caption .btn.btn-outline-light:hover{background:var(--shop-ice)!important;border-color:var(--shop-ice)!important;color:var(--shop-night)!important}
+html:not(.sunja-intro-active) #header-carousel .hero-indicators{left:var(--rail)!important;right:auto!important;bottom:8px!important;margin:0}
+html:not(.sunja-intro-active) #header-carousel .hero-indicators button::before,html:not(.sunja-intro-active) #header-carousel .hero-indicators button>span{border-radius:0!important}
+html:not(.sunja-intro-active) #header-carousel .hero-nav{top:auto!important;bottom:7px!important;height:46px;width:46px!important;border-radius:0;background:var(--shop-blue)!important;box-shadow:none}
+html:not(.sunja-intro-active) #header-carousel .hero-nav:hover{background:var(--shop-strong)!important;transform:none!important}
+html:not(.sunja-intro-active) #header-carousel .hero-nav.carousel-control-prev{left:auto!important;right:calc(var(--rail) + 52px)!important}
+html:not(.sunja-intro-active) #header-carousel .hero-nav.carousel-control-next{right:var(--rail)!important}
 
-/* Social links as a light utility bar, not standalone cards. */
-html:not(.sunja-intro-active) .social-rail {padding:0!important;background:#fff;border-bottom:1px solid var(--line)}
-html:not(.sunja-intro-active) .social-rail .row {--bs-gutter-x:0;--bs-gutter-y:0}
-html:not(.sunja-intro-active) .social-tile {min-height:78px;padding:16px 24px!important;border:0;border-right:1px solid var(--line);border-radius:0;background:#fff!important;box-shadow:none;transition:background .2s!important}
-html:not(.sunja-intro-active) .social-tile:hover {background:#e8eff2!important;transform:none}
-html:not(.sunja-intro-active) .social-tile :is(.text-white,.text-white-50) {color:var(--ink)!important}
+/* A slim social row and an editorial workshop profile. */
+html:not(.sunja-intro-active) .social-rail{max-width:none;padding:0 var(--shop-edge)!important;background:#dcebf7;border-bottom:1px solid var(--shop-line)}
+html:not(.sunja-intro-active) .social-rail .row{--bs-gutter-x:0;--bs-gutter-y:0}
+html:not(.sunja-intro-active) .social-rail .social-tile{min-height:58px;padding:12px 14px!important;border:0;border-right:1px solid var(--shop-line);border-radius:0;background:transparent!important;box-shadow:none;transform:none!important}
+html:not(.sunja-intro-active) .social-rail .social-tile:hover{background:#eaf4fc!important}
+html:not(.sunja-intro-active) .social-rail .social-tile :is(.text-white,.text-white-50){color:var(--shop-ink)!important;text-shadow:none}
+html:not(.sunja-intro-active) .social-rail .social-tile>i:first-child{font-size:1.2rem!important;color:var(--shop-blue)!important}
+html:not(.sunja-intro-active) .social-rail .social-tile>span{min-width:0;overflow-wrap:anywhere}
+html:not(.sunja-intro-active) #o-nama{background:var(--shop-white)!important}
+html:not(.sunja-intro-active) #o-nama>.container>.row{align-items:center;--bs-gutter-x:clamp(26px,6vw,84px)}
+html:not(.sunja-intro-active) #o-nama>.container>.row>div:first-child{order:2;min-width:0}
+html:not(.sunja-intro-active) #o-nama .position-relative.h-100{height:auto!important;border:0;border-radius:0;background:var(--shop-night);box-shadow:0 7px 0 var(--shop-blue)}
+html:not(.sunja-intro-active) #o-nama img[data-about-photo]{max-height:680px!important;border-radius:0;object-fit:contain!important}
+html:not(.sunja-intro-active) #o-nama .position-absolute.top-0.end-0{inset:auto 0 0 auto!important;margin:0!important;border:0;border-radius:0;background:var(--shop-night)!important}
+html:not(.sunja-intro-active) #o-nama .experience-feature{border:0;border-left:6px solid var(--shop-blue);border-radius:0;background:var(--shop-paper);box-shadow:none}
+html:not(.sunja-intro-active) #o-nama .experience-feature :is(strong,span){color:var(--shop-ink)!important}
+html:not(.sunja-intro-active) #o-nama .row.g-4.mb-3>div{padding-bottom:12px;border-bottom:1px solid var(--shop-line)}
+html:not(.sunja-intro-active) #o-nama .row.g-4 .col-12 .bg-light{background:transparent!important;border:0}
 
-/* Editorial type and shared section spacing */
-html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#kontakt) {padding-block:clamp(80px,9vw,140px)!important}
-html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h1 {margin-bottom:32px!important;color:var(--ink)!important;font-size:clamp(2.7rem,5vw,5rem)!important;line-height:1!important;letter-spacing:-.05em!important}
-html:not(.sunja-intro-active) :is(#usluge,#galerija,#recenzije,#lokacija,#kontakt) > .container > .text-center {text-align:left!important}
-html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h6.text-primary {color:var(--blue)!important;font-size:.78rem;letter-spacing:.16em}
-html:not(.sunja-intro-active) :is(#o-nama,#galerija,#lokacija,#kontakt) p {color:var(--muted);line-height:1.7}
-html:not(.sunja-intro-active) :is(#usluge,#galerija,#recenzije,#lokacija,#kontakt) > .container > .text-center h6::before {display:none}
+/* Services as a workshop index and a single stable detail stage. */
+html:not(.sunja-intro-active) #usluge{background:var(--shop-navy)!important;border:0}
+html:not(.sunja-intro-active) #usluge h1,html:not(.sunja-intro-active) #usluge h6.text-primary{color:#eff7ff!important}
+html:not(.sunja-intro-active) #usluge>.container>.row.g-4.wow{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,2.4fr);gap:20px;margin:0}
+html:not(.sunja-intro-active) #usluge>.container>.row.g-4.wow>div{width:auto;min-width:0;max-width:none;padding:0;margin:0}
+html:not(.sunja-intro-active) #usluge .service-nav-grid{display:grid!important;grid-template-columns:minmax(0,1fr);gap:4px!important;margin:0!important}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link{min-height:55px;margin:0!important;padding:10px 12px!important;border:1px solid #597a97!important;border-radius:0!important;background:#193b59!important;color:#f0f7ff!important;box-shadow:none;transform:none!important}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link h4{font-size:.94rem!important;line-height:1.25;color:inherit!important;overflow-wrap:anywhere}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link i{background:none!important;color:var(--shop-ice)!important;border:0}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:is(.active,:hover){background:#e1f1ff!important;color:var(--shop-ink)!important;border-color:#e1f1ff!important;box-shadow:inset 5px 0 0 var(--shop-blue)}
+html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:is(.active,:hover) i{background:none!important;color:var(--shop-blue)!important}
+html:not(.sunja-intro-active) #usluge .tab-content{min-height:100%;padding:clamp(16px,2.6vw,34px)!important;border:0;border-radius:0;background:var(--shop-white);box-shadow:none}
+html:not(.sunja-intro-active) #usluge .tab-pane .row{align-items:center}
+html:not(.sunja-intro-active) #usluge .tab-pane h3{font-size:clamp(1.6rem,2.7vw,2.95rem)!important;line-height:1.08;overflow-wrap:anywhere}
+html:not(.sunja-intro-active) #usluge .service-media-frame{display:grid;place-items:center;min-height:0!important;height:clamp(234px,27vw,414px);max-height:none;border:0;border-radius:0;background:var(--shop-paper)}
+html:not(.sunja-intro-active) #usluge .service-media-frame::before{display:none}
+html:not(.sunja-intro-active) #usluge .service-media-frame .service-image{width:100%;height:100%!important;max-height:100%!important;min-height:0;object-fit:contain!important;opacity:1}
+html:not(.sunja-intro-active) #usluge .tab-pane .btn{border-radius:0!important}
 
-/* About: real workshop photo, large proof point and numbered service facts. */
-html:not(.sunja-intro-active) #o-nama {background:var(--paper)!important}
-html:not(.sunja-intro-active) #o-nama > .container > .row {align-items:center;margin-inline:0;--bs-gutter-x:clamp(32px,7vw,100px)}
-html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:first-child {order:1;padding-top:0!important}
-html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:last-child {order:2}
-html:not(.sunja-intro-active) #o-nama h1 .text-primary {color:var(--blue)!important}
-html:not(.sunja-intro-active) #o-nama .position-relative.h-100 {height:auto!important;aspect-ratio:4/5;overflow:hidden;border:0;border-radius:0;box-shadow:none;background:#d9e1e2}
-html:not(.sunja-intro-active) #o-nama .svc-photo {width:100%;height:100%!important;max-height:none!important;object-fit:cover!important;border-radius:0;box-shadow:none}
-html:not(.sunja-intro-active) #o-nama .position-absolute.top-0.end-0 {inset:auto 0 0 auto!important;margin:0!important;border:0;border-radius:0;background:var(--navy)!important}
-html:not(.sunja-intro-active) #o-nama .experience-feature {background:var(--navy);border:0;border-radius:0;box-shadow:none}
-html:not(.sunja-intro-active) #o-nama .row.g-4.mb-3.pb-3 > div {border-bottom:1px solid #cbd5d8;padding-bottom:15px}
-html:not(.sunja-intro-active) #o-nama .row.g-4.mb-3.pb-3 .bg-light {background:transparent!important;border:0;border-radius:0}
+/* Equal gallery columns and bounded frames. Never promote one photo to full width. */
+html:not(.sunja-intro-active) #galerija{background:var(--shop-paper)!important}
+html:not(.sunja-intro-active) #galerija .row.g-4{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(11px,1.7vw,23px);margin:0}
+html:not(.sunja-intro-active) #galerija .row.g-4>div{grid-column:auto!important;width:auto;min-width:0;max-width:none;padding:0;margin:0}
+html:not(.sunja-intro-active) #galerija .team-item{height:100%;display:flex;flex-direction:column;border:1px solid var(--shop-line);border-radius:0;box-shadow:none;background:#fff}
+html:not(.sunja-intro-active) #galerija .team-item:is(:hover,:focus-within){border-color:var(--shop-blue);transform:none!important;box-shadow:none}
+html:not(.sunja-intro-active) #galerija .team-item .position-relative{position:relative!important;aspect-ratio:4/5!important;height:auto!important;min-height:0!important;max-height:304px;overflow:hidden;background:#d6e3ee!important}
+html:not(.sunja-intro-active) #galerija .team-item .gallery-img{position:absolute;inset:0;width:100%!important;height:100%!important;max-height:100%!important;object-fit:contain!important;transform:none!important}
+html:not(.sunja-intro-active) #galerija .team-item .gallery-tile-link{align-items:flex-end;justify-content:flex-end;padding:8px;background:none!important;opacity:1!important}
+html:not(.sunja-intro-active) #galerija .gallery-tile-link:focus-visible{outline-offset:-4px;outline-color:var(--shop-strong)!important}
+html:not(.sunja-intro-active) #galerija .gallery-action-icon{width:36px;height:36px;background:var(--shop-night);color:#fff;border-radius:0;box-shadow:none}
+html:not(.sunja-intro-active) #galerija .gallery-source-line{flex:1;display:flex;align-items:center;min-height:44px;padding:9px 10px!important;border:0;border-radius:0;text-align:left!important;background:#fff!important;color:var(--shop-ink)!important}
+html:not(.sunja-intro-active) #galerija .row.g-4>.col-lg-4:last-child .team-item>a{flex:1;min-height:100%!important;padding:clamp(10px,2vw,28px)!important;border:0;background:var(--shop-blue)!important}
+html:not(.sunja-intro-active) #galerija .team-item>a :is(h4,p){color:#fff!important;overflow-wrap:anywhere}
+html:not(.sunja-intro-active) #galerija .team-item>a .btn{white-space:normal}
 
-/* Services: full-width horizontal index over a large selected-service panel. */
-html:not(.sunja-intro-active) #usluge {border:0;background:#fff!important;color:var(--ink)}
-html:not(.sunja-intro-active) #usluge > .container > .row.g-4.wow {display:block;margin:0}
-html:not(.sunja-intro-active) #usluge > .container > .row.g-4.wow > :is(.col-lg-4,.col-lg-8) {width:100%;max-width:none;padding:0}
-html:not(.sunja-intro-active) #usluge .service-nav-grid {display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px!important;margin:0!important;padding:0;background:#cad6db}
-html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link {min-height:90px;margin:0!important;padding:20px!important;border:0!important;border-radius:0!important;background:#eef2f2!important;color:var(--ink)!important;box-shadow:none;transition:background .2s,color .2s!important}
-html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link i {flex:0 0 36px;width:36px;height:36px;margin-right:12px!important;border:0;background:transparent!important;color:var(--blue)!important}
-html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link h4 {color:inherit!important;font-size:1rem!important}
-html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:hover,html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link.active {background:var(--blue)!important;color:#fff!important;transform:none!important}
-html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link.active i,html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link:hover i {color:#fff!important}
-html:not(.sunja-intro-active) #usluge .tab-content {height:100%;padding:clamp(24px,4vw,55px)!important;border:0;border-radius:0;background:var(--paper);box-shadow:none}
-html:not(.sunja-intro-active) #usluge .tab-pane .row {align-items:center;--bs-gutter-x:clamp(24px,5vw,70px)}
-html:not(.sunja-intro-active) #usluge .service-media-frame {min-height:390px;border:0;border-radius:0;background:#dfe5e4}
-html:not(.sunja-intro-active) #usluge .service-media-frame .service-image {max-height:480px!important;object-fit:contain!important}
-html:not(.sunja-intro-active) #usluge .tab-pane h3 {color:var(--ink);font-size:clamp(2rem,3.4vw,3.6rem)!important;line-height:1;letter-spacing:-.04em}
-html:not(.sunja-intro-active) #usluge .tab-pane p {color:var(--muted)}
+/* Ratings band, directions heading, and dedicated contact board. */
+html:not(.sunja-intro-active) #recenzije{background:#dcebf7!important}
+html:not(.sunja-intro-active) #recenzije>.container{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:clamp(18px,5vw,76px)}
+html:not(.sunja-intro-active) #recenzije>.container>.row{margin:0}
+html:not(.sunja-intro-active) #recenzije .row>.col-lg-8{width:100%;padding:0}
+html:not(.sunja-intro-active) #recenzije .row>.col-lg-8>.bg-white{text-align:left!important;padding:clamp(16px,4vw,48px)!important;border:1px solid var(--shop-line);border-top:5px solid var(--shop-blue);border-radius:0;box-shadow:none!important}
+html:not(.sunja-intro-active) #lokacija{max-width:none;background:#fff!important;padding:var(--shop-pad) var(--shop-edge) 32px!important}
+html:not(.sunja-intro-active) #lokacija h1{margin-bottom:12px!important}
+html:not(.sunja-intro-active) #globeMap{background:#e7f0f8}
+html:not(.sunja-intro-active) .map-quick-link{color:var(--shop-ink);min-height:44px;border-radius:0;border:1px solid var(--shop-line);box-shadow:none}
+html:not(.sunja-intro-active) #kontakt{background:#f1f5f9!important}
+html:not(.sunja-intro-active) #kontakt>.container>.row>div:nth-child(2){order:3}
+html:not(.sunja-intro-active) #kontakt>.container>.row>div:nth-child(3){order:2}
+html:not(.sunja-intro-active) #kontakt .row.gy-4>div>.bg-light{height:100%;border:0;border-top:3px solid var(--shop-blue);border-radius:0;background:#fff!important}
+html:not(.sunja-intro-active) #kontakt .contact-spotlight{border:0;border-radius:0;background:var(--shop-night);box-shadow:none}
+html:not(.sunja-intro-active) #kontakt .contact-spotlight::before{display:none}
+html:not(.sunja-intro-active) #kontakt .contact-facts{background:none!important;border:0!important;box-shadow:none!important}
+html:not(.sunja-intro-active) #kontakt .contact-fact{background:none!important;border:0!important;border-bottom:1px solid #56718c!important;border-radius:0!important}
+html:not(.sunja-intro-active) #kontakt .contact-fact-icon{background:none!important;border:0;color:var(--shop-ice)!important}
+html:not(.sunja-intro-active) #kontakt :is(.contact-fact p,.contact-fact p a,.contact-muted,.contact-spotlight-copy){color:#eff7ff!important}
+html:not(.sunja-intro-active) #kontakt .contact-direct-phone{min-height:190px;border:0;border-radius:0;background:var(--shop-blue)!important;box-shadow:inset 0 6px 0 var(--shop-strong)}
+html:not(.sunja-intro-active) #kontakt .contact-direct-phone-number{font-size:clamp(1.85rem,4.5vw,4.35rem)!important;text-align:center;white-space:normal}
+html:not(.sunja-intro-active) #siteFooter.footer{margin-top:0!important;padding-inline:var(--shop-edge)!important;border-top:5px solid var(--shop-blue);background-color:var(--shop-night)!important;background-image:linear-gradient(#0b1c2ef0,#0b1c2ef0),url('../assets/gallery/sunja-tiktok-7627945643490692373.webp')!important}
+html:not(.sunja-intro-active) #siteFooter .footer-brand img{max-width:100%;width:auto;object-fit:contain}
+html:not(.sunja-intro-active) #siteFooter .footer-menu{display:flex;flex-wrap:wrap;gap:0 12px}
+html:not(.sunja-intro-active) #siteFooter .footer-menu a{display:inline-flex;align-items:center;margin:0;padding:0;border:0}
+html:not(.sunja-intro-active) #siteFooter .row>div{min-width:0;overflow-wrap:anywhere}
+html:not(.sunja-intro-active) .mobile-callbar{border-radius:0!important;box-shadow:0 -1px 0 #dcebf7}
+html:not(.sunja-intro-active) .mobile-callbar a{letter-spacing:.04em}
+html:not(.sunja-intro-active) #backTop{border-radius:0!important}
 
-/* Gallery: dark workshop wall, staggered contact sheet, photographs remain uncropped. */
-html:not(.sunja-intro-active) #galerija {background:var(--navy)!important}
-html:not(.sunja-intro-active) #galerija h1 {color:#fff!important}
-html:not(.sunja-intro-active) #galerija h6.text-primary {color:#a9daed!important}
-html:not(.sunja-intro-active) #galerija .row.g-4 {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin:0}
-html:not(.sunja-intro-active) #galerija .row.g-4 > div {grid-column:auto!important;width:auto;max-width:none;margin:0;padding:0}
-html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(2),html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(5) {transform:translateY(28px)}
-html:not(.sunja-intro-active) #galerija .team-item {overflow:hidden;border:0;border-radius:0;background:var(--navy-2);box-shadow:none}
-html:not(.sunja-intro-active) #galerija .team-item .position-relative {height:auto;aspect-ratio:4/5!important;background:#172f3f}
-html:not(.sunja-intro-active) #galerija .gallery-img {position:absolute;inset:0;width:100%;height:100%!important;max-height:none;object-fit:contain!important;transition:transform .45s var(--ease)!important}
-html:not(.sunja-intro-active) #galerija .team-item:hover .gallery-img {transform:scale(1.025)!important}
-html:not(.sunja-intro-active) #galerija .team-overlay {backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
-html:not(.sunja-intro-active) #galerija .gallery-source-line {display:flex;align-items:center;min-height:50px;padding:12px 14px!important;border:0;background:#183548!important;color:#e6f1f5!important}
-html:not(.sunja-intro-active) #galerija .gallery-source-line small {color:#e6f1f5!important}
-html:not(.sunja-intro-active) #galerija .team-item > a {min-height:300px!important;border:0!important;background:var(--blue)!important}
-html:not(.sunja-intro-active) #galerija .team-item > a p {color:#fff!important}
-
-/* Review band and map frame */
-html:not(.sunja-intro-active) #recenzije {background:#dce9eb!important}
-html:not(.sunja-intro-active) #recenzije > .container {display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(32px,6vw,100px);align-items:center}
-html:not(.sunja-intro-active) #recenzije .row > .col-lg-8 {width:100%}
-html:not(.sunja-intro-active) #recenzije .row > .col-lg-8 > .bg-white {text-align:left!important;padding:clamp(28px,4vw,55px)!important;border:0;border-left:6px solid var(--blue);border-radius:0;background:#fff!important;box-shadow:none!important}
-html:not(.sunja-intro-active) #recenzije p {color:var(--muted);font-size:1.1rem;line-height:1.7}
-html:not(.sunja-intro-active) #lokacija {padding-top:clamp(80px,8vw,120px)!important;background:var(--paper)!important}
-html:not(.sunja-intro-active) #globeScroll {border-top:5px solid var(--blue)}
-
-/* Contact and footer: a dark action board followed by a clean information index. */
-html:not(.sunja-intro-active) #kontakt {background:var(--navy)!important;color:#fff}
-html:not(.sunja-intro-active) #kontakt h1 {color:#fff!important}
-html:not(.sunja-intro-active) #kontakt h6.text-primary {color:#a9daed!important}
-html:not(.sunja-intro-active) #kontakt .row.gy-4 > div > .bg-light {border:0;border-top:3px solid #8fc5dc;border-radius:0;background:#173548!important}
-html:not(.sunja-intro-active) #kontakt .row.gy-4 > div > .bg-light :is(h5,p,a) {color:#fff!important}
-html:not(.sunja-intro-active) #kontakt .contact-spotlight {border:1px solid #496778;border-radius:0;background:#102b3d;box-shadow:none}
-html:not(.sunja-intro-active) #kontakt .contact-facts {border:0!important;background:transparent!important;box-shadow:none!important}
-html:not(.sunja-intro-active) #kontakt .contact-fact {border:0!important;border-bottom:1px solid #48667a!important;border-radius:0!important;background:transparent!important}
-html:not(.sunja-intro-active) #kontakt .contact-fact-icon {background:transparent!important;border:0!important;color:#a6d7f2!important}
-html:not(.sunja-intro-active) #kontakt .contact-fact-label {color:#a6d7f2!important}
-html:not(.sunja-intro-active) #kontakt .contact-fact p,html:not(.sunja-intro-active) #kontakt .contact-fact p a,html:not(.sunja-intro-active) #kontakt .contact-muted,html:not(.sunja-intro-active) #kontakt .contact-spotlight-copy {color:#f4f8ff!important}
-html:not(.sunja-intro-active) #kontakt .contact-direct-phone {min-height:300px;border:0;border-radius:0;background:var(--blue)!important;box-shadow:none}
-html:not(.sunja-intro-active) #kontakt .contact-btn-primary {background:var(--blue)!important;color:#fff!important}
-html:not(.sunja-intro-active) #kontakt .contact-btn-secondary {border-color:#fff!important;color:#fff!important}
-html:not(.sunja-intro-active) .footer-wave {display:none}
-html:not(.sunja-intro-active) #siteFooter {margin-top:0!important;border-top:1px solid #35505f;background:#071722!important;background-image:linear-gradient(rgba(7,23,34,.96),rgba(7,23,34,.96)),url('../assets/gallery/sunja-tiktok-7627945643490692373.webp')!important;background-size:cover;background-position:center}
-html:not(.sunja-intro-active) #siteFooter .footer-brand img {max-width:210px}
-
-/* Purposeful, one-time entrances; never hide content when JS or motion is unavailable. */
-@keyframes workshop-enter {from {opacity:0;transform:translateY(20px)} to {opacity:1;transform:translateY(0)}}
-@keyframes workshop-image {from {transform:scale(1.035)} to {transform:scale(1)}}
-@media (prefers-reduced-motion:no-preference) {
-  html:not(.sunja-intro-active) #header-carousel .carousel-item.active picture {animation:workshop-image 1.2s var(--ease) both!important}
-  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim {animation:workshop-enter .7s var(--ease) both!important}
-  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim:nth-child(2) {animation-delay:.08s!important}
-  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim:nth-child(3) {animation-delay:.15s!important}
-  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim:nth-child(4) {animation-delay:.21s!important}
-  html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim:nth-child(5) {animation-delay:.27s!important}
-  html:not(.sunja-intro-active) .wow.is-revealed {animation:workshop-enter .65s var(--ease) both}
-  html:not(.sunja-intro-active) #usluge .tab-pane.active {animation:workshop-enter .4s var(--ease) both}
+@media(max-width:991.98px){
+ html:not(.sunja-intro-active) .navbar.nav-bar .navbar-brand{height:62px;min-height:62px}
+ html:not(.sunja-intro-active) .navbar.nav-bar .navbar-collapse>.btn{display:none!important}
+ html:not(.sunja-intro-active) #usluge>.container>.row.g-4.wow{grid-template-columns:minmax(0,1fr)}
+ html:not(.sunja-intro-active) #usluge .service-nav-grid,html:not(.sunja-intro-active) #galerija .row.g-4{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
-@media (max-width:1199.98px) and (min-width:992px) {
-  html:not(.sunja-intro-active) .workshop-topbar .row > div {gap:8px;padding-inline:16px!important}
-  html:not(.sunja-intro-active) .workshop-topbar small {font-size:11px!important}
-  html:not(.sunja-intro-active) .nav-bar .nav-link {padding-inline:8px!important}
-  html:not(.sunja-intro-active) .nav-bar .navbar-collapse > .btn {padding-inline:16px!important}
+@media(max-width:767.98px){
+ html:not(.sunja-intro-active) #header-carousel{--photo:clamp(172px,46vw,300px);--stage:calc(var(--photo) + 385px)}
+ html:not(.sunja-intro-active) #header-carousel .carousel-item picture{inset:0 var(--shop-edge) auto!important;height:var(--photo)!important}
+ html:not(.sunja-intro-active) #header-carousel .carousel-caption{width:100%!important;align-items:flex-start!important;padding:calc(var(--photo) + 20px) var(--shop-edge) 61px!important}
+ html:not(.sunja-intro-active) #header-carousel .carousel-caption h1{font-size:clamp(2.35rem,9vw,4rem)!important;max-width:none}
+ html:not(.sunja-intro-active) #header-carousel .carousel-item:nth-child(2) .carousel-caption h1{font-size:clamp(1.95rem,7.8vw,3rem)!important}
+ html:not(.sunja-intro-active) .social-rail .social-tile{min-height:50px;border:0;border-bottom:1px solid var(--shop-line)}
+ html:not(.sunja-intro-active) #o-nama img[data-about-photo]{max-height:440px!important}
+ html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link i{display:none}
+ html:not(.sunja-intro-active) #galerija .team-item>a h4{font-size:1rem!important}
+ html:not(.sunja-intro-active) #galerija .team-item>a p{font-size:.82rem!important;line-height:1.4}
+ html:not(.sunja-intro-active) #galerija .team-item>a>i{font-size:1.35rem!important}
+ html:not(.sunja-intro-active) #recenzije>.container{grid-template-columns:minmax(0,1fr)}
+ html:not(.sunja-intro-active) #recenzije h1{margin-bottom:0!important}
 }
-@media (max-width:991.98px) {
-  html:not(.sunja-intro-active) .nav-bar,html:not(.sunja-intro-active) .nav-bar .navbar-brand {min-height:72px}
-  html:not(.sunja-intro-active) .nav-bar .navbar-brand {border:0}
-  html:not(.sunja-intro-active) .nav-bar .navbar-collapse {border-top:1px solid var(--line);background:#fff}
-  html:not(.sunja-intro-active) .nav-bar .nav-link {min-height:48px}
-  html:not(.sunja-intro-active) .nav-bar .navbar-collapse > .btn {display:none!important}
-  html:not(.sunja-intro-active) #usluge .service-nav-grid {grid-template-columns:repeat(2,minmax(0,1fr))}
-  html:not(.sunja-intro-active) #recenzije > .container {grid-template-columns:1fr;gap:20px}
+
+/* Control-driven motion only. No scroll-in effects or repeated attention cues. */
+@keyframes bay-copy{from{transform:translateY(7px);opacity:.7}to{transform:none;opacity:1}}
+@keyframes bay-detail{from{transform:translateX(5px);opacity:.8}to{transform:none;opacity:1}}
+html:not(.sunja-intro-active) body .wow.is-revealed,html:not(.sunja-intro-active) #header-carousel .carousel-item.active picture,html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim{animation:none!important}
+@media(prefers-reduced-motion:no-preference){
+ html:not(.sunja-intro-active):not(.perf-lite) #header-carousel .carousel-item.active :is(h1,p).h-anim{animation:bay-copy .34s var(--shop-ease) both!important}
+ html:not(.sunja-intro-active):not(.perf-lite) #usluge .tab-pane.active{animation:bay-detail .22s var(--shop-ease) both!important}
 }
-@media (max-width:767.98px) {
-  html:not(.sunja-intro-active) #header-carousel .carousel-item {min-height:620px}
-  html:not(.sunja-intro-active) #header-carousel .carousel-item picture::after {background:linear-gradient(0deg,rgba(5,19,29,.96) 0%,rgba(5,19,29,.72) 58%,rgba(5,19,29,.35) 100%)}
-  html:not(.sunja-intro-active) #header-carousel .carousel-caption {min-height:620px;padding:90px 24px 96px!important;align-items:flex-end!important}
-  html:not(.sunja-intro-active) #header-carousel .carousel-caption h1 {max-width:none;font-size:clamp(3.1rem,12vw,4.8rem)!important}
-  html:not(.sunja-intro-active) #header-carousel .carousel-item:nth-child(2) .carousel-caption h1 {font-size:clamp(1.75rem,8vw,2.3rem)!important}
-  html:not(.sunja-intro-active) #header-carousel .carousel-caption p {font-size:1rem!important}
-  html:not(.sunja-intro-active) #header-carousel .hero-indicators {left:24px;bottom:18px}
-  html:not(.sunja-intro-active) #header-carousel .hero-nav {display:none}
-  html:not(.sunja-intro-active) .social-rail .social-tile {min-height:68px;border-bottom:1px solid var(--line)}
-  html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#kontakt) {padding-block:68px!important}
-  html:not(.sunja-intro-active) :is(#o-nama,#usluge,#galerija,#recenzije,#lokacija,#kontakt) h1 {font-size:2rem!important}
-  html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:first-child {order:2}
-  html:not(.sunja-intro-active) #o-nama > .container > .row > .col-lg-6:last-child {order:1}
-  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link {min-height:68px;padding:10px!important}
-  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link h4 {font-size:.86rem!important;overflow-wrap:normal}
-  html:not(.sunja-intro-active) #usluge .service-nav-grid .nav-link i {display:none}
-  html:not(.sunja-intro-active) #usluge .service-media-frame {min-height:240px}
-  html:not(.sunja-intro-active) #galerija .row.g-4 {grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-  html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(2),html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(5) {transform:none}
-  html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(5),
-  html:not(.sunja-intro-active) #galerija .row.g-4 > div:last-child {grid-column:1 / -1!important}
-  html:not(.sunja-intro-active) #galerija .row.g-4 > div:nth-child(5) .position-relative {aspect-ratio:16/10!important}
-  html:not(.sunja-intro-active) #galerija .team-item > a {min-height:220px!important;padding:20px!important}
-  html:not(.sunja-intro-active) #kontakt .contact-actions {flex-wrap:wrap}
-}
-@media (prefers-reduced-motion:reduce) {
-  html:not(.sunja-intro-active) #header-carousel .carousel-item.active picture,html:not(.sunja-intro-active) #header-carousel .carousel-item.active .h-anim,html:not(.sunja-intro-active) #usluge .tab-pane.active,html:not(.sunja-intro-active) .wow.is-revealed {animation:none!important;transform:none!important}
-  html:not(.sunja-intro-active) .btn,html:not(.sunja-intro-active) #galerija .gallery-img {transition:none!important}
-  .stars.on .stars-fg {transition:none!important}
-  .stars.on .stars-fg i {animation:none!important}
+@media(prefers-reduced-motion:reduce){
+ html:not(.sunja-intro-active) :is(.btn,.nav-link,.social-tile,.team-item,.gallery-tile-link,.gallery-action-icon,.service-image,.hero-nav,#header-carousel .carousel-item){transition:none!important}
+ html:not(.sunja-intro-active) #usluge .tab-pane.active,html:not(.sunja-intro-active) .stars.on :is(.stars-fg,.stars-fg i),html:not(.sunja-intro-active) #header-carousel .hero-indicators button.active span{animation:none!important;transition:none!important}
+ html:not(.sunja-intro-active) #header-carousel .hero-indicators button.active span{width:100%!important}
 }
