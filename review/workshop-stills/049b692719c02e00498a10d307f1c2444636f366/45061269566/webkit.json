@@ -1,0 +1,329 @@
+{
+  "draft": "049b692719c02e00498a10d307f1c2444636f366",
+  "engine": "webkit",
+  "photosCheckedAtEachSize": 5,
+  "minimumPaintedFraction": 0.08,
+  "results": [
+    {
+      "size": "1920x1080",
+      "engine": "webkit",
+      "fixedControlsHiddenInStills": true,
+      "normal": null,
+      "nativeSection": [
+        0.703,
+        0.526,
+        0.365,
+        0.525,
+        0.366
+      ],
+      "finalSection": [
+        0.703,
+        0.526,
+        0.365,
+        0.525,
+        0.366
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.703,
+        0.526,
+        0.365,
+        0.525,
+        0.366
+      ],
+      "finalFull": [
+        0.703,
+        0.526,
+        0.365,
+        0.525,
+        0.366
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20260924-2e26b3d5.webp",
+        "assets/photos/tt-20261027-cce4aa19.webp",
+        "assets/photos/tt-20261108-574b96bf.webp",
+        "assets/photos/tt-20261004-2d828014.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "1366x768",
+      "engine": "webkit",
+      "fixedControlsHiddenInStills": true,
+      "normal": null,
+      "nativeSection": [
+        0.791,
+        0.563,
+        0.418,
+        0.562,
+        0.417
+      ],
+      "finalSection": [
+        0.791,
+        0.563,
+        0.418,
+        0.562,
+        0.417
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.791,
+        0.563,
+        0.418,
+        0.562,
+        0.417
+      ],
+      "finalFull": [
+        0.791,
+        0.563,
+        0.418,
+        0.562,
+        0.417
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20261004-f4d7f335.webp",
+        "assets/photos/tt-20261013-235e6ce1.webp",
+        "assets/photos/tt-20261023-180d1783.webp",
+        "assets/photos/tt-20261027-cce4aa19.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "1024x768",
+      "engine": "webkit",
+      "fixedControlsHiddenInStills": true,
+      "normal": null,
+      "nativeSection": [
+        0.842,
+        0.582,
+        0.458,
+        0.582,
+        0.428
+      ],
+      "finalSection": [
+        0.842,
+        0.582,
+        0.458,
+        0.582,
+        0.428
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.842,
+        0.582,
+        0.458,
+        0.582,
+        0.428
+      ],
+      "finalFull": [
+        0.842,
+        0.582,
+        0.458,
+        0.582,
+        0.428
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20261017-8d087753.webp",
+        "assets/photos/tt-20261108-234cf88c.webp",
+        "assets/photos/tt-20261031-a32411f2.webp",
+        "assets/photos/tt-20261027-cce4aa19.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "820x1180",
+      "engine": "webkit",
+      "fixedControlsHiddenInStills": true,
+      "normal": null,
+      "nativeSection": [
+        0.925,
+        0.65,
+        0.484,
+        0.616,
+        0.456
+      ],
+      "finalSection": [
+        0.925,
+        0.65,
+        0.484,
+        0.616,
+        0.456
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.925,
+        0.651,
+        0.484,
+        0.617,
+        0.456
+      ],
+      "finalFull": [
+        0.925,
+        0.651,
+        0.484,
+        0.617,
+        0.456
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20260929-08b1947c.webp",
+        "assets/photos/tt-20261108-574b96bf.webp",
+        "assets/photos/tt-20261027-cce4aa19.webp",
+        "assets/photos/tt-20261023-10c0b05f.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "768x1024",
+      "engine": "webkit",
+      "fixedControlsHiddenInStills": true,
+      "normal": null,
+      "nativeSection": [
+        0.98,
+        0.667,
+        0.491,
+        0.666,
+        0.489
+      ],
+      "finalSection": [
+        0.98,
+        0.667,
+        0.491,
+        0.666,
+        0.489
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.98,
+        0.667,
+        0.491,
+        0.666,
+        0.489
+      ],
+      "finalFull": [
+        0.98,
+        0.667,
+        0.491,
+        0.666,
+        0.489
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20261004-f4d7f335.webp",
+        "assets/photos/tt-20261004-2d828014.webp",
+        "assets/photos/tt-20261023-180d1783.webp",
+        "assets/photos/tt-20261027-cce4aa19.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "390x844",
+      "engine": "webkit",
+      "fixedControlsHiddenInStills": true,
+      "normal": [
+        0.73,
+        0.729,
+        0.746,
+        0.696,
+        0.696
+      ],
+      "nativeSection": [
+        0.73,
+        0.729,
+        0.746,
+        0.696,
+        0.696
+      ],
+      "finalSection": [
+        0.73,
+        0.729,
+        0.746,
+        0.696,
+        0.696
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.73,
+        0.729,
+        0.746,
+        0.696,
+        0.696
+      ],
+      "finalFull": [
+        0.73,
+        0.729,
+        0.746,
+        0.696,
+        0.696
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20261108-234cf88c.webp",
+        "assets/photos/tt-20260924-d643c1cd.webp",
+        "assets/photos/tt-20261013-235e6ce1.webp",
+        "assets/photos/tt-20261023-180d1783.webp"
+      ],
+      "errors": []
+    },
+    {
+      "size": "360x800",
+      "engine": "webkit",
+      "fixedControlsHiddenInStills": true,
+      "normal": [
+        0.735,
+        0.696,
+        0.734,
+        0.696,
+        0.735
+      ],
+      "nativeSection": [
+        0.735,
+        0.696,
+        0.734,
+        0.696,
+        0.735
+      ],
+      "finalSection": [
+        0.735,
+        0.696,
+        0.734,
+        0.696,
+        0.735
+      ],
+      "sectionMethod": "native section",
+      "nativeFull": [
+        0.735,
+        0.696,
+        0.734,
+        0.696,
+        0.735
+      ],
+      "finalFull": [
+        0.735,
+        0.696,
+        0.734,
+        0.696,
+        0.735
+      ],
+      "fullMethod": "native full-page",
+      "photos": [
+        "assets/photos/tt-20261120-3d31739d.webp",
+        "assets/photos/tt-20261031-a32411f2.webp",
+        "assets/photos/tt-20260929-08b1947c.webp",
+        "assets/photos/tt-20261017-8d087753.webp",
+        "assets/photos/tt-20261108-234cf88c.webp"
+      ],
+      "errors": []
+    }
+  ],
+  "failures": []
+}
