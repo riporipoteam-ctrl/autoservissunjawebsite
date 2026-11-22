@@ -1,0 +1,102 @@
+name: Responsive screenshots
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'css/**'
+      - '.github/workflows/responsive-captures.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    env:
+      BROWSER_ENGINE: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps "$BROWSER_ENGINE"
+      - name: Capture the pull request preview
+        run: |
+          python - <<'PY'
+          import os
+          from functools import partial
+          from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+          from pathlib import Path
+          from threading import Thread
+          from playwright.sync_api import sync_playwright
+
+          sizes = [(1920,1080),(1366,768),(1024,768),(820,1180),(768,1024),(390,844),(360,800)]
+          sections = [('#pocetna','hero'),('.social-rail','social'),('#o-nama','about'),
+                      ('#usluge','services'),('#galerija','gallery'),('#recenzije','reviews'),
+                      ('#lokacija','location'),('#kontakt','contact'),('#siteFooter','footer')]
+          server = ThreadingHTTPServer(('127.0.0.1', 0), partial(SimpleHTTPRequestHandler, directory=Path.cwd()))
+          Thread(target=server.serve_forever, daemon=True).start()
+          origin = f'http://127.0.0.1:{server.server_port}'
+          failures = []
+          with sync_playwright() as pw:
+              browser = getattr(pw, os.environ['BROWSER_ENGINE']).launch()
+              for w,h in sizes:
+                  label = f'{w}x{h}'
+                  target = Path('captures') / label
+                  target.mkdir(parents=True, exist_ok=True)
+                  ctx = browser.new_context(viewport={'width': w, 'height': h}, device_scale_factor=1, has_touch=w <= 820)
+                  try:
+                      page = ctx.new_page()
+                      page.set_default_timeout(12000)
+                      page.goto(origin, wait_until='domcontentloaded', timeout=30000)
+                      page.wait_for_function("!document.documentElement.classList.contains('sunja-intro-active')")
+                      page.locator('#pocetna').wait_for(state='visible')
+                      page.evaluate('() => { window.bootstrap?.Carousel.getInstance(document.querySelector("#header-carousel"))?.pause(); }')
+                      page.evaluate('() => Promise.race([document.fonts.ready, new Promise(r=>setTimeout(r,2000))])')
+                      page.evaluate('''() => {
+                          const images = [...document.querySelectorAll('#pocetna img, #o-nama img, #usluge .tab-pane.active img, #galerija img')];
+                          images.forEach(img => { img.loading = 'eager'; });
+                          return Promise.race([Promise.allSettled(images.map(img => img.decode())), new Promise(r=>setTimeout(r,3000))]);
+                      }''')
+                      if w <= 767:
+                          page.screenshot(path=target/'00-mobile-viewport.png', animations='disabled')
+                      for i,(selector,name) in enumerate(sections, start=1):
+                          element = page.locator(selector)
+                          element.scroll_into_view_if_needed()
+                          element.screenshot(path=target/f'{i:02}-{name}.png', animations='disabled', timeout=12000)
+                      page.evaluate("window.scrollTo({top:0,behavior:'instant'})")
+                      page.screenshot(path=target/'10-full-page.png', full_page=True, animations='disabled', timeout=20000)
+                      metrics = page.evaluate('''() => ({ viewport: document.documentElement.clientWidth,
+                        document: document.documentElement.scrollWidth, height: document.documentElement.scrollHeight })''')
+                      print(label, metrics, flush=True)
+                      if metrics['document'] > metrics['viewport'] + 1:
+                          failures.append(f'{label}: horizontal overflow ({metrics})')
+                  except Exception as exc:
+                      failures.append(f'{label}: {exc}')
+                  finally:
+                      ctx.close()
+              browser.close()
+          server.shutdown()
+          if failures:
+              raise SystemExit('\n'.join(failures))
+          PY
+      - name: Save screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: responsive-captures-${{ matrix.browser }}
+          path: captures/**/*.png
+          if-no-files-found: error
+          retention-days: 14
