@@ -562,7 +562,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("tt-20261110-5ab64c5a", INDEX)
         self.assertNotIn("tt-wide-01.webp", INDEX)
         self.assertNotIn("tt-01.webp", INDEX)
-        self.assertIn("tt-20260919-d3b7439d.webp", INDEX)
+        self.assertIn("assets/gallery/sunja-tiktok-7627945643490692373.webp", INDEX)
         self.assertNotIn("aboutPhoto.src = aboutSrc", INDEX)
 
     def test_images_are_not_presented_with_blur_effects(self):
