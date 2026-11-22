@@ -1,0 +1,147 @@
+name: Fix and verify narrow pastel preview
+
+on:
+  push:
+    branches: [ops/check-pastel-pr-21]
+    paths: ['.github/workflows/check-pastel-pr-21.yml']
+
+permissions: {}
+
+jobs:
+  fix:
+    if: github.repository == 'riporipoteam-ctrl/autoservissunjawebsite' && github.ref == 'refs/heads/ops/check-pastel-pr-21'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 3
+    permissions:
+      contents: write
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: redesign/pastel-workshop
+      - id: commit
+        name: Keep the footer grid inside the phone viewport
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = '59cfcb485c6266dc67cbf31a2911b47ab4608499'
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('css/overhaul-v49.css')
+          css = p.read_text()
+          key = 'html:not(.sunja-intro-active) #siteFooter .row>div{min-width:0;overflow-wrap:anywhere}'
+          assert css.count(key) == 1
+          addition = '\n/* Bootstrap g-5 uses a 24px negative half-gutter; the phone inset is 18px. */\n@media(max-width:767.98px){html:not(.sunja-intro-active) #siteFooter>.container>.row.g-5{--bs-gutter-x:1.75rem}}'
+          p.write_text(css.replace(key,key+addition,1))
+          PY
+          git diff --check
+          git add -- css/overhaul-v49.css
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Keep the footer grid within narrow phone screens'
+          git push origin HEAD:refs/heads/redesign/pastel-workshop
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+  check:
+    needs: fix
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, webkit]
+    env:
+      BROWSER_ENGINE: ${{ matrix.browser }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.fix.outputs.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install browser
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps "$BROWSER_ENGINE"
+      - name: Verify the seven widths and capture the phone carousel
+        run: |
+          python - <<'PY'
+          import os
+          from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
+          from pathlib import Path
+          from threading import Thread
+          from playwright.sync_api import sync_playwright
+
+          class QuietServer(SimpleHTTPRequestHandler):
+              def log_message(self, *args):
+                  pass
+
+          server = ThreadingHTTPServer(('127.0.0.1', 0), QuietServer)
+          Thread(target=server.serve_forever, daemon=True).start()
+          origin = f'http://127.0.0.1:{server.server_port}'
+          sizes = [(360,800),(390,844),(768,1024),(820,1180),(1024,768),(1366,768),(1920,1080)]
+          sections = ['#pocetna','.social-rail','#o-nama','#usluge','#galerija','#recenzije','#lokacija','#kontakt','#siteFooter']
+          issues = []
+          with sync_playwright() as pw:
+              browser = getattr(pw, os.environ['BROWSER_ENGINE']).launch()
+              for w,h in sizes:
+                  label = f'{w}x{h}'
+                  dest = Path('captures') / label
+                  dest.mkdir(parents=True, exist_ok=True)
+                  ctx = browser.new_context(viewport={'width':w,'height':h},device_scale_factor=1,has_touch=w<=820,is_mobile=w<=390,reduced_motion='reduce')
+                  try:
+                      p = ctx.new_page()
+                      p.set_default_timeout(10000)
+                      p.goto(origin+'/?skipIntro=1',wait_until='load',timeout=30000)
+                      p.wait_for_function("!document.documentElement.classList.contains('sunja-intro-active')")
+                      p.evaluate("() => window.bootstrap?.Carousel.getInstance(document.querySelector('#header-carousel'))?.pause()")
+                      bounds = p.evaluate('''() => {
+                          const width = document.documentElement.clientWidth;
+                          const footer = document.querySelector('#siteFooter > .container > .row.g-5').getBoundingClientRect();
+                          const right = document.documentElement.scrollWidth;
+                          const offenders = right > width + 1 ? [...document.querySelectorAll('body *')].map(e => [e.id || e.getAttribute('class') || e.tagName, Math.round(e.getBoundingClientRect().right)]).filter(x=>x[1] > width + 1).slice(0,20) : [];
+                          return {width,right,footer:[Math.round(footer.left),Math.round(footer.right)],offenders};
+                      }''')
+                      print(label, bounds, flush=True)
+                      if bounds['right'] > bounds['width'] + 1 or bounds['footer'][0] < -1 or bounds['footer'][1] > bounds['width'] + 1:
+                          issues.append(f'{label}: horizontal overflow')
+                      if w <= 390:
+                          p.locator('.mobile-callbar .call').wait_for(state='visible')
+                          assert p.locator('.mobile-callbar .call').get_attribute('href') == 'tel:+38761297847'
+                          p.locator('.mobile-callbar .dir').wait_for(state='visible')
+                          for i in range(3):
+                              p.locator(f'#header-carousel [data-bs-slide-to="{i}"]').click()
+                              slide = p.locator('#header-carousel .carousel-item').nth(i)
+                              p.wait_for_function("(i) => document.querySelectorAll('#header-carousel .carousel-item')[i].classList.contains('active')", arg=i)
+                              p.wait_for_function("img => img.complete && img.naturalWidth > 0", arg=slide.locator('picture img').element_handle())
+                              cta = slide.locator('.carousel-caption .btn')
+                              box = cta.bounding_box()
+                              dock = p.locator('.mobile-callbar').bounding_box()
+                              if box is None or dock is None or box['y'] + box['height'] > dock['y']:
+                                  issues.append(f'{label}: slide {i+1} call-to-action is not above the mobile dock')
+                              p.screenshot(path=dest/f'00-phone-slide-{i+1}.png',animations='disabled')
+                          p.locator('#header-carousel [data-bs-slide-to="0"]').click()
+                      for i,selector in enumerate(sections,start=1):
+                          sec = p.locator(selector)
+                          sec.scroll_into_view_if_needed()
+                          sec.screenshot(path=dest/f'{i:02}-{selector[1:]}.png',animations='disabled')
+                      p.evaluate("window.scrollTo({top:0,behavior:'instant'})")
+                      p.screenshot(path=dest/'10-full-page.png',full_page=True,animations='disabled',timeout=20000)
+                  except Exception as exc:
+                      issues.append(f'{label}: {exc}')
+                  finally:
+                      ctx.close()
+              browser.close()
+          server.shutdown()
+          if issues:
+              raise SystemExit('\n'.join(issues))
+          PY
+      - name: Save review screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pastel-review-${{ matrix.browser }}
+          path: captures/**/*.png
+          if-no-files-found: error
+          retention-days: 14
