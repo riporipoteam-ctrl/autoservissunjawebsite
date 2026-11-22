@@ -1,0 +1,285 @@
+/* Workshop in Motion — Šunja's own photography, cobalt + steel, native scroll. */
+:root{--wm-ink:#102442;--wm-dark:#0b1c34;--wm-blue:#084ac1;--wm-hi:#155ee4;--wm-sky:#d1e9ff;--wm-pale:#edf6ff;--wm-paper:#f8fbff;--wm-mute:#425875;--wm-line:#acc6e2;--wm-edge:clamp(16px,5vw,76px);--wm-space:clamp(47px,7vw,107px);--wm-max:1390px;--wm-nav:65px;--wm-ease:cubic-bezier(.18,.75,.22,1);--wm-progress:0}
+html:not(.sunja-intro-active) body{color:var(--wm-ink);background:var(--wm-paper)}
+.wm-wrap{width:min(calc(100% - 2*var(--wm-edge)),var(--wm-max));margin-inline:auto;min-width:0}
+#workshopStory{min-width:0}
+/* Section targets own their offsets. Native focus on the sticky toolbar must not scroll the page. */
+html[data-wm-ready='1']{scroll-padding-top:0}
+#workshopStory :is(h1,h2,h3,p,dd,figure){margin:0}
+#workshopStory :is(h1,h2,h3){font-family:Barlow,system-ui,sans-serif;letter-spacing:-.042em;line-height:.98;font-weight:700;color:inherit}
+#workshopStory h2{font-size:clamp(2.5rem,6.6vw,7.2rem);text-wrap:balance}
+#workshopStory h3{font-size:clamp(1.7rem,3vw,3.8rem)}
+#workshopStory p{font-size:clamp(.97rem,1.22vw,1.13rem);line-height:1.55}
+#workshopStory [id],#siteFooter{scroll-margin-top:calc(var(--wm-nav) + 10px)}
+.wm-kicker{display:flex;align-items:center;gap:8px;font-size:.73rem;font-weight:750;line-height:1.35;letter-spacing:.11em;text-transform:uppercase;margin-bottom:12px}
+.wm-kicker b{display:inline-grid;place-items:center;min-width:34px;min-height:25px;padding:2px 6px;border:1px solid currentColor;border-radius:4px;font-size:.68rem;letter-spacing:.05em;font-variant-numeric:tabular-nums}
+.wm-titleline{display:flex;align-items:end;justify-content:space-between;gap:14px;margin-bottom:clamp(20px,3vw,39px)}
+.wm-section{padding:var(--wm-space) 0}
+.wm-actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px;min-width:0}
+.wm-button,.wm-icon{display:inline-flex!important;align-items:center;justify-content:center;gap:9px;min-height:46px;padding:8px 15px;border:1px solid transparent;border-radius:99px;background:var(--wm-blue);color:white!important;text-decoration:none!important;text-align:center;font:inherit;font-weight:750;line-height:1.15;overflow-wrap:anywhere;transition:background .16s,border-color .16s,translate .16s var(--wm-ease)}
+.wm-button:hover,.wm-icon:hover{background:#06358d}
+.wm-button:active,.wm-icon:active{translate:0 2px}
+.wm-button--paper{background:white;color:var(--wm-ink)!important;border-color:#acc6e2}
+.wm-button--paper:hover{background:#d9ecff;border-color:#7ca8db}
+.wm-button--glass{background:#143966;border-color:#6b99ce}
+.wm-button--glass:hover{background:#21538d;border-color:#aecff1}
+.wm-icon{width:46px;min-width:46px;height:46px;padding:0}
+:is(#workshopStory,#wmHeader,#wmDock,#siteFooter) :is(a,button,[tabindex]):not(.map-quick-link):focus-visible{outline:3px solid #aa5000!important;outline-offset:3px}
+:is(#usluge,#galerija,#kontakt,#siteFooter,#wmDock) :is(a,button,[tabindex]):focus-visible{outline-color:#ffdc94!important;outline-offset:-3px}
+.wm-skip{position:fixed;z-index:1080;inset:8px auto auto 8px;transform:translateY(-150%);padding:10px 15px;border-radius:5px;color:var(--wm-ink);background:white}
+.wm-skip:focus{transform:none}
+#wmHeader{position:sticky;top:0;z-index:1030;background:var(--wm-paper);box-shadow:0 1px 0 #83a2c9}
+#wmHeader::after{content:'';position:absolute;inset:auto 0 0;height:3px;background:var(--wm-hi);transform:scaleX(0);transform-origin:left;pointer-events:none}
+html[data-workshop-motion=full] #wmHeader::after,html[data-workshop-motion=light] #wmHeader::after{transform:scaleX(var(--wm-progress))}
+#wmHeader .wm-nav{padding:0!important;min-height:var(--wm-nav);box-shadow:none!important;background:transparent!important}
+#wmHeader .wm-nav>.wm-wrap{display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;min-height:var(--wm-nav);gap:0 14px}
+#wmHeader .navbar-brand{height:auto;min-height:0;padding:7px 0!important;margin:0!important}
+#wmHeader .navbar-brand img{display:block;width:auto!important;height:45px!important;max-width:130px;object-fit:contain;transform:none!important}
+#wmHeader .navbar-nav{gap:4px;margin-left:auto;min-width:0}
+#wmHeader .navbar-nav .nav-link{display:flex;align-items:center;gap:5px;min-height:45px;margin:0!important;padding:7px clamp(6px,.75vw,12px)!important;border-radius:99px;font-weight:700;font-size:.88rem;text-transform:none;color:var(--wm-ink)!important;box-shadow:none}
+#wmHeader .nav-link:is(:hover,[aria-current=location]){background:#dcecff!important;color:#083b98!important}
+#wmHeader .nav-link::after,#wmHeader .nav-link::before{display:none!important}
+#wmHeader .wm-nav-num{color:#466589;letter-spacing:.02em;font-size:.64rem;font-variant-numeric:tabular-nums}
+#wmHeader .wm-nav-call{margin-inline-start:11px}
+#wmHeader .navbar-toggler{color:var(--wm-blue);min-height:45px;padding:8px 13px;border:1px solid #88add9;border-radius:99px;background:white;font-size:.9rem;font-weight:750;box-shadow:none}
+/* 01 / The workshop. The photo travels inside the gauge as the needle sweeps. */
+#workshopStory #pocetna{--wm-hero:0;position:relative;background:var(--wm-sky);color:var(--wm-ink);margin:0!important;min-height:0}
+.wm-pin{position:relative;display:grid;align-content:center;min-height:0;padding:clamp(27px,4.6vw,65px) 0 clamp(19px,2.7vw,41px);background:radial-gradient(ellipse at 74% 36%,#f1f8ff 0,#e1f1ff 29%,transparent 65%),var(--wm-sky)}
+.wm-hero-grid{display:grid;grid-template-columns:minmax(0,.88fr) minmax(0,1.12fr);align-items:center;gap:8px;min-width:0}
+.wm-hero-copy{position:relative;z-index:2;min-width:0;padding-bottom:7px}
+#workshopStory #pocetna h1{max-width:100%;font-size:clamp(3.9rem,11.3vw,12rem);line-height:.77;letter-spacing:-.065em}
+#workshopStory #pocetna h1 span{display:block;color:#154283;font-size:.35em;line-height:1.08;letter-spacing:-.026em;margin-bottom:.17em}
+#workshopStory #pocetna .wm-hero-copy p{max-width:43ch;color:#29486b;margin-top:clamp(14px,2vw,24px)}
+.wm-hero-copy .wm-actions{margin-top:clamp(14px,2.3vw,26px)}
+.wm-hero-visual{position:relative;min-width:0;padding:clamp(12px,3.4vw,47px) 0 0 16px;isolation:isolate}
+.wm-gauge{position:absolute;width:110%;height:auto;inset:-10% -4% auto auto;z-index:-1;overflow:visible;pointer-events:none;opacity:.73}
+.wm-gauge .wm-needle{transform-origin:400px 310px;transform:rotate(calc(-64deg + var(--wm-hero,0)*128deg))}
+.wm-gauge .wm-gauge-arc{stroke-dasharray:100;stroke-dashoffset:calc(88 - 74*var(--wm-hero,0))}
+.wm-odometer{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 6px;color:#234976;letter-spacing:.1em;text-transform:uppercase;font-size:.7rem;font-weight:800;font-variant-numeric:tabular-nums}
+#workshopStory #header-carousel{margin:0;min-width:0;isolation:isolate;background:#eef7ff;border:1px solid #6d9cd0;border-radius:14px;box-shadow:0 16px 27px #18467b29;overflow:hidden}
+#workshopStory #header-carousel .carousel-inner{border-radius:0!important;box-shadow:none!important}
+#workshopStory #header-carousel .carousel-item{height:auto!important;min-height:0!important;max-height:none!important;background:none!important;overflow:hidden}
+#workshopStory #header-carousel .carousel-item::before,#workshopStory #header-carousel .carousel-item::after{display:none!important}
+#workshopStory #header-carousel .wm-film{position:relative;height:clamp(206px,31vw,399px);overflow:hidden;background:#0d2f58;isolation:isolate}
+#workshopStory #header-carousel .hero-bg{position:absolute!important;inset:0!important;display:block!important;background-image:linear-gradient(#10294c4d,#10294c91),var(--hero-photo)!important;background-size:cover!important;background-position:center!important;filter:blur(11px);opacity:.73!important;transform:scale(1.09)!important;animation:none!important;z-index:-1;pointer-events:none}
+#workshopStory #header-carousel .hero-bg::before,#workshopStory #header-carousel .hero-bg::after{display:none!important}
+#workshopStory #header-carousel .carousel-item picture{position:absolute!important;inset:0!important;margin:0!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;border:0!important;border-radius:0!important;opacity:1!important;transform:none!important;animation:none!important;box-shadow:none!important;background:none!important}
+#workshopStory #header-carousel .carousel-item picture::before,#workshopStory #header-carousel .carousel-item picture::after{display:none!important}
+#workshopStory #header-carousel .carousel-item picture img{display:block;position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;background:none!important;opacity:1!important;transform:translate3d(0,calc(var(--wm-hero,0)*-27px*var(--wm-amplitude,1)),0) scale(calc(1 + .19*var(--wm-hero,0)*var(--wm-amplitude,1)))!important}
+#workshopStory #header-carousel .carousel-item:first-child picture img{object-fit:cover!important;object-position:50% 49%!important}
+.wm-shot-bar{display:flex;align-items:center;gap:9px;min-height:43px;padding:5px 11px;background:#dceeff;color:#173b67;font-size:.82rem;line-height:1.2}
+.wm-shot-bar span{color:#33597e;font-size:.72rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wm-shot-bar a{margin-inline-start:auto;text-align:right;color:#073d91;text-decoration:underline;text-underline-offset:2px;white-space:normal}
+#workshopStory #header-carousel .wm-media-nav{display:flex;align-items:center;gap:5px;padding:5px 8px;border-top:1px solid #9abce2}
+#workshopStory #header-carousel .hero-indicators{position:static!important;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;flex:1;min-width:0;margin:0!important;padding:0;align-items:stretch}
+#workshopStory #header-carousel .hero-indicators button{position:static!important;display:block;min-height:44px;width:100%!important;height:auto!important;margin:0!important;padding:3px!important;border:1px solid #a2bfe0!important;border-radius:99px!important;text-indent:0!important;background:white!important;color:#143a69!important;font-weight:750;font-size:.74rem;line-height:1.14;opacity:1!important;transform:none!important;overflow-wrap:anywhere;pointer-events:auto!important}
+#workshopStory #header-carousel .hero-indicators button:is(.active,:hover){background:var(--wm-blue)!important;color:white!important;border-color:var(--wm-blue)!important}
+#workshopStory #header-carousel .hero-indicators button::before,#workshopStory #header-carousel .hero-indicators button::after{display:none!important}
+#workshopStory #header-carousel .hero-nav{position:static!important;height:44px!important;width:44px!important;min-width:44px;min-height:44px;color:#124278!important;background:#d8eaff!important;border:1px solid #8eafd7!important;opacity:1!important;box-shadow:none!important;transform:none!important;z-index:auto;pointer-events:auto!important}
+#workshopStory #header-carousel .hero-nav:hover{background:#c2dfff!important}
+.wm-workstrip{display:flex;align-items:center;justify-content:space-between;gap:9px 16px;flex-wrap:wrap;margin-top:clamp(15px,3vw,32px);border-top:1px solid #82a9d3;padding-top:10px;font-size:.83rem;color:#204572}
+#pocetna .wm-workstrip .status-pill{max-width:100%;white-space:normal;color:var(--wm-ink)!important;background:white!important;border-radius:99px;box-shadow:none}
+.wm-scroll-link{display:inline-flex;align-items:center;gap:6px;min-height:44px;color:#10417e!important;font-weight:750;text-decoration:underline;text-underline-offset:3px}
+.wm-scroll-link i{font-size:.77rem}
+/* 02 / Services: numbered selection rail with one full scene, not a row of cards. */
+#workshopStory #usluge{background:var(--wm-blue);color:white}
+#workshopStory #usluge .service-nav-grid{display:grid!important;grid-template-columns:repeat(6,minmax(0,1fr));gap:5px!important;width:100%;margin:0 0 11px!important}
+#workshopStory #usluge .wm-tab{display:flex!important;align-items:center;gap:6px;min-width:0;width:100%;min-height:53px;margin:0!important;padding:6px 7px!important;color:white!important;background:#0a3b96!important;border:1px solid #8ab4f0!important;border-radius:7px!important;text-align:left;font-weight:750;font-size:clamp(.71rem,1.25vw,.94rem);line-height:1.18;box-shadow:none!important;transform:none!important;overflow-wrap:anywhere}
+#workshopStory #usluge .wm-tab b{display:grid;place-items:center;min-width:25px;height:25px;border:1px solid currentColor;border-radius:50%;font-size:.66rem;font-variant-numeric:tabular-nums;flex:none}
+#workshopStory #usluge .wm-tab:is(:hover,.active){background:#e2f0ff!important;color:#12366a!important;border-color:#edf6ff!important}
+#workshopStory #usluge .tab-content{padding:0!important;background:none!important;border:0!important;box-shadow:none!important}
+.wm-service-scene{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);align-items:center;gap:clamp(13px,3vw,40px);padding:clamp(14px,3.2vw,41px);background:#eff7ff;color:var(--wm-ink);border-radius:13px;overflow:hidden;isolation:isolate}
+.wm-service-copy{min-width:0;position:relative}
+.wm-service-copy .wm-kicker{color:#0945ae}
+#usluge .wm-service-copy p{color:#355276;margin-top:9px!important}
+.wm-service-copy ul{margin:9px 0 13px;padding-left:1.2em;line-height:1.55;color:#355276}
+.wm-service-copy li::marker{color:var(--wm-blue)}
+#workshopStory #usluge .service-media-frame{height:clamp(174px,29vw,372px);min-height:0!important;max-height:none!important;border:0;border-radius:9px;background:repeating-linear-gradient(130deg,#d4e5f7 0 2px,#e6f0fc 2px 11px);overflow:hidden;display:grid;place-items:center}
+#workshopStory #usluge .service-media-frame::before,#workshopStory #usluge .service-media-frame::after{display:none}
+#workshopStory #usluge .service-image{width:100%!important;height:100%!important;min-height:0!important;max-height:100%!important;object-fit:contain!important;opacity:1}
+/* 03 / Gallery: five real frames in a stepped film grid. */
+#workshopStory #galerija{background:var(--wm-dark);color:#eaf4ff}
+.wm-film-grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));grid-auto-rows:auto;gap:8px}
+#workshopStory #galerija .wm-frame{position:relative;display:flex;flex-direction:column;grid-column:span 4;min-width:0;height:auto;border:1px solid #5579a8;border-radius:10px;overflow:hidden;color:#eaf4ff;background:#183759;box-shadow:none;transform:none!important}
+#workshopStory #galerija .wm-frame:first-child{grid-column:span 5;grid-row:span 2}
+#workshopStory #galerija .wm-frame:nth-child(even){grid-column:span 3}
+.wm-frame-photo{height:clamp(147px,17vw,227px);min-width:0;overflow:hidden;display:grid;place-items:center;background:radial-gradient(ellipse at center,#305b8a,#123152);isolation:isolate}
+.wm-frame:first-child .wm-frame-photo{height:auto;flex:1;min-height:295px}
+#workshopStory #galerija .wm-frame img{display:block;width:100%!important;height:100%!important;min-height:0;max-height:100%!important;object-fit:contain!important;transform:translate3d(0,calc(var(--wm-drift,0px)*var(--wm-frame-travel,.62)),0)!important}
+.wm-frame-foot{display:flex;align-items:center;justify-content:space-between;gap:5px;min-height:49px;min-width:0;padding:2px 5px 2px 8px;border-top:1px solid #5579a8;font-size:.81rem;overflow-wrap:anywhere}
+.wm-frame-foot .wm-icon{width:44px;min-width:44px;height:44px;min-height:44px;background:#214e7e}
+.wm-frame-foot .wm-icon:hover{background:var(--wm-hi)}
+.wm-frame-foot b{font-size:.67rem;font-variant-numeric:tabular-nums;white-space:nowrap}
+/* 04 / A mileage-stamp scene and a separate review note. */
+#workshopStory #o-nama{background:#e6f2fe;color:var(--wm-ink)}
+.wm-workshop-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,.85fr);align-items:center;gap:clamp(16px,6vw,89px)}
+.wm-workshop-visual{position:relative;min-width:0;padding:0 6% 35px 0}
+.wm-workshop-visual img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover;border-radius:12px;background:#c9def5}
+.wm-stamp{position:absolute;right:0;bottom:0;display:grid;justify-items:center;align-content:center;min-width:140px;padding:9px 14px;background:var(--wm-blue);border:4px solid #e6f2fe;border-radius:10px;color:white;font-weight:750;line-height:1.15;transform:translate3d(0,calc(var(--wm-drift,0px)*-.9),0) rotate(calc(var(--wm-sweep,0)*-8deg))}
+.wm-stamp strong{font-family:Barlow,system-ui,sans-serif;font-size:clamp(2.6rem,6vw,6.6rem);line-height:.86;letter-spacing:-.05em}
+.wm-workshop-copy p{margin-top:13px!important;color:var(--wm-mute)}
+.wm-workshop-copy .wm-actions{margin-top:13px}
+#workshopStory #recenzije{background:white;color:var(--wm-ink);border-top:1px solid #bdd4ec}
+.wm-review-row{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);align-items:center;gap:12px 30px}
+#workshopStory #recenzije h2{font-size:clamp(1.85rem,4vw,3.6rem)}
+.wm-review-note{border-left:3px solid var(--wm-blue);padding:7px 0 7px 15px;min-width:0}
+.wm-review-note .stars{font-size:1.3rem}
+.wm-review-note p{color:var(--wm-mute);margin:6px 0 11px!important}
+/* 05 / Coordinates + 06 / Direct contact. The globe's own sticky code is not restyled. */
+#workshopStory #lokacija{background:#d4eaff;color:var(--wm-ink);padding:var(--wm-space) 0 24px}
+#lokacija .wm-titleline{margin:0}
+#lokacija p{color:var(--wm-mute);margin-top:8px!important}
+#workshopStory #kontakt{position:relative;background:#0a3b96;color:white;isolation:isolate;overflow:hidden}
+#kontakt::before{content:'';position:absolute;z-index:-1;width:clamp(240px,49vw,720px);aspect-ratio:1;inset:auto -12% -88% auto;border:clamp(15px,4vw,64px) double #78adf35b;border-radius:50%;transform:translate3d(calc(var(--wm-drift,0px)*.8),0,0)}
+.wm-contact-row{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);align-items:end;gap:11px 26px}
+#workshopStory #kontakt h2{font-size:clamp(2.3rem,5.4vw,5.85rem)}
+.wm-number{display:inline-block;margin:13px 0;color:white!important;font:700 clamp(2.2rem,7.1vw,7.6rem)/1 Barlow,system-ui,sans-serif;letter-spacing:-.045em;text-decoration:none;overflow-wrap:anywhere}
+.wm-number:hover{text-decoration:underline;text-underline-offset:6px}
+.wm-contact-info{border-left:1px solid #9ec7fc;padding-left:14px;display:grid;gap:11px;color:#e2f0ff}
+.wm-contact-info strong{display:block;color:white}
+#siteFooter{margin:0!important;padding:25px 0;color:#e5f1ff;background:#0b1c34!important}
+#siteFooter a{color:white;text-underline-offset:3px}
+.wm-footer-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr) minmax(0,1.05fr);gap:19px}
+#siteFooter h2{font-size:.93rem;color:white;margin:0 0 9px}
+.wm-footer-grid img{width:123px;max-width:100%;height:auto;margin-bottom:6px}
+#siteFooter .wm-footer-grid p{margin:0 0 6px;color:#e5f1ff}
+.wm-footer-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;font-size:.86rem;overflow-wrap:anywhere}
+.wm-foot-end{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px 12px;border-top:1px solid #516f94;padding-top:9px;margin-top:14px;font-size:.79rem}
+.wm-motion-switch{background:transparent;color:#e5f1ff;min-height:44px;border:1px solid #88a6cc;border-radius:99px;padding:6px 10px;text-align:left}
+.wm-motion-switch:hover{background:#214672}
+.wm-motion-switch[hidden]{display:none!important}
+#wmDock{display:none}
+#backTop.wm-icon{width:46px;height:46px;background:#164aab!important;border:1px solid #92b8e3!important;display:none!important}
+#backTop.wm-icon.is-visible{display:inline-flex!important}
+/* Motion is opt-in by browser preference. Portrait phones get no pinning. */
+@media (min-width:1024px) and (min-height:690px){
+ /* A sticky child travels inside the section's content box, not its padding. */
+ html[data-workshop-motion=full] #workshopStory #pocetna::after{content:'';display:block;height:clamp(240px,51svh,575px)}
+ html[data-workshop-motion=full] .wm-pin{position:sticky;top:var(--wm-nav);min-height:calc(100svh - var(--wm-nav))}
+ html[data-workshop-motion=full] .wm-hero-copy{transform:translate3d(0,calc(var(--wm-hero,0)*-44px),0)}
+}
+@keyframes wm-rise{from{opacity:.68;translate:0 14px}to{opacity:1;translate:0 0}}
+@keyframes wm-frame-in{from{clip-path:inset(0 7% 0 0 round 9px);opacity:.74;translate:8px 0}to{clip-path:inset(0 0 0 0 round 9px);opacity:1;translate:0 0}}
+html[data-wm-ready='1']:is([data-workshop-motion=full],[data-workshop-motion=light]) .wm-hero-copy h1{animation:wm-rise .58s var(--wm-ease) both}
+html:is([data-workshop-motion=full],[data-workshop-motion=light]) #workshopStory .wm-arrived[data-wm-reveal]{animation:wm-rise .44s var(--wm-ease) both}
+html:is([data-workshop-motion=full],[data-workshop-motion=light]) #usluge .tab-pane.active .service-media-frame{animation:wm-frame-in .29s var(--wm-ease) both}
+html[data-workshop-motion=off] #workshopStory .carousel-item,html[data-workshop-motion=off] #workshopStory .tab-pane{transition:none!important}
+@media (max-width:991.98px){
+ #wmHeader .wm-nav-call{display:none!important}
+ #wmHeader #navbarCollapse{width:100%}
+ #wmHeader .navbar-nav{padding:4px 0 9px}
+ #workshopStory #usluge .service-nav-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ #wmDock{position:fixed;inset:auto 8px 0!important;z-index:1040;display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:4px;width:auto!important;max-width:none!important;margin:0!important;padding:3px 4px calc(4px + env(safe-area-inset-bottom,0px))!important;background:var(--wm-dark)!important;border:1px solid #6c8fb7;border-radius:14px 14px 0 0;visibility:visible!important;opacity:1!important}
+ #wmDock a{display:flex;align-items:center;justify-content:center;gap:7px;min-height:46px;padding:6px 3px;border-radius:8px;color:white!important;font-size:.86rem;line-height:1.14;text-align:center}
+ #wmDock .call{background:var(--wm-blue)!important}#wmDock .dir{background:#173f70!important}
+ #siteFooter{padding-bottom:calc(68px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:767.98px){
+ .wm-pin{padding:22px 0 12px}
+ .wm-hero-grid,.wm-service-scene,.wm-workshop-grid,.wm-review-row,.wm-contact-row{grid-template-columns:minmax(0,1fr)}
+ .wm-hero-visual{padding:7px 0 0}
+ .wm-hero-copy{padding:0 0 3px}
+ #workshopStory #pocetna h1{font-size:clamp(4.15rem,16.3vw,7.2rem)}
+ #workshopStory #pocetna .wm-hero-copy p{margin-top:13px}
+ .wm-hero-copy .wm-actions{margin-top:12px}
+ .wm-gauge{width:73%;inset:-24% 0 auto auto}
+ #workshopStory #header-carousel .wm-film{height:clamp(140px,46vw,300px)}
+ .wm-workstrip{margin-top:11px;padding-top:6px}
+ .wm-titleline{align-items:flex-start;flex-direction:column}
+ .wm-film-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+ #workshopStory #galerija .wm-frame,#workshopStory #galerija .wm-frame:nth-child(even),#workshopStory #galerija .wm-frame:first-child{grid-column:auto;grid-row:auto}
+ .wm-frame:first-child .wm-frame-photo,.wm-frame-photo{height:clamp(120px,41vw,239px);flex:none;min-height:0}
+ .wm-frame-foot b{display:none}
+ .wm-workshop-visual{padding:0 8px 20px 0}
+ .wm-review-note,.wm-contact-info{border-left:0;border-top:1px solid #94b5dc;padding:8px 0 0}
+}
+@media (max-width:479.98px){
+ #workshopStory #usluge .service-nav-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .wm-footer-grid{grid-template-columns:minmax(0,1fr)}
+ .wm-workstrip{font-size:.78rem}
+ #workshopStory #header-carousel .hero-indicators button{font-size:.66rem}
+ .wm-shot-bar{font-size:.77rem;gap:6px}
+ .wm-media-nav{padding-inline:4px!important;gap:4px!important}
+}
+@media (prefers-reduced-motion:reduce){:is(#workshopStory,#wmHeader,#wmDock,#siteFooter) :is(a,button,.carousel-item,.tab-pane){animation:none!important;transition:none!important}}
+
+/* Scene rhythm and the hand-off from the opening dial to the service floor. */
+#workshopStory .wm-section{padding:var(--wm-space) 0!important}
+#workshopStory #usluge{background:var(--wm-blue)!important;border-top:0}
+#workshopStory #galerija{background:var(--wm-dark)!important}
+#workshopStory #o-nama{background:#e6f2fe!important}
+#workshopStory #recenzije{padding:clamp(28px,4.6vw,60px) 0!important}
+#workshopStory #lokacija{padding-bottom:24px!important}
+#workshopStory #kontakt{background:#0a3b96!important}
+#workshopStory h2{hyphens:auto}
+#workshopStory>section[id]{scroll-margin-top:0}
+#wmHeader .wm-header-tools{display:flex;align-items:center;gap:7px}
+#wmHeader .wm-motion-switch{display:grid;place-items:center;width:45px;min-width:45px;height:45px;padding:0;background:#e8f3ff;color:#113e78;border-color:#94b6dd}
+#wmHeader .wm-motion-switch:hover,#wmHeader .wm-motion-switch[aria-pressed=true]{background:#cfE5ff;color:#073a90}
+.wm-motion-switch .wm-play-icon,.wm-motion-switch[aria-pressed=true] .wm-pause-icon{display:none}
+.wm-motion-switch[aria-pressed=true] .wm-play-icon{display:inline}
+#wmHeader .nav-link.active:not([aria-current=location]):not(:hover){background:none!important;color:var(--wm-ink)!important}
+#pocetna .wm-pin{isolation:isolate}
+.wm-hero-copy h1{width:fit-content}
+.wm-gauge{width:118%;inset:-16% 0 auto auto;opacity:.86;transform:translate3d(0,calc(-23px*var(--wm-hero)*var(--wm-amplitude,1)),0)}
+.wm-gauge .wm-needle{transform-box:view-box}
+#workshopStory #header-carousel .carousel-inner{border:0!important}
+#workshopStory #header-carousel .wm-film .hero-bg{width:100%!important;filter:none!important}
+#workshopStory #header-carousel .wm-film{background:#173651}
+#workshopStory #header-carousel .carousel-item picture img{border-radius:0!important}
+.wm-odometer-track,.wm-coordinate i{position:relative;flex:1;min-width:2px;height:5px;border-block:1px solid #6f9cc7;background:repeating-linear-gradient(90deg,transparent 0 9px,#88add2 9px 10px);overflow:hidden}
+.wm-odometer-track::after,.wm-coordinate i::after{content:'';position:absolute;inset:0;background:var(--wm-hi);transform-origin:left;transform:scaleX(var(--wm-hero,0))}
+.wm-hero-handoff{display:none;pointer-events:none}
+.wm-coordinate{display:flex;align-items:center;gap:10px;margin-top:18px;color:#1b4777;font:700 clamp(.65rem,1.3vw,.83rem)/1.2 system-ui,sans-serif;letter-spacing:.07em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wm-coordinate i::after{transform:scaleX(var(--wm-entry,1))}
+#workshopStory #usluge .tab-pane{animation:none!important;transform:none!important}
+#workshopStory #usluge .wm-service-copy p{margin-bottom:0!important}
+#workshopStory #usluge .wm-service-copy li{color:#355276!important}
+#workshopStory #usluge .service-media-frame{position:relative;min-width:0;grid-template-rows:minmax(0,1fr);grid-template-columns:minmax(0,1fr);background:#d7e9fc}
+#workshopStory #usluge .service-media-frame img{display:block;position:relative;inset:auto;min-width:0;max-height:100%!important;transform:translate3d(0,calc(var(--wm-drift,0px)*.33),0)}
+#workshopStory #usluge .service-media-frame::after{display:block;content:'';inset:0 0 0 auto;position:absolute;background:linear-gradient(90deg,#d7e9fc00,#d7e9fc);width:12%;transform:scaleX(calc(1 - var(--wm-entry,1)));transform-origin:right;pointer-events:none}
+#workshopStory #galerija .wm-frame{box-shadow:none!important;border-color:#5579a8!important;background:#143454!important}
+.wm-frame-photo{position:relative;grid-template: minmax(0,1fr) / minmax(0,1fr);background:var(--gallery-bg),#123152;background-size:0}
+#workshopStory #galerija .wm-frame img{position:absolute;inset:0;padding:0;object-position:center;background:none!important}
+.wm-frame:nth-child(even){--wm-frame-travel:-.66}
+.wm-frame:nth-child(3){--wm-frame-travel:1.04}
+.wm-frame:nth-child(5){--wm-frame-travel:.86}
+.wm-frame-foot .wm-icon{margin:0;flex:none;border-radius:50%}
+#workshopStory #kontakt .wm-number{max-width:100%;overflow-wrap:normal;white-space:normal}
+#workshopStory #kontakt .wm-contact-info p{color:#e2f0ff}
+#workshopStory #kontakt::before{transform:translate3d(calc(var(--wm-drift,0px)*2.2),calc(var(--wm-drift,0px)*-.92),0) scale(calc(1 + var(--wm-sweep,0)*.20));inset:auto -12% -86% auto}
+#siteFooter .hours-list p{border-radius:2px;border-bottom:1px dotted #516f94}
+#siteFooter .hours-list p.today{background:#183c68}
+#siteFooter .wm-footer-links a{min-height:32px;display:inline-flex;align-items:center;text-decoration:underline}
+#siteFooter .wm-foot-end a{text-decoration:underline}
+#backTop.wm-icon{border-radius:50%!important;box-shadow:none!important}
+@media (min-width:1024px) and (min-height:690px){
+ html[data-workshop-motion=full] #workshopStory #pocetna{background:linear-gradient(180deg,var(--wm-sky) 74%,var(--wm-blue) 98%)}
+ html[data-workshop-motion=full] .wm-hero-handoff{display:block;position:absolute;inset:auto 0 0;height:clamp(25px,9vh,108px);background:var(--wm-blue);transform-origin:right bottom;transform:scale(calc(.055 + var(--wm-hero)*.945),calc(.055 + var(--wm-hero)*.31));clip-path:polygon(5% 0,100% 0,100% 100%,0 100%);z-index:-1}
+ html[data-workshop-motion=full] .wm-hero-visual{transform:translate3d(0,calc(var(--wm-hero)*-22px),0)}
+}
+html[data-workshop-motion=light]{--wm-amplitude:.34}
+@media (max-width:991.98px){
+ #wmHeader #navbarCollapse{position:absolute;top:100%;left:0;right:0;width:auto;padding-inline:var(--wm-edge);background:var(--wm-paper);box-shadow:0 10px 24px #132f5140}
+ #wmHeader #navbarCollapse.show{max-height:calc(100svh - var(--wm-nav) - 70px);overflow-y:auto}
+ #wmHeader .wm-nav>.wm-wrap{flex-wrap:nowrap}
+ #wmHeader .navbar-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ #wmDock{box-shadow:0 -4px 15px #08274c22!important;border:1px solid #6c8fb7!important}
+ #wmDock a{padding:6px 3px!important;min-height:46px;font-size:.81rem!important;border-radius:8px!important}
+ #siteFooter{padding-bottom:calc(70px + env(safe-area-inset-bottom,0px))!important}
+}
+@media (max-width:767.98px){
+ .wm-gauge{width:70%;inset:-24% 0 auto auto}
+}
+html[data-workshop-motion=off]{scroll-behavior:auto!important}
+html[data-workshop-motion=off] #workshopStory .stars.on :is(.stars-fg,.stars-fg i){animation:none!important;transition:none!important}
+@media (prefers-reduced-motion:reduce){
+ #pocetna .wm-hero-copy h1,#workshopStory .wm-arrived,#workshopStory #usluge .tab-pane.active .service-media-frame,#workshopStory .stars.on :is(.stars-fg,.stars-fg i){animation:none!important;transition:none!important}
+}
+
+/* Clicking a photograph still opens its original gallery post. */
+#workshopStory #galerija .wm-frame .gallery-tile-link{position:static}
+#workshopStory #galerija .wm-frame .gallery-tile-link::after{content:'';position:absolute;inset:0;z-index:1}
+#workshopStory #galerija .wm-frame:focus-within{outline:2px solid #ffdc94;outline-offset:3px}
+#workshopStory #galerija .wm-frame:hover .wm-frame-foot{background:#1b4777}
+#wmHeader .wm-motion-switch:hover,#wmHeader .wm-motion-switch[aria-pressed=true]{background:#cfe5ff}

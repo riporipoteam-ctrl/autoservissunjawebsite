@@ -192,12 +192,17 @@
         function startCycle() {
             if (document.hidden || document.documentElement.classList.contains("sunja-intro-active")) return;
             stop();
+            // Workshop in Motion owns its playback state, including the no-Bootstrap timer.
+            var currentMode = root.dataset.workshopMotion;
+            var shouldPlay = currentMode ? currentMode !== "off" :
+                !document.getElementById("workshopStory") || !(reduceMotion || perfLite);
             if (window.bootstrap && window.bootstrap.Carousel) {
                 try {
-                    instance = window.bootstrap.Carousel.getOrCreateInstance(hero, {
+                    var Carousel = window.bootstrap.Carousel;
+                    instance = Carousel.getInstance(hero) || new Carousel(hero, {
                         interval: 6500, ride: false, pause: false, wrap: true, touch: true
                     });
-                    instance.cycle();
+                    if (shouldPlay) instance.cycle();
                     return;
                 } catch (error) {
                     instance = null;
@@ -219,7 +224,7 @@
                     });
                 });
             }
-            fallbackTimer = window.setInterval(function () { rotateBy(1); }, 6500);
+            if (shouldPlay) fallbackTimer = window.setInterval(function () { rotateBy(1); }, 6500);
         }
         document.addEventListener("visibilitychange", function () {
             if (document.hidden) stop();
@@ -227,6 +232,7 @@
         });
         window.addEventListener("pageshow", startCycle);
         window.addEventListener("sunja:intro-finished", startCycle);
+        window.addEventListener("sunja:workshop-motion-change", startCycle);
         startCycle();
     }
     setupHeroCarousel();
@@ -255,7 +261,7 @@
 
     // One tap initiates one native scroll. No custom 1.9s animation loop.
     function scrollToTopSmoothly() {
-        window.scrollTo({ top: 0, behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth" });
+        window.scrollTo({ top: 0, behavior: (reduceMotion || fastTouchNavigation || document.documentElement.dataset.workshopMotion === "off") ? "auto" : "smooth" });
     }
     if (backTop) {
         backTop.addEventListener("click", function (event) {
@@ -315,10 +321,17 @@
     function collapseMobileMenu() {
         if (window.innerWidth >= 992) return;
         var el = document.getElementById("navbarCollapse");
-        if (!el || !el.classList.contains("show")) return;
+        if (!el) return;
+        var toggle = document.querySelector(".navbar-toggler");
+        // Bootstrap ignores hide() while an opening transition is in progress.
+        // Complete that transition now so this same tap can close the menu.
+        if (el.classList.contains("collapsing") && toggle && toggle.getAttribute("aria-expanded") === "true") {
+            el.dispatchEvent(new Event("transitionend"));
+        }
+        if (!el.classList.contains("show")) return;
         try {
             if (typeof bootstrap !== "undefined" && bootstrap.Collapse) {
-                bootstrap.Collapse.getOrCreateInstance(el, { toggle: false }).hide();
+                (bootstrap.Collapse.getInstance(el) || new bootstrap.Collapse(el, { toggle: false })).hide();
             }
         } catch (e) {
             // A failed Bootstrap transition must never cancel the tap.
@@ -328,7 +341,6 @@
             el.classList.add("collapse");
             el.style.height = "";
         }
-        var toggle = document.querySelector(".navbar-toggler");
         if (toggle) {
             toggle.setAttribute("aria-expanded", "false");
             toggle.classList.add("collapsed");
@@ -373,7 +385,7 @@
         var destination = Math.max(0, target.getBoundingClientRect().top + window.pageYOffset - offset - 10);
         window.scrollTo({
             top: destination,
-            behavior: (reduceMotion || fastTouchNavigation) ? "auto" : "smooth"
+            behavior: (reduceMotion || fastTouchNavigation || document.documentElement.dataset.workshopMotion === "off") ? "auto" : "smooth"
         });
         return true;
     }
