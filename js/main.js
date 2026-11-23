@@ -30,22 +30,22 @@
         });
     }
 
-    // The hero has only three curated photographs. Warm the two following
-    // slides at low fetch priority so a transition never lands on an undecoded
-    // image, including on mobile and lower-powered devices.
-    window.addEventListener("DOMContentLoaded", function () {
-        var heroImages = document.querySelectorAll("#header-carousel .carousel-item:not(.active) picture img");
-        heroImages.forEach(function (slideImg) {
-            slideImg.decoding = "async";
-            slideImg.loading = "eager";
-            if ("fetchPriority" in slideImg) slideImg.fetchPriority = "low";
-        });
-    }, { once: true });
+    // The first hero photo retains fetchpriority=high. Once the page is loaded,
+    // fetch the other two permanent slides on capable connections so Bootstrap
+    // does not reveal an empty lazy image during the automatic transition.
+    if (!saveData && !perfLite) {
+        window.addEventListener("load", function () {
+            var slides = document.querySelectorAll(".carousel-item:not(.active) picture img");
+            slides.forEach(function (slideImg) {
+                slideImg.decoding = "async";
+                slideImg.loading = "eager";
+            });
+        }, { once: true });
+    }
 
-    // v40: one clock owns both the slide rotation and the progress indicator.
-    // Bootstrap still performs the actual transition, but its own interval is
-    // disabled so a busy transition can never drop an automatic next-slide call.
-    // A small no-dependency controller remains available when the CDN is blocked.
+    // v40: keep the original slide appearance; only make its timing reliable.
+    // Bootstrap performs the visual transition. This single timeout owns the
+    // next-slide deadline so progress and automatic movement cannot drift.
     function setupHeroCarousel() {
         var hero = document.getElementById("header-carousel");
         if (!hero) return;
@@ -57,8 +57,10 @@
         var interval = Number(hero.getAttribute("data-hero-interval")) || 6500;
         var instance = null;
         var cycleTimer = 0;
-        var wiredFallback = false;
+        var recoveryTimer = 0;
+        var fallbackBound = false;
         var transitionPending = false;
+        var eventsBound = false;
 
         function currentIndex() {
             return slides.findIndex(function (slide) {
@@ -76,31 +78,36 @@
             cycleTimer = 0;
         }
 
-        function resetProgress() {
+        function setProgressDuration() {
+            indicators.forEach(function (button) {
+                var fill = button.querySelector("span");
+                if (fill) fill.style.animationDuration = interval + "ms";
+            });
+        }
+
+        function restartProgress() {
             indicators.forEach(function (button) {
                 var fill = button.querySelector("span");
                 if (!fill) return;
                 fill.style.animation = "none";
                 void fill.offsetWidth;
-                fill.style.animation = "";
+                // Set the exact duration inline. The legacy stylesheet has an
+                // 8s animation; the actual slide interval is 6.5s.
+                fill.style.animation = button.classList.contains("active")
+                    ? "heroFill " + interval + "ms linear forwards"
+                    : "none";
             });
         }
 
-        function syncAccessibility() {
-            slides.forEach(function (slide, index) {
-                slide.setAttribute("aria-hidden", slide.classList.contains("active") ? "false" : "true");
-                if (slide.classList.contains("active")) {
-                    slide.setAttribute("aria-label", (index + 1) + " od " + slides.length);
-                }
-            });
+        function syncIndicators() {
+            var active = currentIndex();
             indicators.forEach(function (button, index) {
-                var active = index === currentIndex();
-                if (active) {
+                if (index === active) {
                     button.setAttribute("aria-current", "true");
-                    button.setAttribute("aria-label", "Prikaži slajd " + (index + 1) + " od " + slides.length);
+                    button.classList.add("active");
                 } else {
                     button.removeAttribute("aria-current");
-                    button.setAttribute("aria-label", "Prikaži slajd " + (index + 1) + " od " + slides.length);
+                    button.classList.remove("active");
                 }
             });
         }
@@ -111,17 +118,24 @@
             cycleTimer = window.setTimeout(advanceNextSlide, interval);
         }
 
+        function finishTransition() {
+            transitionPending = false;
+            if (recoveryTimer) window.clearTimeout(recoveryTimer);
+            recoveryTimer = 0;
+            syncIndicators();
+            restartProgress();
+            scheduleNextSlide();
+        }
+
         function rotateTo(index) {
             var next = (index + slides.length) % slides.length;
             slides.forEach(function (slide, i) {
                 slide.classList.toggle("active", i === next);
+                slide.classList.remove("carousel-item-next", "carousel-item-prev",
+                    "carousel-item-start", "carousel-item-end");
             });
-            indicators.forEach(function (button, i) {
-                button.classList.toggle("active", i === next);
-            });
-            syncAccessibility();
-            resetProgress();
-            scheduleNextSlide();
+            syncIndicators();
+            finishTransition();
         }
 
         function rotateBy(delta) {
@@ -129,48 +143,31 @@
             rotateTo((active < 0 ? 0 : active) + delta);
         }
 
-        function advanceNextSlide() {
-            cycleTimer = 0;
-            if (!canRotate()) return;
-
-            if (instance && typeof instance.next === "function") {
-                var before = currentIndex();
-                try {
-                    instance.next();
-                    // Defensive recovery: if a transition was prevented or the
-                    // Bootstrap instance became busy, never leave the timer dead.
-                    window.setTimeout(function () {
-                        if (!canRotate()) return;
-                        if (currentIndex() === before && !transitionPending && !cycleTimer) {
-                            scheduleNextSlide();
-                        }
-                    }, 1100);
-                    return;
-                } catch (error) {
-                    instance = null;
-                }
-            }
-
-            wireFallbackControls();
-            rotateBy(1);
-        }
-
         function handleSlideStart() {
+            clearCycle();
             transitionPending = true;
-            // Bootstrap sets the active indicator as the transition begins.
-            // Start the same 6.5s deadline from that exact moment.
-            scheduleNextSlide();
+            if (recoveryTimer) window.clearTimeout(recoveryTimer);
+            // A normal Bootstrap transition completes in under a second. If its
+            // "slid" event is lost, recover the scheduler without waiting forever.
+            recoveryTimer = window.setTimeout(function () {
+                if (transitionPending) finishTransition();
+            }, 1400);
         }
 
         function handleSlideEnd() {
-            transitionPending = false;
-            syncAccessibility();
-            if (!cycleTimer) scheduleNextSlide();
+            finishTransition();
         }
 
-        function wireFallbackControls() {
-            if (wiredFallback) return;
-            wiredFallback = true;
+        function bindBootstrapEvents() {
+            if (eventsBound) return;
+            eventsBound = true;
+            hero.addEventListener("slide.bs.carousel", handleSlideStart);
+            hero.addEventListener("slid.bs.carousel", handleSlideEnd);
+        }
+
+        function bindFallbackControls() {
+            if (fallbackBound) return;
+            fallbackBound = true;
 
             indicators.forEach(function (button, index) {
                 button.addEventListener("click", function (event) {
@@ -185,7 +182,6 @@
                 });
             });
 
-            // Preserve swipe navigation even if the Bootstrap bundle is blocked.
             var touchStart = null;
             hero.addEventListener("touchstart", function (event) {
                 if (event.touches.length !== 1 ||
@@ -207,44 +203,83 @@
             }, { passive: true });
         }
 
+        function advanceNextSlide() {
+            cycleTimer = 0;
+            if (!canRotate()) return;
+
+            var before = currentIndex();
+            if (instance && typeof instance.next === "function") {
+                try {
+                    instance.next();
+                    // Bootstrap silently ignores next() while an earlier slide
+                    // is still marked as transitioning. If no event arrives,
+                    // force one clean active-slide update and restart the clock.
+                    window.setTimeout(function () {
+                        if (!canRotate()) return;
+                        if (currentIndex() === before && !transitionPending) {
+                            rotateBy(1);
+                        } else if (transitionPending) {
+                            finishTransition();
+                        } else if (!cycleTimer) {
+                            scheduleNextSlide();
+                        }
+                    }, 1150);
+                    return;
+                } catch (error) {
+                    instance = null;
+                }
+            }
+            bindFallbackControls();
+            rotateBy(1);
+        }
+
         function startCycle() {
             if (!canRotate()) {
                 clearCycle();
+                if (recoveryTimer) window.clearTimeout(recoveryTimer);
+                recoveryTimer = 0;
                 return;
             }
 
             if (!instance && window.bootstrap && window.bootstrap.Carousel) {
                 try {
-                    hero.addEventListener("slide.bs.carousel", handleSlideStart);
-                    hero.addEventListener("slid.bs.carousel", handleSlideEnd);
-                    instance = window.bootstrap.Carousel.getOrCreateInstance(hero, {
-                        interval: false,
-                        ride: false,
-                        pause: false,
-                        wrap: true,
-                        touch: true
-                    });
+                    bindBootstrapEvents();
+                    var Carousel = window.bootstrap.Carousel;
+                    // Bootstrap 5.0.0 exposes getInstance(), not the later
+                    // getOrCreateInstance() helper. Support both safely.
+                    instance = typeof Carousel.getInstance === "function"
+                        ? Carousel.getInstance(hero)
+                        : null;
+                    if (!instance) {
+                        instance = new Carousel(hero, {
+                            interval: false,
+                            ride: false,
+                            pause: false,
+                            wrap: true,
+                            touch: true
+                        });
+                    }
                     if (typeof instance.pause === "function") instance.pause();
                 } catch (error) {
                     instance = null;
-                    wireFallbackControls();
+                    bindFallbackControls();
                 }
             } else if (!instance) {
-                wireFallbackControls();
+                bindFallbackControls();
             }
 
-            transitionPending = false;
-            syncAccessibility();
-            resetProgress();
+            setProgressDuration();
+            syncIndicators();
+            restartProgress();
             scheduleNextSlide();
         }
 
         document.addEventListener("visibilitychange", function () {
             if (document.hidden) {
                 clearCycle();
-                hero.classList.add("hero-carousel-paused");
+                if (recoveryTimer) window.clearTimeout(recoveryTimer);
+                recoveryTimer = 0;
             } else {
-                hero.classList.remove("hero-carousel-paused");
                 startCycle();
             }
         });

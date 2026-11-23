@@ -61,21 +61,21 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn('sms:+387', INDEX)
         self.assertNotIn('Pošalji SMS', INDEX)
 
-    def test_v40_carousel_uses_one_clock_for_rotation_and_progress(self):
+    def test_v40_carousel_uses_one_timer_and_keeps_the_original_layout(self):
         self.assertIn('data-bs-pause="false"', INDEX)
         self.assertIn('data-hero-interval="6500"', INDEX)
         self.assertNotIn('data-bs-interval=', INDEX)
         self.assertIn('function setupHeroCarousel()', JS)
         self.assertIn('function scheduleNextSlide()', JS)
+        self.assertIn('function handleSlideEnd()', JS)
         self.assertIn('interval: false', JS)
         self.assertIn('slide.bs.carousel', JS)
         self.assertIn('slid.bs.carousel', JS)
-        self.assertIn('document.addEventListener("visibilitychange"', JS)
-        self.assertIn('bootstrap.Carousel', JS)
-
-    def test_v40_hero_redesign_stylesheet_is_loaded_after_base_css(self):
-        self.assertIn('css/hero-v40.css?v=40.0', INDEX)
-        self.assertTrue((ROOT / "css" / "hero-v40.css").is_file())
+        self.assertIn('if (currentIndex() === before && !transitionPending)', JS)
+        self.assertIn('"heroFill " + interval + "ms linear forwards"', JS)
+        self.assertNotIn('hero-carousel-v40', INDEX)
+        self.assertNotIn('hero-photo-frame', INDEX)
+        self.assertIn('css/style.css?v=39.0', INDEX)
 
     def test_v37_mobile_status_badge_wraps_inside_viewport(self):
         self.assertIn('/* v37 mobile status overflow fix */', CSS)
@@ -263,11 +263,11 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("var(--hero-photo-mobile)", CSS)
         self.assertIn('id="heroMainSrc"', INDEX)
 
-    def test_v40_preloads_following_slides_before_first_transition(self):
-        self.assertIn('window.addEventListener("DOMContentLoaded", function ()', JS)
-        self.assertIn('querySelectorAll("#header-carousel .carousel-item:not(.active) picture img")', JS)
+    def test_v21_preloads_fixed_following_slides_after_first_load(self):
+        self.assertIn('window.addEventListener("load", function ()', JS)
+        self.assertIn('querySelectorAll(".carousel-item:not(.active) picture img")', JS)
         self.assertIn('slideImg.loading = "eager"', JS)
-        self.assertIn('slideImg.fetchPriority = "low"', JS)
+        self.assertIn('if (!saveData && !perfLite)', JS)
 
     def test_v21_glass_is_only_on_three_requested_controls(self):
         self.assertNotIn("sunja-liquid-", INDEX + CSS + JS)
@@ -581,7 +581,6 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn("assets/gallery/sunja-tiktok-7627945643490692373.webp", INDEX)
         self.assertIn("assets/gallery/radionica-dijagnostika.webp", INDEX)
         self.assertIn("assets/gallery/kljucevi-programiranje.webp", INDEX)
-        self.assertNotIn("tt-wide-20260919-d3b7439d.webp", INDEX)
         self.assertNotIn("var heroPool =", INDEX)
         self.assertNotIn("heroImg.src = pick", INDEX)
 
