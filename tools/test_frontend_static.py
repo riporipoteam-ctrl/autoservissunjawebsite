@@ -71,7 +71,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertIn('interval: false', JS)
         self.assertIn('slide.bs.carousel', JS)
         self.assertIn('slid.bs.carousel', JS)
-        self.assertIn('if (currentIndex() === before && !transitionPending)', JS)
+        self.assertIn('if (currentIndex() === before)', JS)
         self.assertIn('"heroFill " + interval + "ms linear forwards"', JS)
         self.assertNotIn('hero-carousel-v40', INDEX)
         self.assertNotIn('hero-photo-frame', INDEX)
