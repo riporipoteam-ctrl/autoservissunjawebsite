@@ -652,10 +652,51 @@ class SiteInteractionTests(unittest.TestCase):
             }""")
             self.assertEqual(timing["interval"], "6500", timing)
             self.assertIn(timing["duration"], ("6.5s", "6500ms"), timing)
-            page.wait_for_function("""() => {
-                const slides = [...document.querySelectorAll('#header-carousel .carousel-item')];
-                return slides.length === 3 && slides[1].classList.contains('active');
-            }""", timeout=9000)
+            page.evaluate("""() => {
+                const root = document.querySelector('#header-carousel');
+                const diag = window.__carouselTestDiag = {
+                    hidden: document.hidden,
+                    intro: document.documentElement.classList.contains('sunja-intro-active'),
+                    slides: [...root.querySelectorAll('.carousel-item')].map((el) => el.classList.contains('active')),
+                    starts: 0,
+                    ends: 0,
+                    nextCalls: 0,
+                    hasBootstrapInstance: false,
+                    instanceNextType: 'missing'
+                };
+                root.addEventListener('slide.bs.carousel', () => { diag.starts += 1; });
+                root.addEventListener('slid.bs.carousel', () => { diag.ends += 1; });
+                const Carousel = window.bootstrap.Carousel;
+                const instance = typeof Carousel.getInstance === 'function' ? Carousel.getInstance(root) : null;
+                diag.hasBootstrapInstance = !!instance;
+                if (instance) {
+                    diag.instanceNextType = typeof instance.next;
+                    const next = instance.next.bind(instance);
+                    instance.next = function () {
+                        diag.nextCalls += 1;
+                        return next();
+                    };
+                }
+            }""")
+            try:
+                page.wait_for_function("""() => {
+                    const slides = [...document.querySelectorAll('#header-carousel .carousel-item')];
+                    return slides.length === 3 && slides[1].classList.contains('active');
+                }""", timeout=9000)
+            except Exception as error:
+                diagnostic = page.evaluate("""() => {
+                    const root = document.querySelector('#header-carousel');
+                    return {
+                        ...window.__carouselTestDiag,
+                        hiddenNow: document.hidden,
+                        introNow: document.documentElement.classList.contains('sunja-intro-active'),
+                        active: [...root.querySelectorAll('.carousel-item')].map((el) => el.classList.contains('active')),
+                        indicator: [...root.querySelectorAll('.hero-indicators button')].map((el) => el.classList.contains('active')),
+                        progressStyle: root.querySelector('.hero-indicators button.active span')?.getAttribute('style'),
+                        visibility: document.visibilityState
+                    };
+                }""")
+                self.fail(f"Carousel did not advance: {diagnostic}; error={error}")
         finally:
             context.close()
 
