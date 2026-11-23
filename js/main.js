@@ -216,7 +216,12 @@
                     // force one clean active-slide update and restart the clock.
                     window.setTimeout(function () {
                         if (!canRotate()) return;
-                        if (currentIndex() === before && !transitionPending) {
+                        if (currentIndex() === before) {
+                            // A "slide" event can fire even when Bootstrap's
+                            // transition never commits the new active item.
+                            // If the old slide is still showing, force progress
+                            // rather than restarting a dead carousel clock.
+                            transitionPending = false;
                             rotateBy(1);
                         } else if (transitionPending) {
                             finishTransition();
