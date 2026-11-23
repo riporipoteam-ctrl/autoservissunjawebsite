@@ -307,8 +307,8 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("'url(\"' + safeSrc + '\")'", INDEX)
 
     def test_v214_hero_backdrops_resolve_from_site_root(self):
-        self.assertIn("--hero-photo:url('/assets/photos/", INDEX)
-        self.assertIn("--hero-photo-mobile:url('/assets/photos/", INDEX)
+        self.assertIn("--hero-photo:url('/assets/gallery/", INDEX)
+        self.assertIn("--hero-photo-mobile:url('/assets/gallery/", INDEX)
         self.assertIn("--hero-photo:url('/assets/gallery/", INDEX)
         self.assertNotIn("--hero-photo:url('assets/", INDEX)
 
@@ -562,7 +562,7 @@ class FrontendStaticTests(unittest.TestCase):
         self.assertNotIn("tt-20261110-5ab64c5a", INDEX)
         self.assertNotIn("tt-wide-01.webp", INDEX)
         self.assertNotIn("tt-01.webp", INDEX)
-        self.assertIn("tt-20260919-d3b7439d.webp", INDEX)
+        self.assertIn("assets/gallery/sunja-tiktok-7627945643490692373.webp", INDEX)
         self.assertNotIn("aboutPhoto.src = aboutSrc", INDEX)
 
     def test_images_are_not_presented_with_blur_effects(self):
@@ -578,7 +578,7 @@ class FrontendStaticTests(unittest.TestCase):
 
 
     def test_three_slides_have_permanent_photos_and_no_auto_swap(self):
-        self.assertIn("assets/photos/tt-wide-20260919-d3b7439d.webp", INDEX)
+        self.assertIn("assets/gallery/sunja-tiktok-7627945643490692373.webp", INDEX)
         self.assertIn("assets/gallery/radionica-dijagnostika.webp", INDEX)
         self.assertIn("assets/gallery/kljucevi-programiranje.webp", INDEX)
         self.assertNotIn("var heroPool =", INDEX)
