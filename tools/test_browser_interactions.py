@@ -670,7 +670,9 @@ class SiteInteractionTests(unittest.TestCase):
             page.wait_for_function("() => !!(window.bootstrap && window.bootstrap.Carousel)")
             page.evaluate("""() => {
                 const root = document.querySelector('#header-carousel');
-                const instance = window.bootstrap.Carousel.getOrCreateInstance(root);
+                const Carousel = window.bootstrap.Carousel;
+                const instance = (typeof Carousel.getInstance === 'function' &&
+                    Carousel.getInstance(root)) || new Carousel(root, { interval: false });
                 instance.next = function () {};
             }""")
             page.wait_for_function("""() => {
