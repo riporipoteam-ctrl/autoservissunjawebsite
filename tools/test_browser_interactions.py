@@ -673,7 +673,11 @@ class SiteInteractionTests(unittest.TestCase):
                 const Carousel = window.bootstrap.Carousel;
                 const instance = (typeof Carousel.getInstance === 'function' &&
                     Carousel.getInstance(root)) || new Carousel(root, { interval: false });
-                instance.next = function () {};
+                // Reproduce the failure: Bootstrap emits slide-start, but never
+                // changes the active slide and never emits slid.bs.carousel.
+                instance.next = function () {
+                    root.dispatchEvent(new Event('slide.bs.carousel'));
+                };
             }""")
             page.wait_for_function("""() => {
                 const slides = [...document.querySelectorAll('#header-carousel .carousel-item')];
