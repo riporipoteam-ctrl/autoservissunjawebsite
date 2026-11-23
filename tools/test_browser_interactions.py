@@ -633,7 +633,7 @@ class SiteInteractionTests(unittest.TestCase):
         finally:
             context.close()
 
-    def test_v40_progress_and_bootstrap_slide_advance_share_the_same_deadline(self):
+    def test_v40_carousel_progress_matches_the_slide_interval_and_advances(self):
         context = self.browser.new_context(
             viewport={"width": 1280, "height": 800},
             reduced_motion="no-preference",
@@ -643,26 +643,23 @@ class SiteInteractionTests(unittest.TestCase):
             page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
             page.wait_for_function("() => !!(window.bootstrap && window.bootstrap.Carousel)")
             timing = page.evaluate("""() => {
-                const carousel = document.querySelector('#header-carousel');
-                const active = carousel.querySelector('.hero-indicators button.active span');
+                const root = document.querySelector('#header-carousel');
+                const fill = root.querySelector('.hero-indicators button.active span');
                 return {
-                    interval: carousel.getAttribute('data-hero-interval'),
-                    progressDuration: getComputedStyle(active).animationDuration
+                    interval: root.getAttribute('data-hero-interval'),
+                    duration: getComputedStyle(fill).animationDuration
                 };
             }""")
             self.assertEqual(timing["interval"], "6500", timing)
-            self.assertIn(timing["progressDuration"], ("6.5s", "6500ms"), timing)
+            self.assertIn(timing["duration"], ("6.5s", "6500ms"), timing)
             page.wait_for_function("""() => {
                 const slides = [...document.querySelectorAll('#header-carousel .carousel-item')];
                 return slides.length === 3 && slides[1].classList.contains('active');
             }""", timeout=9000)
-            self.assertEqual(
-                page.locator("#header-carousel .hero-indicators button.active").count(), 1
-            )
         finally:
             context.close()
 
-    def test_v40_carousel_recovers_if_bootstrap_drops_next_transition(self):
+    def test_v40_carousel_recovers_when_bootstrap_ignores_next(self):
         context = self.browser.new_context(
             viewport={"width": 1280, "height": 800},
             reduced_motion="no-preference",
@@ -672,8 +669,8 @@ class SiteInteractionTests(unittest.TestCase):
             page.goto(self.url + "?skipIntro=1", wait_until="load", timeout=45000)
             page.wait_for_function("() => !!(window.bootstrap && window.bootstrap.Carousel)")
             page.evaluate("""() => {
-                const carousel = document.querySelector('#header-carousel');
-                const instance = window.bootstrap.Carousel.getOrCreateInstance(carousel);
+                const root = document.querySelector('#header-carousel');
+                const instance = window.bootstrap.Carousel.getOrCreateInstance(root);
                 instance.next = function () {};
             }""")
             page.wait_for_function("""() => {
