@@ -90,9 +90,12 @@
                 var fill = button.querySelector("span");
                 if (!fill) return;
                 fill.style.animation = "none";
-                fill.style.animationDuration = interval + "ms";
                 void fill.offsetWidth;
-                fill.style.animation = "";
+                // Set the exact duration inline. The legacy stylesheet has an
+                // 8s animation; the actual slide interval is 6.5s.
+                fill.style.animation = button.classList.contains("active")
+                    ? "heroFill " + interval + "ms linear forwards"
+                    : "none";
             });
         }
 
@@ -241,13 +244,21 @@
             if (!instance && window.bootstrap && window.bootstrap.Carousel) {
                 try {
                     bindBootstrapEvents();
-                    instance = window.bootstrap.Carousel.getOrCreateInstance(hero, {
-                        interval: false,
-                        ride: false,
-                        pause: false,
-                        wrap: true,
-                        touch: true
-                    });
+                    var Carousel = window.bootstrap.Carousel;
+                    // Bootstrap 5.0.0 exposes getInstance(), not the later
+                    // getOrCreateInstance() helper. Support both safely.
+                    instance = typeof Carousel.getInstance === "function"
+                        ? Carousel.getInstance(hero)
+                        : null;
+                    if (!instance) {
+                        instance = new Carousel(hero, {
+                            interval: false,
+                            ride: false,
+                            pause: false,
+                            wrap: true,
+                            touch: true
+                        });
+                    }
                     if (typeof instance.pause === "function") instance.pause();
                 } catch (error) {
                     instance = null;
