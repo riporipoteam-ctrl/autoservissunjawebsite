@@ -1,6 +1,20 @@
 {
  "hero": [
   {
+   "href": "https://www.tiktok.com/@autoservissunja/video/7712985651943148820",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-27",
+   "cat": "opcenito",
+   "source": "tiktok",
+   "post_id": "7712985651943148820",
+   "media_id": "tiktok:7712985651943148820:0",
+   "media_index": 0,
+   "quality_v": 2,
+   "src": "assets/photos/tt-wide-20261127-a738c888.webp",
+   "cat_checked": true,
+   "cat_v": true
+  },
+  {
    "href": "https://www.tiktok.com/@autoservissunja/photo/7710350720762957077",
    "title": "Radionica, novembar 2026",
    "date": "2026-11-20",
@@ -227,6 +241,20 @@
  ],
  "gallery": [
   {
+   "href": "https://www.tiktok.com/@autoservissunja/video/7712985651943148820",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-27",
+   "cat": "opcenito",
+   "source": "tiktok",
+   "post_id": "7712985651943148820",
+   "media_id": "tiktok:7712985651943148820:0",
+   "media_index": 0,
+   "quality_v": 2,
+   "src": "assets/photos/tt-20261127-a738c888.webp",
+   "cat_checked": true,
+   "cat_v": true
+  },
+  {
    "href": "https://www.tiktok.com/@autoservissunja/photo/7710350720762957077",
    "title": "Radionica, novembar 2026",
    "date": "2026-11-20",
@@ -452,6 +480,20 @@
   }
  ],
  "heroMobile": [
+  {
+   "href": "https://www.tiktok.com/@autoservissunja/video/7712985651943148820",
+   "title": "Radionica, novembar 2026",
+   "date": "2026-11-27",
+   "cat": "opcenito",
+   "source": "tiktok",
+   "post_id": "7712985651943148820",
+   "media_id": "tiktok:7712985651943148820:0",
+   "media_index": 0,
+   "quality_v": 2,
+   "src": "assets/photos/tt-20261127-a738c888.webp",
+   "cat_checked": true,
+   "cat_v": true
+  },
   {
    "href": "https://www.tiktok.com/@autoservissunja/photo/7710350720762957077",
    "title": "Radionica, novembar 2026",
@@ -704,15 +746,15 @@
   }
  },
  "latest": {
-  "src": "assets/photos/tt-20261120-3d31739d.webp",
-  "wide": "assets/photos/tt-wide-20261120-3d31739d.webp",
-  "href": "https://www.tiktok.com/@autoservissunja/photo/7710350720762957077",
+  "src": "assets/photos/tt-20261127-a738c888.webp",
+  "wide": "assets/photos/tt-wide-20261127-a738c888.webp",
+  "href": "https://www.tiktok.com/@autoservissunja/video/7712985651943148820",
   "title": "Radionica, novembar 2026",
-  "date": "2026-11-20",
+  "date": "2026-11-27",
   "cat": "opcenito",
   "source": "tiktok",
-  "post_id": "7710350720762957077",
-  "media_id": "tiktok:7710350720762957077:0"
+  "post_id": "7712985651943148820",
+  "media_id": "tiktok:7712985651943148820:0"
  },
  "_missing": {},
  "_carousel_probe": {
@@ -853,6 +895,12 @@
    "count": 0,
    "attempts": 1,
    "last": 1795381202
+  },
+  "7712985651943148820": {
+   "status": "not-photo",
+   "count": 0,
+   "attempts": 1,
+   "last": 1795820001
   }
  }
 }
